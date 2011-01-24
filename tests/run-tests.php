@@ -20,22 +20,10 @@ Nano::addLibrary('pear/PHP');
 require_once 'PHPUnit/Autoload.php';
 
 // construct global wrapper for test suites
-$suite = new PHPUnit_Framework_TestSuite();
-$suite->setName('nanoPortal test suite');
+$suite = TestSuite::init();
 
-// load "core" tests from /tests directory
-$coreTestsSuite = TestSuite::getCoreTestSuite();
-$suite->addTestSuite($coreTestsSuite);
-
-// create results and printer objects
-$results = new PHPUnit_Framework_TestResult();
-$printer = new PHPUnit_TextUI_ResultPrinter(null /* $out */, true /* $verbose */, false /* $colors */, true /* $debug */);
-
-// "bind" printer to the results object
-$results->addListener($printer);
+// add "core" tests from /tests directory
+$suite->addCoreTestSuite();
 
 // run test suite
 $suite->run($results);
-
-// print results
-$printer->printResult($results);

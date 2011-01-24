@@ -6,29 +6,59 @@
  * $Id$
  */
 
-class TestSuite {
+class TestSuite extends PHPUnit_Framework_TestSuite {
 
 	/**
-	 * Scan given directory for *.class.php files and add them to the list of source files
+	 * Return new instance of test suite class
+	 */
+	static public function init() {
+		$suite = new self;
+		$suite->setName('nanoPortal test suite');
+
+		return $suite;
+	}
+
+	/**
+	 * Return list of *Test.php files from given directory
 	 */
 	static private function scanDirectory($dir) {
 		return glob(realpath($dir) . '/*Test.php');
 	}
 
 	/**
-	 * Return test suite object containing set of core tests
+	 * Add test suite containing set of core tests
 	 */
-	static public function getCoreTestSuite() {
-		$suite = new PHPUnit_Framework_TestSuite();
+	public function addCoreTestSuite() {
+		$suite = new parent;
 		$suite->setName('nanoPortal core test suite');
 
 		$dir = Nano::getCoreDirectory() . '/tests';
 		$files = self::scanDirectory($dir);
 
-		if (!empty($files)) {
-			$suite->addTestFiles($files);
+		foreach($files as $file) {
+			$suite->addTestFile($file);
 		}
 
+		$this->addTestSuite($suite);
+
 		return $suite;
+	}
+
+	/**
+	 * Run suite and print results to console
+	 */
+	public function run(PHPUnit_Framework_TestResult $result = NULL, $filter = FALSE, array $groups = array(), array $excludeGroups = array(), $processIsolation = FALSE) {
+		// create results and printer objects
+		$results = new PHPUnit_Framework_TestResult();
+		$printer = new PHPUnit_TextUI_ResultPrinter(null /* $out */, true /* $verbose */, false /* $colors */, false /* $debug */);
+
+		// "bind" printer to the results object
+		$results->addListener($printer);
+
+		// run test suite
+		parent::run($results);
+
+		// print results
+		$printer->printResult($results);
 	}
 }
