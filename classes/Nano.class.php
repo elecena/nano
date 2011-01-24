@@ -23,11 +23,25 @@ class Nano {
 	}
 
 	/**
+	 * Return path to nanoPortal core
+	 */
+	static public function getCoreDirectory() {
+		return self::$dir;
+	}
+
+	/**
+	 * Return path to nanoPortal libraries
+	 */
+	static public function getLibDirectory() {
+		return self::$libraryDir;
+	}
+
+	/**
 	 * Add given library to include_path
 	 */
 	static public function addLibrary($path) {
 		// normalize path
-		$fullPath = self::$libraryDir . '/' . $path;
+		$fullPath = self::getLibDirectory() . '/' . $path;
 
 		// update include_path
 		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
