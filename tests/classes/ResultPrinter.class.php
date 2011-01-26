@@ -10,6 +10,8 @@ class ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
 
 	function __construct() {
 		parent::__construct(null /* $out */, true /* $verbose */, false /* $colors */, false /* $debug */);
+
+		$this->write(PHPUnit_Runner_Version::getVersionString() . "\n\n");
 	}
 
 	/**
@@ -18,7 +20,8 @@ class ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite) {
 
 		var_dump(get_class($suite));
-		var_dump($suite->count());
+		var_dump($suite->getName());
+		//var_dump(count($suite->tests()));
 
 		if ($suite instanceof PHPUnit_Framework_TestCase) {
 			$name = $suite->getName();

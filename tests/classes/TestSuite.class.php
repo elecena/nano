@@ -8,17 +8,12 @@
 
 class TestSuite extends PHPUnit_Framework_TestSuite {
 
-	// instance of framework
-	private $nano;
-
 	/**
 	 * Return new instance of test suite class
 	 */
-	static public function init(Nano $nano) {
+	static public function init() {
 		$suite = new self;
 		$suite->setName('nanoPortal test suite');
-
-		$suite->nano = $nano;
 
 		return $suite;
 	}
@@ -31,18 +26,27 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 	}
 
 	/**
-	 * Add test suite containing set of core tests
+	 * Creates test suite with *Test.php files from given directory
 	 */
-	public function addCoreTestSuite() {
+	private function createTestSuiteForDirectory($dir, $name) {
 		$suite = new parent;
-		$suite->setName('nanoPortal core test suite');
+		$suite->setName($name);
 
-		$dir = $this->nano->getCoreDirectory() . '/tests';
 		$files = self::scanDirectory($dir);
 
 		if (!empty($files)) {
 			$suite->addTestFiles($files);
 		}
+
+		return $suite;
+	}
+
+	/**
+	 * Add test suite containing set of core tests
+	 */
+	public function addCoreTestSuite() {
+		$dir = Nano::getCoreDirectory() . '/tests';
+		$suite = $this->createTestSuiteForDirectory($dir, 'nanoPortal core test suite');
 
 		$this->addTestSuite($suite);
 

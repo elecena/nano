@@ -10,20 +10,11 @@ class Nano {
 
 	const VERSION = '0.01';
 
-	private $dir = '';
-	private $libraryDir = '';
+	static private $dir = '';
+	static private $libraryDir = '';
 
 	/**
-	 * Framework's constructor
-	 */
-	private function __construct($dir) {
-		// setup paths
-		$this->dir = realpath($dir);
-		$this->libraryDir = realpath($dir) . '/lib';
-	}
-
-	/**
-	 * Initialize framework
+	 * Initialize framework (initialize classes autoloader, set directories)
 	 */
 	static public function init() {
 		// load autoloader class
@@ -35,31 +26,32 @@ class Nano {
 
 		// set framework's directory
 		$dir = dirname(__FILE__) . '/..';
-
-		$nano = new self($dir);
-		return $nano;
+		
+		// setup paths
+		self::$dir = realpath($dir);
+		self::$libraryDir = realpath($dir) . '/lib';
 	}
 
 	/**
 	 * Return path to nanoPortal core
 	 */
-	public function getCoreDirectory() {
-		return $this->dir;
+	static public function getCoreDirectory() {
+		return self::$dir;
 	}
 
 	/**
 	 * Return path to nanoPortal libraries
 	 */
-	public function getLibDirectory() {
-		return $this->libraryDir;
+	static public function getLibDirectory() {
+		return self::$libraryDir;
 	}
 
 	/**
 	 * Add given library to include_path
 	 */
-	public function addLibrary($path) {
+	static public function addLibrary($path) {
 		// normalize path
-		$fullPath = $this->getLibDirectory() . '/' . $path;
+		$fullPath = self::getLibDirectory() . '/' . $path;
 
 		// update include_path
 		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
