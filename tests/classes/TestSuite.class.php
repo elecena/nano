@@ -8,12 +8,17 @@
 
 class TestSuite extends PHPUnit_Framework_TestSuite {
 
+	// instance of framework
+	private $nano;
+
 	/**
 	 * Return new instance of test suite class
 	 */
-	static public function init() {
+	static public function init(Nano $nano) {
 		$suite = new self;
 		$suite->setName('nanoPortal test suite');
+
+		$suite->nano = $nano;
 
 		return $suite;
 	}
@@ -32,11 +37,11 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		$suite = new parent;
 		$suite->setName('nanoPortal core test suite');
 
-		$dir = Nano::getCoreDirectory() . '/tests';
+		$dir = $this->nano->getCoreDirectory() . '/tests';
 		$files = self::scanDirectory($dir);
 
-		foreach($files as $file) {
-			$suite->addTestFile($file);
+		if (!empty($files)) {
+			$suite->addTestFiles($files);
 		}
 
 		$this->addTestSuite($suite);
@@ -49,8 +54,8 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 	 */
 	public function run(PHPUnit_Framework_TestResult $result = NULL, $filter = FALSE, array $groups = array(), array $excludeGroups = array(), $processIsolation = FALSE) {
 		// create results and printer objects
-		$results = new PHPUnit_Framework_TestResult();
-		$printer = new PHPUnit_TextUI_ResultPrinter(null /* $out */, true /* $verbose */, false /* $colors */, false /* $debug */);
+		$results = new TestResult();
+		$printer = new ResultPrinter();
 
 		// "bind" printer to the results object
 		$results->addListener($printer);
