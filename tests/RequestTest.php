@@ -33,6 +33,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		// emulate POST request
 		$request = new Request(array(
 			'foo' => 'bar',
+			'test' => '2',
 			'box' => 'on',
 		),
 		array(
@@ -41,9 +42,10 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertTrue($request->wasPosted());
 
-		$this->assertNull($request->get('test'));
+		$this->assertNull($request->get('test2'));
 		$this->assertEquals('bar', $request->get('foo'));
 		$this->assertEquals(0, $request->getInt('foo'));
+		$this->assertEquals(2, $request->getInt('test'));
 		$this->assertTrue($request->getChecked('box'));
 		$this->assertFalse($request->getChecked('box2'));
 	}
