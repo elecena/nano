@@ -15,20 +15,23 @@ class Request {
 	private $params;
 
 	// stores request's info as [param name] => [value] keys
-	private $info;
+	private $env;
 
 	// HTTP request type (either GET or POST)
 	private $type;
 
+	// cache client IP
+	private $ip = null;
+
 	/**
 	 * Setup request object
 	 */
-	public function __construct(array $request, array $server) {
+	public function __construct(array $request, array $env = array()) {
 		$this->params = $request;
-		$this->info = $server;
+		$this->env = $env;
 
 		// detect request type
-		switch($server['REQUEST_METHOD']) {
+		switch($env['REQUEST_METHOD']) {
 			case 'POST':
 				$this->type = self::POST;
 				break;
@@ -78,33 +81,38 @@ class Request {
 	 * Return null if IP is malformed or not provided (CLI?)
 	 */
 	public function getIP() {
-		$ip = false;
-
-		if (!empty($this->info['HTTP_CLIENT_IP'])) {
-			$ip = $this->info['HTTP_CLIENT_IP'];
+		if (!empty($this->ip)) {
+			return $this->ip;
 		}
 
-		if (!empty($this->info['REMOTE_ADDR'])) {
-			$ip = $this->info['REMOTE_ADDR'];
-		}
+		$ip = null;
 
-		// proxy
-		if (!empty($this->info['HTTP_X_FORWARDED_FOR'])) {
-			$ipList = explode (', ', $this->info['HTTP_X_FORWARDED_FOR']);
+		// @see http://roshanbh.com.np/2007/12/getting-real-ip-address-in-php.html
+		$fields = array(
+			'HTTP_CLIENT_IP',
+			'HTTP_X_FORWARDED_FOR',
+			'REMOTE_ADDR'
+		);
 
-			if ($ip) {
-				$ipList[] = $ip;
-				$ip = false;
-			}
+		// scan HTTP headers to find IP
+		foreach($fields as $field) {
+			if (!empty($this->env[$field])) {
+				$tmp = $this->env[$field];
 
-			// scan IP addresses for local ones (ignore them)
-			foreach ($ipList as $v) {
-				if (!preg_match('#^(192\.168|172\.16|10|224|240|127|0)\.#', $v)) {
-					return $v;
+				if (!self::isLocalIP($tmp)) {
+					$ip = $tmp;
+					break;
 				}
 			}
 		}
 
-		return $ip ? $ip : null;
+		return !is_null($ip) ? ($this->ip = $ip) : null;
+	}
+
+	/**
+	 * Return whether given IP is a local IP
+	 */
+	static public function isLocalIP($ip) {
+		return preg_match('#^(192\.168|172\.16|10|224|240|127|0)\.#', $ip) > 0;
 	}
 }

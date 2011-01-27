@@ -53,8 +53,10 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	public function testIP() {
 		// crawl-66-249-66-248.googlebot.com
 		$ip = '66.249.66.248';
+		$local = '192.168.1.146';
 
 		$request = new Request(array(), array('HTTP_CLIENT_IP' => $ip));
+		$this->assertEquals($ip, $request->getIP());
 		$this->assertEquals($ip, $request->getIP());
 
 		$request = new Request(array(), array('REMOTE_ADDR' => $ip));
@@ -63,7 +65,19 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$request = new Request(array(), array('HTTP_X_FORWARDED_FOR' => $ip));
 		$this->assertEquals($ip, $request->getIP());
 
-		$request = new Request(array(), array('HTTP_X_FORWARDED_FOR' => "192.168.0.1, {$ip}"));
+		$request = new Request(array(), array('HTTP_X_FORWARDED_FOR' => $ip, 'REMOTE_ADDR' => $local));
 		$this->assertEquals($ip, $request->getIP());
+
+		// no IP provided
+		$request = new Request(array());
+		$this->assertNull($request->getIP());
+
+		// only local IP provided
+		$request = new Request(array(), array('HTTP_X_FORWARDED_FOR' => $local));
+		$this->assertNull($request->getIP());
+
+		// test helper method
+		$this->assertFalse(request::isLocalIP($ip));
+		$this->assertTrue(request::isLocalIP($local));
 	}
 }
