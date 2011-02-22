@@ -29,6 +29,21 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($request->getChecked('box2'));
 	}
 
+	public function testGETParamsFromArray() {
+		// emulate GET request
+		$request = Request::newFromArray(array(
+			'foo' => 'bar',
+			'test' => '2',
+			'box' => 'on',
+		));
+
+		$this->assertFalse($request->wasPosted());
+
+		$this->assertNull($request->get('foo2'));
+		$this->assertEquals('bar', $request->get('foo'));
+		$this->assertTrue($request->getChecked('box'));
+	}
+
 	public function testPOSTParams() {
 		// emulate POST request
 		$request = new Request(array(
@@ -48,6 +63,21 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, $request->getInt('test'));
 		$this->assertTrue($request->getChecked('box'));
 		$this->assertFalse($request->getChecked('box2'));
+	}
+
+	public function testPOSTParamsFromArray() {
+		// emulate POST request
+		$request = Request::newFromArray(array(
+			'foo' => 'bar',
+			'test' => '2',
+			'box' => 'on',
+		), Request::POST);
+
+		$this->assertTrue($request->wasPosted());
+
+		$this->assertNull($request->get('foo2'));
+		$this->assertEquals('bar', $request->get('foo'));
+		$this->assertTrue($request->getChecked('box'));
 	}
 
 	public function testIP() {

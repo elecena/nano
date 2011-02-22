@@ -44,6 +44,16 @@ class Request {
 	}
 
 	/**
+	 * Creates new instance of Request class with given params
+	 */
+	public static function newFromArray(array $params, $type = self::GET) {
+		$request = new self($params);
+		$request->type = $type;
+
+		return $request;
+	}
+
+	/**
 	 * Get value of given request parameter
 	 *
 	 * Return $default if parameter is not found
