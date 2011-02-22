@@ -22,7 +22,10 @@ class Nano {
 
 		// setup autoloader
 		Autoloader::init();
+		
+		// add /classes and /classes/utils dictionaries
 		Autoloader::scanDirectory(dirname(__FILE__));
+		Autoloader::scanDirectory(dirname(__FILE__) . '/utils');
 
 		// set framework's directory
 		$dir = dirname(__FILE__) . '/..';
