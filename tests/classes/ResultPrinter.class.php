@@ -8,25 +8,41 @@
 
 class ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
 
+	private $level = 0;
+
 	function __construct() {
 		parent::__construct(null /* $out */, true /* $verbose */, false /* $colors */, false /* $debug */);
 
-		$this->write(PHPUnit_Runner_Version::getVersionString() . "\n\n");
+		$this->write(PHPUnit_Runner_Version::getVersionString() . "\n");
+		$this->write('NanoPortal v' . Nano::VERSION . "\n");
 	}
 
 	/**
      * A test suite started.
-     *
+     */
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite) {
+		$name = $suite->getName();
 
-		var_dump(get_class($suite));
-		var_dump($suite->getName());
-		//var_dump(count($suite->tests()));
+		switch($this->level) {
+			case 0:
+				break;
 
-		if ($suite instanceof PHPUnit_Framework_TestCase) {
-			$name = $suite->getName();
-			echo "\n[{$name}]\n";
+			case 1:
+				$this->write("\n{$name}:");
+				break;
+
+			case 2:
+				$this->write("\n* {$name} ");
+				break;
 		}
+
+		$this->level++;
 	}
-	/**/
+
+	 /**
+     * A testsuite ended.
+     */
+    public function endTestSuite(PHPUnit_Framework_TestSuite $suite) {
+		$this->level--;
+    }
 }
