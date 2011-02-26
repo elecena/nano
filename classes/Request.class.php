@@ -70,6 +70,27 @@ class Request {
 	public function getInt($param, $default = 0) {
 		return intval($this->get($param, $default));
 	}
+	
+	/**
+	 * Get numeric value of given request parameter (with value limits applied)
+	 *
+	 * Return $default if parameter is not found (limits are not applied to default value)
+	 */
+	public function getIntLimit($param, $limitMin, $limitMax, $default = null) {
+		$val = $this->get($param, null);
+		
+		// value not found - return $default
+		if (is_null($val) && !is_null($default)) {
+			return intval($default);
+		}
+		
+		// value found - apply limits
+		$val = intval($val);
+		$val = max($val, $limitMin);
+		$val = min($val, $limitMax);
+		
+		return $val;
+	}
 
 	/**
 	 * Return if given checkbox is selected

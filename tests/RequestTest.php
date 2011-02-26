@@ -80,6 +80,23 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($request->getChecked('box'));
 	}
 
+	public function testGetIntLimit() {
+		// emulate GET request
+		$request = Request::newFromArray(array(
+			'limit' => '20',
+		));
+
+		$this->assertEquals(20, $request->getInt('limit'));
+		$this->assertEquals(20, $request->getIntLimit('limit', 0, 25));
+		$this->assertEquals(15, $request->getIntLimit('limit', 0, 15));
+		$this->assertEquals(25, $request->getIntLimit('limit', 25, 50));
+
+		$this->assertEquals(5, $request->getIntLimit('test', 5, 15));
+		$this->assertEquals(0, $request->getIntLimit('test', 5, 15, 'foo'));
+		$this->assertEquals(10, $request->getIntLimit('test', 20, 25, 10));
+		$this->assertEquals(50, $request->getIntLimit('test', 0, 25, 50));
+	}
+
 	public function testIP() {
 		// crawl-66-249-66-248.googlebot.com
 		$ip = '66.249.66.248';
