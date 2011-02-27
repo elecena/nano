@@ -22,17 +22,30 @@ class Nano {
 
 		// setup autoloader
 		Autoloader::init();
-		
+
 		// add /classes and /classes/utils dictionaries
 		Autoloader::scanDirectory(dirname(__FILE__));
 		Autoloader::scanDirectory(dirname(__FILE__) . '/utils');
 
 		// set framework's directory
 		$dir = dirname(__FILE__) . '/..';
-		
+
 		// setup paths
 		self::$dir = realpath($dir);
 		self::$libraryDir = realpath($dir) . '/lib';
+	}
+
+	/**
+	 * Creates new instance of Nano application based on given configuration
+	 */
+	static public function app($workingDirectory, $config) {
+		// initialize framework
+		Nano::init();
+
+		// create new application
+		$app = new NanoApp();
+
+		return $app;
 	}
 
 	/**
