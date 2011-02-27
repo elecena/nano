@@ -54,6 +54,17 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 	}
 
 	/**
+	 * Add test suite for given directory
+	 */
+	public function addTestSuiteDirectory($dir, $name) {
+		$suite = $this->createTestSuiteForDirectory($dir, $name);
+
+		$this->addTestSuite($suite);
+
+		return $suite;
+	}
+
+	/**
 	 * Run suite and print results to console
 	 */
 	public function run(PHPUnit_Framework_TestResult $result = NULL, $filter = FALSE, array $groups = array(), array $excludeGroups = array(), $processIsolation = FALSE) {

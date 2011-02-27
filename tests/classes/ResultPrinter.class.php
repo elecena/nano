@@ -44,5 +44,9 @@ class ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
      */
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite) {
 		$this->level--;
+
+		if ($this->level == 1) {
+			$this->write("\n");
+		}
     }
 }

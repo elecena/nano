@@ -28,5 +28,8 @@ $suite = TestSuite::init();
 // add "core" tests from /tests directory
 $suite->addCoreTestSuite();
 
+// add tests for application from /tests/app directory
+$suite->addTestSuiteDirectory(dirname(__FILE__) . '/app/tests', 'nanoPortal test app suite');
+
 // run test suite
 $suite->run();
