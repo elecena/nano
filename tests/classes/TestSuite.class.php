@@ -72,6 +72,15 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		$results = new TestResult();
 		$printer = new ResultPrinter();
 
+		// collect code coverage report
+		//$results->collectRawCodeCoverageInformation(true);
+		$results->collectCodeCoverageInformation(true);
+		
+		// filter out /lib and /tests directories
+		$filter = $results->getCodeCoverage()->filter();
+		$filter->addDirectoryToBlacklist(realpath(dirname(__FILE__) . '/..'));
+		$filter->addDirectoryToBlacklist(Nano::getLibDirectory());
+
 		// "bind" printer to the results object
 		$results->addListener($printer);
 
@@ -80,5 +89,11 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 
 		// print results
 		$printer->printResult($results);
+		
+		// code coverage report
+		$codeCoverage = $results->getCodeCoverage();
+		//var_dump(get_class($codeCoverage));
+		//var_dump($codeCoverage);
+		//var_dump($codeCoverage->getSummary());
 	}
 }
