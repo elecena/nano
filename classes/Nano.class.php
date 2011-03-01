@@ -65,9 +65,9 @@ class Nano {
 	/**
 	 * Add given library to include_path
 	 */
-	static public function addLibrary($path) {
+	static public function addLibrary($directory) {
 		// normalize path
-		$fullPath = self::getLibDirectory() . '/' . $path;
+		$fullPath = self::getLibDirectory() . '/' . $directory;
 
 		// update include_path
 		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);

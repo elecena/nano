@@ -91,9 +91,12 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		$printer->printResult($results);
 		
 		// code coverage report
-		$codeCoverage = $results->getCodeCoverage();
-		//var_dump(get_class($codeCoverage));
-		//var_dump($codeCoverage);
-		//var_dump($codeCoverage->getSummary());
+		$codeCoverage = $results->getCodeCoverageSummary();
+
+		var_dump($codeCoverage);
+		
+		foreach($codeCoverage as $file => $info) {
+			
+		}
 	}
 }

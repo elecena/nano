@@ -14,4 +14,12 @@ class NanoTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($dir, Nano::getCoreDirectory());
 		$this->assertEquals($dir . '/lib', Nano::getLibDirectory());
 	}
+
+	public function testAddLibrary() {
+		$libName = 'testLib';
+
+		Nano::addLibrary($libName);
+
+		$this->assertContains($libName, get_include_path());
+	}
 }
