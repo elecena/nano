@@ -11,6 +11,9 @@ class Request {
 	const GET = 1;
 	const POST = 2;
 
+	// stores a URL of request
+	private $requestURI;
+
 	// stores request parameters as [param name] => [value] keys
 	private $params;
 
@@ -41,6 +44,10 @@ class Request {
 				$this->type = self::GET;
 				break;
 		}
+
+		if (isset($env['REQUEST_URI'])) {
+			$this->setRequestURI($env['REQUEST_URI']);
+		}
 	}
 
 	/**
@@ -70,7 +77,7 @@ class Request {
 	public function getInt($param, $default = 0) {
 		return intval($this->get($param, $default));
 	}
-	
+
 	/**
 	 * Get numeric value of given request parameter (with value limits applied)
 	 *
@@ -78,17 +85,17 @@ class Request {
 	 */
 	public function getIntLimit($param, $limitMin, $limitMax, $default = null) {
 		$val = $this->get($param, null);
-		
+
 		// value not found - return $default
 		if (is_null($val) && !is_null($default)) {
 			return intval($default);
 		}
-		
+
 		// value found - apply limits
 		$val = intval($val);
 		$val = max($val, $limitMin);
 		$val = min($val, $limitMax);
-		
+
 		return $val;
 	}
 
@@ -104,6 +111,20 @@ class Request {
 	 */
 	public function wasPosted() {
 		return $this->type == self::POST;
+	}
+
+	/**
+	 * Set URI of request
+	 */
+	public function setRequestURI($requestURI) {
+		$this->requestURI = $requestURI;
+	}
+
+	/**
+	 * Get URI of request
+	 */
+	public function getRequestURI() {
+		return $this->requestURI;
 	}
 
 	/**

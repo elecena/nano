@@ -96,6 +96,23 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(10, $request->getIntLimit('test', 20, 25, 10));
 		$this->assertEquals(50, $request->getIntLimit('test', 0, 25, 50));
 	}
+	
+	public function testRequestURI() {
+		$uri = '/test/unit/foo';
+
+		$request = new Request(array(),
+		array(
+			'REQUEST_URI' => $uri,
+		));
+
+		$this->assertEquals($uri, $request->getRequestURI());
+
+		// change URI
+		$uri = '/test/unit/bar';
+		$request->setRequestURI($uri);
+
+		$this->assertEquals($uri, $request->getRequestURI());
+	}
 
 	public function testIP() {
 		// crawl-66-249-66-248.googlebot.com
