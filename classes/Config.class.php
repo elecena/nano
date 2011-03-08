@@ -32,8 +32,8 @@ class Config {
 	/**
 	 * Gets setting value
 	 */
-	public function get($key) {
-		return isset($this->settings[$key]) ? $this->settings[$key] : null;
+	public function get($key, $default = null) {
+		return isset($this->settings[$key]) ? $this->settings[$key] : $default;
 	}
 
 	/**
