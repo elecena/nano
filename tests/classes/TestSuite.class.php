@@ -75,7 +75,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		// collect code coverage report
 		//$results->collectRawCodeCoverageInformation(true);
 		$results->collectCodeCoverageInformation(true);
-		
+
 		// filter out /lib and /tests directories
 		$filter = $results->getCodeCoverage()->filter();
 		$filter->addDirectoryToBlacklist(realpath(dirname(__FILE__) . '/..'));
@@ -89,14 +89,17 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 
 		// print results
 		$printer->printResult($results);
-		
+
 		// code coverage report
 		$codeCoverage = $results->getCodeCoverageSummary();
 
-		var_dump($codeCoverage);
-		
+		//var_dump($codeCoverage);
+
+		echo "\nCode coverage report:\n";
+
 		foreach($codeCoverage as $file => $info) {
-			
+			$file = basename($file);
+			echo "* {$file} - {$info['coverage']}% covered\n";
 		}
 	}
 }

@@ -25,11 +25,20 @@ class NanoApp {
 	/**
 	 * Create application based on given config
 	 */
-	function __construct($dir, $config) {
+	function __construct($dir, $configSet = 'default') {
 		$this->dir = realpath($dir);
-		$this->config = $config;
 
-		// TODO: set cache, request and connection to database
+		// read configuration
+		$this->config = new Config($this->dir . '/config');
+		$this->config->load($configSet);
+
+		// setup cache
+		$cacheType = $this->config->get('cache.driver');
+		$cacheOptions = $this->config->get('cache');
+
+		//$this->cache = Cache::factory($cacheType. $cacheOptions);
+		
+		// TODO: set request and connection to database
 	}
 
 	/**
@@ -37,5 +46,12 @@ class NanoApp {
 	 */
 	public function getDirectory() {
 		return $this->dir;
+	}
+	
+	/**
+	 * Return config
+	 */
+	public function getConfig() {
+		return $this->config;
 	}
 }

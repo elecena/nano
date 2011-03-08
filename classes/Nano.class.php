@@ -38,12 +38,12 @@ class Nano {
 	/**
 	 * Creates new instance of Nano application based on given configuration
 	 */
-	static public function app($dir, $config) {
+	static public function app($dir, $configSet = 'default') {
 		// initialize framework
 		Nano::init();
 
 		// create new application
-		$app = new NanoApp($dir, $config);
+		$app = new NanoApp($dir, $configSet);
 
 		return $app;
 	}

@@ -6,7 +6,7 @@
  * $Id$
  */
 
-class Cache {
+abstract class Cache {
 
 	// number of hits for cache keys
 	private $hits = 0;
@@ -40,7 +40,7 @@ class Cache {
 	abstract public function exists($key) {}
 
 	/**
-	 * Removes given key
+	 * Deletes given key
 	 */
-	abstract public function remove($key) {}
+	abstract public function delete($key) {}
 }
