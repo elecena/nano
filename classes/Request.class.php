@@ -11,8 +11,8 @@ class Request {
 	const GET = 1;
 	const POST = 2;
 
-	// stores a URL of request
-	private $requestURI;
+	// stores a path fragment of the request (/foo/bar?q=123 -> /foo/bar)
+	private $path;
 
 	// stores request parameters as [param name] => [value] keys
 	private $params;
@@ -29,7 +29,7 @@ class Request {
 	/**
 	 * Setup request object
 	 */
-	public function __construct(array $request, array $env = array()) {
+	public function __construct(array $request = array(), array $env = array()) {
 		$this->params = $request;
 		$this->env = $env;
 
@@ -44,10 +44,27 @@ class Request {
 				$this->type = self::GET;
 				break;
 		}
+	}
 
-		if (isset($env['REQUEST_URI'])) {
-			$this->setRequestURI($env['REQUEST_URI']);
+	/**
+	 * Gets path part from request's URI
+	 */
+	private static function getPathFromURI($uri) {
+		return parse_url($uri, PHP_URL_PATH);
+	}
+
+	/**
+	 * Gets values of params from request's URI
+	 */
+	private static function getParamsFromURI($uri) {
+		$ret = array();
+		$query = parse_url($uri, PHP_URL_QUERY);
+
+		if (!is_null($query)) {
+			parse_str($query, $ret);
 		}
+
+		return $ret;
 	}
 
 	/**
@@ -56,6 +73,20 @@ class Request {
 	public static function newFromArray(array $params, $type = self::GET) {
 		$request = new self($params);
 		$request->type = $type;
+
+		return $request;
+	}
+
+	/**
+	 * Creates new instance of Request class from REQUEST_URI variable
+	 */
+	public static function newFromRequestURI($uri, $type = self::GET) {
+		$path = self::getPathFromURI($uri);
+		$params = self::getParamsFromURI($uri);
+
+		$request = new self($params);
+		$request->type = $type;
+		$request->setPath($path);
 
 		return $request;
 	}
@@ -116,15 +147,15 @@ class Request {
 	/**
 	 * Set URI of request
 	 */
-	public function setRequestURI($requestURI) {
-		$this->requestURI = $requestURI;
+	public function setPath($path) {
+		$this->path = $path;
 	}
 
 	/**
 	 * Get URI of request
 	 */
-	public function getRequestURI() {
-		return $this->requestURI;
+	public function getPath() {
+		return $this->path;
 	}
 
 	/**

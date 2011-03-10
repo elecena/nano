@@ -96,22 +96,27 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(10, $request->getIntLimit('test', 20, 25, 10));
 		$this->assertEquals(50, $request->getIntLimit('test', 0, 25, 50));
 	}
-	
-	public function testRequestURI() {
-		$uri = '/test/unit/foo';
 
-		$request = new Request(array(),
-		array(
-			'REQUEST_URI' => $uri,
-		));
-
-		$this->assertEquals($uri, $request->getRequestURI());
-
-		// change URI
+	public function testRequestPath() {
 		$uri = '/test/unit/bar';
-		$request->setRequestURI($uri);
+		$uriWithParams = $uri . '?q=123&abc=456';
 
-		$this->assertEquals($uri, $request->getRequestURI());
+		// set path directly
+		$request = new Request(array(
+			'q' => 'foo'
+		));
+		$request->setPath($uri);
+
+		$this->assertEquals($uri, $request->getPath());
+		$this->assertEquals('foo', $request->get('q'));
+
+		// create from REQUEST_URI
+		$request = Request::newFromRequestURI($uriWithParams);
+
+		$this->assertFalse($request->wasPosted());
+		$this->assertEquals($uri, $request->getPath());
+		$this->assertEquals('123', $request->get('q'));
+		$this->assertEquals('456', $request->get('abc'));
 	}
 
 	public function testIP() {
