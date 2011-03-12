@@ -31,9 +31,23 @@ class Config {
 
 	/**
 	 * Gets setting value
+	 *
+	 * Uses $default when key is not found, when both read value and $default are arrays they're merged
 	 */
 	public function get($key, $default = null) {
-		return isset($this->settings[$key]) ? $this->settings[$key] : $default;
+		if (isset($this->settings[$key])) {
+			$ret =$this->settings[$key];
+			
+			// merge with defaults
+			if (is_array($ret) && is_array($default)) {
+				$ret = array_merge($default, $ret);
+			}
+		}
+		else {
+			$ret = $default;
+		}
+		
+		return $ret;
 	}
 
 	/**

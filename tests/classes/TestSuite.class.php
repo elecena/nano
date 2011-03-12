@@ -73,7 +73,6 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		$printer = new ResultPrinter();
 
 		// collect code coverage report
-		//$results->collectRawCodeCoverageInformation(true);
 		$results->collectCodeCoverageInformation(true);
 
 		// filter out /lib and /tests directories

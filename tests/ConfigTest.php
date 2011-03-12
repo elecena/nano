@@ -35,5 +35,19 @@ class ConfigTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertNull($config->get($key));
 		$this->assertEquals('foo', $config->get($key, 'foo'));
+
+		$config->set($key, array(
+			'foo' => 'bar',
+			'test' => true,
+		));
+
+		$this->assertEquals(array(
+			'abc' => 123,
+			'foo' => 'bar',
+			'test' => true,
+		), $config->get($key, array(
+			'abc' => 123,
+			'test' => false,
+		)));
 	}
 }

@@ -33,10 +33,12 @@ class NanoApp {
 		$this->config->load($configSet);
 
 		// setup cache
-		$cacheType = $this->config->get('cache.driver');
-		$cacheOptions = $this->config->get('cache');
+		$cacheType = $this->config->get('cache.driver', 'file');
+		$cacheOptions = $this->config->get('cache.options', array(
+			'directory' => $this->dir . '/cache'
+		));
 
-		//$this->cache = Cache::factory($cacheType. $cacheOptions);
+		$this->cache = Cache::factory($cacheType, $cacheOptions);
 		
 		// TODO: set request and connection to database
 	}
@@ -46,6 +48,13 @@ class NanoApp {
 	 */
 	public function getDirectory() {
 		return $this->dir;
+	}
+	
+	/**
+	 * Return cache
+	 */
+	public function getCache() {
+		return $this->cache;
 	}
 	
 	/**
