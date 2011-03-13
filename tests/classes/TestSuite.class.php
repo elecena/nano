@@ -73,12 +73,16 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		$printer = new ResultPrinter();
 
 		// collect code coverage report
-		$results->collectCodeCoverageInformation(true);
+		#$codeCoverage = true;
 
-		// filter out /lib and /tests directories
-		$filter = $results->getCodeCoverage()->filter();
-		$filter->addDirectoryToBlacklist(realpath(dirname(__FILE__) . '/..'));
-		$filter->addDirectoryToBlacklist(Nano::getLibDirectory());
+		if (!empty($codeCoverage)) {
+			$results->collectCodeCoverageInformation(true);
+
+			// filter out /lib and /tests directories
+			$filter = $results->getCodeCoverage()->filter();
+			$filter->addDirectoryToBlacklist(realpath(dirname(__FILE__) . '/..'));
+			$filter->addDirectoryToBlacklist(Nano::getLibDirectory());
+		}
 
 		// "bind" printer to the results object
 		$results->addListener($printer);
@@ -92,13 +96,13 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		// code coverage report
 		$codeCoverage = $results->getCodeCoverageSummary();
 
-		//var_dump($codeCoverage);
+		if (!empty($codeCoverage)) {
+			echo "\nCode coverage report:\n";
 
-		echo "\nCode coverage report:\n";
-
-		foreach($codeCoverage as $file => $info) {
-			$file = basename($file);
-			echo "* {$file} - {$info['coverage']}% covered\n";
+			foreach($codeCoverage as $file => $info) {
+				$file = basename($file);
+				echo "* {$file} - {$info['coverage']}% covered\n";
+			}
 		}
 	}
 }

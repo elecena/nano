@@ -23,6 +23,13 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->dir, $this->app->getDirectory());
 	}
 
+	public function testAppFactory() {
+		$obj = $this->app->factory('ExampleModel');
+
+		$this->assertInstanceOf('ExampleModel', $obj);
+		$this->assertInstanceOf('NanoApp', $obj->app);
+	}
+
 	public function testAppConfig() {
 		$config = $this->app->getConfig();
 

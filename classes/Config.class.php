@@ -37,7 +37,7 @@ class Config {
 	public function get($key, $default = null) {
 		if (isset($this->settings[$key])) {
 			$ret =$this->settings[$key];
-			
+
 			// merge with defaults
 			if (is_array($ret) && is_array($default)) {
 				$ret = array_merge($default, $ret);
@@ -46,7 +46,7 @@ class Config {
 		else {
 			$ret = $default;
 		}
-		
+
 		return $ret;
 	}
 
@@ -90,7 +90,7 @@ class Config {
 					$this->settings[$key] = $value;
 				}
 			}
-			
+
 			return true;
 		}
 		else {

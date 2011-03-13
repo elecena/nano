@@ -28,6 +28,9 @@ class NanoApp {
 	function __construct($dir, $configSet = 'default') {
 		$this->dir = realpath($dir);
 
+		// register classes from /classes directory
+		Autoloader::scanDirectory($this->dir. '/classes');
+
 		// read configuration
 		$this->config = new Config($this->dir . '/config');
 		$this->config->load($configSet);
@@ -39,8 +42,19 @@ class NanoApp {
 		));
 
 		$this->cache = Cache::factory($cacheType, $cacheOptions);
-		
+
 		// TODO: set request and connection to database
+	}
+
+	/**
+	 * Returns instance of given class from /classes directory
+	 *
+	 * Class constructor is called with application's instance
+	 */
+	public function factory($className) {
+		$instance = new $className($this);
+
+		return $instance;
 	}
 
 	/**
@@ -49,14 +63,14 @@ class NanoApp {
 	public function getDirectory() {
 		return $this->dir;
 	}
-	
+
 	/**
 	 * Return cache
 	 */
 	public function getCache() {
 		return $this->cache;
 	}
-	
+
 	/**
 	 * Return config
 	 */
