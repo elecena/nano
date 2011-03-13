@@ -12,7 +12,7 @@ class FooModule extends Module {
 	 * Default method used for routing requests for this module
 	 */
 	public function route($param) {
-
+		return array('default' => true);
 	}
 
 	/**

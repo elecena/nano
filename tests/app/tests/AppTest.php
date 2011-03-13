@@ -35,7 +35,9 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull($this->app->factory('NotExistingClass'));
 	}
 
-	public function testModuleFactory() {
+	public function testModules() {
+		$this->assertEquals(array('Foo'), $this->app->getModules());
+
 		$obj = $this->app->getModule('Foo');
 
 		$this->assertInstanceOf('FooModule', $obj);
@@ -127,13 +129,32 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull($cache->get($key));
 		$this->assertEquals($value, $cache->get($key, $value));
 	}
-	
+
 	public function testRoute() {
+		$router = new Router($this->app);
 		$request = new Request(array(
 			'q' => 'uberproduct'
 		));
+
+		$request->setPath('/');
+		$this->assertNull($router->route($request));
+
+		$request->setPath('/bar');
+		$this->assertNull($router->route($request));
+
+		$request->setPath('/foo');
+		$this->assertEquals(array('default' => true), $router->route($request));
+
+		$request->setPath('/foo/bar');
+		$this->assertEquals(array('id' => 0), $router->route($request));
+
 		$request->setPath('/foo/bar/31451');
-		
-		$this->app->route($request);
+		$this->assertEquals(array('id' => 31451), $router->route($request));
+
+		$request->setPath('/foo/bar/31451/test');
+		$this->assertEquals(array('id' => 31451), $router->route($request));
+
+		$request->setPath('/foo/test');
+		$this->assertEquals(array('default' => true), $router->route($request));
 	}
 }

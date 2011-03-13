@@ -25,6 +25,9 @@ class NanoApp {
 	// application's working directory
 	private $dir;
 
+	// an array of loaded modules
+	private $modules;
+
 	/**
 	 * Create application based on given config
 	 */
@@ -48,8 +51,21 @@ class NanoApp {
 
 		// TODO: set request and connection to database
 
+
+		// TODO: set connection to database
+
+
 		// set private fields
 		$this->router = new Router($this);
+
+		// load and setup all modules
+		$this->modules = array();
+		$modules = glob($this->dir . '/modules/*');
+
+		foreach($modules as $module) {
+			$moduleName = ucfirst(basename($module));
+			$this->modules[$moduleName] = Module::factory($moduleName, $this);
+		}
 	}
 
 	/**
@@ -79,12 +95,19 @@ class NanoApp {
 	}
 
 	/**
-	 * Create and setup instance of given module for given application
+	 * Return an instance of given module
 	 */
 	public function getModule($moduleName) {
-		$instance = Module::factory($moduleName, $this);
+		$instance = isset($this->modules[$moduleName]) ? $this->modules[$moduleName] : null;
 
 		return $instance;
+	}
+
+	/**
+	 * Return list of names of loaded modules
+	 */
+	public function getModules() {
+		return array_keys($this->modules);
 	}
 
 	/**

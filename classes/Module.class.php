@@ -15,7 +15,7 @@ abstract class Module {
 
 	// HTTP request
 	private $request;
-	
+
 	// router
 	private $router;
 
