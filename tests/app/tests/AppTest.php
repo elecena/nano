@@ -18,6 +18,8 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 	public function testCreateApp() {
 		$this->assertInstanceOf('NanoApp', $this->app);
+		$this->assertInstanceOf('Cache', $this->app->getCache());
+		$this->assertInstanceOf('Router', $this->app->getRouter());
 		$this->assertInstanceOf('Config', $this->app->getConfig());
 
 		$this->assertEquals($this->dir, $this->app->getDirectory());
@@ -28,6 +30,19 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertInstanceOf('ExampleModel', $obj);
 		$this->assertInstanceOf('NanoApp', $obj->app);
+
+		// test creation of not existing class
+		$this->assertNull($this->app->factory('NotExistingClass'));
+	}
+
+	public function testModuleFactory() {
+		$obj = $this->app->getModule('Foo');
+
+		$this->assertInstanceOf('FooModule', $obj);
+		$this->assertEquals(array('id' => 123), $obj->bar('123'));
+
+		// test creation of not existing module
+		$this->assertNull($this->app->getModule('NotExistingModule'));
 	}
 
 	public function testAppConfig() {
@@ -111,5 +126,14 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($cache->exists($key));
 		$this->assertNull($cache->get($key));
 		$this->assertEquals($value, $cache->get($key, $value));
+	}
+	
+	public function testRoute() {
+		$request = new Request(array(
+			'q' => 'uberproduct'
+		));
+		$request->setPath('/foo/bar/31451');
+		
+		$this->app->route($request);
 	}
 }

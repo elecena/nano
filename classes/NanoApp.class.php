@@ -16,6 +16,9 @@ class NanoApp {
 	// HTTP request
 	private $request;
 
+	// router
+	private $router;
+
 	// config
 	private $config;
 
@@ -44,6 +47,9 @@ class NanoApp {
 		$this->cache = Cache::factory($cacheType, $cacheOptions);
 
 		// TODO: set request and connection to database
+
+		// set private fields
+		$this->router = new Router($this);
 	}
 
 	/**
@@ -52,7 +58,31 @@ class NanoApp {
 	 * Class constructor is called with application's instance
 	 */
 	public function factory($className) {
-		$instance = new $className($this);
+		if (class_exists($className)) {
+			$instance = new $className($this);
+		}
+		else {
+			$instance = null;
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * Route given request
+	 */
+	public function route(Request $request) {
+		// load all modules
+
+		// route given request
+		$this->router->route($request);
+	}
+
+	/**
+	 * Create and setup instance of given module for given application
+	 */
+	public function getModule($moduleName) {
+		$instance = Module::factory($moduleName, $this);
 
 		return $instance;
 	}
@@ -69,6 +99,13 @@ class NanoApp {
 	 */
 	public function getCache() {
 		return $this->cache;
+	}
+
+	/**
+	 * Return router
+	 */
+	public function getRouter() {
+		return $this->router;
 	}
 
 	/**
