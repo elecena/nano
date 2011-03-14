@@ -136,25 +136,55 @@ class AppTest extends PHPUnit_Framework_TestCase {
 			'q' => 'uberproduct'
 		));
 
+		$this->assertNull($router->getLastRoute($request));
+
 		$request->setPath('/');
-		$this->assertNull($router->route($request));
+		$router->route($request);
+		$this->assertNull($router->getLastRoute($request));
 
 		$request->setPath('/bar');
-		$this->assertNull($router->route($request));
+		$router->route($request);
+		$this->assertNull($router->getLastRoute($request));
 
 		$request->setPath('/foo');
-		$this->assertEquals(array('default' => true), $router->route($request));
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
 
 		$request->setPath('/foo/bar');
-		$this->assertEquals(array('id' => 0), $router->route($request));
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'bar', 'params' => array()), $router->getLastRoute());
 
 		$request->setPath('/foo/bar/31451');
-		$this->assertEquals(array('id' => 31451), $router->route($request));
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'bar', 'params' => array('31451')), $router->getLastRoute());
 
 		$request->setPath('/foo/bar/31451/test');
-		$this->assertEquals(array('id' => 31451), $router->route($request));
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'bar', 'params' => array('31451', 'test')), $router->getLastRoute());
 
 		$request->setPath('/foo/test');
-		$this->assertEquals(array('default' => true), $router->route($request));
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
+
+		// test route mapping
+		$router->map('/test', '/foo/bar/123');
+		$router->map('show/*', '/foo/bar/*');
+		$router->map('show', '/foo/');
+
+		$request->setPath('/test');
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'bar', 'params' => array(123)), $router->getLastRoute());
+
+		$request->setPath('/test/123');
+		$router->route($request);
+		$this->assertNull($router->getLastRoute($request));
+
+		$request->setPath('/show/456');
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'bar', 'params' => array(456)), $router->getLastRoute());
+
+		$request->setPath('/show');
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
 	}
 }

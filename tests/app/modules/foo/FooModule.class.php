@@ -8,6 +8,8 @@
 
 class FooModule extends Module {
 
+	private function init() {}
+
 	/**
 	 * Default method used for routing requests for this module
 	 */

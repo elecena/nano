@@ -33,6 +33,11 @@ abstract class Module {
 	}
 
 	/**
+	 * Perform initialization tasks
+	 */
+	private function init() {}
+
+	/**
 	 * Create and setup instance of given module for given application
 	 */
 	public static function factory($moduleName, NanoApp $app) {
@@ -51,6 +56,8 @@ abstract class Module {
 			$instance->cache = $app->getCache();
 			$instance->router = $app->getRouter();
 			$instance->config = $app->getConfig();
+
+			$instance->init();
 		}
 		else {
 			$instance = null;

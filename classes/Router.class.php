@@ -12,16 +12,86 @@ class Router {
 
 	private $app;
 
+	// URL mapping
+	private $map = array();
+	private $wildcardMap = array();
+
+	// last routed request info
+	private $lastRoute = null;
+
 	function __construct(NanoApp $app) {
 		$this->app = $app;
+	}
+
+	/**
+	 * Normalize given URL
+	 *
+	 * Trim separator and extra chars given
+	 */
+	private function normalize($url, $extraChars = '') {
+		$url = rtrim($url, self::SEPARATOR . $extraChars);
+		$url = ltrim($url, self::SEPARATOR);
+
+		return $url;
+	}
+
+	/**
+	 * Add route mapping
+	 *
+	 * /foo/bar/* -> /bar
+	 * /test -> /bar/test
+	 */
+	public function map($from, $to) {
+		$isWildcard = substr($from, -2) == self::SEPARATOR . '*';
+
+		$from = $this->normalize($from, '*');
+		$to = $this->normalize($to, '*');
+
+		if ($isWildcard) {
+			$this->wildcardMap[$from . self::SEPARATOR] = $to;
+		}
+		else {
+			$this->map[$from] = $to;
+		}
+	}
+
+	/**
+	 * Return first matching mapping for given URL
+	 */
+	private function applyMap($path) {
+		$url = $path;
+
+		// match "straight" mapping
+		if (isset($this->map[$path])) {
+			$url = $this->map[$path];
+		}
+		// now try with wildcard mapping
+		else {
+			foreach($this->wildcardMap as $from => $to) {
+				// for /show/* entry match /show/123, but do not match /show
+				if (substr($url, 0, strlen($from)) == $from) {
+					// pass parameters "hidden" under *
+					$url = $to . self::SEPARATOR . substr($url, strlen($from));
+				}
+			}
+		}
+
+		return $url;
 	}
 
 	/**
 	 * Route given request
 	 */
 	public function route(Request $request) {
+		// get and normalize path
+		$path = $request->getPath();
+		$path = $this->normalize($path);
+
+		// apply route mapping
+		$path = $this->applyMap($path);
+
 		// split path by separators
-		$pathParts = explode(self::SEPARATOR, trim($request->getPath(), self::SEPARATOR));
+		$pathParts = explode(self::SEPARATOR, $path);
 
 		/*
 		 * Parse path /product/show/123/456 to:
@@ -32,7 +102,8 @@ class Router {
 
 		// default module's method used for routing
 		$methodName = 'route';
-		$methodParams = array_fill(0, 5, null);
+		//$methodParams = array_fill(0, 5, null);
+		$methodParams = array();
 
 		switch (count($pathParts)) {
 			// empty path: /
@@ -73,9 +144,29 @@ class Router {
 				$methodName = 'route';
 			}
 
-			$ret = call_user_func_array(array($module, $methodName), $methodParams);
+			// fill array of parameters passed with null values
+			$params = array_merge($methodParams, array_fill(0, 5, null));
+
+			$ret = call_user_func_array(array($module, $methodName), $params);
+
+			// store info about this route
+			$this->lastRoute = array(
+				'module' => strtolower($moduleName),
+				'method' => $methodName,
+				'params' => $methodParams,
+			);
+		}
+		else {
+			$this->lastRoute = null;
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Get info about last route
+	 */
+	public function getLastRoute() {
+		return $this->lastRoute;
 	}
 }
