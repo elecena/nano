@@ -22,17 +22,21 @@ class NanoApp {
 	// config
 	private $config;
 
+	// an array of loaded modules
+	private $modules;
+
 	// application's working directory
 	private $dir;
 
-	// an array of loaded modules
-	private $modules;
+	// apllications' libraries directory
+	private $libraryDir = '';
 
 	/**
 	 * Create application based on given config
 	 */
 	function __construct($dir, $configSet = 'default') {
 		$this->dir = realpath($dir);
+		$this->libraryDir = $this->dir . '/lib';
 
 		// register classes from /classes directory
 		Autoloader::scanDirectory($this->dir. '/classes');
@@ -115,6 +119,24 @@ class NanoApp {
 	 */
 	public function getDirectory() {
 		return $this->dir;
+	}
+
+	/**
+	 * Return path to nanoPortal libraries
+	 */
+	public function getLibDirectory() {
+		return $this->libraryDir;
+	}
+
+	/**
+	 * Add given library to include_path
+	 */
+	public function addLibrary($directory) {
+		// normalize path
+		$fullPath = $this->getLibDirectory() . '/' . $directory;
+
+		// update include_path
+		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
 	}
 
 	/**

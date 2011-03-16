@@ -10,7 +10,10 @@ class Nano {
 
 	const VERSION = '0.01';
 
+	// core directory
 	static private $dir = '';
+
+	// core libraries directory
 	static private $libraryDir = '';
 
 	/**
@@ -32,7 +35,7 @@ class Nano {
 
 		// setup paths
 		self::$dir = realpath($dir);
-		self::$libraryDir = realpath($dir) . '/lib';
+		self::$libraryDir = self::$dir . '/lib';
 	}
 
 	/**

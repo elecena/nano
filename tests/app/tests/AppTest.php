@@ -22,7 +22,15 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('Router', $this->app->getRouter());
 		$this->assertInstanceOf('Config', $this->app->getConfig());
 
+		// directories
 		$this->assertEquals($this->dir, $this->app->getDirectory());
+		$this->assertEquals($this->dir . '/lib', $this->app->getLibDirectory());
+
+		// test application's library
+		$libName = 'gapi';
+
+		$this->app->addLibrary($libName);
+		$this->assertContains($libName, get_include_path());
 	}
 
 	public function testAppFactory() {

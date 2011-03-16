@@ -21,9 +21,16 @@ abstract class Cache {
 		$className = 'Cache' . ucfirst($driver);
 
 		// use autoloader to add requested class
-		Autoloader::add($className, dirname(__FILE__) . '/cache/' . $className . '.class.php');
+		$src = dirname(__FILE__) . '/cache/' . $className . '.class.php';
 
-		$instance = new $className($options);
+		if (file_exists($src)) {
+			require_once $src;
+
+			$instance = new $className($options);
+		}
+		else {
+			$instance = null;
+		}
 		return $instance;
 	}
 

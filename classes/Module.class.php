@@ -45,10 +45,10 @@ abstract class Module {
 
 		// request given file
 		$dir = $app->getDirectory() . '/modules/' . strtolower($moduleName);
-		$file = $dir . '/' . $className . '.class.php';
+		$src = $dir . '/' . $className . '.class.php';
 
-		if (file_exists($file)) {
-			require_once $file;
+		if (file_exists($src)) {
+			require_once $src;
 
 			$instance = new $className($moduleName);
 
