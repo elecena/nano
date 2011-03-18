@@ -195,4 +195,28 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$router->route($request);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
 	}
+
+	public function testRequest() {
+		$ip = '66.249.66.248';
+
+		// fake request's data
+		$_REQUEST = array(
+			'q' => 'word',
+		);
+
+		$_SERVER = array(
+			'REQUEST_METHOD' => 'POST',
+			'REQUEST_URI' => '/foo/test/?q=word',
+			'HTTP_CLIENT_IP' => $ip,
+		);
+
+		// build an app based on given request
+		$app = Nano::app($this->dir);
+		$request = $app->getRequest();
+
+		$this->assertTrue($request->wasPosted());
+		$this->assertEquals('word', $request->get('q'));
+		$this->assertEquals('/foo/test/', $request->getPath());
+		$this->assertEquals($ip, $request->getIP());
+	}
 }

@@ -53,8 +53,11 @@ class NanoApp {
 
 		$this->cache = Cache::factory($cacheType, $cacheOptions);
 
-		// TODO: set request and connection to database
+		// set request
+		$params = isset($_REQUEST) ? $_REQUEST : array();
+		$env = isset($_SERVER) ? $_SERVER : array();
 
+		$this->request = new Request($params, $env);
 
 		// TODO: set connection to database
 
@@ -144,6 +147,13 @@ class NanoApp {
 	 */
 	public function getCache() {
 		return $this->cache;
+	}
+
+	/**
+	 * Return request
+	 */
+	public function getRequest() {
+		return $this->request;
 	}
 
 	/**

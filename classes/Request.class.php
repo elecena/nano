@@ -29,8 +29,8 @@ class Request {
 	/**
 	 * Setup request object
 	 */
-	public function __construct(array $request = array(), array $env = array()) {
-		$this->params = $request;
+	public function __construct(array $params = array(), array $env = array()) {
+		$this->params = $params;
 		$this->env = $env;
 
 		// detect request type
@@ -43,6 +43,12 @@ class Request {
 			default:
 				$this->type = self::GET;
 				break;
+		}
+
+		// set path for request's URI
+		if (isset($env['REQUEST_URI'])) {
+			$path = $this->getPathFromURI($env['REQUEST_URI']);
+			$this->setPath($path);
 		}
 	}
 
