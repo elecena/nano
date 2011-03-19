@@ -12,6 +12,9 @@ class Router {
 
 	private $app;
 
+	// methods prefix (used by API)
+	private $prefix;
+
 	// URL mapping
 	private $map = array();
 	private $wildcardMap = array();
@@ -19,8 +22,9 @@ class Router {
 	// last routed request info
 	private $lastRoute = null;
 
-	function __construct(NanoApp $app) {
+	function __construct(NanoApp $app, $prefix = '') {
 		$this->app = $app;
+		$this->prefix = $prefix;
 	}
 
 	/**
@@ -101,8 +105,7 @@ class Router {
 		 */
 
 		// default module's method used for routing
-		$methodName = 'route';
-		//$methodParams = array_fill(0, 5, null);
+		$methodName = $defaultMethodName = 'route';
 		$methodParams = array();
 
 		switch (count($pathParts)) {
@@ -130,10 +133,16 @@ class Router {
 		$moduleName = ucfirst(strtolower($moduleName));
 		$methodName = strtolower($methodName);
 
+		// apply methods prefix - foo -> prefixFoo
+		if ($this->prefix != '') {
+			$methodName = $this->prefix . ucfirst($methodName);
+			$defaultMethodName = $this->prefix . ucfirst($defaultMethodName);
+		}
+
 		#var_dump(array($moduleName, $methodName, $methodParams));
 
 		// default value - means 404
-		$ret = null;
+		$ret = $this->lastRoute = null;
 
 		// call selected module and method (with parameters)
 		$module = $this->app->getModule($moduleName);
@@ -141,23 +150,25 @@ class Router {
 		if (!empty($module)) {
 			// call selected method, otherwise call route method
 			if (!is_callable(array($module, $methodName))) {
-				$methodName = 'route';
+				$methodName = $defaultMethodName;
 			}
 
 			// fill array of parameters passed with null values
 			$params = array_merge($methodParams, array_fill(0, 5, null));
 
-			$ret = call_user_func_array(array($module, $methodName), $params);
+			if (is_callable(array($module, $methodName))) {
+				// use provided request when executing module's method
+				$module->setRequest($request);
 
-			// store info about this route
-			$this->lastRoute = array(
-				'module' => strtolower($moduleName),
-				'method' => $methodName,
-				'params' => $methodParams,
-			);
-		}
-		else {
-			$this->lastRoute = null;
+				$ret = call_user_func_array(array($module, $methodName), $params);
+
+				// store info about this route
+				$this->lastRoute = array(
+					'module' => strtolower($moduleName),
+					'method' => $methodName,
+					'params' => $methodParams,
+				);
+			}
 		}
 
 		return $ret;

@@ -10,8 +10,23 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 	private $app;
 	private $dir;
+	private $ip;
 
 	public function setUp() {
+		// client's IP
+		$this->ip = '66.249.66.248';
+
+		// fake request's data
+		$_REQUEST = array(
+			'q' => 'lm317',
+		);
+
+		$_SERVER = array(
+			'REQUEST_METHOD' => 'POST',
+			'REQUEST_URI' => '/foo/test/?q=word',
+			'HTTP_CLIENT_IP' => $this->ip,
+		);
+
 		$this->dir = realpath(dirname(__FILE__) . '/..');
 		$this->app = Nano::app($this->dir);
 	}
@@ -140,9 +155,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 	public function testRoute() {
 		$router = new Router($this->app);
-		$request = new Request(array(
-			'q' => 'uberproduct'
-		));
+		$request = $this->app->getRequest();
 
 		$this->assertNull($router->getLastRoute($request));
 
@@ -173,6 +186,11 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$request->setPath('/foo/test');
 		$router->route($request);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
+	}
+
+	public function testRouteMaps() {
+		$router = new Router($this->app);
+		$request = $this->app->getRequest();
 
 		// test route mapping
 		$router->map('/test', '/foo/bar/123');
@@ -196,27 +214,42 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
 	}
 
+	public function testRoutePrefix() {
+		$router = new Router($this->app);
+		$request = $this->app->getRequest();
+
+		// prefix routing
+		$router = new Router($this->app, 'api' /* $prefix */);
+
+		// not existing route (no apiRouter method defined)
+		$request->setPath('/foo');
+		$resp = $router->route($request);
+		$this->assertNull($resp);
+		$this->assertNull($router->getLastRoute());
+
+		// routing for apiBar method
+		$request->setPath('/foo/bar/123');
+		$resp = $router->route($request);
+		$this->assertEquals(array('id' => 123, 'api' => true, 'query' => 'lm317'), $resp);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'apiBar', 'params' => array('123')), $router->getLastRoute());
+	}
+
 	public function testRequest() {
-		$ip = '66.249.66.248';
-
-		// fake request's data
-		$_REQUEST = array(
-			'q' => 'word',
-		);
-
-		$_SERVER = array(
-			'REQUEST_METHOD' => 'POST',
-			'REQUEST_URI' => '/foo/test/?q=word',
-			'HTTP_CLIENT_IP' => $ip,
-		);
-
-		// build an app based on given request
-		$app = Nano::app($this->dir);
-		$request = $app->getRequest();
+		$this->setUp();
+		$request = $this->app->getRequest();
 
 		$this->assertTrue($request->wasPosted());
-		$this->assertEquals('word', $request->get('q'));
+		$this->assertEquals('lm317', $request->get('q'));
 		$this->assertEquals('/foo/test/', $request->getPath());
-		$this->assertEquals($ip, $request->getIP());
+		$this->assertEquals($this->ip, $request->getIP());
+	}
+
+	public function testApi() {
+		$api = new Api($this->app);
+		$resp = $api->call('/foo/bar/456', array(
+			'q' => 'foobar',
+		));
+
+		$this->assertEquals(array('id' => 456, 'api' => true, 'query' => 'foobar'), $resp);
 	}
 }

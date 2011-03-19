@@ -8,22 +8,22 @@
 
 abstract class Module {
 	// cache object
-	private $cache;
+	protected $cache;
 
 	// DB connection
-	private $db;
+	protected $db;
 
 	// HTTP request
-	private $request;
+	protected $request;
 
 	// router
-	private $router;
+	protected $router;
 
 	// config
-	private $config;
+	protected $config;
 
 	// module's name
-	private $name;
+	protected $name;
 
 	/**
 	 * Use given application
@@ -54,6 +54,7 @@ abstract class Module {
 
 			// set private fields
 			$instance->cache = $app->getCache();
+			$instance->request = $app->getRequest();
 			$instance->router = $app->getRouter();
 			$instance->config = $app->getConfig();
 
@@ -64,5 +65,12 @@ abstract class Module {
 		}
 
 		return $instance;
+	}
+	
+	/**
+	 * Use provided request
+	 */
+	public function setRequest(Request $request) {
+		$this->request = $request;
 	}
 }

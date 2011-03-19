@@ -10,6 +10,7 @@ class Request {
 
 	const GET = 1;
 	const POST = 2;
+	const API = 3;
 
 	// stores a path fragment of the request (/foo/bar?q=123 -> /foo/bar)
 	private $path;
@@ -37,6 +38,11 @@ class Request {
 		switch($env['REQUEST_METHOD']) {
 			case 'POST':
 				$this->type = self::POST;
+				break;
+				
+			// "fake" request type
+			case 'API':
+				$this->type = self::API;
 				break;
 
 			case 'GET':
@@ -148,6 +154,13 @@ class Request {
 	 */
 	public function wasPosted() {
 		return $this->type == self::POST;
+	}
+
+	/**
+	 * Return if current request was sent using API
+	 */
+	public function isApi() {
+		return $this->type == self::API;
 	}
 
 	/**
