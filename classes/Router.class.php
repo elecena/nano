@@ -22,9 +22,14 @@ class Router {
 	// last routed request info
 	private $lastRoute = null;
 
+	// URL to application's home page
+	private $homeUrl;
+
 	function __construct(NanoApp $app, $prefix = '') {
 		$this->app = $app;
 		$this->prefix = $prefix;
+
+		$this->homeUrl = $this->app->getConfig()->get('home');
 	}
 
 	/**
@@ -179,5 +184,38 @@ class Router {
 	 */
 	public function getLastRoute() {
 		return $this->lastRoute;
+	}
+
+	/**
+	 * Format a local link for a given route
+	 */
+	public function link($path, $params = array()) {
+		// parse homepage's URL
+		$pathPrefix = self::SEPARATOR . $this->normalize(parse_url($this->homeUrl, PHP_URL_PATH));
+
+		if (strlen($pathPrefix) > 1) {
+			$pathPrefix .= self::SEPARATOR;
+		}
+
+		// build a link
+		$link = $pathPrefix . $this->normalize($path);
+
+		// add request parameters
+		if (!empty($params)) {
+			$link .= '?' . http_build_query($params, '', '&');
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Format a external link (i.e. with host name) for a given route
+	 */
+	public function externalLink($path, $params = array()) {
+		// parse homepage's URL
+		$scheme = parse_url($this->homeUrl, PHP_URL_SCHEME);
+		$host = parse_url($this->homeUrl, PHP_URL_HOST);
+
+		return $scheme . '://' . $host . $this->link($path, $params);
 	}
 }

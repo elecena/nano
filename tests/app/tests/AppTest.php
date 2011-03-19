@@ -34,6 +34,8 @@ class AppTest extends PHPUnit_Framework_TestCase {
 	public function testCreateApp() {
 		$this->assertInstanceOf('NanoApp', $this->app);
 		$this->assertInstanceOf('Cache', $this->app->getCache());
+		$this->assertInstanceOf('Request', $this->app->getRequest());
+		$this->assertInstanceOf('Response', $this->app->getResponse());
 		$this->assertInstanceOf('Router', $this->app->getRouter());
 		$this->assertInstanceOf('Config', $this->app->getConfig());
 
@@ -153,7 +155,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($value, $cache->get($key, $value));
 	}
 
-	public function testRoute() {
+	public function testRouter() {
 		$router = new Router($this->app);
 		$request = $this->app->getRequest();
 
@@ -188,7 +190,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
 	}
 
-	public function testRouteMaps() {
+	public function testRouterMaps() {
 		$router = new Router($this->app);
 		$request = $this->app->getRequest();
 
@@ -214,7 +216,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
 	}
 
-	public function testRoutePrefix() {
+	public function testRouterPrefix() {
 		$router = new Router($this->app);
 		$request = $this->app->getRequest();
 
@@ -232,6 +234,18 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$resp = $router->route($request);
 		$this->assertEquals(array('id' => 123, 'api' => true, 'query' => 'lm317'), $resp);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'apiBar', 'params' => array('123')), $router->getLastRoute());
+	}
+
+	public function testRouterLink() {
+		$router = new Router($this->app);
+
+		// home URL: http://example.org/site/
+		$this->assertEquals('/site/', $router->link(''));
+		$this->assertEquals('/site/foo/bar', $router->link('foo/bar'));
+		$this->assertEquals('/site/foo/bar', $router->link('/foo/bar/'));
+		$this->assertEquals('/site/foo/bar?q=test', $router->link('foo/bar/', array('q' => 'test')));
+		$this->assertEquals('http://example.org/site/', $router->externalLink('/'));
+		$this->assertEquals('http://example.org/site/foo/bar?q=test&foo=1', $router->externalLink('/foo/bar/', array('q' => 'test', 'foo' => 1)));
 	}
 
 	public function testRequest() {

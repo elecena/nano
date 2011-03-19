@@ -7,6 +7,9 @@
  */
 
 abstract class Module {
+	// application
+	protected $app;
+
 	// cache object
 	protected $cache;
 
@@ -15,6 +18,9 @@ abstract class Module {
 
 	// HTTP request
 	protected $request;
+
+	// response
+	protected $response;
 
 	// router
 	protected $router;
@@ -52,9 +58,11 @@ abstract class Module {
 
 			$instance = new $className($moduleName);
 
-			// set private fields
+			// set protected fields
+			$instance->app = $app;
 			$instance->cache = $app->getCache();
 			$instance->request = $app->getRequest();
+			$instance->response = $app->getResponse();
 			$instance->router = $app->getRouter();
 			$instance->config = $app->getConfig();
 
@@ -66,7 +74,7 @@ abstract class Module {
 
 		return $instance;
 	}
-	
+
 	/**
 	 * Use provided request
 	 */

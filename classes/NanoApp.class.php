@@ -15,6 +15,9 @@ class NanoApp {
 
 	// HTTP request
 	private $request;
+	
+	// response
+	protected $response;
 
 	// router
 	private $router;
@@ -58,6 +61,9 @@ class NanoApp {
 		$env = isset($_SERVER) ? $_SERVER : array();
 
 		$this->request = new Request($params, $env);
+		
+		// response
+		$this->response = new Response();
 
 		// TODO: set connection to database
 
@@ -95,10 +101,11 @@ class NanoApp {
 	 * Route given request
 	 */
 	public function route(Request $request) {
-		// load all modules
-
 		// route given request
-		$this->router->route($request);
+		$resp = $this->router->route($request);
+		
+		// wrap using Response object
+		$this->response->setContent($resp);
 	}
 
 	/**
@@ -154,6 +161,13 @@ class NanoApp {
 	 */
 	public function getRequest() {
 		return $this->request;
+	}
+	
+	/**
+	 * Return response
+	 */
+	public function getResponse() {
+		return $this->response;
 	}
 
 	/**
