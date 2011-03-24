@@ -24,11 +24,22 @@ XML;
 		$this->assertContains('<root>', (string) $dom);
 		$this->assertContains('data-foo', (string) $dom);
 
+		// XPath
+		$this->assertEquals(0, count($dom->xpath('//root/bar')));
+		$this->assertNull($dom->getNodeContent('//root/bar'));
+		$this->assertNull($dom->getNodeAttr('//foo/bar', 'foo'));
+		$this->assertNotNull($dom->xpath('//foo/bar'));
+		$this->assertInstanceOf('SimpleXMLElement', $dom->getNode('//foo/bar'));
+		$this->assertEquals('123', $dom->getNodeContent('//foo/bar'));
+		$this->assertEquals('1', $dom->getNodeAttr('//foo/bar', 'data-foo'));
+
 		// parse well formatted XML (with possible fallback to HTML)
 		$dom = DOM::newFromXml($xml);
 
 		$this->assertInstanceOf('DOM', $dom);
 		$this->assertContains('<root>', (string) $dom);
+		$this->assertEquals('123', $dom->getNodeContent('//foo/bar'));
+		$this->assertEquals('1', $dom->getNodeAttr('//foo/bar', 'data-foo'));
 
 		// parse broken XML (using strict mode)
 		$dom = DOM::newFromXml($xml . '<foo>', true /* $stictMode */);
@@ -56,5 +67,14 @@ HTML;
 		$this->assertInstanceOf('DOM', $dom);
 		$this->assertContains('<p>', (string) $dom);
 		$this->assertContains('</li><li>', (string) $dom);
+
+		// XPath
+		$this->assertEquals(2, count($dom->xpath('//ol/li')));
+		$this->assertContains('123', $dom->getNodeContent('//ol/li'));
+		$this->assertEquals('4', $dom->getNodeAttr('//ol', 'start'));
+
+		$nodes = $dom->xpath('//ol/li');
+		$this->assertContains('123', (string) $nodes[0]);
+		$this->assertContains('456', (string) $nodes[1]);
 	}
 }

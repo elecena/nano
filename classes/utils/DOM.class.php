@@ -85,6 +85,40 @@ class DOM {
 	}
 
 	/**
+	 * Return a set of elements matching given XPath
+	 */
+	public function xpath($xpath) {
+		return $this->doc->xpath($xpath);
+	}
+
+	/**
+	 * Return the first node matching given XPath
+	 */
+	public function getNode($xpath) {
+		$nodes = $this->xpath($xpath);
+
+		return !empty($nodes) ? $nodes[0] : null;
+	}
+
+	/**
+	 * Return content of the first node matching given XPath
+	 */
+	public function getNodeContent($xpath) {
+		$node = $this->getNode($xpath);
+
+		return !empty($node) ? (string) $node : null;
+	}
+
+	/**
+	 * Return given attribute of the first node matching given XPath
+	 */
+	public function getNodeAttr($xpath, $attr) {
+		$node = $this->getNode($xpath);
+
+		return !empty($node[$attr]) ? (string) $node[$attr] : null;
+	}
+
+	/**
 	 * Return XML string for current DOM
 	 */
 	public function __toString() {
