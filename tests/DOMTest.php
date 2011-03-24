@@ -77,4 +77,25 @@ HTML;
 		$this->assertContains('123', (string) $nodes[0]);
 		$this->assertContains('456', (string) $nodes[1]);
 	}
+
+	// provider for testHtmlCharset()
+	private function getHtml($text, $charset) {
+		$html = <<<HTML
+<head><meta http-equiv="Content-Type" content="text/html; charset=$charset"/></head>
+<p>$text</p>
+HTML;
+
+		return $html;
+	}
+
+	public function testHtmlCharset() {
+		$dom = DOM::newFromHtml($this->getHtml('ąę', 'utf-8'));
+		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+
+		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'iso-8859-2'));
+		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+
+		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'iso-8859-2'), 'iso-8859-2' /* forced charset */);
+		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+	}
 }
