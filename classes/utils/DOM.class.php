@@ -8,6 +8,10 @@
 
 class DOM {
 
+	// charset used by source XML/HTML
+	private $charset;
+
+	// SimpleXMLElement of loaded node
 	private $doc;
 
 	function __construct(SimpleXMLElement $doc) {
@@ -26,6 +30,7 @@ class DOM {
 			// (try to) parse as XML
 			$doc = new SimpleXMLElement($xml);
 			$instance = new self($doc);
+			$instance->charset = 'utf-8';
 		}
 		catch(Exception $e) {
 			// fallback to HTML (if not in strict mode)
@@ -42,7 +47,7 @@ class DOM {
 	/**
 	 * Parse provided HTML into DOM and perform charset conversion to utf
 	 */
-	public static function newFromHtml($html, $charset = false) {
+	public static function newFromHtml($html, $charset = null) {
 		$instance = null;
 
 		// force charset
@@ -78,6 +83,7 @@ class DOM {
 
 			if (!empty($xml)) {
 				$instance = new self($xml);
+				$instance->charset = $charset;
 			}
 		}
 
@@ -116,6 +122,13 @@ class DOM {
 		$node = $this->getNode($xpath);
 
 		return !empty($node[$attr]) ? (string) $node[$attr] : null;
+	}
+
+	/**
+	 * Return charset used by source XML/HTML
+	 */
+	public function getCharset() {
+		return $this->charset;
 	}
 
 	/**

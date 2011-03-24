@@ -23,6 +23,7 @@ XML;
 		$this->assertInstanceOf('DOM', $dom);
 		$this->assertContains('<root>', (string) $dom);
 		$this->assertContains('data-foo', (string) $dom);
+		$this->assertEquals('utf-8', $dom->getCharset());
 
 		// XPath
 		$this->assertEquals(0, count($dom->xpath('//root/bar')));
@@ -67,6 +68,7 @@ HTML;
 		$this->assertInstanceOf('DOM', $dom);
 		$this->assertContains('<p>', (string) $dom);
 		$this->assertContains('</li><li>', (string) $dom);
+		$this->assertNull($dom->getCharset());
 
 		// XPath
 		$this->assertEquals(2, count($dom->xpath('//ol/li')));
@@ -91,11 +93,18 @@ HTML;
 	public function testHtmlCharset() {
 		$dom = DOM::newFromHtml($this->getHtml('ąę', 'utf-8'));
 		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertEquals('utf-8', $dom->getCharset());
 
 		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'iso-8859-2'));
 		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertEquals('iso-8859-2', $dom->getCharset());
 
 		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'iso-8859-2'), 'iso-8859-2' /* forced charset */);
 		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertEquals('iso-8859-2', $dom->getCharset());
+		
+		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'utf-8'), 'iso-8859-2' /* forced charset */);
+		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertEquals('iso-8859-2', $dom->getCharset());
 	}
 }
