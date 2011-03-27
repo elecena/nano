@@ -10,20 +10,23 @@ class NanoApp {
 	// cache object
 	private $cache;
 
+	// config
+	private $config;
+
 	// DB connection
 	private $db;
 
-	// HTTP request
-	private $request;
+	// events handler
+	private $events;
 
 	// response
 	protected $response;
 
+	// HTTP request
+	private $request;
+
 	// router
 	private $router;
-
-	// config
-	private $config;
 
 	// an array of loaded modules
 	private $modules;
@@ -43,6 +46,9 @@ class NanoApp {
 
 		// register classes from /classes directory
 		Autoloader::scanDirectory($this->dir. '/classes');
+
+		// events handler
+		$this->events = new Events();
 
 		// read configuration
 		$this->config = new Config($this->dir . '/config');
@@ -157,10 +163,17 @@ class NanoApp {
 	}
 
 	/**
-	 * Return request
+	 * Return config
 	 */
-	public function getRequest() {
-		return $this->request;
+	public function getConfig() {
+		return $this->config;
+	}
+	
+	/**
+	 * Return events
+	 */
+	public function getEvents() {
+		return $this->events;
 	}
 
 	/**
@@ -171,16 +184,16 @@ class NanoApp {
 	}
 
 	/**
+	 * Return request
+	 */
+	public function getRequest() {
+		return $this->request;
+	}
+
+	/**
 	 * Return router
 	 */
 	public function getRouter() {
 		return $this->router;
-	}
-
-	/**
-	 * Return config
-	 */
-	public function getConfig() {
-		return $this->config;
 	}
 }

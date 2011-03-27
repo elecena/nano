@@ -1,7 +1,8 @@
-* events handling (on / fire methods)
+* events handling (bind / fire methods)
 * debug logging
 * API entry point (api.php)
 * output formatter (json, xml, jsonp, php)
+* templating system
 * theming
 * JS / CSS loading + minification
 * adding meta tags to HTML

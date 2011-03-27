@@ -8,7 +8,9 @@
 
 class FooModule extends Module {
 
-	private function init() {}
+	protected function init() {
+		$this->bind('eventFoo', 'onFoo');
+	}
 
 	/**
 	 * Default method used for routing requests for this module
@@ -31,5 +33,12 @@ class FooModule extends Module {
 		$query = $this->request->get('q', 'foo');
 
 		return array('id' => intval($id), 'api' => true, 'query' => $query);
+	}
+
+	/**
+	 * Event handler
+	 */
+	public function onFoo($value) {
+		$value .= 'test';
 	}
 }

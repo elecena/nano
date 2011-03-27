@@ -199,6 +199,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$router->map('/test', '/foo/bar/123');
 		$router->map('show/*', '/foo/bar/*');
 		$router->map('show', '/foo/');
+		$router->map('show/abc', '/foo/test');
 		$router->map('', '/foo/123');
 
 		$request->setPath('/test');
@@ -216,6 +217,10 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$request->setPath('/show');
 		$router->route($request);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
+
+		$request->setPath('/show/abc');
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array('test')), $router->getLastRoute());
 
 		$request->setPath('/');
 		$router->route($request);
@@ -271,5 +276,15 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		));
 
 		$this->assertEquals(array('id' => 456, 'api' => true, 'query' => 'foobar'), $resp);
+	}
+
+	public function testModuleEvents() {
+		$events = $this->app->getEvents();
+		$module = $this->app->getModule('Foo');
+
+		$value = 'foo';
+
+		$this->assertTrue($events->fire('eventFoo', array(&$value)));
+		$this->assertEquals('footest', $value);
 	}
 }

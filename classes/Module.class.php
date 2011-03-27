@@ -28,6 +28,9 @@ abstract class Module {
 	// config
 	protected $config;
 
+	// events handler
+	protected $events;
+
 	// module's name
 	protected $name;
 
@@ -41,7 +44,7 @@ abstract class Module {
 	/**
 	 * Perform initialization tasks
 	 */
-	private function init() {}
+	protected function init() {}
 
 	/**
 	 * Create and setup instance of given module for given application
@@ -61,10 +64,11 @@ abstract class Module {
 			// set protected fields
 			$instance->app = $app;
 			$instance->cache = $app->getCache();
+			$instance->config = $app->getConfig();
+			$instance->events = $app->getEvents();
 			$instance->request = $app->getRequest();
 			$instance->response = $app->getResponse();
 			$instance->router = $app->getRouter();
-			$instance->config = $app->getConfig();
 
 			$instance->init();
 		}
@@ -80,5 +84,21 @@ abstract class Module {
 	 */
 	public function setRequest(Request $request) {
 		$this->request = $request;
+	}
+
+	/**
+	 * Binds given callback to be fired when given event occurs
+	 *
+	 * When can returns false, fire() method returns false too and no callbacks execution is stopped
+	 */
+	protected function bind($eventName, $callbackMethod) {
+		$this->events->bind($eventName, array($this, $callbackMethod));
+	}
+
+	/**
+	 * Execute all callbacks binded to given event (passing additional parameters if provided)
+	 */
+	protected function fire($eventName, $params = array()) {
+		return $this->events->fire($eventName, $params);
 	}
 }
