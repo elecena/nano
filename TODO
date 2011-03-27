@@ -1,0 +1,7 @@
+* API entry point (api.php)
+* output formatter (json, xml, jsonp, php)
+* themeing
+* static pages per module
+* JS / CSS loading + minification
+* RSS feeds generator
+* GData client
