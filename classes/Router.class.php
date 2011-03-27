@@ -29,7 +29,17 @@ class Router {
 		$this->app = $app;
 		$this->prefix = $prefix;
 
-		$this->homeUrl = $this->app->getConfig()->get('home');
+		$config = $this->app->getConfig();
+
+		// set URL to app's home page
+		$this->homeUrl = $config->get('home');
+
+		// set alias to index page (/)
+		$index = $config->get('index');
+
+		if (!is_null($index)) {
+			$this->map('/', $index);
+		}
 	}
 
 	/**
@@ -155,6 +165,9 @@ class Router {
 		if (!empty($module)) {
 			// call selected method, otherwise call route method
 			if (!is_callable(array($module, $methodName))) {
+				// if method doesn't exist, push it as a first parameter
+				array_unshift($methodParams, $methodName);
+
 				$methodName = $defaultMethodName;
 			}
 

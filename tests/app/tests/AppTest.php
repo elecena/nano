@@ -161,9 +161,10 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertNull($router->getLastRoute($request));
 
+		// $config['index'] = '/foo/index';
 		$request->setPath('/');
 		$router->route($request);
-		$this->assertNull($router->getLastRoute($request));
+		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array('index')), $router->getLastRoute());
 
 		$request->setPath('/bar');
 		$router->route($request);
@@ -187,7 +188,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		$request->setPath('/foo/test');
 		$router->route($request);
-		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
+		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array('test')), $router->getLastRoute());
 	}
 
 	public function testRouterMaps() {
@@ -198,6 +199,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$router->map('/test', '/foo/bar/123');
 		$router->map('show/*', '/foo/bar/*');
 		$router->map('show', '/foo/');
+		$router->map('', '/foo/123');
 
 		$request->setPath('/test');
 		$router->route($request);
@@ -214,6 +216,10 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$request->setPath('/show');
 		$router->route($request);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
+
+		$request->setPath('/');
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array('123')), $router->getLastRoute());
 	}
 
 	public function testRouterPrefix() {

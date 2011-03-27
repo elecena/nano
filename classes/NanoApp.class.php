@@ -15,7 +15,7 @@ class NanoApp {
 
 	// HTTP request
 	private $request;
-	
+
 	// response
 	protected $response;
 
@@ -61,7 +61,7 @@ class NanoApp {
 		$env = isset($_SERVER) ? $_SERVER : array();
 
 		$this->request = new Request($params, $env);
-		
+
 		// response
 		$this->response = new Response();
 
@@ -103,7 +103,7 @@ class NanoApp {
 	public function route(Request $request) {
 		// route given request
 		$resp = $this->router->route($request);
-		
+
 		// wrap using Response object
 		$this->response->setContent($resp);
 	}
@@ -162,7 +162,7 @@ class NanoApp {
 	public function getRequest() {
 		return $this->request;
 	}
-	
+
 	/**
 	 * Return response
 	 */

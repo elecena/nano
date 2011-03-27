@@ -1,7 +1,10 @@
+* events handling (on / fire methods)
+* debug logging
 * API entry point (api.php)
 * output formatter (json, xml, jsonp, php)
-* themeing
-* static pages per module
+* theming
 * JS / CSS loading + minification
+* adding meta tags to HTML
+* static pages module (/pages/static)
 * RSS feeds generator
 * GData client
