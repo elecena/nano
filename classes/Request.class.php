@@ -35,11 +35,13 @@ class Request {
 		$this->env = $env;
 
 		// detect request type
-		switch($env['REQUEST_METHOD']) {
+		$method = isset($env['REQUEST_METHOD']) ? $env['REQUEST_METHOD'] : '';
+
+		switch($method) {
 			case 'POST':
 				$this->type = self::POST;
 				break;
-				
+
 			// "fake" request type
 			case 'API':
 				$this->type = self::API;

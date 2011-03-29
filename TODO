@@ -1,4 +1,4 @@
-* events handling (bind / fire methods)
+* events handling (bind / fire methods)			[DONE]
 * debug logging
 * API entry point (api.php)
 * output formatter (json, xml, jsonp, php)

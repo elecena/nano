@@ -96,7 +96,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$config = $this->app->getConfig();
 		$this->assertTrue($config->load('devel'));
 
-		$this->assertEquals(array('driver' => 'redis'), $config->get('cache'));
+		$this->assertEquals(array('driver' => 'redis', 'options' => array('ip' => '127.0.0.1')), $config->get('cache'));
 		$this->assertEquals('redis', $config->get('cache.driver'));
 		$this->assertEquals('123', $config->get('foo.bar'));
 
