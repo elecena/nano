@@ -14,7 +14,7 @@ class ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
 		parent::__construct(null /* $out */, true /* $verbose */, false /* $colors */, false /* $debug */);
 
 		$this->write(PHPUnit_Runner_Version::getVersionString() . "\n");
-		$this->write('NanoPortal v' . Nano::VERSION . "\n");
+		$this->write('NanoPortal v' . Nano::VERSION . ' / PHP v' . phpversion() . "\n");
 	}
 
 	/**
