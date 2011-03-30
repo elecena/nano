@@ -27,6 +27,13 @@ class FooModule extends Module {
 	}
 
 	/**
+	 * This method can not be routed
+	 */
+	public function _test($id) {
+		return array('test' => $id);
+	}
+
+	/**
 	 * Method used for routing requests matching /foo/bar/*
 	 */
 	public function apiBar($id) {

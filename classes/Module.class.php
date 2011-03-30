@@ -87,7 +87,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Binds given callback to be fired when given event occurs
+	 * Binds given module's method to be fired when given event occurs
 	 *
 	 * When can returns false, fire() method returns false too and no callbacks execution is stopped
 	 */

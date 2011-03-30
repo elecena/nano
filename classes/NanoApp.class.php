@@ -13,6 +13,9 @@ class NanoApp {
 	// config
 	private $config;
 
+	// debug logging
+	private $debug;
+
 	// DB connection
 	private $db;
 
@@ -78,10 +81,17 @@ class NanoApp {
 		$this->router = new Router($this);
 
 		// load and setup all modules
-		$this->modules = array();
-		$modules = glob($this->dir . '/modules/*');
+		$this->loadModules();
+	}
 
-		foreach($modules as $module) {
+	/**
+	 * Load all modules
+	 */
+	private function loadModules() {
+		$this->modules = array();
+		$moduleFiles = glob($this->dir . '/modules/*');
+
+		foreach($moduleFiles as $module) {
 			$moduleName = ucfirst(basename($module));
 			$this->modules[$moduleName] = Module::factory($moduleName, $this);
 		}
@@ -168,7 +178,7 @@ class NanoApp {
 	public function getConfig() {
 		return $this->config;
 	}
-	
+
 	/**
 	 * Return events
 	 */

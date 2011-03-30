@@ -9,3 +9,8 @@
 * static pages module (/pages/static)
 * RSS feeds generator
 * GData client
+
+
+@see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class
+@see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1474/serialize
+@see http://rssphp.net/examples/convert_array_to_xml/

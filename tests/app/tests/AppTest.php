@@ -34,10 +34,11 @@ class AppTest extends PHPUnit_Framework_TestCase {
 	public function testCreateApp() {
 		$this->assertInstanceOf('NanoApp', $this->app);
 		$this->assertInstanceOf('Cache', $this->app->getCache());
+		$this->assertInstanceOf('Config', $this->app->getConfig());
+		$this->assertInstanceOf('Events', $this->app->getEvents());
 		$this->assertInstanceOf('Request', $this->app->getRequest());
 		$this->assertInstanceOf('Response', $this->app->getResponse());
 		$this->assertInstanceOf('Router', $this->app->getRouter());
-		$this->assertInstanceOf('Config', $this->app->getConfig());
 
 		// directories
 		$this->assertEquals($this->dir, $this->app->getDirectory());
@@ -186,9 +187,22 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$router->route($request);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'bar', 'params' => array('31451', 'test')), $router->getLastRoute());
 
+		$request->setPath('/foo/bar/314-51/_test');
+		$router->route($request);
+		$this->assertEquals(array('module' => 'foo', 'method' => 'bar', 'params' => array('314-51', '_test')), $router->getLastRoute());
+
 		$request->setPath('/foo/test');
 		$router->route($request);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array('test')), $router->getLastRoute());
+
+		// unroutable requests
+		$request->setPath('/bar/_test/123');
+		$router->route($request);
+		$this->assertNull($router->getLastRoute($request));
+
+		$request->setPath('/bar/apiBar/123');
+		$router->route($request);
+		$this->assertNull($router->getLastRoute($request));
 	}
 
 	public function testRouterMaps() {

@@ -171,6 +171,8 @@ class Router {
 				$methodName = $defaultMethodName;
 			}
 
+			#var_dump(array($moduleName, $methodName, $methodParams));
+
 			// fill array of parameters passed with null values
 			$params = array_merge($methodParams, array_fill(0, 5, null));
 

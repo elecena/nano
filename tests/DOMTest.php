@@ -25,6 +25,7 @@ XML;
 <ol start="4">
 	<li>123
 	<li>456
+	<li><a href="/foo?bar=test&id=123">789</a>
 </ol>
 HTML;
 	}
@@ -82,7 +83,7 @@ HTML;
 		$this->assertNull($dom->getCharset());
 
 		// XPath
-		$this->assertEquals(2, count($dom->xpath('//ol/li')));
+		$this->assertEquals(3, count($dom->xpath('//ol/li')));
 		$this->assertContains('123', $dom->getNodeContent('//ol/li'));
 		$this->assertEquals('4', $dom->getNodeAttr('//ol', 'start'));
 
