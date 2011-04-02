@@ -45,4 +45,9 @@ abstract class Output {
 	 * Render current data
 	 */
 	abstract public function render();
+
+	/**
+	 * Get value of Content-type HTTP header suitable for given output formatter
+	 */
+	abstract public function getContentType();
 }

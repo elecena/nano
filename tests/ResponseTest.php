@@ -16,4 +16,14 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($text, $response->getContent());
 	}
+
+	public function testJSONResponse() {
+		$data = array('foo' => 'bar');
+		$content = Output::factory('json', $data);
+
+		$response = new Response();
+		$response->setContent($content);
+
+		$this->assertEquals('{"foo":"bar"}', $response->getContent());
+	}
 }

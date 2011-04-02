@@ -28,11 +28,25 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 			),
 		);
 
+		// JSON
 		$output = Output::factory('json', $data);
 		$this->assertEquals('{"foo":"bar","test":["123","456"]}', $output->render());
+		$this->assertEquals('application/json', $output->getContentType());
 
-		$output = Output::factory('json');
-		$output->setData($data);
-		$this->assertEquals('{"foo":"bar","test":["123","456"]}', $output->render());
+		$output->setData(array('123', '456'));
+		$this->assertEquals('["123","456"]', $output->render());
+
+		// TODO: XML
+
+
+		// JSONP (JSON + callback)
+		$output = Output::factory('jsonp', $data);
+		$this->assertEquals('callback({"foo":"bar","test":["123","456"]})', $output->render());
+		$this->assertEquals('application/javascript', $output->getContentType());
+
+		// custom callback
+		$callback = 'f' . mt_rand(0,100);
+		$output->setCallback($callback);
+		$this->assertEquals($callback . '({"foo":"bar","test":["123","456"]})', $output->render());
 	}
 }
