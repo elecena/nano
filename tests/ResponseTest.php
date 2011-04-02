@@ -25,5 +25,6 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$response->setContent($content);
 
 		$this->assertEquals('{"foo":"bar"}', $response->getContent());
+		$this->assertEquals('application/json', $response->getHeader('Content-type'));
 	}
 }
