@@ -17,7 +17,7 @@ class Response {
 	public function setContent($content) {
 		// handle output's wrappers
 		if ($content instanceof Output) {
-			$this->content = $content->getContent();
+			$this->content = $content->render();
 		}
 		// handle strings
 		else if (is_string($content)) {

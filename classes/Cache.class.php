@@ -20,7 +20,6 @@ abstract class Cache {
 	public static function factory($driver, Array $options = array()) {
 		$className = 'Cache' . ucfirst($driver);
 
-		// use autoloader to add requested class
 		$src = dirname(__FILE__) . '/cache/' . $className . '.class.php';
 
 		if (file_exists($src)) {

@@ -116,48 +116,6 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('CacheRedis', $app->getCache());
 	}
 
-	public function testCache() {
-		$this->setUp();
-		$cache = $this->app->getCache();
-
-		$this->assertInstanceOf('CacheFile', $cache);
-
-		$key = 'foo';
-		$value = array(
-			'test' => true,
-			'mixed' => array(1,2,3),
-			'pi' => 3.1415
-		);
-
-		$this->assertTrue($cache->set($key, $value, 60));
-		$this->assertTrue($cache->exists($key));
-		$this->assertEquals($value, $cache->get($key));
-
-		$cache->delete($key);
-
-		$this->assertFalse($cache->exists($key));
-		$this->assertNull($cache->get($key));
-
-		// mixed keys
-		$key = array('foo', 'bar', 'test');
-
-		$this->assertTrue($cache->set($key, $value, 60));
-		$this->assertTrue($cache->exists($key));
-		$this->assertEquals($value, $cache->get($key));
-
-		$cache->delete($key);
-
-		$this->assertFalse($cache->exists($key));
-		$this->assertNull($cache->get($key));
-
-		// handling of non-existing keys
-		$key = 'notExistingKey';
-
-		$this->assertFalse($cache->exists($key));
-		$this->assertNull($cache->get($key));
-		$this->assertEquals($value, $cache->get($key, $value));
-	}
-
 	public function testRouter() {
 		$router = new Router($this->app);
 		$request = $this->app->getRequest();
