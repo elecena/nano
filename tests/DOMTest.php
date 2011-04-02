@@ -64,6 +64,11 @@ HTML;
 		$dom = DOM::newFromXml($this->xml . '<foo>', true /* $stictMode */);
 
 		$this->assertNull($dom);
+
+		// parse broken XML (with possible fallback to HTML)
+		$dom = DOM::newFromXml($this->xml . '<foo>');
+
+		$this->assertInstanceOf('DOM', $dom);
 	}
 
 	public function testParseHtmlAsXml() {

@@ -27,6 +27,15 @@ class FooModule extends Module {
 	}
 
 	/**
+	 * Method for testing events firing
+	 */
+	public function event($var) {
+		$this->fire('eventFoo', array(&$var));
+
+		return $var;
+	}
+
+	/**
 	 * This method can not be routed
 	 */
 	public function _test($id) {

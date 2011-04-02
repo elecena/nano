@@ -35,6 +35,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('NanoApp', $this->app);
 		$this->assertInstanceOf('Cache', $this->app->getCache());
 		$this->assertInstanceOf('Config', $this->app->getConfig());
+		$this->assertInstanceOf('Debug', $this->app->getDebug());
 		$this->assertInstanceOf('Events', $this->app->getEvents());
 		$this->assertInstanceOf('Request', $this->app->getRequest());
 		$this->assertInstanceOf('Response', $this->app->getResponse());
@@ -71,6 +72,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		// test creation of not existing module
 		$this->assertNull($this->app->getModule('NotExistingModule'));
+		$this->assertNull(Module::factory('NotExistingModule', $this->app));
 	}
 
 	public function testAppConfig() {
@@ -239,6 +241,13 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$request->setPath('/');
 		$router->route($request);
 		$this->assertEquals(array('module' => 'foo', 'method' => 'route', 'params' => array('123')), $router->getLastRoute());
+
+		// empty path mapping
+		$router->map('', '');
+
+		$request->setPath('/');
+		$router->route($request);
+		$this->assertNull($router->getLastRoute($request));
 	}
 
 	public function testRouterPrefix() {
@@ -281,6 +290,10 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('lm317', $request->get('q'));
 		$this->assertEquals('/foo/test/', $request->getPath());
 		$this->assertEquals($this->ip, $request->getIP());
+
+		// route app request
+		$ret = $this->app->route($request);
+		$this->assertNull($ret);
 	}
 
 	public function testApi() {
@@ -300,5 +313,8 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertTrue($events->fire('eventFoo', array(&$value)));
 		$this->assertEquals('footest', $value);
+
+		// events firing
+		$this->assertEquals('footest', $module->event('foo'));
 	}
 }

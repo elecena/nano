@@ -124,13 +124,7 @@ class Router {
 		$methodParams = array();
 
 		switch (count($pathParts)) {
-			// empty path: /
-			case 0:
-				// use default module
-				$moduleName = '';
-				break;
-
-			// module name only: /product
+			// module name only: /product (or an empty path)
 			case 1:
 				$moduleName = $pathParts[0];
 				break;

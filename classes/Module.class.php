@@ -13,6 +13,9 @@ abstract class Module {
 	// cache object
 	protected $cache;
 
+	// debug
+	protected $debug;
+
 	// DB connection
 	protected $db;
 
@@ -44,7 +47,9 @@ abstract class Module {
 	/**
 	 * Perform initialization tasks
 	 */
+	// @codeCoverageIgnoreStart
 	protected function init() {}
+	// @codeCoverageIgnoreEnd
 
 	/**
 	 * Create and setup instance of given module for given application
@@ -65,6 +70,7 @@ abstract class Module {
 			$instance->app = $app;
 			$instance->cache = $app->getCache();
 			$instance->config = $app->getConfig();
+			$instance->debug = $app->getDebug();
 			$instance->events = $app->getEvents();
 			$instance->request = $app->getRequest();
 			$instance->response = $app->getResponse();

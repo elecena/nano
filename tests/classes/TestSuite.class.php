@@ -73,7 +73,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		$printer = new ResultPrinter();
 
 		// collect code coverage report
-		#$codeCoverage = true;
+		$codeCoverage = true;
 
 		if (!empty($codeCoverage)) {
 			$results->collectCodeCoverageInformation(true);
@@ -102,6 +102,10 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 			foreach($codeCoverage as $file => $info) {
 				$file = basename($file);
 				echo "* {$file} - {$info['coverage']}% covered\n";
+
+				if ($info['notCoveredLines'] != '') {
+					echo " -> lines not covered: {$info['notCoveredLines']}\n\n";
+				}
 			}
 		}
 	}

@@ -30,13 +30,16 @@ class TestResult extends PHPUnit_Framework_TestResult {
 				if (is_array($status)) {
 					$linesCovered++;
 				}
-				// line not covered - function block ends here and there's return before
-				else if ($status == -2) {
-					$linesTotal -= 1;
-				}
-				// line not covered
-				else if ($status == -1) {
-					$notCoveredLines[] = $lineNo;
+				else switch($status) {
+					// line not covered - function block ends here and there's return before
+					case -2:
+						$linesTotal -= 1;
+						break;
+
+					// line not covered
+					case -1:
+						$notCoveredLines[] = $lineNo;
+						break;
 				}
 			}
 

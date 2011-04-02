@@ -35,7 +35,7 @@ class NanoApp {
 	private $modules;
 
 	// application's working directory
-	private $dir;
+	private $dir = '';
 
 	// apllications' libraries directory
 	private $libraryDir = '';
@@ -52,6 +52,9 @@ class NanoApp {
 
 		// events handler
 		$this->events = new Events();
+
+		// debug
+		$this->debug = new Debug($this->dir . '/log');
 
 		// read configuration
 		$this->config = new Config($this->dir . '/config');
@@ -177,6 +180,13 @@ class NanoApp {
 	 */
 	public function getConfig() {
 		return $this->config;
+	}
+	
+	/**
+	 * Return debug
+	 */
+	public function getDebug() {
+		return $this->debug;
 	}
 
 	/**
