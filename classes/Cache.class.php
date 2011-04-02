@@ -18,7 +18,7 @@ abstract class Cache {
 	 * Creates an instance of given cache driver
 	 */
 	public static function factory($driver, Array $options = array()) {
-		$className = 'Cache' . ucfirst($driver);
+		$className = 'Cache' . ucfirst(strtolower($driver));
 
 		$src = dirname(__FILE__) . '/cache/' . $className . '.class.php';
 

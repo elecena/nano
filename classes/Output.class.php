@@ -15,7 +15,7 @@ abstract class Output {
 	 * Creates an instance of given cache driver
 	 */
 	public static function factory($driver, $data = null) {
-		$className = 'Output' . ucfirst($driver);
+		$className = 'Output' . ucfirst(strtolower($driver));
 
 		$src = dirname(__FILE__) . '/output/' . $className . '.class.php';
 
