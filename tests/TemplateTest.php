@@ -48,8 +48,9 @@ class TemplateTest extends PHPUnit_Framework_TestCase {
 		$this->assertContains('<li>foo</li>', $template->render('test'));
 		$this->assertContains('<li>bar</li>', $template->render('test'));
 
-		$template->set('title', 'An article');
-		$this->assertContains('<h1>An article</h1>', $template->render('test'));
+		// change previously set variable
+		$template->set('title', 'Foo&bar');
+		$this->assertContains('<h1>Foo&amp;bar</h1>', $template->render('test'));
 		$this->assertContains('<li>foo</li>', $template->render('test'));
 	}
 }
