@@ -36,8 +36,10 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 		$output->setData(array('123', '456'));
 		$this->assertEquals('["123","456"]', $output->render());
 
-		// TODO: XML
-
+		// XML
+		$output = Output::factory('xml', $data);
+		$this->assertEquals("<?xml version=\"1.0\"?>\n<root><foo>bar</foo><test><value>123</value><value>456</value></test></root>", $output->render());
+		$this->assertEquals('text/xml', $output->getContentType());
 
 		// JSONP (JSON + callback)
 		$output = Output::factory('jsonp', $data);
