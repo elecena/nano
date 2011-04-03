@@ -34,7 +34,7 @@ class DebugTest extends PHPUnit_Framework_TestCase {
 		// remove log file
 		$debug->clearLogFile();
 
-		$this->assertFalse(file_exists($logFile));
+		$this->assertFileNotExists($logFile);
 
 		// log to a file
 		$this->assertTrue($debug->log('foo'));
@@ -61,7 +61,7 @@ class DebugTest extends PHPUnit_Framework_TestCase {
 
 		$debug->disableLog();
 		$this->assertFalse($debug->log('foo'));
-		$this->assertFalse(strpos(file_get_contents($logFile), 'foo'));
+		$this->assertNotContains('foo', file_get_contents($logFile));
 
 		$debug->enableLog();
 		$this->assertTrue($debug->log('foo'));
@@ -81,7 +81,7 @@ class DebugTest extends PHPUnit_Framework_TestCase {
 		// set threshold to DEBUG level
 		$debug->setLogThreshold(Debug::DEBUG);
 		$this->assertFalse($debug->log('foo'));
-		$this->assertFalse(strpos(file_get_contents($logFile), 'foo'));
+		$this->assertNotContains('foo', file_get_contents($logFile));
 
 		$this->assertTrue($debug->log('foo', Debug::DEBUG));
 		$this->assertContains(": foo\n", file_get_contents($logFile));
@@ -89,6 +89,6 @@ class DebugTest extends PHPUnit_Framework_TestCase {
 		// set threshold to zero level (no logging)
 		$debug->setLogThreshold(0);
 		$this->assertFalse($debug->log('bar', Debug::ERROR));
-		$this->assertFalse(strpos(file_get_contents($logFile), 'bar'));
+		$this->assertNotContains('bar', file_get_contents($logFile));
 	}
 }
