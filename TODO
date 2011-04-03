@@ -1,9 +1,9 @@
 * events handling (bind / fire methods)			[DONE]
-* debug logging
+* debug logging									[DONE]
+* templating system
 * API entry point (api.php)
 * output formatter (json, xml, jsonp, rss feed)
 * RSS feeds generator
-* templating system
 * sessions handling
 * theming
 * JS / CSS loading + minification
