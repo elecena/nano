@@ -1,13 +1,14 @@
 * events handling (bind / fire methods)			[DONE]
 * debug logging
 * API entry point (api.php)
-* output formatter (json, xml, jsonp, php)
+* output formatter (json, xml, jsonp, rss feed)
+* RSS feeds generator
 * templating system
+* sessions handling
 * theming
 * JS / CSS loading + minification
 * adding meta tags to HTML
 * static pages module (/pages/static)
-* RSS feeds generator
 * GData client
 
 

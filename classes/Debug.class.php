@@ -8,6 +8,13 @@
 
 class Debug {
 
+	// log level constants
+	const ERROR = 1;
+	const WARNING = 2;
+	const NOTICE = 3;
+	const DEBUG = 4;
+	const INFO = 5;
+
 	// log files directory
 	private $dir;
 
@@ -16,6 +23,9 @@ class Debug {
 
 	// log file (full path)
 	private $logFile;
+
+	// log messages level threshold
+	private $logThreshold;
 
 	// timestamp when object was created
 	private $start;
@@ -27,6 +37,9 @@ class Debug {
 		$this->dir = $dir;
 		$this->setLogFile($logFile);
 		$this->enableLog();
+
+		// log everything
+		$this->setLogThreshold(self::INFO);
 
 		$this->start = microtime(true /* get_as_float */);
 	}
@@ -43,6 +56,13 @@ class Debug {
 	 */
 	public function disableLog() {
 		$this->logEnabled = false;
+	}
+
+	/**
+	 * Set log threshold (0 - log nothing, 5 - log everything)
+	 */
+	public function setLogThreshold($logThreshold) {
+		$this->logThreshold = intval($logThreshold);
 	}
 
 	/**
@@ -73,9 +93,14 @@ class Debug {
 	/**
 	 * Log given message to log file
 	 */
-	public function log($msg, $level = 7) {
+	public function log($msg, $level = 5) {
 		// check if logging is enabled
 		if ($this->logEnabled == false) {
+			return false;
+		}
+
+		// check debug threshold
+		if ($this->logThreshold < $level) {
 			return false;
 		}
 
@@ -87,8 +112,6 @@ class Debug {
 
 		// line to be added
 		$msgLine = "{$delta}: {$msg}\n";
-
-		// TODO: check level threshold
 
 		// log to file
 		file_put_contents($this->getLogFile(), $msgLine, FILE_APPEND | LOCK_EX);

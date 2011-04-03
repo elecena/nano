@@ -22,7 +22,7 @@ abstract class Output {
 		if (file_exists($src)) {
 			require_once $src;
 
-			$instance = new $className($options);
+			$instance = new $className();
 
 			if (!is_null($data)) {
 				$instance->setData($data);

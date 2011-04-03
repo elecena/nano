@@ -67,4 +67,28 @@ class DebugTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($debug->log('foo'));
 		$this->assertContains(": foo\n", file_get_contents($logFile));
 	}
+
+	public function testLoggingThreshold() {
+		$debug = new Debug($this->logDir);
+		$logFile = $debug->getLogFile();
+
+		// remove log file
+		$debug->clearLogFile();
+
+		$this->assertTrue($debug->log('test'));
+		$this->assertContains(": test\n", file_get_contents($logFile));
+
+		// set threshold to DEBUG level
+		$debug->setLogThreshold(Debug::DEBUG);
+		$this->assertFalse($debug->log('foo'));
+		$this->assertFalse(strpos(file_get_contents($logFile), 'foo'));
+
+		$this->assertTrue($debug->log('foo', Debug::DEBUG));
+		$this->assertContains(": foo\n", file_get_contents($logFile));
+
+		// set threshold to zero level (no logging)
+		$debug->setLogThreshold(0);
+		$this->assertFalse($debug->log('bar', Debug::ERROR));
+		$this->assertFalse(strpos(file_get_contents($logFile), 'bar'));
+	}
 }
