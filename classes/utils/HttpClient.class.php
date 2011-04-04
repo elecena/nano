@@ -10,6 +10,11 @@
 
 class HttpClient {
 
+	// HTTP request types
+	const GET = 1;
+	const POST = 2;
+	const HEAD = 3;
+
 	// User-Agent wysy³any przy ¿¹daniach
 	private $userAgent;
 
@@ -69,6 +74,25 @@ class HttpClient {
 	}
 
 	/**
+	 * Set timeout for a single request
+	 */
+	public function setTimeout($timeout) {
+		$this->timeout = $timeout;
+
+		curl_setopt($this->handle, CURLOPT_TIMEOUT, $this->timeout);
+	}
+
+	/**
+	 * Use given cookie jar file
+	 */
+	public function useCookieJar($jarFile) {
+		curl_setopt_array($this->handle, array(
+			CURLOPT_COOKIEFILE => $jarFile,
+			CURLOPT_COOKIEJAR => $jarFile,
+		));
+	}
+
+	/**
 	 * Send GET HTTP request for a given URL
 	 */
 	public function get($url, Array $query = array()) {
@@ -77,31 +101,56 @@ class HttpClient {
 			$url .= '?' . http_build_query($query);
 		}
 
-		// GET request
-		curl_setopt($this->handle, CURLOPT_POST, false);
-
-		return $this->sendRequest($url);
+		return $this->sendRequest(self::GET, $url);
 	}
 
 	/**
 	 * Send POST HTTP request for a given URL
 	 */
 	public function post($url, Array $fields = array()) {
-		// dodaj parametry zapytania
+		// add request POST fields
 		if (!empty($fields)) {
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, http_build_query($fields));
 		}
 
-		// POST request
-		curl_setopt($this->handle, CURLOPT_POST, true);
+		return $this->sendRequest(self::POST, $url);
+	}
 
-		return $this->sendRequest($url);
+	/**
+	 * Send HEAD HTTP request for a given URL
+	 */
+	public function head($url, Array $query = array()) {
+		// add request params
+		if (!empty($query) && is_array($query)) {
+			$url .= '?' . http_build_query($query);
+		}
+
+		return $this->sendRequest(self::HEAD, $url);
 	}
 
 	/**
 	 * Send HTTP request
 	 */
-	private function sendRequest($url) {
+	private function sendRequest($type, $url) {
+		// send requested type of HTTP request
+		curl_setopt($this->handle, CURLOPT_POST, false);
+		curl_setopt($this->handle, CURLOPT_NOBODY, false);
+
+		switch ($type) {
+			case self::POST:
+				curl_setopt($this->handle, CURLOPT_POST, true);
+				break;
+
+			case self::HEAD:
+				// @see http://curl.haxx.se/mail/curlphp-2008-03/0072.html
+				curl_setopt($this->handle, CURLOPT_NOBODY, true);
+				break;
+
+			case self::GET:
+			default:
+				// nop
+		}
+
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 
 		// cleanup
@@ -110,33 +159,42 @@ class HttpClient {
 		// send request and grab response
 		ob_start();
 		$res = curl_exec($this->handle);
-		$ret = ob_get_clean();
+		$content = ob_get_clean();
 
-		// pobierz informacje o zakoñczonym ¿¹daniu
+		// get response
 		if ($res === true) {
+			// @see http://pl2.php.net/curl_getinfo
 			$info = curl_getinfo($this->handle); //var_dump($info);
 
-			// redirect
-			if ($url != $info['url']) {
-			}
+			// return HTTP response object
+			$response = new HttpResponse();
 
-			// HTTP error?
-			if ($info['http_code'] != 200) {
-			}
+			// set response code
+			$response->setResponseCode($info['http_code']);
+
+			// set response headers
+			$response->setHeaders($this->headers);
+
+			// set response content
+			$response->setContent($content);
+
+			// set response location (useful for redirects)
+			$response->setLocation($info['url']);
 		}
 		else {
 			// return an error
-			$ret = false;
+			$response = false;
+
+			// curl_error($this->handle)
 		}
 
-		// TODO: return object of class HttpResponse
-		return $ret;
+		return $response;
 	}
 
 	/**
 	 * Parse response's header
 	 *
-	 *@see http://it.toolbox.com/wiki/index.php/Use_curl_from_PHP_-_processing_response_headers
+	 * @see http://it.toolbox.com/wiki/index.php/Use_curl_from_PHP_-_processing_response_headers
 	 */
 	function parseResponseHeader($ch, $raw) {
 		// parse response's line

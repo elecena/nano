@@ -1,6 +1,7 @@
 * events handling (bind / fire methods)			[DONE]
 * debug logging									[DONE]
-* templating system
+* templating system								[DONE]
+* database layer
 * API entry point (api.php)
 * output formatter (json, xml, jsonp, rss feed)
 * RSS feeds generator
@@ -10,6 +11,7 @@
 * adding meta tags to HTML
 * static pages module (/pages/static)
 * GData client
+* cron jobs
 
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class

@@ -16,21 +16,33 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$this->assertRegExp('#libcurl/#', $client->getUserAgent());
 	}
 
-	public function testGet() {
-		return;
-	
-		// make request to Wikipedia
-		// redirects to http://en.wikipedia.org/wiki/Main_Page
+	public function testInvalidRequest() {
 		$client = new HttpClient();
-		$resp = $client->get('http://en.wikipedia.org'); //var_dump($client);
 
-		$this->assertRegExp('#<title>Wikipedia, the free encyclopedia</title>#', $resp);
+		$resp = $client->get('foo://bar');
 
+		$this->assertFalse($resp);
+	}
 
-		// make request to Google (which blocks requests done by bots)
+	public function testCookiesJar() {
 		$client = new HttpClient();
-		$resp = $client->get('http://www.google.com/search', array('q' => 'foo')); //var_dump($client); //var_dump($resp);
 
-		//$this->assertFalse($resp);
+		// create cookie jar file
+		$jarFile = dirname(__FILE__) . '/app/cache/jar';
+
+		$client->setTimeout(0);
+		$client->useCookieJar($jarFile);
+
+		$resp = $client->get('http://www.google.com/search', array('q' => 'nano'));
+
+		// check cookies
+		clearstatcache();
+
+		$this->assertFileExists($jarFile);
+		$this->assertContains('Cookie File', file_get_contents($jarFile));
+
+		// remove jar file
+		unlink($jarFile);
+		$this->assertFileNotExists($jarFile);
 	}
 }
