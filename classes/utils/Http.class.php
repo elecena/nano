@@ -13,8 +13,10 @@ class Http {
 	 */
 	static public function get($url, $query = array()) {
 		$client = new HttpClient();
+		$ret = $client->get($url, $query);
 
-		return $client->get($url, $query);
+		$client->close();
+		return $ret;
 	}
 
 	/**
@@ -22,8 +24,10 @@ class Http {
 	 */
 	static public function post($url, $fields = array()) {
 		$client = new HttpClient();
+		$ret = $client->post($url, $fields);
 
-		return $client->post($url, $fields);
+		$client->close();
+		return $ret;
 	}
 
 	/**
@@ -31,7 +35,9 @@ class Http {
 	 */
 	static public function head($url, $query = array()) {
 		$client = new HttpClient();
+		$ret = $client->head($url, $query);
 
-		return $client->head($url, $query);
+		$client->close();
+		return $ret;
 	}
 }

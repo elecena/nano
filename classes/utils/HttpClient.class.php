@@ -60,6 +60,13 @@ class HttpClient {
 	}
 
 	/**
+	 * Close a session,free all resources and store cookies in jar file
+	 */
+	public function close() {
+		curl_close($this->handle);
+	}
+
+	/**
 	 * Set user agent identification used by HTTP client
 	 */
 	public function setUserAgent($userAgent) {

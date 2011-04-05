@@ -28,16 +28,17 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$client = new HttpClient();
 
 		// create cookie jar file
-		$jarFile = dirname(__FILE__) . '/app/cache/jar';
+		$jarFile = tempnam(dirname(__FILE__) . '/app/cache', 'jar');
 
 		$client->setTimeout(0);
 		$client->useCookieJar($jarFile);
 
 		$resp = $client->get('http://www.google.com/search', array('q' => 'nano'));
 
-		// check cookies
-		clearstatcache();
+		// close HTTP session
+		$client->close();
 
+		// check cookies
 		$this->assertFileExists($jarFile);
 		$this->assertContains('Cookie File', file_get_contents($jarFile));
 

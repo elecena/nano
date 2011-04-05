@@ -21,16 +21,16 @@ class HttpTest extends PHPUnit_Framework_TestCase {
 
 	public function testPost() {
 		// POST request (ends with HTTP 400)
-		$resp = Http::post('http://google.com/images/foo'); //var_dump($resp);
+		$resp = Http::post('http://google.com/images/foo', array('foo' => 'bar')); //var_dump($resp);
 
-		$this->assertEquals(400, $resp->getResponseCode());
+		$this->assertEquals(404, $resp->getResponseCode());
 		$this->assertContains('text/html', $resp->getHeader('Content-Type'));
-		$this->assertContains('Bad Request', $resp->getContent());
+		$this->assertContains('Not Found', $resp->getContent());
 	}
 
 	public function testHead() {
 		// HEAD request for not existing image
-		$resp = Http::head('http://www.google.pl/images/srpr/nav_logo.png'); //var_dump($resp);
+		$resp = Http::head('http://www.google.pl/images/srpr/nav_logo.png', array('foo' => 'bar')); //var_dump($resp);
 
 		$this->assertEquals(404, $resp->getResponseCode());
 		$this->assertEquals('', $resp->getContent());
