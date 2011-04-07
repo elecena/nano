@@ -1,0 +1,18 @@
+== Configuration ==
+
+
+=== Nginx ===
+
+<nginx>
+	<location path="/">
+		<!-- static assets -->
+		<rewrite>\.(css|js|gif|png|jpg)$ /static.php</rewrite>
+
+		<!-- URL - last (always redirect) -->
+		<!-- @see http://rootnode.net/web#vhost-configuration-advanced-mode -->
+		<if condition="!-f $request_filename">
+			<rewrite>^/(.+)$ /index.php last</rewrite>
+			<break/>
+		</if>
+	</location>
+</nginx>
