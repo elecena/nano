@@ -1,10 +1,11 @@
 * events handling (bind / fire methods)			[DONE]
 * debug logging									[DONE]
 * templating system								[DONE]
+* output formatter (json, xml, jsonp)			[DONE]
 * database layer
 * API entry point (api.php)
-* output formatter (json, xml, jsonp, rss feed)
 * RSS feeds generator
+* XML sitemap generator
 * sessions handling
 * theming
 * JS / CSS loading + minification
