@@ -14,8 +14,8 @@ class Response {
 	// key / value list of HTTP headers to be emitted
 	private $headers = array();
 
-	// response HTTP code (default to 200 OK)
-	private $responseCode = 200;
+	// response HTTP code (defaults to 404 - Not Found)
+	private $responseCode = 404;
 
 	/**
 	 * Set output's content
@@ -54,5 +54,19 @@ class Response {
 	 */
 	public function getHeader($name) {
 		return isset($this->headers[$name]) ? $this->headers[$name] : null;
+	}
+
+	/**
+	 * Set response code
+	 */
+	public function setResponseCode($responseCode) {
+		$this->responseCode = $responseCode;
+	}
+
+	/**
+	 * Get response code
+	 */
+	public function getResponseCode() {
+		return $this->responseCode;
 	}
 }
