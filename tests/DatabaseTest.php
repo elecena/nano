@@ -30,32 +30,6 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		$database = Database::connect($app, array('driver' => 'mysql'));
 
 		$this->assertInstanceOf('DatabaseMysql', $database);
-	}
-
-	public function testMySqlDatabaseFactory() {
-		$app = $this->buildApp();
-
-		// don't actually connect
-		$database = Database::connect($app, array('driver' => 'mysql'));
-
-		$this->assertInstanceOf('DatabaseMysql', $database);
-
 		$this->assertFalse($database->isConnected());
-	}
-
-	// this test requires a running instance of mySQL on localhost:3306
-	public function testMySqlDatabaseConnect() {
-		$app = $this->buildApp();
-
-		$database = Database::connect($app, array('driver' => 'mysql', 'host' => 'localhost', 'user' => 'root'));
-
-		$this->assertInstanceOf('DatabaseMysql', $database);
-		$this->assertTrue($database->isConnected());
-		$this->assertContains('localhost', $database->getInfo());
-
-		// string escaping
-		$this->assertEquals('\\"foo\\"', $database->escape('"foo"'));
-		$this->assertEquals('\\\'foo\\\'', $database->escape('\'foo\''));
-		$this->assertEquals('%_test_%', $database->escape('%_test_%'));
 	}
 }
