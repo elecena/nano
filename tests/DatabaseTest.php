@@ -17,6 +17,11 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		return $app;
 	}
 
+	private function getDatabaseMySql() {
+		$app = $this->buildApp();
+		return Database::connect($app, array('driver' => 'mysql'));
+	}
+
 	public function testDatabaseConnectFactory() {
 		$app = $this->buildApp();
 
@@ -31,24 +36,29 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('DatabaseMysql', $database);
 	}
 
-	public function testDatabase() {
-		$app = $this->buildApp();
-
-		// existing driver (don't actually connect)
-		$database = Database::connect($app, array('driver' => 'mysql'));
+	public function testDatabaseMySql() {
+		$database = $this->getDatabaseMySql();
 
 		$this->assertInstanceOf('DatabaseMysql', $database);
 		$this->assertFalse($database->isConnected());
-		
+	}
+
+	public function testResolveList() {
+		$database = $this->getDatabaseMySql();
+
 		// test fields SQL
 		$listSql = $database->resolveList('*');
 		$this->assertEquals('*', $listSql);
-		
+
 		$listSql = $database->resolveList('pages');
 		$this->assertEquals('pages', $listSql);
-		
+
 		$listSql = $database->resolveList(array('pages', 'users'));
 		$this->assertEquals('pages,users', $listSql);
+	}
+
+	public function testResolveWhere() {
+		$database = $this->getDatabaseMySql();
 
 		// test where statements
 		$whereSql = $database->resolveWhere(false);
@@ -71,5 +81,25 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 
 		$whereSql = $database->resolveWhere(array('foo' => 'bar', 'test' => '123'));
 		$this->assertEquals('foo="bar" AND test="123"', $whereSql);
+	}
+
+	public function testResolveOptions() {
+		$database = $this->getDatabaseMySql();
+
+		// test options
+		$optionsSql = $database->resolveOptions(array());
+		$this->assertEquals('', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('limit' => '15'));
+		$this->assertEquals('LIMIT 15', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('order' => 'id'));
+		$this->assertEquals('ORDER BY id', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('offset' => 2, 'limit' => '5'));
+		$this->assertEquals('LIMIT 5 OFFSET 2', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('offset' => 2, 'limit' => '5', 'order' => 'foo DESC'));
+		$this->assertEquals('ORDER BY foo DESC LIMIT 5 OFFSET 2', $optionsSql);
 	}
 }

@@ -103,6 +103,8 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Select given fields from a table using following WHERE statements
+	 *
+	 * @see http://dev.mysql.com/doc/refman/5.0/en/select.html
 	 */
 	public function select($table, $fields, $where = array(), Array $options = array()) {
 		$sql = 'SELECT ' . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
@@ -110,6 +112,11 @@ class DatabaseMysql extends Database {
 		$whereSql = $this->resolveWhere($where);
 		if (!empty($whereSql)) {
 			$sql .= ' WHERE ' . $whereSql;
+		}
+
+		$optionsSql = $this->resolveOptions($options);
+		if (!empty($optionsSql)) {
+			$sql .= ' ' . $optionsSql;
 		}
 
 		$res = $this->query($sql);

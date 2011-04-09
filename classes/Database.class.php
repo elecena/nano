@@ -184,4 +184,25 @@ abstract class Database {
 
 		return $sql;
 	}
+
+	/**
+	 * Return part of SQL for given set of options
+	 */
+	public function resolveOptions(Array $options) {
+		$sqlParts = array();
+
+		if (isset($options['order'])) {
+			$sqlParts[] = 'ORDER BY ' . $options['order'];
+		}
+
+		if (isset($options['limit'])) {
+			$sqlParts[] = 'LIMIT ' . intval($options['limit']);
+		}
+
+		if (isset($options['offset'])) {
+			$sqlParts[] = 'OFFSET ' . intval($options['offset']);
+		}
+
+		return implode(' ', $sqlParts);
+	}
 }

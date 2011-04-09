@@ -76,5 +76,11 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->select(array('pages', 'users'), array('pages.id AS id', 'user.name AS author'), array('users.id = pages.author'));
 		$this->assertQueryEquals('SELECT pages.id AS id,user.name AS author FROM pages,users WHERE users.id = pages.author');
+
+		$database->select('pages', 'id', array(), array('limit' => 5));
+		$this->assertQueryEquals('SELECT id FROM pages LIMIT 5');
+
+		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10));
+		$this->assertQueryEquals('SELECT id FROM pages LIMIT 5 OFFSET 10');
 	}
 }
