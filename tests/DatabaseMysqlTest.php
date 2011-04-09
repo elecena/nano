@@ -60,5 +60,21 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->begin();
 		$this->assertQueryEquals('BEGIN');
+
+		// select() queries
+		$database->select('pages', 'id');
+		$this->assertQueryEquals('SELECT id FROM pages');
+
+		$database->select('pages', 'id', array('user' => 42));
+		$this->assertQueryEquals('SELECT id FROM pages WHERE user="42"');
+
+		$database->select('pages', 'id', array('title' => "foo's"));
+		$this->assertQueryEquals('SELECT id FROM pages WHERE title="foo\\\'s"');
+
+		$database->select('pages', array('id', 'content'), array('user' => 42));
+		$this->assertQueryEquals('SELECT id,content FROM pages WHERE user="42"');
+
+		$database->select(array('pages', 'users'), array('pages.id AS id', 'user.name AS author'), array('users.id = pages.author'));
+		$this->assertQueryEquals('SELECT pages.id AS id,user.name AS author FROM pages,users WHERE users.id = pages.author');
 	}
 }

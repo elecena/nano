@@ -16,7 +16,7 @@ abstract class Database {
 
 	// indicates that connection was successfully established
 	protected $connected = false;
-	
+
 	/**
 	 * Force constructors to be protected - use Database::connect
 	 */
@@ -44,7 +44,8 @@ abstract class Database {
 					$instance->debug = $app->getDebug();
 				}
 				catch(Exception $e) {
-					var_dump($e->getMessage());
+					// TODO: handle exception
+					//var_dump($e->getMessage());
 				}
 			}
 		}
@@ -90,17 +91,17 @@ abstract class Database {
 	/**
 	 * Select given fields from a table using following WHERE statements
 	 */
-	abstract public function select($table, Array $fields, $where, Array $options = array());
+	abstract public function select($table, $fields, $where = array(), Array $options = array());
 
 	/**
 	 * Select given fields from a table using following WHERE statements (return single row)
 	 */
-	abstract public function selectRow($table, Array $fields, $where, Array $options = array());
+	abstract public function selectRow($table, $fields, $where = array(), Array $options = array());
 
 	/**
 	 * Select given fields from a table using following WHERE statements (return single field)
 	 */
-	abstract public function selectField($table, $field, $where, Array $options = array());
+	abstract public function selectField($table, $field, $where = array(), Array $options = array());
 
 	/**
 	 * Remove rows from a table using following WHERE statements
@@ -141,4 +142,46 @@ abstract class Database {
 	 * Return true if currently connected to the database
 	 */
 	abstract public function isConnected();
+
+	/**
+	 * Return part of SQL for given list of values
+	 */
+	public function resolveList($values) {
+		if (is_array($values)) {
+			$sql = implode(',', $values);
+		}
+		else {
+			$sql = $values;
+		}
+
+		return $sql;
+	}
+
+	/**
+	 * Return part of SQL for given WHERE statements
+	 */
+	public function resolveWhere($where) {
+		if (is_string($where)) {
+			$sql = $where;
+		}
+		else if (is_array($where)) {
+			$sqlParts = array();
+
+			foreach($where as $field => $cond) {
+				if (is_numeric($field)) {
+					$sqlParts[] = $cond;
+				}
+				else {
+					$sqlParts[] = $field . '="' . $this->escape($cond) . '"';
+				}
+			}
+
+			$sql = implode(' AND ', $sqlParts);
+		}
+		else {
+			$sql = false;
+		}
+
+		return $sql;
+	}
 }

@@ -97,27 +97,37 @@ class DatabaseMysql extends Database {
 	 * Properly encode given string
 	 */
 	public function escape($value) {
-		return $this->link->escape_string($value);
+		//return $this->link->escape_string($value);
+		return mysql_escape_string($value);
 	}
 
 	/**
 	 * Select given fields from a table using following WHERE statements
 	 */
-	public function select($table, Array $fields, $where, Array $options = array()) {
+	public function select($table, $fields, $where = array(), Array $options = array()) {
+		$sql = 'SELECT ' . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
 
+		$whereSql = $this->resolveWhere($where);
+		if (!empty($whereSql)) {
+			$sql .= ' WHERE ' . $whereSql;
+		}
+
+		$res = $this->query($sql);
+
+		return $res;
 	}
 
 	/**
 	 * Select given fields from a table using following WHERE statements (return single row)
 	 */
-	public function selectRow($table, Array $fields, $where, Array $options = array()) {
+	public function selectRow($table, $fields, $where = array(), Array $options = array()) {
 
 	}
 
 	/**
 	 * Select given fields from a table using following WHERE statements (return single field)
 	 */
-	public function selectField($table, $field, $where, Array $options = array()) {
+	public function selectField($table, $field, $where = array(), Array $options = array()) {
 
 	}
 
