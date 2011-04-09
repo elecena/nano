@@ -8,20 +8,74 @@
 
 abstract class Database {
 
+	// debug
+	protected $debug;
+
+	// connection resource
+	protected $link;
+
+	// indicates that connection was successfully established
+	protected $connected = false;
+
 	/**
 	 * Connect to a given database
 	 */
 	public static function connect(NanoApp $app, Array $settings) {
-		// TODO
-		$instance = new Database();
+		$driver = isset($settings['driver']) ? $settings['driver'] : null;
+		$instance = null;
+
+		if (!empty($driver)) {
+			$className = 'Database' . ucfirst(strtolower($driver));
+
+			$src = dirname(__FILE__) . '/database/' . $className . '.class.php';
+
+			if (file_exists($src)) {
+				require_once $src;
+
+				try {
+					$instance = new $className($settings);
+
+					// use debugger from the application
+					$instance->debug = $app->getDebug();
+				}
+				catch(Exception $e) {
+					var_dump($e->getMessage());
+				}
+			}
+		}
 
 		return $instance;
 	}
 
 	/**
+	 * Close the current connection
+	 */
+	abstract public function close();
+
+	/**
+	 * Ping the current connection
+	 */
+	abstract public function ping();
+
+	/**
 	 * Send given query and return results handler
 	 */
 	abstract public function query($sql);
+
+	/**
+	 * Start a transaction
+	 */
+	abstract public function begin();
+
+	/**
+	 * Commit the current transaction
+	 */
+	abstract public function commit();
+
+	/**
+	 * Rollback the current transaction
+	 */
+	abstract public function rollback();
 
 	/**
 	 * Properly encode given string
@@ -77,4 +131,9 @@ abstract class Database {
 	 * Get information about current connection
 	 */
 	abstract public function getInfo();
+
+	/**
+	 * Return true if currently connected to the database
+	 */
+	abstract public function isConnected();
 }

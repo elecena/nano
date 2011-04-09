@@ -7,4 +7,7 @@ $config['cache'] = array(
 	'driver' => 'file',
 	'options' => array(),
 );
+$config['database'] = array(
+	'driver' => 'mysql',
+);
 $config['foo']['bar'] = '123';

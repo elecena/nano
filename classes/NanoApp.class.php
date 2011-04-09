@@ -16,8 +16,8 @@ class NanoApp {
 	// debug logging
 	private $debug;
 
-	// DB connection
-	private $db;
+	// database connection
+	private $database;
 
 	// events handler
 	private $events;
@@ -77,8 +77,8 @@ class NanoApp {
 		// response
 		$this->response = new Response();
 
-		// TODO: set connection to database
-
+		// set connection to database
+		$this->database = Database::connect($this, $this->config->get('database', array()));
 
 		// set private fields
 		$this->router = new Router($this);
@@ -103,7 +103,7 @@ class NanoApp {
 	/**
 	 * Returns instance of given class from /classes directory
 	 *
-	 * Class constructor is called with application's instance
+	 * Class constructor is provided with application's instance
 	 */
 	public function factory($className) {
 		if (class_exists($className)) {
@@ -181,7 +181,14 @@ class NanoApp {
 	public function getConfig() {
 		return $this->config;
 	}
-	
+
+	/**
+	 * Return database
+	 */
+	public function getDatabase() {
+		return $this->database;
+	}
+
 	/**
 	 * Return debug
 	 */

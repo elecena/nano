@@ -35,6 +35,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('NanoApp', $this->app);
 		$this->assertInstanceOf('Cache', $this->app->getCache());
 		$this->assertInstanceOf('Config', $this->app->getConfig());
+		$this->assertInstanceOf('Database', $this->app->getDatabase());
 		$this->assertInstanceOf('Debug', $this->app->getDebug());
 		$this->assertInstanceOf('Events', $this->app->getEvents());
 		$this->assertInstanceOf('Request', $this->app->getRequest());
