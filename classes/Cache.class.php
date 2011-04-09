@@ -13,6 +13,11 @@ abstract class Cache {
 
 	// number of misses for cache keys
 	private $misses = 0;
+	
+	/**
+	 * Force constructors to be protected - use Cache::factory
+	 */
+	abstract protected function __construct(Array $options);
 
 	/**
 	 * Creates an instance of given cache driver

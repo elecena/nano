@@ -23,7 +23,7 @@ class CacheRedis extends Cache {
 	/**
 	 * Creates an instance of cache driver
 	 */
-	function __construct(Array $options = array()) {
+	protected function __construct(Array $options = array()) {
 		$this->ip = $options['ip'];
 		$this->port = isset($options['port']) ? $options['port'] : 0;
 		$this->pass = isset($options['pass']) ? $options['pass'] : null;

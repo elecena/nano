@@ -16,6 +16,11 @@ abstract class Database {
 
 	// indicates that connection was successfully established
 	protected $connected = false;
+	
+	/**
+	 * Force constructors to be protected - use Database::connect
+	 */
+	abstract protected function __construct(Array $settings);
 
 	/**
 	 * Connect to a given database

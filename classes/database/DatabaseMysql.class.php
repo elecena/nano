@@ -11,7 +11,7 @@ class DatabaseMysql extends Database {
 	/**
 	 * Connect to a database
 	 */
-	function __construct(Array $settings) {
+	protected function __construct(Array $settings) {
 		$this->link = mysqli_init();
 
 		// set UTF8 as connection encoding
@@ -68,29 +68,29 @@ class DatabaseMysql extends Database {
 	/**
 	 * Send given query and return results handler
 	 */
-	public function query($sql) {
-
+	public function query($sql, $resultmode =  MYSQLI_STORE_RESULT) {
+		return $this->link->query($sql, $resultmode);
 	}
 
 	/**
 	 * Start a transaction
 	 */
 	public function begin() {
-
+		$this->query('BEGIN');
 	}
 
 	/**
 	 * Commit the current transaction
 	 */
 	public function commit() {
-
+		return $this->link->commit();
 	}
 
 	/**
 	 * Rollback the current transaction
 	 */
 	public function rollback() {
-
+		return $this->link->rollback();
 	}
 
 	/**

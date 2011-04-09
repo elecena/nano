@@ -41,7 +41,6 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('DatabaseMysql', $database);
 
 		$this->assertFalse($database->isConnected());
-		$this->assertEquals('', $database->escape('"foo"'));
 	}
 
 	// this test requires a running instance of mySQL on localhost:3306
@@ -53,5 +52,10 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('DatabaseMysql', $database);
 		$this->assertTrue($database->isConnected());
 		$this->assertContains('localhost', $database->getInfo());
+
+		// string escaping
+		$this->assertEquals('\\"foo\\"', $database->escape('"foo"'));
+		$this->assertEquals('\\\'foo\\\'', $database->escape('\'foo\''));
+		$this->assertEquals('%_test_%', $database->escape('%_test_%'));
 	}
 }

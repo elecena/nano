@@ -13,7 +13,7 @@ class CacheFile extends Cache {
 	/**
 	 * Creates an instance of cache driver
 	 */
-	function __construct(Array $options = array()) {
+	protected function __construct(Array $options = array()) {
 		$this->dir = isset($options['directory']) ? $options['directory'] : '';
 	}
 
