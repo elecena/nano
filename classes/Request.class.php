@@ -8,9 +8,11 @@
 
 class Request {
 
+	// constants for request type
 	const GET = 1;
 	const POST = 2;
 	const API = 3;
+	const CLI = 4;
 
 	// stores a path fragment of the request (/foo/bar?q=123 -> /foo/bar)
 	private $path;
@@ -42,9 +44,13 @@ class Request {
 				$this->type = self::POST;
 				break;
 
-			// "fake" request type
+			// "fake" request types
 			case 'API':
 				$this->type = self::API;
+				break;
+
+			case 'CLI':
+				$this->type = self::CLI;
 				break;
 
 			case 'GET':
@@ -163,6 +169,13 @@ class Request {
 	 */
 	public function isApi() {
 		return $this->type == self::API;
+	}
+
+	/**
+	 * Return if current request was sent using CLI (command line interface)
+	 */
+	public function isCLI() {
+		return $this->type == self::CLI;
 	}
 
 	/**

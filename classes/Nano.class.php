@@ -52,6 +52,26 @@ class Nano {
 	}
 
 	/**
+	 * Creates new instance of Nano application for command line
+	 */
+	static public function cli($dir, $logFile = 'script', $configSet = 'default') {
+		// initialize framework
+		Nano::init();
+
+		// create new application
+		$app = new NanoCliApp($dir, $configSet);
+
+		// set debug log
+		$debug = $app->getDebug();
+
+		$debug->enableLog();
+		$debug->setLogFile($logFile);
+		$debug->clearLogFile();
+
+		return $app;
+	}
+
+	/**
 	 * Return path to nanoPortal core
 	 */
 	static public function getCoreDirectory() {

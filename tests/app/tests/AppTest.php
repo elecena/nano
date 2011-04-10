@@ -53,6 +53,18 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertContains($libName, get_include_path());
 	}
 
+	public function testCliApp() {
+		$app = Nano::cli($this->dir);
+
+		$this->assertInstanceOf('NanoCliApp', $app);
+		$this->assertEquals($this->dir . '/log/script.log', $app->getDebug()->getLogFile());
+		$this->assertTrue($app->getRequest()->isCLI());
+
+		$app = Nano::cli($this->dir, 'foo');
+
+		$this->assertEquals($this->dir . '/log/foo.log', $app->getDebug()->getLogFile());
+	}
+
 	public function testAppFactory() {
 		$obj = $this->app->factory('ExampleModel');
 

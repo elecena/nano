@@ -8,37 +8,37 @@
 
 class NanoApp {
 	// cache object
-	private $cache;
+	protected $cache;
 
 	// config
-	private $config;
+	protected $config;
 
 	// debug logging
-	private $debug;
+	protected $debug;
 
 	// database connection
-	private $database;
+	protected $database;
 
 	// events handler
-	private $events;
+	protected $events;
 
 	// response
 	protected $response;
 
 	// HTTP request
-	private $request;
+	protected $request;
 
 	// router
-	private $router;
+	protected $router;
 
 	// an array of loaded modules
-	private $modules;
+	protected $modules;
 
 	// application's working directory
-	private $dir = '';
+	protected $dir = '';
 
 	// apllications' libraries directory
-	private $libraryDir = '';
+	protected $libraryDir = '';
 
 	/**
 	 * Create application based on given config
