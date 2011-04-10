@@ -47,9 +47,7 @@ abstract class Module {
 	/**
 	 * Perform initialization tasks
 	 */
-	// @codeCoverageIgnoreStart
-	protected function init() {}
-	// @codeCoverageIgnoreEnd
+	abstract protected function init();
 
 	/**
 	 * Create and setup instance of given module for given application
