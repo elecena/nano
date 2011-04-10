@@ -11,11 +11,15 @@ class DatabaseMysql extends Database {
 	/**
 	 * Connect to a database
 	 */
-	protected function __construct(Array $settings) {
+	protected function __construct(NanoApp $app, Array $settings) {
+		parent::__construct($app, $settings);
+
 		$this->link = mysqli_init();
 
 		// set UTF8 as connection encoding
-		$this->link->options(MYSQLI_INIT_COMMAND, 'SET NAMES "utf8"');
+		if (!empty($settings['utf'])) {
+			$this->link->options(MYSQLI_INIT_COMMAND, 'SET NAMES "utf8"');
+		}
 
 		// prepare connection settings
 		// @see http://www.php.net/manual/en/mysqli.real-connect.php
@@ -34,10 +38,15 @@ class DatabaseMysql extends Database {
 		// try to connect
 		if (!empty($params)) {
 			if (@call_user_func_array(array($this->link, 'real_connect'), $params)) {
+				$this->debug->log(__METHOD__ . ' - connected with ' . $settings['host']);
+
 				$this->connected = true;
 			}
 			else {
 				$errorMsg = trim(mysqli_connect_error());
+
+				$this->debug->log(__METHOD__ . ' - connecting with ' . $settings['host'] . ' failed (' . $errorMsg .')', Debug::ERROR);
+
 				throw new Exception($errorMsg);
 			}
 		}
@@ -71,12 +80,15 @@ class DatabaseMysql extends Database {
 	 * @see http://www.php.net/manual/en/mysqli.real-query.php
 	 */
 	public function query($sql) {
+		$this->debug->log(__METHOD__ . ': ' . $sql, Debug::NOTICE);
+
 		$res = $this->link->query($sql, MYSQLI_USE_RESULT);
 
 		// check for errors
 		if (empty($res)) {
+			$this->debug->log(__METHOD__ . ': ' . $this->link->error, Debug::ERROR);
+
 			// TODO: raise an excpetion
-			var_dump($res);
 
 			return false;
 		}
@@ -174,7 +186,7 @@ class DatabaseMysql extends Database {
 	 * Get data for current row
 	 */
 	public function fetchRow($results) {
-		$row = $results->fetch_row();
+		$row = $results->fetch_assoc();
 
 		return !is_null($row) ? $row : false;
 	}
@@ -190,7 +202,7 @@ class DatabaseMysql extends Database {
 	 * Get information about current connection
 	 */
 	public function getInfo() {
-		return $this->isConnected() ? $this->link->host_info : '';
+		return $this->isConnected() ? $this->link->server_info : '';
 	}
 
 	/**

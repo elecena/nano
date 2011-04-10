@@ -9,5 +9,6 @@ $config['cache'] = array(
 );
 $config['database'] = array(
 	'driver' => 'mysql',
+	'utf' => true,
 );
 $config['foo']['bar'] = '123';

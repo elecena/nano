@@ -20,12 +20,17 @@ abstract class Database {
 	/**
 	 * Force constructors to be protected - use Database::connect
 	 */
-	abstract protected function __construct(Array $settings);
+	protected function __construct(NanoApp $app, Array $settings) {
+		// use debugger from the application
+		$this->debug = $app->getDebug();
+	}
 
 	/**
 	 * Connect to a given database
 	 */
 	public static function connect(NanoApp $app, Array $settings) {
+		$debug = $app->getDebug();
+
 		$driver = isset($settings['driver']) ? $settings['driver'] : null;
 		$instance = null;
 
@@ -37,17 +42,19 @@ abstract class Database {
 			if (file_exists($src)) {
 				require_once $src;
 
-				try {
-					$instance = new $className($settings);
+				//$debug->log(__METHOD__ . ' - connecting using "' . $driver . '" driver');
 
-					// use debugger from the application
-					$instance->debug = $app->getDebug();
+				try {
+					$instance = new $className($app, $settings);
 				}
 				catch(Exception $e) {
 					// TODO: handle exception
 					//var_dump($e->getMessage());
 				}
 			}
+		}
+		else {
+			$debug->log(__METHOD__ . ' - no driver specified', DEBUG::ERROR);
 		}
 
 		return $instance;
@@ -133,7 +140,7 @@ abstract class Database {
 	public function selectField($table, $field, $where = array(), Array $options = array()) {
 		$row = $this->selectRow($table, $field, $where, $options);
 
-		return !empty($row) ? $row[0] : false;
+		return !empty($row) ? reset($row) : false;
 	}
 
 	/**
