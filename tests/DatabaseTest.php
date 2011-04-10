@@ -83,6 +83,26 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('foo="bar" AND test="123"', $whereSql);
 	}
 
+	public function testResolveOrderBy() {
+		$database = $this->getDatabaseMySql();
+
+		// test ORDER BY
+		$optionsSql = $database->resolveOrderBy(false);
+		$this->assertFalse($optionsSql);
+
+		$optionsSql = $database->resolveOrderBy('');
+		$this->assertEquals('', $optionsSql);
+
+		$optionsSql = $database->resolveOrderBy('foo ASC');
+		$this->assertEquals('foo ASC', $optionsSql);
+
+		$optionsSql = $database->resolveOrderBy(array('foo ASC', 'bar DESC'));
+		$this->assertEquals('foo ASC,bar DESC', $optionsSql);
+
+		$optionsSql = $database->resolveOrderBy(array('foo' => 'ASC', 'bar' => 'DESC'));
+		$this->assertEquals('foo ASC,bar DESC', $optionsSql);
+	}
+
 	public function testResolveOptions() {
 		$database = $this->getDatabaseMySql();
 
@@ -101,5 +121,17 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 
 		$optionsSql = $database->resolveOptions(array('offset' => 2, 'limit' => '5', 'order' => 'foo DESC'));
 		$this->assertEquals('ORDER BY foo DESC LIMIT 5 OFFSET 2', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('offset' => 2, 'limit' => '5', 'order' => array('foo' => 'DESC')));
+		$this->assertEquals('ORDER BY foo DESC LIMIT 5 OFFSET 2', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('offset' => 2, 'limit' => '5', 'order' => array('foo' => 'DESC', 'bar')));
+		$this->assertEquals('ORDER BY foo DESC,bar LIMIT 5 OFFSET 2', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('offset 2', 'limit 5'));
+		$this->assertEquals('offset 2 limit 5', $optionsSql);
+
+		$optionsSql = $database->resolveOptions(array('limit' => 5, 'offset 2'));
+		$this->assertEquals('LIMIT 5', $optionsSql);
 	}
 }

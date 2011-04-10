@@ -90,18 +90,51 @@ abstract class Database {
 
 	/**
 	 * Select given fields from a table using following WHERE statements
+	 *
+	 * @see http://dev.mysql.com/doc/refman/5.0/en/select.html
 	 */
-	abstract public function select($table, $fields, $where = array(), Array $options = array());
+	public function select($table, $fields, $where = array(), Array $options = array()) {
+		$sql = 'SELECT ' . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
+
+		$whereSql = $this->resolveWhere($where);
+		if (!empty($whereSql)) {
+			$sql .= ' WHERE ' . $whereSql;
+		}
+
+		$optionsSql = $this->resolveOptions($options);
+		if (!empty($optionsSql)) {
+			$sql .= ' ' . $optionsSql;
+		}
+
+		return $this->query($sql);
+	}
 
 	/**
 	 * Select given fields from a table using following WHERE statements (return single row)
 	 */
-	abstract public function selectRow($table, $fields, $where = array(), Array $options = array());
+	public function selectRow($table, $fields, $where = array(), Array $options = array()) {
+		$options['limit'] = 1;
+		$res = $this->select($table, $fields, $where, $options);
+
+		if (!empty($res)) {
+			$ret = $res->fetchRow();
+
+			$res->free();
+			return $ret;
+		}
+		else {
+			return false;
+		}
+	}
 
 	/**
 	 * Select given fields from a table using following WHERE statements (return single field)
 	 */
-	abstract public function selectField($table, $field, $where = array(), Array $options = array());
+	public function selectField($table, $field, $where = array(), Array $options = array()) {
+		$row = $this->selectRow($table, $field, $where, $options);
+
+		return !empty($row) ? $row[0] : false;
+	}
 
 	/**
 	 * Remove rows from a table using following WHERE statements
@@ -132,6 +165,26 @@ abstract class Database {
 	 * Get number of rows affected by the recent query
 	 */
 	abstract public function getRowsAffected();
+
+	/**
+	 * Get number of rows in given results set
+	 */
+	abstract public function numRows($results);
+
+	/**
+	 * Change the position of results cursor
+	 */
+	abstract public function seekRow($results, $rowId);
+
+	/**
+	 * Get data for current row
+	 */
+	abstract public function fetchRow($results);
+
+	/**
+	 * Free the memory
+	 */
+	abstract public function freeResults($results);
 
 	/**
 	 * Get information about current connection
@@ -186,13 +239,41 @@ abstract class Database {
 	}
 
 	/**
+	 * Return part of SQL for given ORDER BY conditions
+	 */
+	public function resolveOrderBy($orderBy) {
+		if (is_string($orderBy)) {
+			$sql = $orderBy;
+		}
+		else if (is_array($orderBy)) {
+			$sqlParts = array();
+
+			foreach($orderBy as $field => $cond) {
+				if (is_numeric($field)) {
+					$sqlParts[] = $cond;
+				}
+				else {
+					$sqlParts[] = $field . ' ' . $cond;
+				}
+			}
+
+			$sql = implode(',', $sqlParts);
+		}
+		else {
+			$sql = false;
+		}
+
+		return $sql;
+	}
+
+	/**
 	 * Return part of SQL for given set of options
 	 */
 	public function resolveOptions(Array $options) {
 		$sqlParts = array();
 
 		if (isset($options['order'])) {
-			$sqlParts[] = 'ORDER BY ' . $options['order'];
+			$sqlParts[] = 'ORDER BY ' . $this->resolveOrderBy($options['order']);
 		}
 
 		if (isset($options['limit'])) {
@@ -201,6 +282,13 @@ abstract class Database {
 
 		if (isset($options['offset'])) {
 			$sqlParts[] = 'OFFSET ' . intval($options['offset']);
+		}
+
+		// parse options it they were provided as a simple list
+		if (empty($sqlParts)) {
+			foreach($options as $opt) {
+				$sqlParts[] = $opt;
+			}
 		}
 
 		return implode(' ', $sqlParts);

@@ -67,9 +67,22 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Send given query and return results handler
+	 *
+	 * @see http://www.php.net/manual/en/mysqli.real-query.php
 	 */
-	public function query($sql, $resultmode =  MYSQLI_STORE_RESULT) {
-		return $this->link->query($sql, $resultmode);
+	public function query($sql) {
+		$res = $this->link->query($sql, MYSQLI_USE_RESULT);
+
+		// check for errors
+		if (empty($res)) {
+			// TODO: raise an excpetion
+			var_dump($res);
+
+			return false;
+		}
+
+		// wrap results into iterator
+		return new DatabaseResult($this, $res);
 	}
 
 	/**
@@ -99,43 +112,6 @@ class DatabaseMysql extends Database {
 	public function escape($value) {
 		//return $this->link->escape_string($value);
 		return mysql_escape_string($value);
-	}
-
-	/**
-	 * Select given fields from a table using following WHERE statements
-	 *
-	 * @see http://dev.mysql.com/doc/refman/5.0/en/select.html
-	 */
-	public function select($table, $fields, $where = array(), Array $options = array()) {
-		$sql = 'SELECT ' . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
-
-		$whereSql = $this->resolveWhere($where);
-		if (!empty($whereSql)) {
-			$sql .= ' WHERE ' . $whereSql;
-		}
-
-		$optionsSql = $this->resolveOptions($options);
-		if (!empty($optionsSql)) {
-			$sql .= ' ' . $optionsSql;
-		}
-
-		$res = $this->query($sql);
-
-		return $res;
-	}
-
-	/**
-	 * Select given fields from a table using following WHERE statements (return single row)
-	 */
-	public function selectRow($table, $fields, $where = array(), Array $options = array()) {
-
-	}
-
-	/**
-	 * Select given fields from a table using following WHERE statements (return single field)
-	 */
-	public function selectField($table, $field, $where = array(), Array $options = array()) {
-
 	}
 
 	/**
@@ -170,7 +146,7 @@ class DatabaseMysql extends Database {
 	 * Get primary key value for recently inserted row
 	 */
 	public function getInsertId() {
-
+		return !empty($this->link) ? $this->link->insert_id : 0;
 	}
 
 	/**
@@ -178,6 +154,36 @@ class DatabaseMysql extends Database {
 	 */
 	public function getRowsAffected() {
 
+	}
+
+	/**
+	 * Get number of rows in given results set
+	 */
+	public function numRows($results) {
+		return $results->num_rows;
+	}
+
+	/**
+	 * Change the position of results cursor
+	 */
+	public function seekRow($results, $rowId) {
+		$results->data_seek($rowId);
+	}
+
+	/**
+	 * Get data for current row
+	 */
+	public function fetchRow($results) {
+		$row = $results->fetch_row();
+
+		return !is_null($row) ? $row : false;
+	}
+
+	/**
+	 * Free the memory
+	 */
+	public function freeResults($results) {
+		$results->free_result();
 	}
 
 	/**

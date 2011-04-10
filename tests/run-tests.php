@@ -6,6 +6,8 @@
  * $Id$
  */
 
+ini_set('memory_limit', '64M');
+ 
 require_once '../nano.php';
 
 // initialize instance of framework object

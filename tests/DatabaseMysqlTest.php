@@ -62,6 +62,9 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$this->assertQueryEquals('BEGIN');
 
 		// select() queries
+		$database->select('pages', '*');
+		$this->assertQueryEquals('SELECT * FROM pages');
+
 		$database->select('pages', 'id');
 		$this->assertQueryEquals('SELECT id FROM pages');
 
@@ -82,5 +85,34 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10));
 		$this->assertQueryEquals('SELECT id FROM pages LIMIT 5 OFFSET 10');
+	}
+
+	// requires server running on localhost:3306
+	public function testMySqlDatabase() {
+		return;
+
+		$app = Nano::app(dirname(__FILE__) . '/app');
+		$database = Database::connect($app, array('driver' => 'mysql', 'host' => 'localhost', 'user' => 'root', 'pass' => '', 'database' => 'test'));
+
+		$res = $database->select('test', '*');
+		foreach($res as $i => $row) {
+			var_dump($row);
+		}
+		$res->free();
+
+		$res = $database->select('test', '*');
+		while($row = $res->fetchRow()) {
+			var_dump($row);
+		}
+		$res->free();
+
+		$row = $database->selectRow('test', '*', array('id' => 2));
+		var_dump($row);
+
+		$row = $database->selectField('test', 'count(*)');
+		var_dump($row);
+
+		$res = $database->query('SELECT VERSION()');
+		var_dump($res->fetchField());
 	}
 }
