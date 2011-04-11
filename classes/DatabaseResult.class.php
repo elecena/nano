@@ -57,7 +57,7 @@ class DatabaseResult implements Iterator, Countable {
 	public function fetchField() {
 		$row = $this->fetchRow();
 
-		return !empty($row) ? $row[0] : false;
+		return !empty($row) ? reset($row) : false;
 	}
 
 	/**
