@@ -80,9 +80,13 @@ class DatabaseMysql extends Database {
 	 * @see http://www.php.net/manual/en/mysqli.real-query.php
 	 */
 	public function query($sql) {
-		$this->debug->log(__METHOD__ . ': ' . $sql, Debug::NOTICE);
-
+		$time = microtime(true);
 		$res = $this->link->query($sql, MYSQLI_USE_RESULT);
+		$time = microtime(true) - $time;
+
+		$timeFormatted = ' [' . round($time, 4) . ' s]';
+
+		$this->debug->log(__METHOD__ . ': ' . $sql . $timeFormatted, Debug::NOTICE);
 
 		// check for errors
 		if (empty($res)) {
