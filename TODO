@@ -2,7 +2,7 @@
 * debug logging									[DONE]
 * templating system								[DONE]
 * output formatter (json, xml, jsonp)			[DONE]
-* database layer
+* database layer								[DONE]
 * API entry point (api.php)
 * RSS feeds generator
 * XML sitemap generator
