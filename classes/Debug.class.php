@@ -124,7 +124,7 @@ class Debug {
 	 */
 	private function getTimestamp() {
 		$timestamp = microtime(true /* get_as_float */) - $this->start;
-		$timestamp = sprintf('%.4f', $timestamp);
+		$timestamp = sprintf('%.3f', $timestamp);
 
 		return $timestamp;
 	}
