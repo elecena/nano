@@ -17,7 +17,7 @@ abstract class Module {
 	protected $debug;
 
 	// DB connection
-	protected $db;
+	protected $database;
 
 	// HTTP request
 	protected $request;
@@ -68,6 +68,7 @@ abstract class Module {
 			$instance->app = $app;
 			$instance->cache = $app->getCache();
 			$instance->config = $app->getConfig();
+			$instance->database = $app->getDatabase();
 			$instance->debug = $app->getDebug();
 			$instance->events = $app->getEvents();
 			$instance->request = $app->getRequest();
