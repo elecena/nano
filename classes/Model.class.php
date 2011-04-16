@@ -29,7 +29,7 @@ abstract class Model {
 	/**
 	 * Use given application
 	 */
-	private function __construct(NanoApp $app) {
+	function __construct(NanoApp $app) {
 		$this->app = $app;
 
 		$this->cache = $app->getCache();
