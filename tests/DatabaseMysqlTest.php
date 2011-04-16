@@ -54,6 +54,11 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('foo\\"s', $database->escape('foo"s'));
 		$this->assertEquals('foo\\\'s', $database->escape('foo\'s'));
 
+		// test performance data
+		$performanceData = $database->getPerformanceData();
+		$this->assertEquals(0, $performanceData['queries']);
+		$this->assertEquals(0, $performanceData['time']);
+
 		// test queries
 		$database->query('SET foo = 1');
 		$this->assertQueryEquals('SET foo = 1');
@@ -94,25 +99,34 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$app = Nano::app(dirname(__FILE__) . '/app');
 		$database = Database::connect($app, array('driver' => 'mysql', 'host' => 'localhost', 'user' => 'root', 'pass' => '', 'database' => 'test'));
 
+		// test performance data
+		$performanceData = $database->getPerformanceData();
+		$this->assertEquals(0, $performanceData['queries']);
+		$this->assertEquals(0, $performanceData['time']);
+
 		$res = $database->select('test', '*');
 		foreach($res as $i => $row) {
-			var_dump($row);
+			#var_dump($row);
 		}
 		$res->free();
 
 		$res = $database->select('test', '*');
 		while($row = $res->fetchRow()) {
-			var_dump($row);
+			#var_dump($row);
 		}
 		$res->free();
 
 		$row = $database->selectRow('test', '*', array('id' => 2));
-		var_dump($row);
+		#var_dump($row);
 
 		$row = $database->selectField('test', 'count(*)');
-		var_dump($row);
+		#var_dump($row);
 
 		$res = $database->query('SELECT VERSION()');
-		var_dump($res->fetchField());
+		#var_dump($res->fetchField());
+
+		$performanceData = $database->getPerformanceData();
+		$this->assertEquals(5, $performanceData['queries']);
+		$this->assertTrue($performanceData['time'] > 0);
 	}
 }

@@ -17,6 +17,12 @@ abstract class Database {
 	// indicates that connection was successfully established
 	protected $connected = false;
 
+	// number of queries
+	protected $queries = 0;
+
+	// total time of queries (in seconds)
+	protected $queriesTime = 0;
+
 	/**
 	 * Force constructors to be protected - use Database::connect
 	 */
@@ -318,5 +324,15 @@ abstract class Database {
 		}
 
 		return implode(' ', $sqlParts);
+	}
+
+	/**
+	 * Return performance data
+	 */
+	public function getPerformanceData() {
+		return array(
+			'queries' => $this->queries,
+			'time' => $this->queriesTime,
+		);
 	}
 }

@@ -84,6 +84,11 @@ class DatabaseMysql extends Database {
 		$res = $this->link->query($sql, MYSQLI_USE_RESULT);
 		$time = microtime(true) - $time;
 
+		// update stats
+		$this->queries++;
+		$this->queriesTime += $time;
+
+		// log query
 		$timeFormatted = ' [' . sprintf('%.3f', $time) . ' s]';
 
 		$this->debug->log(__METHOD__ . ': ' . $sql . $timeFormatted, Debug::NOTICE);

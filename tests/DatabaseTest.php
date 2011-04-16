@@ -41,6 +41,10 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertInstanceOf('DatabaseMysql', $database);
 		$this->assertFalse($database->isConnected());
+
+		$performanceData = $database->getPerformanceData();
+		$this->assertEquals(0, $performanceData['queries']);
+		$this->assertEquals(0, $performanceData['time']);
 	}
 
 	public function testPrepareSQL() {
@@ -97,10 +101,10 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 
 		$whereSql = $database->resolveWhere(array('foo' => 'bar', 'test' => '123'));
 		$this->assertEquals('foo="bar" AND test="123"', $whereSql);
-		
+
 		$whereSql = $database->resolveWhere(array('foo' => array(1, 5, 6)));
 		$this->assertEquals('foo IN ("1","5","6")', $whereSql);
-		
+
 		$whereSql = $database->resolveWhere(array('foo' => array("test's", 'foo')));
 		$this->assertEquals('foo IN ("test\\\'s","foo")', $whereSql);
 	}
