@@ -204,6 +204,21 @@ abstract class Database {
 	abstract public function isConnected();
 
 	/**
+	 * Prepare SQL by replacing placeholders with given set of values
+	 */
+	public function prepareSQL($sql, Array $values) {
+		$replacements = array();
+
+		foreach($values as $key => $value) {
+			$replacements['%' . $key . '%'] = $this->escape($value);
+		}
+
+		$sql = strtr($sql, $replacements);
+
+		return $sql;
+	}
+
+	/**
 	 * Return part of SQL for given list of values
 	 */
 	public function resolveList($values) {

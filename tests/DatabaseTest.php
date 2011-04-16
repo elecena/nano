@@ -43,6 +43,22 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($database->isConnected());
 	}
 
+	public function testPrepareSQL() {
+		$database = $this->getDatabaseMySql();
+
+		$sql = $database->prepareSQL('SELECT foo FROM bar WHERE test = "%val%"', array('val' => 'test'));
+		$this->assertEquals('SELECT foo FROM bar WHERE test = "test"', $sql);
+
+		$sql = $database->prepareSQL('SELECT foo FROM bar WHERE test = "%val%"', array('val' => 'test', 'foo' => 'bar'));
+		$this->assertEquals('SELECT foo FROM bar WHERE test = "test"', $sql);
+
+		$sql = $database->prepareSQL('SELECT foo FROM bar WHERE test = "%val%"', array('foo' => 'bar'));
+		$this->assertEquals('SELECT foo FROM bar WHERE test = "%val%"', $sql);
+
+		$sql = $database->prepareSQL('SELECT foo FROM bar WHERE test = "%val%" AND foo = "%foo%"', array('val' => '%foo%', 'foo' => 'bar'));
+		$this->assertEquals('SELECT foo FROM bar WHERE test = "%foo%" AND foo = "bar"', $sql);
+	}
+
 	public function testResolveList() {
 		$database = $this->getDatabaseMySql();
 
