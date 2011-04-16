@@ -68,7 +68,8 @@ class Nano {
 		$debug->setLogFile($logFile);
 		$debug->clearLogFile();
 
-		$debug->log('Nano v' . self::VERSION . ' CLI app started');
+		// log nano version and when app was started
+		$debug->log('Nano v' . self::VERSION . ' CLI app started at ' . date('Y-m-d H:i:s'));
 		$debug->log('----');
 
 		return $app;

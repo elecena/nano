@@ -104,18 +104,28 @@ class Debug {
 			return false;
 		}
 
-		// get "delta" timestamp to log
-		$delta = round(microtime(true /* get_as_float */) - $this->start, 4);
+		// timestamp
+		$timestamp = $this->getTimestamp();
 
 		// clear the message
 		$msg = trim($msg);
 
 		// line to be added
-		$msgLine = "{$delta}: {$msg}\n";
+		$msgLine = "{$timestamp}: {$msg}\n";
 
 		// log to file
 		file_put_contents($this->getLogFile(), $msgLine, FILE_APPEND | LOCK_EX);
 
 		return true;
+	}
+
+	/**
+	 * Get timestamp to be added before log message
+	 */
+	private function getTimestamp() {
+		$timestamp = microtime(true /* get_as_float */) - $this->start;
+		$timestamp = sprintf('%.4f', $timestamp);
+
+		return $timestamp;
 	}
 }
