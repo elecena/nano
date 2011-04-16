@@ -246,6 +246,10 @@ abstract class Database {
 				if (is_numeric($field)) {
 					$sqlParts[] = $cond;
 				}
+				else if (is_array($cond)) {
+					$cond = array_map(array($this, 'escape'), $cond);
+					$sqlParts[] = $field . ' IN ("' . implode('","', $cond) . '")';
+				}
 				else {
 					$sqlParts[] = $field . '="' . $this->escape($cond) . '"';
 				}
