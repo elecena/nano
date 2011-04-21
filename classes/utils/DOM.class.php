@@ -116,6 +116,15 @@ class DOM {
 	}
 
 	/**
+	 * Return text content (tags are stripped out) of the first node matching given XPath
+	 */
+	public function getNodeTextContent($xpath) {
+		$node = $this->getNode($xpath);
+
+		return !empty($node) ? strip_tags($node->asXML()) : null;
+	}
+
+	/**
 	 * Return given attribute of the first node matching given XPath
 	 */
 	public function getNodeAttr($xpath, $attr) {
