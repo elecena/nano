@@ -45,12 +45,10 @@ class HttpClient {
 		$this->handle = curl_init();
 
 		curl_setopt_array($this->handle, array(
-			//CURLOPT_COOKIEFILE => "{$this->dir}/.cookies",
-			//CURLOPT_COOKIEJAR => "{$this->dir}/.cookies",
 			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_HEADER => false,
-			CURLOPT_HEADERFUNCTION => array(&$this, 'parseResponseHeader'),
+			CURLOPT_HEADERFUNCTION => array($this, 'parseResponseHeader'),
 			CURLOPT_MAXREDIRS => 2,
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
@@ -128,7 +126,7 @@ class HttpClient {
 	 */
 	public function head($url, Array $query = array()) {
 		// add request params
-		if (!empty($query) && is_array($query)) {
+		if (!empty($query)) {
 			$url .= '?' . http_build_query($query);
 		}
 
