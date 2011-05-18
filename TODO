@@ -3,9 +3,10 @@
 * templating system								[DONE]
 * output formatter (json, xml, jsonp)			[DONE]
 * database layer								[DONE]
+* general entry point (index.php)
 * API entry point (api.php)
-* RSS feeds generator
 * XML sitemap generator
+* RSS feeds generator
 * sessions handling
 * theming
 * JS / CSS loading + minification
