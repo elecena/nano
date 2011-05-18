@@ -13,6 +13,7 @@
 * adding meta tags to HTML
 * static pages module (/pages/static)
 * GData client
+* GoogleAnalytics API client
 * cron jobs
 
 
