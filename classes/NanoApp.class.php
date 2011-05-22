@@ -96,7 +96,7 @@ class NanoApp {
 
 		foreach($moduleFiles as $module) {
 			$moduleName = ucfirst(basename($module));
-			$this->modules[$moduleName] = Module::factory($moduleName, $this);
+			$this->modules[$moduleName] = Module::factory($this, $moduleName);
 		}
 	}
 

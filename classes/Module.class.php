@@ -38,21 +38,27 @@ abstract class Module {
 	protected $name;
 
 	/**
-	 * Use given application
+	 * Setup the module usin ggiven application
 	 */
-	private function __construct($name) {
+	protected function __construct(NanoApp $app, $name) {
 		$this->name = $name;
-	}
 
-	/**
-	 * Perform initialization tasks
-	 */
-	abstract protected function init();
+		// set protected fields
+		$this->app = $app;
+		$this->cache = $app->getCache();
+		$this->config = $app->getConfig();
+		$this->database = $app->getDatabase();
+		$this->debug = $app->getDebug();
+		$this->events = $app->getEvents();
+		$this->request = $app->getRequest();
+		$this->response = $app->getResponse();
+		$this->router = $app->getRouter();
+	}
 
 	/**
 	 * Create and setup instance of given module for given application
 	 */
-	public static function factory($moduleName, NanoApp $app) {
+	public static function factory(NanoApp $app, $moduleName) {
 		$className = $moduleName . 'Module';
 
 		// request given file
@@ -61,21 +67,7 @@ abstract class Module {
 
 		if (file_exists($src)) {
 			require_once $src;
-
-			$instance = new $className($moduleName);
-
-			// set protected fields
-			$instance->app = $app;
-			$instance->cache = $app->getCache();
-			$instance->config = $app->getConfig();
-			$instance->database = $app->getDatabase();
-			$instance->debug = $app->getDebug();
-			$instance->events = $app->getEvents();
-			$instance->request = $app->getRequest();
-			$instance->response = $app->getResponse();
-			$instance->router = $app->getRouter();
-
-			$instance->init();
+			$instance = new $className($app, $moduleName);
 		}
 		else {
 			$instance = null;
@@ -94,7 +86,7 @@ abstract class Module {
 	/**
 	 * Binds given module's method to be fired when given event occurs
 	 *
-	 * When can returns false, fire() method returns false too and no callbacks execution is stopped
+	 * When can false is returned, fire() method returns false too and no callbacks execution is stopped
 	 */
 	protected function bind($eventName, $callbackMethod) {
 		$this->events->bind($eventName, array($this, $callbackMethod));

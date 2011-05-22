@@ -85,7 +85,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		// test creation of not existing module
 		$this->assertNull($this->app->getModule('NotExistingModule'));
-		$this->assertNull(Module::factory('NotExistingModule', $this->app));
+		$this->assertNull(Module::factory($this->app, 'NotExistingModule'));
 	}
 
 	public function testAppConfig() {

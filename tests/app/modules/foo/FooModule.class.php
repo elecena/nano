@@ -8,7 +8,8 @@
 
 class FooModule extends Module {
 
-	protected function init() {
+	protected function __construct(NanoApp $app, $name) {
+		parent::__construct($app, $name);
 		$this->bind('eventFoo', 'onFoo');
 	}
 
