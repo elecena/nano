@@ -10,13 +10,13 @@ class CacheRedis extends Cache {
 
 	// Redis server IP
 	private $ip;
-	
+
 	// Redis server port
 	private $port;
-	
+
 	// Redis authentication password
 	private $pass;
-	
+
 	// Redis selected database
 	private $db;
 
@@ -38,7 +38,7 @@ class CacheRedis extends Cache {
 	/**
 	 * Sets key value
 	 */
-	public function set($key, $value, $ttl) {}
+	public function set($key, $value, $ttl = null) {}
 
 	/**
 	 * Checks if given key exists
@@ -49,4 +49,14 @@ class CacheRedis extends Cache {
 	 * Deletes given key
 	 */
 	public function delete($key) {}
+
+	/**
+	 * Increase given key's value and returns updated value
+	 */
+	public function incr($key, $by = 1) {}
+
+	/**
+	 * Decrease given key's value and returns updated value
+	 */
+	public function decr($key, $by = 1) {}
 }

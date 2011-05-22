@@ -13,7 +13,7 @@ abstract class Cache {
 
 	// number of misses for cache keys
 	private $misses = 0;
-	
+
 	/**
 	 * Force constructors to be protected - use Cache::factory
 	 */
@@ -46,7 +46,7 @@ abstract class Cache {
 	/**
 	 * Sets key value
 	 */
-	abstract public function set($key, $value, $ttl);
+	abstract public function set($key, $value, $ttl = null);
 
 	/**
 	 * Checks if given key exists
@@ -57,6 +57,16 @@ abstract class Cache {
 	 * Deletes given key
 	 */
 	abstract public function delete($key);
+
+	/**
+	 * Increase given key's value and returns updated value
+	 */
+	abstract public function incr($key, $by = 1);
+
+	/**
+	 * Decrease given key's value and returns updated value
+	 */
+	abstract public function decr($key, $by = 1);
 
 	/**
 	 * Serialize data before storing in the cache
@@ -77,7 +87,7 @@ abstract class Cache {
 	/**
 	 * Get key used for storing in the cache
 	 */
-	protected function getKey($key) {
+	protected function getStorageKey($key) {
 		// merge key passed as an array
 		if (is_array($key)) {
 			$key = implode('::', $key);

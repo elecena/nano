@@ -19,12 +19,18 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull($cache);
 	}
 
-	public function testCacheGetSet() {
+	private function getCacheFile() {
 		$dir = dirname(__FILE__) . '/app/cache';
 
 		$cache = Cache::factory('file', array(
 			'directory' => $dir
 		));
+
+		return $cache;
+	}
+
+	public function testCacheGetSet() {
+		$cache = $this->getCacheFile();
 		$this->assertInstanceOf('CacheFile', $cache);
 
 		$key = 'foo';
@@ -61,5 +67,34 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($cache->exists($key));
 		$this->assertNull($cache->get($key));
 		$this->assertEquals($value, $cache->get($key, $value));
+	}
+
+	public function testCacheIncrDecr() {
+		$cache = $this->getCacheFile();
+		$this->assertInstanceOf('CacheFile', $cache);
+
+		$key = 'bar';
+		$value = 12;
+
+		$this->assertFalse($cache->exists($key));
+		$this->assertNull($cache->incr($key));
+		$this->assertNull($cache->decr($key));
+
+		$cache->set($key, $value, 60);
+
+		$this->assertEquals($value, $cache->get($key));
+		$this->assertEquals($value + 1, $cache->incr($key));
+		$this->assertEquals($value + 5, $cache->incr($key, 4));
+		$this->assertEquals($value + 5, $cache->get($key));
+
+		$this->assertEquals($value + 4, $cache->decr($key));
+		$this->assertEquals($value, $cache->decr($key, 4));
+		$this->assertEquals($value, $cache->get($key));
+
+		$cache->delete($key);
+
+		$this->assertFalse($cache->exists($key));
+		$this->assertNull($cache->incr($key));
+		$this->assertNull($cache->decr($key));
 	}
 }
