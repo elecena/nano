@@ -23,11 +23,13 @@ class CacheRedis extends Cache {
 	/**
 	 * Creates an instance of cache driver
 	 */
-	protected function __construct(Array $options = array()) {
-		$this->ip = $options['ip'];
-		$this->port = isset($options['port']) ? $options['port'] : 0;
-		$this->pass = isset($options['pass']) ? $options['pass'] : null;
-		$this->db = isset($options['db']) ? $options['db'] : 0;
+	protected function __construct(NanoApp $app, Array $settings) {
+		parent::__construct($app, $settings);
+
+		$this->ip = $settings['ip'];
+		$this->port = isset($settings['port']) ? $settings['port'] : 0;
+		$this->pass = isset($settings['pass']) ? $settings['pass'] : null;
+		$this->db = isset($settings['db']) ? $settings['db'] : 0;
 	}
 
 	/**

@@ -8,25 +8,29 @@
 
 class CacheTest extends PHPUnit_Framework_TestCase {
 
+	private function getCache($driver = 'file', $settings = array()) {
+		// use test application's directory
+		$dir = realpath(dirname(__FILE__) . '/app');
+		$app = Nano::app($dir);
+
+		$settings = array_merge(array(
+			'driver' => $driver,
+		), $settings);
+
+		return Cache::factory($app, $settings);
+	}
+
 	public function testCacheFactory() {
-		$cache = Cache::factory('file');
-		$this->assertInstanceOf('CacheFile', $cache);
-
-		$cache = Cache::factory('FiLe');
-		$this->assertInstanceOf('CacheFile', $cache);
-
-		$cache = Cache::factory('Unknown');
-		$this->assertNull($cache);
+		$this->assertInstanceOf('CacheFile', $this->getCache('file'));
+		$this->assertInstanceOf('CacheFile', $this->getCache('FiLe'));
+		$this->assertInstanceOf('CacheRedis', $this->getCache('redis', array('ip' => '127.0.0.1')));
+		$this->assertNull($this->getCache('Unknown'));
 	}
 
 	private function getCacheFile() {
 		$dir = dirname(__FILE__) . '/app/cache';
 
-		$cache = Cache::factory('file', array(
-			'directory' => $dir
-		));
-
-		return $cache;
+		return $this->getCache('file', array('directory' => $dir));
 	}
 
 	public function testCacheGetSet() {

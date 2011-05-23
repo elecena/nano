@@ -60,13 +60,12 @@ class NanoApp {
 		$this->config = new Config($this->dir . '/config');
 		$this->config->load($configSet);
 
-		// setup cache
-		$cacheType = $this->config->get('cache.driver', 'file');
-		$cacheOptions = $this->config->get('cache.options', array(
-			'directory' => $this->dir . '/cache'
+		// setup cache (using default driver if none provided)
+		$cacheSettings = $this->config->get('cache', array(
+			'driver' => 'file',
 		));
 
-		$this->cache = Cache::factory($cacheType, $cacheOptions);
+		$this->cache = Cache::factory($this, $cacheSettings);
 
 		// set request
 		$params = isset($_REQUEST) ? $_REQUEST : array();

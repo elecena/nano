@@ -94,7 +94,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->dir . '/config', $config->getDirectory());
 
 		$this->assertEquals('value', $config->get('test'));
-		$this->assertEquals(array('driver' => 'file', 'options' => array()), $config->get('cache'));
+		$this->assertEquals(array('driver' => 'file'), $config->get('cache'));
 		$this->assertEquals('file', $config->get('cache.driver'));
 		$this->assertEquals('123', $config->get('foo.bar'));
 
@@ -112,7 +112,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$config = $this->app->getConfig();
 		$this->assertTrue($config->load('devel'));
 
-		$this->assertEquals(array('driver' => 'redis', 'options' => array('ip' => '127.0.0.1')), $config->get('cache'));
+		$this->assertEquals(array('driver' => 'redis', 'ip' => '127.0.0.1'), $config->get('cache'));
 		$this->assertEquals('redis', $config->get('cache.driver'));
 		$this->assertEquals('123', $config->get('foo.bar'));
 

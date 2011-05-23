@@ -8,6 +8,9 @@
 
 abstract class Cache {
 
+	// debug
+	protected $debug;
+
 	// number of hits for cache keys
 	private $hits = 0;
 
@@ -17,23 +20,29 @@ abstract class Cache {
 	/**
 	 * Force constructors to be protected - use Cache::factory
 	 */
-	abstract protected function __construct(Array $options);
+	protected function __construct(NanoApp $app, Array $settings) {
+		// use debugger from the application
+		$this->debug = $app->getDebug();
+	}
 
 	/**
 	 * Creates an instance of given cache driver
 	 */
-	public static function factory($driver, Array $options = array()) {
-		$className = 'Cache' . ucfirst(strtolower($driver));
+	public static function factory(NanoApp $app, Array $settings) {
 
-		$src = dirname(__FILE__) . '/cache/' . $className . '.class.php';
+		$driver = isset($settings['driver']) ? $settings['driver'] : null;
+		$instance = null;
 
-		if (file_exists($src)) {
-			require_once $src;
+		if (!empty($driver)) {
+				$className = 'Cache' . ucfirst(strtolower($driver));
 
-			$instance = new $className($options);
-		}
-		else {
-			$instance = null;
+			$src = dirname(__FILE__) . '/cache/' . $className . '.class.php';
+
+			if (file_exists($src)) {
+				require_once $src;
+
+				$instance = new $className($app, $settings);
+			}
 		}
 		return $instance;
 	}
@@ -59,12 +68,12 @@ abstract class Cache {
 	abstract public function delete($key);
 
 	/**
-	 * Increase given key's value and returns updated value
+	 * Increases given key's value and returns updated value
 	 */
 	abstract public function incr($key, $by = 1);
 
 	/**
-	 * Decrease given key's value and returns updated value
+	 * Decreases given key's value and returns updated value
 	 */
 	abstract public function decr($key, $by = 1);
 
