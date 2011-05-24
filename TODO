@@ -8,7 +8,7 @@
 * general entry point (index.php)
 * API entry point (api.php)
 * XML sitemap generator
-* RSS feeds generator
+* RSS feed generator
 * sessions handling
 * theming
 * JS / CSS loading + minification
@@ -16,6 +16,7 @@
 * static pages module (/pages/static)
 * GData client
 * GoogleAnalytics API client
+* server-side GoogleAnalytics tracking
 * cron jobs
 
 
