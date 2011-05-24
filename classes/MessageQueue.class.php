@@ -11,9 +11,6 @@ abstract class MessageQueue {
 	// debug
 	protected $debug;
 
-	// connection resource
-	protected $link;
-
 	/**
 	 * Force constructors to be protected - use MessageQueue::connect
 	 */
@@ -58,22 +55,27 @@ abstract class MessageQueue {
 	}
 
 	/**
-	 * Add (right push) given value to the end of given queue
+	 * Use given queue
 	 */
-	abstract public function push($queueName, $value);
+	abstract public function useQueue($queueName);
 
 	/**
-	 * Get and remove (left pop) a value from the beginning of given queue
+	 * Add (right push) given message to the end of current queue and return ID of added message
 	 */
-	abstract public function pop($queueName);
+	abstract public function push($message);
 
 	/**
-	 * Get number of items stored in given queue
+	 * Get and remove (left pop) message from the beginning of current queue
 	 */
-	abstract public function getLength($queueName);
+	abstract public function pop();
 
 	/**
-	 * Deletes given queue
+	 * Get number of items stored in current queue
+	 */
+	abstract public function getLength();
+
+	/**
+	 * Delete given queue
 	 */
 	abstract public function delete($queueName);
 }
