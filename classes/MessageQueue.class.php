@@ -11,6 +11,9 @@ abstract class MessageQueue {
 	// debug
 	protected $debug;
 
+	// queue name
+	protected $queueName;
+
 	/**
 	 * Force constructors to be protected - use MessageQueue::connect
 	 */
@@ -36,8 +39,6 @@ abstract class MessageQueue {
 			if (file_exists($src)) {
 				require_once $src;
 
-				//$debug->log(__METHOD__ . ' - connecting using "' . $driver . '" driver');
-
 				try {
 					$instance = new $className($app, $settings);
 				}
@@ -57,10 +58,12 @@ abstract class MessageQueue {
 	/**
 	 * Use given queue
 	 */
-	abstract public function useQueue($queueName);
+	public function useQueue($queueName) {
+		$this->queueName = $queueName;
+	}
 
 	/**
-	 * Add (right push) given message to the end of current queue and return ID of added message
+	 * Add (right push) given message to the end of current queue and return added message
 	 */
 	abstract public function push($message);
 
