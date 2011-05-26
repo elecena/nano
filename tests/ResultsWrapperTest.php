@@ -20,5 +20,10 @@ class ResultsWrapperTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($data['foo'], $res->getFoo());
 		$this->assertEquals($data['id'], $res->getId());
 		$this->assertEquals('abc', $res->getTest());
+		
+		$res = new ResultsWrapper();
+		$res->set('foo', 'test');
+
+		$this->assertEquals('test', $res->getFoo());
 	}
 }

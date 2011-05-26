@@ -11,7 +11,7 @@ class ResultsWrapper {
 	// results
 	protected $results;
 
-	function __construct($results) {
+	function __construct(Array $results = array()) {
 		$this->results = $results;
 	}
 
