@@ -8,8 +8,14 @@
 
 abstract class Cache {
 
+	// key parts separator
+	const SEPARATOR = '::';
+
 	// debug
 	protected $debug;
+
+	// prefix for key names
+	protected $prefix;
 
 	// number of hits for cache keys
 	private $hits = 0;
@@ -23,6 +29,9 @@ abstract class Cache {
 	protected function __construct(NanoApp $app, Array $settings) {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
+
+		// set prefix
+		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
 	}
 
 	/**
@@ -99,7 +108,12 @@ abstract class Cache {
 	protected function getStorageKey($key) {
 		// merge key passed as an array
 		if (is_array($key)) {
-			$key = implode('::', $key);
+			$key = implode(self::SEPARATOR, $key);
+		}
+
+		// add prefix (if provided)
+		if ($this->prefix !== false) {
+			$key = $this->prefix . self::SEPARATOR . $key;
 		}
 
 		return $key;

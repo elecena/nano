@@ -16,7 +16,7 @@ class CacheFile extends Cache {
 	protected function __construct(NanoApp $app, Array $settings) {
 		parent::__construct($app, $settings);
 
-		$this->dir = $app->getConfig()->get('cache.directory',  $app->getDirectory() . '/cache');
+		$this->dir = isset($settings['directory']) ? $settings['directory'] : ($app->getDirectory() . '/cache');
 	}
 
 	/**

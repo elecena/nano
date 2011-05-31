@@ -27,10 +27,14 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull($this->getCache('Unknown'));
 	}
 
-	private function getCacheFile() {
+	private function getCacheFile($settings = array()) {
 		$dir = dirname(__FILE__) . '/app/cache';
 
-		return $this->getCache('file', array('directory' => $dir));
+		$settings = array_merge(array(
+			'directory' => $dir,
+		), $settings);
+
+		return $this->getCache('file', $settings);
 	}
 
 	public function testCacheGetSet() {
@@ -100,5 +104,29 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($cache->exists($key));
 		$this->assertNull($cache->incr($key));
 		$this->assertNull($cache->decr($key));
+	}
+
+	public function testCachePrefix() {
+		$cacheA = $this->getCacheFile();
+		$cacheB = $this->getCacheFile(array('prefix' => 'foo'));
+
+		$key = 'bar';
+		$value = 12;
+
+		$cacheA->set($key, $value, 60);
+
+		$this->assertTrue($cacheA->exists($key));
+		$this->assertFalse($cacheB->exists($key));
+
+		$cacheB->set('test', $value, 60);
+
+		$this->assertFalse($cacheA->exists('test'));
+		$this->assertTrue($cacheB->exists('test'));
+
+		$cacheA->delete($key);
+		$cacheB->delete('test');
+
+		$this->assertFalse($cacheA->exists($key));
+		$this->assertFalse($cacheB->exists('test'));
 	}
 }
