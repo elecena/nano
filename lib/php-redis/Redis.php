@@ -102,6 +102,9 @@ class Redis {
 		return $response;
 	}
 	private function cmd($command) {
+		// nano
+		$command = implode(' ', $command);
+
 		$this->debug('Command: '.(is_array($command)?join(', ',$command):$command));
 		$this->connect ();
 		

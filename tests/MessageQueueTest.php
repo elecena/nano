@@ -21,8 +21,8 @@ class MessageQueueTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testMessageQueueFactory() {
-		//$this->assertInstanceOf('CacheFile', $this->getMessageQueue('file'));
-		//$this->assertInstanceOf('CacheFile', $this->getMessageQueue('FiLe'));
+		$this->assertInstanceOf('MessageQueueRedis', $this->getMessageQueue('redis'));
 		$this->assertNull($this->getMessageQueue('Unknown'));
+		$this->assertNull($this->getMessageQueue(false));
 	}
 }
