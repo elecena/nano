@@ -8,11 +8,17 @@
 
 abstract class MessageQueue {
 
+	// key parts separator
+	const SEPARATOR = '::';
+
 	// debug
 	protected $debug;
 
 	// queue name
 	protected $queueName;
+
+	// prefix
+	private $prefix;
 
 	/**
 	 * Force constructors to be protected - use MessageQueue::connect
@@ -20,6 +26,9 @@ abstract class MessageQueue {
 	protected function __construct(NanoApp $app, Array $settings) {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
+
+		// set prefix
+		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
 	}
 
 	/**
@@ -81,4 +90,21 @@ abstract class MessageQueue {
 	 * Delete given queue
 	 */
 	abstract public function delete($queueName);
+
+
+	/**
+	 * Get key used for storing message key
+	 */
+	protected function getStorageKey($key) {
+		// add queue name before key name
+		$key = 'mq' . self::SEPARATOR . $this->queueName . self::SEPARATOR . $key;
+
+		// add prefix (if provided)
+		if ($this->prefix !== false) {
+			$key = $this->prefix . self::SEPARATOR . $key;
+		}
+
+		return $key;
+	}
+
 }
