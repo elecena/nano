@@ -33,7 +33,7 @@ class MessageQueueRedis extends MessageQueue {
 
 		// lazy connect
 		$this->redis = new Redis($host, $port);
-		$this->redis->debug = true;
+		#$this->redis->debug = true;
 
 		// authenticate (if required)
 		if ($pass !== false) {
@@ -45,30 +45,59 @@ class MessageQueueRedis extends MessageQueue {
 	 * Add (right push) given message to the end of current queue and return added message
 	 */
 	public function push($message) {
+		// prepare message to be added to the queue
+		$id = intval($this->redis->incr($this->getLastIdKey()));
 
+		$msg = array(
+			'id' => $id,
+			'data' => $message,
+		);
+
+		// encode message
+		$rawMsg = json_encode($msg);
+
+		// hack for redis 1.02
+		$rawMsg = strlen($rawMsg) . "\n" . $rawMsg . "\n";
+
+		$this->redis->push($this->getQueueKey(), $rawMsg);
+
+		// return wrapper message
+		return new ResultsWrapper($msg);
 	}
 
 	/**
 	 * Get and remove (left pop) message from the beginning of current queue
 	 */
 	public function pop() {
+		$rawMsg = $this->redis->pop($this->getQueueKey());
 
+		if (!is_null($rawMsg)) {
+			// decode the message
+			$msg = json_decode($rawMsg, true /* as array */);
+
+			// return wrapped message
+			return new ResultsWrapper($msg);
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
 	 * Get number of items stored in the current queue
 	 */
 	public function getLength() {
-		$length = $this->redis->llen($this->getLastIdKey());
+		$length = $this->redis->llen($this->getQueueKey());
 
 		return intval($length);
 	}
 
 	/**
-	 * Delete given queue
+	 * Cleans current queue (i.e. remove all messages)
 	 */
-	public function delete($queueName) {
-
+	public function clean() {
+		$this->redis->delete($this->getQueueKey());
+		$this->redis->delete($this->getLastIdKey());
 	}
 
 	/**

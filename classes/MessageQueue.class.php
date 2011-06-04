@@ -87,13 +87,12 @@ abstract class MessageQueue {
 	abstract public function getLength();
 
 	/**
-	 * Delete given queue
+	 * Cleans current queue (i.e. remove all messages)
 	 */
-	abstract public function delete($queueName);
-
+	abstract public function clean();
 
 	/**
-	 * Get key used for storing message key
+	 * Get key used for storing message queue data
 	 */
 	protected function getStorageKey($key) {
 		// add queue name before key name
@@ -106,5 +105,4 @@ abstract class MessageQueue {
 
 		return $key;
 	}
-
 }
