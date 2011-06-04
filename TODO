@@ -3,8 +3,8 @@
 * templating system								[DONE]
 * output formatter (json, xml, jsonp)			[DONE]
 * database layer								[DONE]
-* message queue layer
-* redis client
+* message queue layer							[DONE]
+* redis client									[DONE]
 * general entry point (index.php)
 * API entry point (api.php)
 * XML sitemap generator
