@@ -66,10 +66,27 @@ class AppTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testAppFactory() {
+		// "simple" factory call (no extra params)
 		$obj = $this->app->factory('ExampleModel');
 
 		$this->assertInstanceOf('ExampleModel', $obj);
 		$this->assertInstanceOf('NanoApp', $obj->app);
+		$this->assertNull($obj->foo);
+		$this->assertNull($obj->bar);
+
+		// "complex" factory call (with extra params)
+		$obj = $this->app->factory('ExampleModel', array('test'));
+
+		$this->assertInstanceOf('ExampleModel', $obj);
+		$this->assertInstanceOf('NanoApp', $obj->app);
+		$this->assertEquals('test', $obj->foo);
+		$this->assertNull($obj->bar);
+
+		// "complex" factory call (with extra params)
+		$obj = $this->app->factory('ExampleModel', array('test', 123));
+
+		$this->assertEquals('test', $obj->foo);
+		$this->assertEquals(123, $obj->bar);
 
 		// test creation of not existing class
 		$this->assertNull($this->app->factory('NotExistingClass'));

@@ -102,11 +102,19 @@ class NanoApp {
 	/**
 	 * Returns instance of given class from /classes directory
 	 *
-	 * Class constructor is provided with application's instance
+	 * Class constructor is provided with application's instance and with extra parameters (if provided)
 	 */
-	public function factory($className) {
+	public function factory($className, Array $params = array()) {
 		if (class_exists($className)) {
 			$instance = new $className($this);
+
+			if (!empty($params)) {
+				// add NanoApp instance as the first constructor parameter
+				array_unshift($params, $this);
+
+				// @see http://www.php.net/manual/en/function.call-user-func-array.php#91565
+				call_user_func_array(array($instance, '__construct'), $params);
+			}
 		}
 		else {
 			$instance = null;

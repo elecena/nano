@@ -61,7 +61,7 @@ class MessageQueueRedis extends MessageQueue {
 
 		$this->redis->push($this->getQueueKey(), $rawMsg);
 
-		// return wrapper message
+		// return wrapped message
 		return new ResultsWrapper($msg);
 	}
 
