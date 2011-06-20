@@ -56,9 +56,6 @@ class MessageQueueRedis extends MessageQueue {
 		// encode message
 		$rawMsg = json_encode($msg);
 
-		// hack for redis 1.02
-		$rawMsg = strlen($rawMsg) . "\n" . $rawMsg . "\n";
-
 		$this->redis->push($this->getQueueKey(), $rawMsg);
 
 		// return wrapped message

@@ -14,7 +14,7 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 		$this->settings = array(
 			'driver' => 'redis',
 			'host' => '89.248.171.138', /* s2 */
-			'port' => 60379,
+			'port' => 60380,
 			'pass' => 'foobared',
 			'prefix' => 'test',
 			'queue' => 'foo',
@@ -91,6 +91,7 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 		for($n=0; $n < $length; $n++) {
 			$msg = array(
 				'foo' => $n,
+				'string' => "Foo bar\n123",
 				'test' => false,
 			);
 			$mq->push($msg);
@@ -105,7 +106,7 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 			$this->assertEquals($n, $mq->getLength());
 			$this->assertEquals($n+1, $msg->getId());
 
-			$this->assertEquals(array('foo' => $n, 'test' => false), $msg->getData());
+			$this->assertEquals(array('foo' => $n, 'string' => "Foo bar\n123", 'test' => false), $msg->getData());
 		}
 
 		// queue is now empty

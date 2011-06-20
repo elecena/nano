@@ -2,7 +2,7 @@
 class RedisException extends Exception {}
 /**
  * Redis database connection class
- * 
+ *
  * @author sash
  * @license LGPL
  * @version 1.2
@@ -12,12 +12,12 @@ class Redis {
 	private $host;
 	private $_sock;
 	public $debug=false;
-	
+
 	function __construct($host='localhost', $port = 6379) {
 		$this->host = $host;
 		$this->port = $port;
 	}
-	
+
 	private function connect() {
 		if ($this->_sock)
 			return;
@@ -34,7 +34,7 @@ class Redis {
 	private function debug($msg){
 		if ($this->debug) echo sprintf("[Redis] %s\n", $msg);
 	}
-	
+
 	private function read() {
 		if ($s = fgets ( $this->_sock )) {
 			$this->debug('Read: '.$s.' ('.strlen($s).' bytes)');
@@ -102,15 +102,12 @@ class Redis {
 		return $response;
 	}
 	private function cmd($command) {
-		// nano
-		$command = implode(' ', $command);
-
 		$this->debug('Command: '.(is_array($command)?join(', ',$command):$command));
 		$this->connect ();
-		
+
 		if (is_array($command)){
 			// Use unified command format
-			
+
 			$s = '*'.count($command)."\r\n";
 			foreach ($command as $m){
 				$s.='$'.strlen($m)."\r\n";
@@ -139,56 +136,56 @@ class Redis {
 			@fclose ( $this->_sock );
 		$this->_sock = null;
 	}
-	
+
 	////////////////////////////////
 	///// Connection handling
 	////////////////////////////////
-	
+
 	/**
 	 * close the connection
-	 * 
-	 * Ask the server to silently close the connection. 
-	 * 
-	 * @return void The connection is closed as soon as the QUIT command is received. 
+	 *
+	 * Ask the server to silently close the connection.
+	 *
+	 * @return void The connection is closed as soon as the QUIT command is received.
 	 */
 	function quit() {
 		return $this->cmd ( 'QUIT' );
 	}
-	
+
 	/**
 	 * simple password authentication if enabled
-	 * 
-	 * Request for authentication in a password protected Redis server. A Redis server 
-	 * can be instructed to require a password before to allow clients to issue commands. 
-	 * This is done using the requirepass directive in the Redis configuration file. 
-	 * 
-	 * If the password given by the client is correct the server replies with an 
-	 * OK status code reply and starts accepting commands from the client. Otherwise 
-	 * an error is returned and the clients needs to try a new password. Note that for 
-	 * the high performance nature of Redis it is possible to try a lot of passwords in 
-	 * parallel in very short time, so make sure to generate a strong and very long password 
-	 * so that this attack is infeasible. 
-	 * 
+	 *
+	 * Request for authentication in a password protected Redis server. A Redis server
+	 * can be instructed to require a password before to allow clients to issue commands.
+	 * This is done using the requirepass directive in the Redis configuration file.
+	 *
+	 * If the password given by the client is correct the server replies with an
+	 * OK status code reply and starts accepting commands from the client. Otherwise
+	 * an error is returned and the clients needs to try a new password. Note that for
+	 * the high performance nature of Redis it is possible to try a lot of passwords in
+	 * parallel in very short time, so make sure to generate a strong and very long password
+	 * so that this attack is infeasible.
+	 *
 	 * @param $password
 	 * @return string Status code reply
 	 */
 	function auth($password) {
 		return $this->cmd ( array('AUTH',$password) );
 	}
-	
+
 	////////////////////////////////
 	///// Commands operating on string values
 	////////////////////////////////
 	/**
 	 * set a key to a string value
-	 * 
+	 *
 	 * Time complexity: O(1)
-	 * 
-	 * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1 GB). 
-	 *  
+	 *
+	 * Set the string value as value of the key. The string can't be longer than 1073741824 bytes (1 GB).
+	 *
 	 * @param $key
 	 * @param $value
-	 * @param $preserve USE SETNX don't perform the operation if the target key already exists. 
+	 * @param $preserve USE SETNX don't perform the operation if the target key already exists.
 	 * @return string Status code reply
 	 */
 	function set($key, $value, $preserve = false) {
@@ -196,22 +193,22 @@ class Redis {
 	}
 	/**
 	 * return the string value of the key
-	 * 
+	 *
 	 * GET
-	 * Get the value of the specified key. If the key does not exist the special 
-	 * value 'nil' is returned. If the value stored at key is not a string an 
-	 * error is returned because GET can only handle string values. 
-	 * 
+	 * Get the value of the specified key. If the key does not exist the special
+	 * value 'nil' is returned. If the value stored at key is not a string an
+	 * error is returned because GET can only handle string values.
+	 *
 	 * MGET - Time complexity: O(1) for every key
-	 * Get the values of all the specified keys. If one or more keys dont exist 
-	 * or is not of type String, a 'nil' value is returned instead of the value 
-	 * of the specified key, but the operation never fails. 
-	 * 
+	 * Get the values of all the specified keys. If one or more keys dont exist
+	 * or is not of type String, a 'nil' value is returned instead of the value
+	 * of the specified key, but the operation never fails.
+	 *
 	 * USAGES:
 	 *  $this->get('key1')
 	 *  $this->get(array('key1','key2'))
 	 *  $this->get('key1','key2')
-	 * 
+	 *
 	 * @param mixed $key
 	 * @return mixed Bulk reply | Multi bulk reply
 	 */
@@ -236,17 +233,17 @@ class Redis {
 	}
 	/**
 	 * set a key to a string returning the old value of the key
-	 * 
-	 * GETSET is an atomic set this value and return the old value command. Set key 
-	 * to the string value and return the old value stored at key. The string can't be 
-	 * longer than 1073741824 bytes (1 GB). 
-	 * 
+	 *
+	 * GETSET is an atomic set this value and return the old value command. Set key
+	 * to the string value and return the old value stored at key. The string can't be
+	 * longer than 1073741824 bytes (1 GB).
+	 *
 	 * Design patterns
-	 * GETSET can be used together with INCR for counting with atomic reset when a 
-	 * given condition arises. For example a process may call INCR against the key 
-	 * mycounter every time some event occurred, but from time to time we need to get 
-	 * the value of the counter and reset it to zero atomically using GETSET mycounter 0. 
-	 * 
+	 * GETSET can be used together with INCR for counting with atomic reset when a
+	 * given condition arises. For example a process may call INCR against the key
+	 * mycounter every time some event occurred, but from time to time we need to get
+	 * the value of the counter and reset it to zero atomically using GETSET mycounter 0.
+	 *
 	 * @param $key
 	 * @param $value
 	 * @return string Bulk reply
@@ -256,19 +253,19 @@ class Redis {
 	}
 	/**
 	 * increment the integer value of key
-	 * 
+	 *
 	 * Time complexity: O(1)
-	 * 
-	 * Increment or decrement the number stored at key by one. If the key does not exist 
-	 * or contains a value of a wrong type, set the key to the value of "0" before to 
-	 * perform the increment or decrement operation. 
-	 * 
-	 * INCRBY and DECRBY work just like INCR and DECR but instead to increment/decrement 
-	 * by 1 the increment/decrement is integer. 
-	 * 
+	 *
+	 * Increment or decrement the number stored at key by one. If the key does not exist
+	 * or contains a value of a wrong type, set the key to the value of "0" before to
+	 * perform the increment or decrement operation.
+	 *
+	 * INCRBY and DECRBY work just like INCR and DECR but instead to increment/decrement
+	 * by 1 the increment/decrement is integer.
+	 *
 	 * @param $key
 	 * @param $amount
-	 * @return int this commands will reply with the new value of key after the increment or decrement. 
+	 * @return int this commands will reply with the new value of key after the increment or decrement.
 	 */
 	function incr($key, $amount = 1) {
 		if ($amount == 1)
@@ -278,18 +275,18 @@ class Redis {
 	}
 	/**
 	 * decrement the integer value of key
-	 * 
+	 *
 	 * Time complexity: O(1)
-	 * Increment or decrement the number stored at key by one. If the key does not exist 
-	 * or contains a value of a wrong type, set the key to the value of "0" before to 
-	 * perform the increment or decrement operation. 
-	 * 
-	 * INCRBY and DECRBY work just like INCR and DECR but instead to increment/decrement 
-	 * by 1 the increment/decrement is integer. 
-	 * 
+	 * Increment or decrement the number stored at key by one. If the key does not exist
+	 * or contains a value of a wrong type, set the key to the value of "0" before to
+	 * perform the increment or decrement operation.
+	 *
+	 * INCRBY and DECRBY work just like INCR and DECR but instead to increment/decrement
+	 * by 1 the increment/decrement is integer.
+	 *
 	 * @param $key
 	 * @param $amount
-	 * @return int this commands will reply with the new value of key after the increment or decrement. 
+	 * @return int this commands will reply with the new value of key after the increment or decrement.
 	 */
 	function decr($key, $amount = 1) {
 		if ($amount == 1)
@@ -299,12 +296,12 @@ class Redis {
 	}
 	/**
 	 * test if a key exists
-	 * 
+	 *
 	 * Time complexity: O(1)
-	 * Test if the specified key exists. The command returns "0" if the key exists, 
-	 * otherwise "1" is returned. Note that even keys set with an empty string as 
-	 * value will return "1". 
-	 * 
+	 * Test if the specified key exists. The command returns "0" if the key exists,
+	 * otherwise "1" is returned. Note that even keys set with an empty string as
+	 * value will return "1".
+	 *
 	 * @param $key
 	 * @return int
 	 */
@@ -314,14 +311,14 @@ class Redis {
 	function __isset($key){
 		return $this->exists($key);
 	}
-	
+
 	/**
 	 * delete a key
-	 * 
+	 *
 	 * Time complexity: O(1)
-	 * Remove the specified key. If the key does not exist no operation is performed. 
+	 * Remove the specified key. If the key does not exist no operation is performed.
 	 * The command always returns success.
-	 * 
+	 *
 	 * @param $key
 	 * @return int
 	 */
@@ -333,24 +330,24 @@ class Redis {
 	}
 	/**
 	 * return the type of the value stored at key
-	 * 
+	 *
 	 * Time complexity: O(1)
-	 * Return the type of the value stored at key in form of a string. The type can 
-	 * be one of "none", "string", "list", "set". "none" is returned if the key does not exist. 
-	 * 
+	 * Return the type of the value stored at key in form of a string. The type can
+	 * be one of "none", "string", "list", "set". "none" is returned if the key does not exist.
+	 *
 	 * @param $key
 	 * @return string
 	 */
 	function type($key){
 		return $this->cms ( array("TYPE", $key) );
 	}
-	
+
 	////////////////////////////////
 	///// Commands operating on the key space
 	////////////////////////////////
 	/**
 	 * return all the keys matching a given pattern
-	 * 
+	 *
 	 * @param $pattern
 	 * @return string space separated list of keys
 	 */
@@ -359,19 +356,19 @@ class Redis {
 	}
 	/**
 	 * return a random key from the key space
-	 * 
+	 *
 	 * @return unknown_type
 	 */
 	function randomkey() {
 		return $this->cmd ( "RANDOMKEY" );
 	}
-	
+
 	/**
 	 * rename the old key in the new one, destroing the newname key if it already exists if if $preserve - if the dst does not already exist
-	 * 
+	 *
 	 * Time complexity: O(1)
-	 * Atomically renames the key oldkey to newkey. If the source and destination name are the same an error is returned. If newkey already exists it is overwritten. 
-	 * 
+	 * Atomically renames the key oldkey to newkey. If the source and destination name are the same an error is returned. If newkey already exists it is overwritten.
+	 *
 	 * @param $src
 	 * @param $dst
 	 * @param $preserve
@@ -392,7 +389,7 @@ class Redis {
 	}
 	/**
 	 * set a time to live in seconds on a key
-	 * 
+	 *
 	 * @param string $key
 	 * @param int $ttl in seconds
 	 * @return int 1: the timeout was set. | 0: the timeout was not set since the key already has an associated timeout, or the key does not exist.
@@ -408,7 +405,7 @@ class Redis {
 	function ttl($key){
 		return $this->cmd (array("TTL", $key));
 	}
-	
+
 	////////////////////////////////
 	///// Commands operating on lists
 	////////////////////////////////
@@ -416,7 +413,7 @@ class Redis {
 	/**
 	 * Append an element to the tail of the List value at key
 	 * if $tail == false - Append an element to the head of the List value at key
-	 * 
+	 *
 	 * @param $key
 	 * @param $value
 	 * @param $tail
@@ -428,7 +425,7 @@ class Redis {
 	}
 	/**
 	 * Return the length of the List value at key
-	 * 
+	 *
 	 * @param $key
 	 * @return unknown_type
 	 */
@@ -437,7 +434,7 @@ class Redis {
 	}
 	/**
 	 * Return a range of elements from the List at key
-	 * 
+	 *
 	 * @param $key
 	 * @param $start
 	 * @param $end
@@ -446,10 +443,10 @@ class Redis {
 	function lrange($key, $start, $end) {
 		return $this->cmd ( array("LRANGE", $key, $start, $end) );
 	}
-	
+
 	/**
 	 * Trim the list at key to the specified range of elements
-	 * 
+	 *
 	 * @param $key
 	 * @param $start
 	 * @param $end
@@ -460,7 +457,7 @@ class Redis {
 	}
 	/**
 	 * Return the element at index position from the List at key
-	 * 
+	 *
 	 * @param $key
 	 * @param $index
 	 * @return unknown_type
@@ -468,10 +465,10 @@ class Redis {
 	function lindex($key, $index) {
 		return $this->cmd ( array("LINDEX", $key, $index) );
 	}
-	
+
 	/**
 	 * Set a new value as the element at index position of the List at key
-	 * 
+	 *
 	 * @param $key
 	 * @param $value
 	 * @param $index
@@ -482,18 +479,18 @@ class Redis {
 	}
 	/**
 	 * Remove the first-N, last-N, or all the elements matching value from the List at key
-	 * 
+	 *
 	 * Time complexity: O(N) (with N being the length of the list)
-	 * 
-	 * Remove the first count occurrences of the value element from the list. 
-	 * If count is zero all the elements are removed. If count is negative elements 
-	 * are removed from tail to head, instead to go from head to tail that is the 
-	 * normal behaviour. So for example LREM with count -2 and hello as value to remove 
-	 * against the list (a,b,c,hello,x,hello,hello) will lave the list (a,b,c,hello,x). 
-	 * The number of removed elements is returned as an integer, see below for more 
-	 * information about the returned value. Note that non existing keys are considered 
+	 *
+	 * Remove the first count occurrences of the value element from the list.
+	 * If count is zero all the elements are removed. If count is negative elements
+	 * are removed from tail to head, instead to go from head to tail that is the
+	 * normal behaviour. So for example LREM with count -2 and hello as value to remove
+	 * against the list (a,b,c,hello,x,hello,hello) will lave the list (a,b,c,hello,x).
+	 * The number of removed elements is returned as an integer, see below for more
+	 * information about the returned value. Note that non existing keys are considered
 	 * like empty lists by LREM, so LREM against non existing keys will always return 0.
-	 * 
+	 *
 	 * @param $key
 	 * @param $value
 	 * @param $count
@@ -502,10 +499,10 @@ class Redis {
 	function lrem($key, $value, $count=1) {
 		return $this->cmd ( array("LREM", $key, $count, $value) );
 	}
-	
+
 	/**
 	 * Return and remove (atomically) the last (first if not tail) element of the List at key
-	 * 
+	 *
 	 * @param $key
 	 * @param $tail
 	 * @return string Bulk reply
@@ -513,15 +510,15 @@ class Redis {
 	function pop($key, $tail = true) {
 		return $this->cmd ( array($tail ? 'RPOP' : 'LPOP', $key) );
 	}
-	
-	
+
+
 	////////////////////////////////
 	///// Commands operating on sets
 	////////////////////////////////
-	
+
 	/**
 	 * Add the specified member to the Set value at name
-	 * 
+	 *
 	 * @param $key
 	 * @param $value
 	 * @return unknown_type
@@ -531,7 +528,7 @@ class Redis {
 	}
 	/**
 	 * Remove the specified member from the Set value at name
-	 * 
+	 *
 	 * @param $key
 	 * @param $value
 	 * @return unknown_type
@@ -541,7 +538,7 @@ class Redis {
 	}
 	/**
 	 * Remove and return (pop) a random element from the Set value at key
-	 * 
+	 *
 	 * @return string
 	 */
 	function spop($key){
@@ -549,7 +546,7 @@ class Redis {
 	}
 	/**
 	 * Move the specified member from one Set to another atomically
-	 * 
+	 *
 	 * @param $srckey
 	 * @param $dstkey
 	 * @param $member
@@ -560,17 +557,17 @@ class Redis {
 	}
 	/**
 	 * Return the number of elements (the cardinality) of the Set at key
-	 * 
+	 *
 	 * @param $key
 	 * @return int
 	 */
 	function scard($key) {
 		return $this->cmd ( array("SCARD", $key) );
 	}
-	
+
 	/**
 	 * Test if the specified value is a member of the Set at key
-	 * 
+	 *
 	 * @param $key
 	 * @param $value
 	 * @return int
@@ -580,7 +577,7 @@ class Redis {
 	}
 	/**
 	 * Return the intersection between the Sets stored at key1, key2, ..., keyN
-	 * 
+	 *
 	 * @param $key1
 	 * @return array
 	 */
@@ -595,8 +592,8 @@ class Redis {
 		return $this->cmd ( $sets );
 	}
 	/**
-	 * Compute the intersection between the Sets stored at key1, key2, ..., keyN, and store the resulting 
-	 * 
+	 * Compute the intersection between the Sets stored at key1, key2, ..., keyN, and store the resulting
+	 *
 	 * @param $dstkey
 	 * @param $key1
 	 * @return string Status code reply
@@ -614,7 +611,7 @@ class Redis {
 	}
 	/**
 	 * Return the union between the Sets stored at key1, key2, ..., keyN
-	 * 
+	 *
 	 * @param $key1
 	 * @return array
 	 */
@@ -630,7 +627,7 @@ class Redis {
 	}
 	/**
 	 * Compute the union between the Sets stored at key1, key2, ..., keyN, and store the resulting Set at dstkey
-	 * 
+	 *
 	 * @param $dstkey
 	 * @param $key1
 	 * @return string Status code reply
@@ -648,7 +645,7 @@ class Redis {
 	}
 	/**
 	 * Return the difference between the Set stored at key1 and all the Sets key2, ..., keyN
-	 * 
+	 *
 	 * @param $key1
 	 * @return array
 	 */
@@ -664,7 +661,7 @@ class Redis {
 	}
 	/**
 	 * Compute the difference between the Set key1 and all the Sets key2, ..., keyN, and store the resulting Set at dstkey
-	 * 
+	 *
 	 * @param $dstkey
 	 * @param $key1
 	 * @return string Status code reply
@@ -682,19 +679,19 @@ class Redis {
 	}
 	/**
 	 * Return all the members of the Set value at key
-	 * 
+	 *
 	 * @param $key
 	 * @return array
 	 */
 	function smembers($key) {
 		return $this->cmd ( array("SMEMBERS", $key) );
 	}
-	
-	
+
+
 	////////////////////////////////
 	///// Multiple databases handling commands
 	////////////////////////////////
-	
+
 	/**
 	 * Select the DB having the specified index
 	 * @param $key
@@ -727,8 +724,8 @@ class Redis {
 	function flushall(){
 		return $this->cmd ( "FLUSHALL" );
 	}
-	
-	
+
+
 	////////////////////////////////
 	///// Sorting
 	////////////////////////////////
@@ -745,14 +742,14 @@ class Redis {
 			return $this->cmd ( array("SORT", $key, $query) );
 		}
 	}
-	
-	
+
+
 	////////////////////////////////
 	///// Persistence control commands
 	////////////////////////////////
-	
-	
-	
+
+
+
 	/**
 	 * Synchronously save the DB on disk (if background = Asynchronously save the DB on disk)
 	 * @param $background
@@ -770,12 +767,12 @@ class Redis {
 	}
 	/**
 	 * Synchronously save the DB on disk, then shutdown the server
-	 * @return string Status code reply on error. On success nothing is returned since the server quits and the connection is closed. 
+	 * @return string Status code reply on error. On success nothing is returned since the server quits and the connection is closed.
 	 */
 	function shutdown(){
 		return $this->cmd ( "SHUTDOWN" );
 	}
-	
+
 	////////////////////////////////
 	///// Remote server control commands
 	////////////////////////////////
@@ -786,32 +783,32 @@ class Redis {
 	function info(){
 		return $this->cmd ( "INFO" );
 	}
-	
+
 	/**
 	 * Change the replication settings
-	 * 
-	 * The SLAVEOF command can change the replication settings of a slave on the fly. 
-	 * If a Redis server is arleady acting as slave, the command SLAVEOF NO ONE will turn 
-	 * off the replicaiton turning the Redis server into a MASTER. In the proper form SLAVEOF 
-	 * hostname port will make the server a slave of the specific server listening at the 
-	 * specified hostname and port. 
-	 * 
-	 * If a server is already a slave of some master, SLAVEOF hostname port will stop 
+	 *
+	 * The SLAVEOF command can change the replication settings of a slave on the fly.
+	 * If a Redis server is arleady acting as slave, the command SLAVEOF NO ONE will turn
+	 * off the replicaiton turning the Redis server into a MASTER. In the proper form SLAVEOF
+	 * hostname port will make the server a slave of the specific server listening at the
+	 * specified hostname and port.
+	 *
+	 * If a server is already a slave of some master, SLAVEOF hostname port will stop
 	 * the replication against the old server and start the synchrnonization against the
 	 *  new one discarding the old dataset.
-	 *  
-	 * The form SLAVEOF no one will stop replication turning the server into a MASTER 
+	 *
+	 * The form SLAVEOF no one will stop replication turning the server into a MASTER
 	 * but will not discard the replication. So if the old master stop working it is
-	 *  possible to turn the slave into a master and set the application to use the 
-	 *  new master in read/write. Later when the other Redis server will be fixed it 
-	 *  can be configured in order to work as slave. 
-	 *  
+	 *  possible to turn the slave into a master and set the application to use the
+	 *  new master in read/write. Later when the other Redis server will be fixed it
+	 *  can be configured in order to work as slave.
+	 *
 	 * @return string Status code reply
 	 */
 	function slaveof($host=null, $port=6379){
 		return $this->cmd(array('SLAVEOF', $host?"$host $port":'no one'));
 	}
-	
+
 	////////////////////////////////
 	///// MISC
 	////////////////////////////////
@@ -821,7 +818,7 @@ class Redis {
 	function do_echo($s) {
 		return $this->cmd ( array("ECHO", $s) );
 	}
-	
+
 	/**
 	 * Call any non-implemented function of redis using the new unified request protocol
 	 * @param string $name
@@ -831,5 +828,5 @@ class Redis {
 		array_unshift($params, strtoupper($name));
 		return $this->cmd($params);
 	}
-	
+
 }
