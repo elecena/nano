@@ -124,14 +124,27 @@ class NanoApp {
 	}
 
 	/**
-	 * Route given request
+	 * Dispatch given request
+	 *
+	 * Returns data returned by the module
 	 */
-	public function route(Request $request) {
+	public function dispatch(Request $request) {
 		// route given request
 		$resp = $this->router->route($request);
 
 		// wrap using Response object
 		$this->response->setContent($resp);
+	}
+
+	/**
+	 * Render the results of given request
+	 *
+	 * Returns template's output for data returned by the module
+	 */
+	public function render(Request $request) {
+		$data = $this->dispatch($request);
+
+		// TODO: load and render template
 	}
 
 	/**

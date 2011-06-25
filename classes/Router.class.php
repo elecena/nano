@@ -12,9 +12,6 @@ class Router {
 
 	private $app;
 
-	// methods prefix (used by API)
-	private $prefix;
-
 	// URL mapping
 	private $map = array();
 	private $wildcardMap = array();
@@ -25,9 +22,8 @@ class Router {
 	// URL to application's home page
 	private $homeUrl;
 
-	function __construct(NanoApp $app, $prefix = '') {
+	function __construct(NanoApp $app) {
 		$this->app = $app;
-		$this->prefix = $prefix;
 
 		$config = $this->app->getConfig();
 
@@ -141,12 +137,6 @@ class Router {
 		// sanitize and normalize
 		$moduleName = ucfirst(strtolower($moduleName));
 		$methodName = strtolower($methodName);
-
-		// apply methods prefix - foo -> prefixFoo
-		if ($this->prefix != '') {
-			$methodName = $this->prefix . ucfirst($methodName);
-			$defaultMethodName = $this->prefix . ucfirst($defaultMethodName);
-		}
 
 		#var_dump(array($moduleName, $methodName, $methodParams));
 
