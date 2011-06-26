@@ -132,8 +132,8 @@ class NanoApp {
 		// route given request
 		$resp = $this->router->route($request);
 
-		// wrap using Response object
-		$this->response->setContent($resp);
+		// $resp can be either string, array or Output object wrapping the response from the module
+		return $resp;
 	}
 
 	/**
@@ -142,15 +142,39 @@ class NanoApp {
 	 * Returns template's output for data returned by the module
 	 */
 	public function render(Request $request) {
-		$data = $this->dispatch($request);
+		$resp = $this->dispatch($request);
 
-		// TODO: load and render template
+		if ($resp instanceof Output) {
+			// module returned wrapped data
+			$output = $resp->render();
+		}
+		else if (!empty($resp) && is_array($resp)) {
+			// module returned raw data
+			$lastRoute = $this->router->getLastRoute();
+
+			$moduleName = $lastRoute['module'];
+			$methodName = $lastRoute['method'];
+
+			$moduleDirectory = $this->getModule($moduleName)->getDirectory();
+
+			// render the template
+			$template = new Template($moduleDirectory . '/templates');
+			$template->set($resp);
+
+			$output = $template->render($methodName);
+		}
+		else {
+			$output = false;
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Return an instance of given module
 	 */
 	public function getModule($moduleName) {
+		$moduleName = ucfirst(strtolower($moduleName));
 		$instance = isset($this->modules[$moduleName]) ? $this->modules[$moduleName] : null;
 
 		return $instance;

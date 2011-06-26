@@ -42,6 +42,13 @@ abstract class Output {
 	}
 
 	/**
+	 * Return raw data
+	 */
+	public function getData() {
+		return $this->data;
+	}
+
+	/**
 	 * Render current data
 	 */
 	abstract public function render();

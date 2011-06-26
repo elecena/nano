@@ -93,7 +93,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testModules() {
-		$this->assertEquals(array('Foo'), $this->app->getModules());
+		$this->assertEquals(array('Foo', 'Static'), $this->app->getModules());
 
 		$obj = $this->app->getModule('Foo');
 
@@ -103,6 +103,11 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		// test creation of not existing module
 		$this->assertNull($this->app->getModule('NotExistingModule'));
 		$this->assertNull(Module::factory($this->app, 'NotExistingModule'));
+
+		// normalize modules names
+		$this->assertInstanceOf('FooModule', $this->app->getModule('foo'));
+		$this->assertInstanceOf('FooModule', $this->app->getModule('FOO'));
+		$this->assertInstanceOf('FooModule', $this->app->getModule('FoO'));
 	}
 
 	public function testAppConfig() {
@@ -150,25 +155,13 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->setUp();
 		$request = $this->app->getRequest();
 
+		// this one will be handled by route() method
 		$this->assertTrue($request->wasPosted());
 		$this->assertEquals('lm317', $request->get('q'));
 		$this->assertEquals('/foo/test/', $request->getPath());
 		$this->assertEquals($this->ip, $request->getIP());
-
-		// route app request
-		$ret = $this->app->dispatch($request);
-		$this->assertNull($ret);
 	}
-/**
-	public function testApi() {
-		$api = new Api($this->app);
-		$resp = $api->call('/foo/bar/456', array(
-			'q' => 'foobar',
-		));
 
-		$this->assertEquals(array('id' => 456, 'api' => true, 'query' => 'foobar'), $resp);
-	}
-**/
 	public function testModuleEvents() {
 		$events = $this->app->getEvents();
 		$module = $this->app->getModule('Foo');
@@ -180,5 +173,37 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		// events firing
 		$this->assertEquals('footest', $module->event('foo'));
+	}
+
+	public function testDispatch() {
+		// method returns raw data
+		$request = Request::newFromRequestURI('/foo/bar/123');
+		$this->assertEquals(array('id' => 123), $this->app->dispatch($request));
+
+		// method returns data wrapped in JSON
+		$request = Request::newFromRequestURI('/foo/json/123');
+		$ret = $this->app->dispatch($request);
+
+		$this->assertInstanceOf('OutputJson', $ret);
+		$this->assertEquals('{"id":123}', $ret->render());
+		$this->assertEquals(array('id' => 123), $ret->getData());
+
+		// incorrect route
+		$request = Request::newFromRequestURI('/foo');
+		$this->assertFalse($this->app->dispatch($request));
+	}
+
+	public function testRender() {
+		// method returns raw data - template will be used to render the response
+		$request = Request::newFromRequestURI('/foo/bar/123');
+		$this->assertEquals('<h1>123</h1>', $this->app->render($request));
+
+		// method returns data wrapped in JSON
+		$request = Request::newFromRequestURI('/foo/json/123');
+		$this->assertEquals('{"id":123}', $this->app->render($request));
+
+		// incorrect route
+		$request = Request::newFromRequestURI('/foo');
+		$this->assertFalse($this->app->render($request));
 	}
 }

@@ -19,7 +19,7 @@ class FooModule extends Module {
 	 * Default method used for routing requests for this module
 	 */
 	public function route($param) {
-		return '';
+		return false;
 	}
 
 	/**
@@ -27,6 +27,13 @@ class FooModule extends Module {
 	 */
 	public function bar($id) {
 		return array('id' => intval($id));
+	}
+
+	/**
+	 * Method used for routing requests matching /foo/json/*
+	 */
+	public function json($id) {
+		return Output::factory('json', array('id' => intval($id)));
 	}
 
 	/**

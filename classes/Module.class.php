@@ -10,6 +10,9 @@ abstract class Module {
 	// application
 	protected $app;
 
+	// module's directory
+	protected $dir;
+
 	// cache object
 	protected $cache;
 
@@ -68,6 +71,7 @@ abstract class Module {
 		if (file_exists($src)) {
 			require_once $src;
 			$instance = new $className($app, $moduleName);
+			$instance->dir = $dir;
 		}
 		else {
 			$instance = null;
@@ -81,6 +85,13 @@ abstract class Module {
 	 */
 	public function setRequest(Request $request) {
 		$this->request = $request;
+	}
+
+	/**
+	 * Get module's directory
+	 */
+	public function getDirectory() {
+		return $this->dir;
 	}
 
 	/**

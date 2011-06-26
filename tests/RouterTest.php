@@ -30,7 +30,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('http://example.org/site/foo/bar?q=test&foo=1', $router->externalLink('/foo/bar/', array('q' => 'test', 'foo' => 1)));
 	}
 
-	public function testRouter() {
+	public function testLastRoute() {
 		$router = $this->getRouter();
 		$request = $this->app->getRequest();
 
@@ -88,6 +88,8 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$router->map('show/*', '/foo/bar/*');
 		$router->map('show', '/foo/');
 		$router->map('show/abc', '/foo/test');
+
+		// home page routing
 		$router->map('', '/foo/123');
 
 		$request->setPath('/test');
