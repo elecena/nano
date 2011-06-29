@@ -175,14 +175,14 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('footest', $module->event('foo'));
 	}
 
-	public function testDispatch() {
+	public function testDispatchRequest() {
 		// method returns raw data
 		$request = Request::newFromRequestURI('/foo/bar/123');
-		$this->assertEquals(array('id' => 123), $this->app->dispatch($request));
+		$this->assertEquals(array('id' => 123), $this->app->dispatchRequest($request));
 
 		// method returns data wrapped in JSON
 		$request = Request::newFromRequestURI('/foo/json/123');
-		$ret = $this->app->dispatch($request);
+		$ret = $this->app->dispatchRequest($request);
 
 		$this->assertInstanceOf('OutputJson', $ret);
 		$this->assertEquals('{"id":123}', $ret->render());
@@ -190,7 +190,7 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		// incorrect route
 		$request = Request::newFromRequestURI('/foo');
-		$this->assertFalse($this->app->dispatch($request));
+		$this->assertFalse($this->app->dispatchRequest($request));
 	}
 
 	public function testRender() {

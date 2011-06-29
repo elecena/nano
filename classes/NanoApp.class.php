@@ -128,7 +128,22 @@ class NanoApp {
 	 *
 	 * Returns data returned by the module
 	 */
-	public function dispatch(Request $request) {
+	public function dispatchRequest(Request $request) {
+		// route given request
+		$resp = $this->router->route($request);
+
+		// $resp can be either string, array or Output object wrapping the response from the module
+		return $resp;
+	}
+	
+	/**
+	 * Dispatch request given by the path and optional parameters
+	 *
+	 * Returns data returned by the module
+	 */
+	public function dispatch($path, $params = array()) {
+		
+	
 		// route given request
 		$resp = $this->router->route($request);
 
@@ -142,7 +157,7 @@ class NanoApp {
 	 * Returns template's output for data returned by the module
 	 */
 	public function render(Request $request) {
-		$resp = $this->dispatch($request);
+		$resp = $this->dispatchRequest($request);
 
 		if ($resp instanceof Output) {
 			// module returned wrapped data

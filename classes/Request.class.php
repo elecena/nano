@@ -11,7 +11,7 @@ class Request {
 	// constants for request type
 	const GET = 1;
 	const POST = 2;
-	const API = 3;
+	const INTERNAL = 3;
 	const CLI = 4;
 
 	// stores a path fragment of the request (/foo/bar?q=123 -> /foo/bar)
@@ -44,11 +44,12 @@ class Request {
 				$this->type = self::POST;
 				break;
 
-			// "fake" request types
-			case 'API':
-				$this->type = self::API;
+			// "fake" request types for internal dispatcher
+			case 'INTERNAL':
+				$this->type = self::INTERNAL;
 				break;
 
+			// "fake" request types for CLI scripts
 			case 'CLI':
 				$this->type = self::CLI;
 				break;
@@ -104,6 +105,13 @@ class Request {
 		$path = self::getPathFromURI($uri);
 		$params = self::getParamsFromURI($uri);
 
+		return self::newFromPath($path, $params, $type);
+	}
+
+	/**
+	 * Creates new instance of Request class from given path and params
+	 */
+	public static function newFromPath($path, $params = array(), $type = self::GET) {
 		$request = new self($params);
 		$request->type = $type;
 		$request->setPath($path);
@@ -165,10 +173,10 @@ class Request {
 	}
 
 	/**
-	 * Return if current request was sent using API
+	 * Return if current request was sent using internal API
 	 */
-	public function isApi() {
-		return $this->type == self::API;
+	public function isInternal() {
+		return $this->type == self::INTERNAL;
 	}
 
 	/**

@@ -38,6 +38,8 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		));
 
 		$this->assertFalse($request->wasPosted());
+		$this->assertFalse($request->isInternal());
+		$this->assertFalse($request->isCLI());
 
 		$this->assertNull($request->get('foo2'));
 		$this->assertEquals('bar', $request->get('foo'));
@@ -56,6 +58,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		));
 
 		$this->assertTrue($request->wasPosted());
+		$this->assertFalse($request->isInternal());
 
 		$this->assertNull($request->get('test2'));
 		$this->assertEquals('bar', $request->get('foo'));
@@ -97,17 +100,38 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(50, $request->getIntLimit('test', 0, 25, 50));
 	}
 
-	public function testApi() {
+	public function testInternal() {
 		$request = new Request(array(
 			'foo' => 'bar',
 			'test' => '2',
 			'box' => 'on',
 		),
 		array(
-			'REQUEST_METHOD' => 'API'
+			'REQUEST_METHOD' => 'INTERNAL'
 		));
 
-		$this->assertTrue($request->isApi());
+		$this->assertTrue($request->isInternal());
+
+		$request = Request::newFromPath('/foo/bar', array(), Request::INTERNAL);
+		$this->assertTrue($request->isInternal());
+		$this->assertEquals('/foo/bar', $request->getPath());
+	}
+
+	public function testCLI() {
+		$request = new Request(array(
+			'foo' => 'bar',
+			'test' => '2',
+			'box' => 'on',
+		),
+		array(
+			'REQUEST_METHOD' => 'CLI'
+		));
+
+		$this->assertTrue($request->isCLI());
+
+		$request = Request::newFromPath('/foo/bar', array(), Request::CLI);
+		$this->assertTrue($request->isCLI());
+		$this->assertEquals('/foo/bar', $request->getPath());
 	}
 
 	public function testRequestPath() {
@@ -130,6 +154,19 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($uri, $request->getPath());
 		$this->assertEquals('123', $request->get('q'));
 		$this->assertEquals('456', $request->get('abc'));
+
+		// create from path
+		$request = Request::newFromPath($uri);
+
+		$this->assertFalse($request->wasPosted());
+		$this->assertEquals($uri, $request->getPath());
+
+		// create from path and params
+		$request = Request::newFromPath($uri, array('q' => 'foo'), Request::POST);
+
+		$this->assertTrue($request->wasPosted());
+		$this->assertEquals($uri, $request->getPath());
+		$this->assertEquals('foo', $request->get('q'));
 	}
 
 	public function testIP() {
