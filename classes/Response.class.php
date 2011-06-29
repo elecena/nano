@@ -8,6 +8,9 @@
 
 class Response {
 
+	// date format to be used for HTTP headers
+	const DATE_RFC1123 = 'D, d M Y H:i:s \G\M\T';
+
 	// HTML to be returned to the client
 	private $content;
 
@@ -57,6 +60,13 @@ class Response {
 	}
 
 	/**
+	 * Get all headers
+	 */
+	public function getHeaders() {
+		return $this->headers;
+	}
+
+	/**
 	 * Set response code
 	 */
 	public function setResponseCode($responseCode) {
@@ -68,5 +78,30 @@ class Response {
 	 */
 	public function getResponseCode() {
 		return $this->responseCode;
+	}
+
+	/**
+	 * Set cache duration time
+	 */
+	public function setCacheDuration($duration) {
+		$duration = intval($duration);
+		$time = time() + $duration;
+
+		$this->setHeader('Expires', gmdate(self::DATE_RFC1123, $time));
+		$this->setHeader('Cache-Control', "max-age={$duration}");
+	}
+
+	/**
+	 * Set last modification date
+	 */
+	public function setLastModified($lastModified) {
+		if (is_string($lastModified)) {
+			$lastModified = strtotime($lastModified);
+		}
+		else {
+			$lastModified = intval($lastModified);
+		}
+
+		$this->setHeader('Last-Modified', gmdate(self::DATE_RFC1123, $lastModified));
 	}
 }
