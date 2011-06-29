@@ -30,6 +30,13 @@ class FooModule extends Module {
 	}
 
 	/**
+	 * Method used for routing requests matching /foo/bar/search?q=*
+	 */
+	public function search() {
+		return array('query' => $this->request->get('q'), 'isInternal' => $this->request->isInternal());
+	}
+
+	/**
 	 * Method used for routing requests matching /foo/json/*
 	 */
 	public function json($id) {

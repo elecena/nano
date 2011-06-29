@@ -193,6 +193,14 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($this->app->dispatchRequest($request));
 	}
 
+	public function testDispatch() {
+		$resp = $this->app->dispatch('/foo/search');
+		$this->assertEquals(array('query' => null, 'isInternal' => true), $resp);
+
+		$resp = $this->app->dispatch('/foo/search', array('q' => 'foo bar'));
+		$this->assertEquals(array('query' => 'foo bar', 'isInternal' => true), $resp);
+	}
+
 	public function testRender() {
 		// method returns raw data - template will be used to render the response
 		$request = Request::newFromRequestURI('/foo/bar/123');

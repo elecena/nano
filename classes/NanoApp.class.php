@@ -135,20 +135,17 @@ class NanoApp {
 		// $resp can be either string, array or Output object wrapping the response from the module
 		return $resp;
 	}
-	
+
 	/**
 	 * Dispatch request given by the path and optional parameters
 	 *
 	 * Returns data returned by the module
 	 */
 	public function dispatch($path, $params = array()) {
-		
-	
-		// route given request
-		$resp = $this->router->route($request);
+		$request = Request::newFromPath($path, $params, Request::INTERNAL);
 
-		// $resp can be either string, array or Output object wrapping the response from the module
-		return $resp;
+		// route given request
+		return $this->router->route($request);
 	}
 
 	/**
