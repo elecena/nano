@@ -50,9 +50,12 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$response->setLastModified($time);
 		$this->assertEquals(gmdate(Response::DATE_RFC1123, $time), $response->getHeader('Last-Modified'));
 
-		$time = gmdate(Response::DATE_RFC1123, $time - 3600);
+		$time = gmdate(Response::DATE_RFC1123, time() - 3600);
 		$response->setLastModified($time);
 		$this->assertEquals($time, $response->getHeader('Last-Modified'));
+
+		$response->setLastModified(date('Y-m-d H:i:s'));
+		$this->assertEquals(gmdate(Response::DATE_RFC1123), $response->getHeader('Last-Modified'));
 	}
 
 	public function testTextResponse() {

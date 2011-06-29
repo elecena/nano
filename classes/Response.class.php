@@ -87,7 +87,10 @@ class Response {
 		$duration = intval($duration);
 		$time = time() + $duration;
 
+		// for browser
 		$this->setHeader('Expires', gmdate(self::DATE_RFC1123, $time));
+
+		// for proxies
 		$this->setHeader('Cache-Control', "max-age={$duration}");
 	}
 
