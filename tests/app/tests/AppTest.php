@@ -201,17 +201,28 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array('query' => 'foo bar', 'isInternal' => true), $resp);
 	}
 
-	public function testRender() {
+	public function testRenderRequest() {
 		// method returns raw data - template will be used to render the response
 		$request = Request::newFromRequestURI('/foo/bar/123');
-		$this->assertEquals('<h1>123</h1>', $this->app->render($request));
+		$this->assertEquals('<h1>123</h1>', $this->app->renderRequest($request));
 
 		// method returns data wrapped in JSON
 		$request = Request::newFromRequestURI('/foo/json/123');
-		$this->assertEquals('{"id":123}', $this->app->render($request));
+		$this->assertEquals('{"id":123}', $this->app->renderRequest($request));
 
 		// incorrect route
 		$request = Request::newFromRequestURI('/foo');
-		$this->assertFalse($this->app->render($request));
+		$this->assertFalse($this->app->renderRequest($request));
+	}
+
+	public function testRender() {
+		// method returns raw data - template will be used to render the response
+		$this->assertEquals('<h1>123</h1>', $this->app->render('/foo/bar/123'));
+
+		// method returns data wrapped in JSON
+		$this->assertEquals('{"id":123}', $this->app->render('/foo/json/123'));
+
+		// incorrect route
+		$this->assertFalse($this->app->render('/foo'));
 	}
 }

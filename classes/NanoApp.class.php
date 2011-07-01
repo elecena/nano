@@ -145,7 +145,7 @@ class NanoApp {
 		$request = Request::newFromPath($path, $params, Request::INTERNAL);
 
 		// route given request
-		return $this->router->route($request);
+		return $this->dispatchRequest($request);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class NanoApp {
 	 *
 	 * Returns template's output for data returned by the module
 	 */
-	public function render(Request $request) {
+	public function renderRequest(Request $request) {
 		$resp = $this->dispatchRequest($request);
 
 		if ($resp instanceof Output) {
@@ -180,6 +180,18 @@ class NanoApp {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Render the results of request given by the path and optional parameters
+	 *
+	 * Returns template's output for data returned by the module
+	 */
+	public function render($path, $params = array()) {
+		$request = Request::newFromPath($path, $params, Request::INTERNAL);
+
+		// render given request
+		return $this->renderRequest($request);
 	}
 
 	/**
