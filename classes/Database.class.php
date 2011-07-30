@@ -23,6 +23,9 @@ abstract class Database {
 	// total time of queries (in seconds)
 	protected $queriesTime = 0;
 
+	// already created connections
+	static private $connections = array();
+
 	/**
 	 * Force constructors to be protected - use Database::connect
 	 */
@@ -35,10 +38,17 @@ abstract class Database {
 	 * Connect to a given database
 	 */
 	public static function connect(NanoApp $app, Array $settings) {
-		$debug = $app->getDebug();
+		// try to reuse already created connection
+		$connectionsKey = md5(serialize($settings));
+
+		if (isset(self::$connections[$connectionsKey])) {
+			return self::$connections[$connectionsKey];
+		}
 
 		$driver = isset($settings['driver']) ? $settings['driver'] : null;
 		$instance = null;
+
+		$debug = $app->getDebug();
 
 		if (!empty($driver)) {
 			$className = 'Database' . ucfirst(strtolower($driver));
@@ -52,6 +62,9 @@ abstract class Database {
 
 				try {
 					$instance = new $className($app, $settings);
+
+					// cache it
+					self::$connections[$connectionsKey] = $instance;
 				}
 				catch(Exception $e) {
 					// TODO: handle exception
