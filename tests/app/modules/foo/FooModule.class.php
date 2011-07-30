@@ -40,7 +40,8 @@ class FooModule extends Module {
 	 * Method used for routing requests matching /foo/json/*
 	 */
 	public function json($id) {
-		return Output::factory('json', array('id' => intval($id)));
+		$this->setFormat('json');
+		return array('id' => intval($id));
 	}
 
 	/**
@@ -48,7 +49,6 @@ class FooModule extends Module {
 	 */
 	public function event($var) {
 		$this->fire('eventFoo', array(&$var));
-
 		return $var;
 	}
 

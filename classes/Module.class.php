@@ -40,6 +40,9 @@ abstract class Module {
 	// module's name
 	protected $name;
 
+	// output's format
+	protected $format;
+
 	/**
 	 * Setup the module usin ggiven application
 	 */
@@ -92,6 +95,20 @@ abstract class Module {
 	 */
 	public function getDirectory() {
 		return $this->dir;
+	}
+
+	/**
+	 * Set output's format
+	 */
+	public function setFormat($format) {
+		$this->format = $format;
+	}
+
+	/**
+	 * Get output's format
+	 */
+	public function getFormat() {
+		return $this->format;
 	}
 
 	/**

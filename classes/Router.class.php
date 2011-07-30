@@ -163,7 +163,9 @@ class Router {
 			if (is_callable(array($module, $methodName))) {
 				// use provided request when executing module's method
 				$module->setRequest($request);
+				$module->setFormat(null);
 
+				// call the module's method and pass provided parameters
 				$ret = call_user_func_array(array($module, $methodName), $params);
 
 				// store info about this route
@@ -172,6 +174,15 @@ class Router {
 					'method' => $methodName,
 					'params' => $methodParams,
 				);
+
+				// apply formatting to module's output
+				if (!$ret instanceof Output) {
+					$format = $module->getFormat();
+
+					if (!is_null($format)) {
+						$ret = Output::factory($format, $ret);
+					}
+				}
 			}
 		}
 

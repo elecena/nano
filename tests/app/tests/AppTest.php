@@ -108,6 +108,14 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('FooModule', $this->app->getModule('foo'));
 		$this->assertInstanceOf('FooModule', $this->app->getModule('FOO'));
 		$this->assertInstanceOf('FooModule', $this->app->getModule('FoO'));
+
+		// output's format
+		$module = $this->app->getModule('Foo');
+
+		$this->assertNull($module->getFormat());
+
+		$module->setFormat('json');
+		$this->assertEquals('json', $module->getFormat());
 	}
 
 	public function testAppConfig() {
