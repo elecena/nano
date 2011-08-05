@@ -169,6 +169,28 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('foo', $request->get('q'));
 	}
 
+	public function testRequestPathNormalize() {
+		$request = new Request(array(
+			'q' => '123',
+		), array(
+			'REQUEST_URI' => '/nanoportal/foo/bar.json?q=123',
+			'SCRIPT_NAME' => '/nanoportal/api.php',
+		));
+
+		$this->assertEquals('/foo/bar.json', $request->getPath());
+		$this->assertEquals('123', $request->get('q'));
+
+		$request = new Request(array(
+			'q' => '123',
+		), array(
+			'REQUEST_URI' => '/foo/bar.json?q=123',
+			'SCRIPT_NAME' => '/api.php',
+		));
+
+		$this->assertEquals('/foo/bar.json', $request->getPath());
+		$this->assertEquals('123', $request->get('q'));
+	}
+
 	public function testIP() {
 		// crawl-66-249-66-248.googlebot.com
 		$ip = '66.249.66.248';
@@ -176,7 +198,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 
 		$request = new Request(array(), array('HTTP_CLIENT_IP' => $ip));
 		$this->assertEquals($ip, $request->getIP());
-		$this->assertEquals($ip, $request->getIP());
+		$this->assertEquals($ip, $request->getIP()); // should be served from "local" cache
 
 		$request = new Request(array(), array('REMOTE_ADDR' => $ip));
 		$this->assertEquals($ip, $request->getIP());

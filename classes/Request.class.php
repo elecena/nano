@@ -60,11 +60,36 @@ class Request {
 				break;
 		}
 
-		// set path for request's URI
+		// set path from request's URI
 		if (isset($env['REQUEST_URI'])) {
-			$path = $this->getPathFromURI($env['REQUEST_URI']);
+			// normalize REQUEST_URI - remove subdirectory from URL
+			// host.net/foo/bar/site/module/param -> /module/param
+			if (isset($env['SCRIPT_NAME'])) {
+				$uri = $this->normalizeURI($env['SCRIPT_NAME'], $env['REQUEST_URI']);
+			}
+			else {
+				$uri = $env['REQUEST_URI'];
+			}
+
+			$path = $this->getPathFromURI($uri);
 			$this->setPath($path);
 		}
+	}
+
+	/**
+	 * Use provided script name to normalize request's URI
+	 *
+	 * Example: "http://host.net/foo/bar/site/module/param" should be routed as "/module/param"
+	 */
+	private static function normalizeURI($scriptName, $uri) {
+		$subdirectory = dirname($scriptName);
+
+		// ok, so we're in subdirectory
+		if (strlen($subdirectory) > 1) {
+			$uri = substr($uri, strlen($subdirectory));
+		}
+
+		return $uri;
 	}
 
 	/**

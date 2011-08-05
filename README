@@ -1,5 +1,20 @@
 == Configuration ==
 
+=== Apache ===
+
+RewriteEngine On
+
+# static assets
+RewriteRule \.(css|js|gif|png|jpg)$ static.php [L]
+
+# API requests
+RewriteRule \.(json|xml)$ api.php [L]
+
+# URL - last (always redirect)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteRule (.*) index.php [L]
+
 
 === Nginx ===
 
@@ -7,6 +22,9 @@
 	<location path="/">
 		<!-- static assets -->
 		<rewrite>\.(css|js|gif|png|jpg)$ /static.php</rewrite>
+
+		<!-- API requests -->
+		<rewrite>\.(json|xml)$ /api.php</rewrite>
 
 		<!-- URL - last (always redirect) -->
 		<!-- @see http://rootnode.net/web#vhost-configuration-advanced-mode -->
