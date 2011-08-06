@@ -11,8 +11,9 @@ class Request {
 	// constants for request type
 	const GET = 1;
 	const POST = 2;
-	const INTERNAL = 3;
-	const CLI = 4;
+	const API = 3;
+	const INTERNAL = 4;
+	const CLI = 5;
 
 	// stores a path fragment of the request (/foo/bar?q=123 -> /foo/bar)
 	private $path;
@@ -42,6 +43,11 @@ class Request {
 		switch($method) {
 			case 'POST':
 				$this->type = self::POST;
+				break;
+
+			// "fake" request types for API dispatcher
+			case 'API':
+				$this->type = self::API;
 				break;
 
 			// "fake" request types for internal dispatcher
@@ -195,6 +201,13 @@ class Request {
 	 */
 	public function wasPosted() {
 		return $this->type == self::POST;
+	}
+
+	/**
+	 * Return if current request was sent using external API
+	 */
+	public function isApi() {
+		return $this->type == self::API;
 	}
 
 	/**

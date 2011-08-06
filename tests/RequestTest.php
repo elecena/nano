@@ -100,6 +100,24 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(50, $request->getIntLimit('test', 0, 25, 50));
 	}
 
+	public function testApi() {
+		$request = new Request(array(
+			'foo' => 'bar',
+			'test' => '2',
+			'box' => 'on',
+		),
+		array(
+			'REQUEST_METHOD' => 'API'
+		));
+
+		$this->assertTrue($request->isApi());
+		$this->assertFalse($request->wasPosted());
+
+		$request = Request::newFromPath('/foo/bar', array(), Request::INTERNAL);
+		$this->assertTrue($request->isInternal());
+		$this->assertEquals('/foo/bar', $request->getPath());
+	}
+
 	public function testInternal() {
 		$request = new Request(array(
 			'foo' => 'bar',
