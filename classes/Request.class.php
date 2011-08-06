@@ -151,6 +151,13 @@ class Request {
 	}
 
 	/**
+	 * Set request type
+	 */
+	public function setType($type) {
+		$this->type = $type;
+	}
+
+	/**
 	 * Get value of given request parameter
 	 *
 	 * Return $default if parameter is not found

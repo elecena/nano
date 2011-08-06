@@ -27,6 +27,14 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, $request->getInt('test'));
 		$this->assertTrue($request->getChecked('box'));
 		$this->assertFalse($request->getChecked('box2'));
+
+		// change request's type
+		$request->setType(Request::POST);
+		$this->assertTrue($request->wasPosted());
+
+		$request->setType(Request::API);
+		$this->assertTrue($request->isApi());
+		$this->assertFalse($request->wasPosted());
 	}
 
 	public function testGETParamsFromArray() {
