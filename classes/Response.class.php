@@ -11,6 +11,10 @@ class Response {
 	// date format to be used for HTTP headers
 	const DATE_RFC1123 = 'D, d M Y H:i:s \G\M\T';
 
+	// popular HTTP codes
+	const OK = 200;
+	const NOT_FOUND = 404;
+
 	// HTML to be returned to the client
 	private $content;
 
