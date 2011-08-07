@@ -50,4 +50,6 @@ if (!empty($callback)) {
 $response->setResponseCode(Response::OK);
 $response->setContent($output);
 
-var_dump(__FILE__); var_dump($request); var_dump($data); var_dump($response); die(); // debug
+echo $response->render();
+
+//var_dump(__FILE__); var_dump($request); var_dump($data); var_dump($response); die(); // debug

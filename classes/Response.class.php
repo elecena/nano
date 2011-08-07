@@ -24,6 +24,16 @@ class Response {
 	// response HTTP code (defaults to 404 - Not Found)
 	private $responseCode = 404;
 
+	// used for generating X-Response-Time header
+	private $responseStart;
+
+	/**
+	 * Set the timestamp of the response start
+	 */
+	public function __construct() {
+		$this->responseStart = microtime(true);
+	}
+
 	/**
 	 * Set output's content
 	 */
@@ -71,6 +81,31 @@ class Response {
 	}
 
 	/**
+	 * Emit HTTP headers to the browser
+	 */
+	private function sendHeaders() {
+		// emit response code
+		header("HTTP/1.1 {$this->responseCode}");
+
+		// set X-Response-Time header
+		$this->setHeader('X-Response-Time', $this->getResponseTime());
+
+		// emit headers
+		$headers = $this->getHeaders();
+
+		foreach($headers as $name => $value) {
+			header("{$name}: {$value}");
+		}
+	}
+
+	/**
+	 * Get current response time
+	 */
+	public function getResponseTime() {
+		return round(microtime(true) - $this->responseStart, 3);
+	}
+
+	/**
 	 * Set response code
 	 */
 	public function setResponseCode($responseCode) {
@@ -110,5 +145,14 @@ class Response {
 		}
 
 		$this->setHeader('Last-Modified', gmdate(self::DATE_RFC1123, $lastModified));
+	}
+
+	/**
+	 * Return response and set HTTP headers
+	 */
+	public function render() {
+		$this->sendHeaders();
+
+		return $this->getContent();
 	}
 }
