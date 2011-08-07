@@ -66,6 +66,10 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($text, $response->getContent());
 		$this->assertEquals(array(), $response->getHeaders());
+
+		// render the response (check the content and the headers)
+		$this->assertEquals($text, $response->render());
+		$this->assertNotNull($response->getHeader('X-Response-Time'));
 	}
 
 	public function testJSONResponse() {

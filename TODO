@@ -6,7 +6,7 @@
 * message queue layer							[DONE]
 * redis client									[DONE]
 * general entry point (index.php)
-* API entry point (api.php)
+* API entry point (api.php)						[DONE]
 * XML sitemap generator
 * RSS feed generator
 * sessions handling
