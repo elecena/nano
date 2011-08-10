@@ -163,7 +163,7 @@ class Router {
 			if (is_callable(array($module, $methodName))) {
 				// use provided request when executing module's method
 				$module->setRequest($request);
-				$module->setFormat(null);
+				$module->clearState();
 
 				// call the module's method and pass provided parameters
 				$ret = call_user_func_array(array($module, $methodName), $params);
@@ -175,12 +175,21 @@ class Router {
 					'params' => $methodParams,
 				);
 
-				// apply formatting to module's output
-				if (!$ret instanceof Output) {
+				if ($ret === false) {
+					// this basically means that the request can't be routed (i.e. HTTP 404)
+				}
+				else {
+					// get module's data
+					$data = $module->getData();
 					$format = $module->getFormat();
 
 					if (!is_null($format)) {
-						$ret = Output::factory($format, $ret);
+						// use provided format to render the data
+						$ret = Output::factory($format, $data);
+					}
+					else {
+						// emit row data
+						$ret = $data;
 					}
 				}
 			}

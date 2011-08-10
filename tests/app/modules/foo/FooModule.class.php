@@ -26,14 +26,15 @@ class FooModule extends Module {
 	 * Method used for routing requests matching /foo/bar/*
 	 */
 	public function bar($id) {
-		return array('id' => intval($id));
+		$this->id = intval($id);
 	}
 
 	/**
 	 * Method used for routing requests matching /foo/bar/search?q=*
 	 */
 	public function search() {
-		return array('query' => $this->request->get('q'), 'isInternal' => $this->request->isInternal());
+		$this->isInternal = $this->request->isInternal();
+		$this->set('query', $this->request->get('q', '')); // null values are not passed to the module's data
 	}
 
 	/**
@@ -41,7 +42,7 @@ class FooModule extends Module {
 	 */
 	public function json($id) {
 		$this->setFormat('json');
-		return array('id' => intval($id));
+		$this->set(array('id' => intval($id)));
 	}
 
 	/**

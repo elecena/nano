@@ -98,7 +98,8 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$obj = $this->app->getModule('Foo');
 
 		$this->assertInstanceOf('FooModule', $obj);
-		$this->assertEquals(array('id' => 123), $obj->bar('123'));
+		$this->assertNull($obj->bar('123'));
+		$this->assertEquals(array('id' => 123), $obj->getData());
 
 		// test creation of not existing module
 		$this->assertNull($this->app->getModule('NotExistingModule'));

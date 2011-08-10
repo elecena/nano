@@ -43,11 +43,15 @@ abstract class Module {
 	// output's format
 	protected $format;
 
+	// module's data
+	protected $data;
+
 	/**
 	 * Setup the module usin ggiven application
 	 */
 	protected function __construct(NanoApp $app, $name) {
 		$this->name = $name;
+		$this->data = array();
 
 		// set protected fields
 		$this->app = $app;
@@ -84,6 +88,14 @@ abstract class Module {
 	}
 
 	/**
+	 * Clean up the module before routing the request
+	 */
+	public function clearState() {
+		$this->setFormat(null);
+		$this->data = array();
+	}
+
+	/**
 	 * Use provided request
 	 */
 	public function setRequest(Request $request) {
@@ -109,6 +121,35 @@ abstract class Module {
 	 */
 	public function getFormat() {
 		return $this->format;
+	}
+
+	/**
+	 * Set module's data to be passed to the template or formatted by the Router
+	 */
+	protected function set($key, $val = null) {
+		// key/value array can be provided set more entries
+		if (is_array($key)) {
+			$this->data = array_merge($this->data, $key);
+		}
+		else if (!is_null($val)) {
+			$this->data[$key] = $val;
+		}
+	}
+
+	/**
+	 * Set module's data using automagical feature of PHP
+	 *
+	 * Example: $this->itemId = 123;
+	 */
+	public function __set($key , $val) {
+		$this->data[$key] = $val;
+	}
+
+	/**
+	 * Get module's data
+	 */
+	public function getData() {
+		return $this->data;
 	}
 
 	/**
