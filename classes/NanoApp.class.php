@@ -132,7 +132,7 @@ class NanoApp {
 		// route given request
 		$resp = $this->router->route($request);
 
-		// $resp can be either string, array or Output object wrapping the response from the module
+		// $resp can be either raw data (array) or Output object wrapping the response from the module
 		return $resp;
 	}
 
@@ -160,7 +160,7 @@ class NanoApp {
 			// module returned wrapped data
 			$output = $resp->render();
 		}
-		else if (!empty($resp) && is_array($resp)) {
+		else if (($resp !== false) && is_array($resp)) {
 			// module returned raw data
 			$lastRoute = $this->router->getLastRoute();
 

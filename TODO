@@ -7,11 +7,13 @@
 * redis client									[DONE]
 * general entry point (index.php)
 * API entry point (api.php)						[DONE]
+* JS / CSS loading + minification + packages
+* theming
+* PID file generator helper
+* locks support
 * XML sitemap generator
 * RSS feed generator
 * sessions handling
-* theming
-* JS / CSS loading + minification
 * adding meta tags to HTML
 * static pages module (/pages/static)
 * GData client

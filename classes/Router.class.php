@@ -96,6 +96,8 @@ class Router {
 
 	/**
 	 * Route given request
+	 *
+	 * Returns either raw module's data, data wrapped in Output object or false
 	 */
 	public function route(Request $request) {
 		// get and normalize path
