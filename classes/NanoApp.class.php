@@ -124,11 +124,9 @@ class NanoApp {
 	}
 
 	/**
-	 * Dispatch given request
-	 *
-	 * Returns data returned by the module
+	 * Internally route the request and return raw data (array) or an Output objecy wrapping the response
 	 */
-	public function dispatchRequest(Request $request) {
+	protected function route(Request $request) {
 		// route given request
 		$resp = $this->router->route($request);
 
@@ -137,9 +135,26 @@ class NanoApp {
 	}
 
 	/**
+	 * Dispatch given request
+	 *
+	 * Returns raw data returned by the module
+	 */
+	public function dispatchRequest(Request $request) {
+		// route given request
+		$resp = $this->route($request);
+
+		// $resp can be either raw data (array) or Output object wrapping the response from the module
+		if ($resp instanceof Output) {
+			$resp = $resp->getData();
+		}
+
+		return $resp;
+	}
+
+	/**
 	 * Dispatch request given by the path and optional parameters
 	 *
-	 * Returns data returned by the module
+	 * Returns raw data returned by the module
 	 */
 	public function dispatch($path, $params = array()) {
 		$request = Request::newFromPath($path, $params, Request::INTERNAL);
@@ -154,7 +169,7 @@ class NanoApp {
 	 * Returns template's output for data returned by the module
 	 */
 	public function renderRequest(Request $request) {
-		$resp = $this->dispatchRequest($request);
+		$resp = $this->route($request);
 
 		if ($resp instanceof Output) {
 			// module returned wrapped data

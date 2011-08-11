@@ -153,6 +153,16 @@ abstract class Module {
 	}
 
 	/**
+	 * Render current module data to HTML using provided template
+	 */
+	public function render($templateName) {
+		$template = new Template($this->getDirectory() . '/templates');
+		$template->set($this->getData());
+
+		return $template->render($templateName);
+	}
+
+	/**
 	 * Binds given module's method to be fired when given event occurs
 	 *
 	 * When can false is returned, fire() method returns false too and no callbacks execution is stopped

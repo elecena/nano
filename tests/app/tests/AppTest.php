@@ -117,6 +117,13 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		$module->setFormat('json');
 		$this->assertEquals('json', $module->getFormat());
+
+		// render HTML
+		$module->id = 123;
+		$this->assertEquals('<h1>123</h1>', $module->render('bar'));
+
+		$module->id = 'test';
+		$this->assertEquals('<h1>test</h1>', $module->render('bar'));
 	}
 
 	public function testAppConfig() {
@@ -189,13 +196,11 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$request = Request::newFromRequestURI('/foo/bar/123');
 		$this->assertEquals(array('id' => 123), $this->app->dispatchRequest($request));
 
-		// method returns data wrapped in JSON
+		// method returns data wrapped in JSON - dispatch will return raw data
 		$request = Request::newFromRequestURI('/foo/json/123');
 		$ret = $this->app->dispatchRequest($request);
 
-		$this->assertInstanceOf('OutputJson', $ret);
-		$this->assertEquals('{"id":123}', $ret->render());
-		$this->assertEquals(array('id' => 123), $ret->getData());
+		$this->assertEquals(array('id' => 123), $ret);
 
 		// incorrect route
 		$request = Request::newFromRequestURI('/foo');
@@ -208,6 +213,9 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		$resp = $this->app->dispatch('/foo/search', array('q' => 'foo bar'));
 		$this->assertEquals(array('query' => 'foo bar', 'isInternal' => true), $resp);
+
+		$resp = $this->app->dispatch('/foo/json/123');
+		$this->assertEquals(array('id' => 123), $resp);
 	}
 
 	public function testRenderRequest() {

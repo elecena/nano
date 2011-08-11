@@ -143,7 +143,8 @@ class Router {
 		#var_dump(array($moduleName, $methodName, $methodParams));
 
 		// default value - means 404
-		$ret = $this->lastRoute = null;
+		$ret = false;
+		$this->lastRoute = null;
 
 		// call selected module and method (with parameters)
 		$module = $this->app->getModule($moduleName);
