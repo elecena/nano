@@ -191,8 +191,12 @@ class Router {
 						$ret = Output::factory($format, $data);
 					}
 					else {
-						// emit row data
-						$ret = $data;
+						// wrap data in a template
+						$template = $module->getTemplate();
+
+						$ret = Output::factory('template', $data);
+						$ret->setTemplate($template);
+						$ret->setTemplateName($methodName);
 					}
 				}
 			}

@@ -124,7 +124,7 @@ class NanoApp {
 	}
 
 	/**
-	 * Internally route the request and return raw data (array) or an Output objecy wrapping the response
+	 * Internally route the request and return raw data (array) or an Output object wrapping the response
 	 */
 	protected function route(Request $request) {
 		// route given request
@@ -173,28 +173,10 @@ class NanoApp {
 
 		if ($resp instanceof Output) {
 			// module returned wrapped data
-			$output = $resp->render();
-		}
-		else if (($resp !== false) && is_array($resp)) {
-			// module returned raw data
-			$lastRoute = $this->router->getLastRoute();
-
-			$moduleName = $lastRoute['module'];
-			$methodName = $lastRoute['method'];
-
-			$moduleDirectory = $this->getModule($moduleName)->getDirectory();
-
-			// render the template
-			$template = new Template($moduleDirectory . '/templates');
-			$template->set($resp);
-
-			$output = $template->render($methodName);
-		}
-		else {
-			$output = false;
+			$resp = $resp->render();
 		}
 
-		return $output;
+		return $resp;
 	}
 
 	/**

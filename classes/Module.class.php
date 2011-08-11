@@ -108,6 +108,13 @@ abstract class Module {
 	public function getDirectory() {
 		return $this->dir;
 	}
+	
+	/**
+	 * Get module's template
+	 */
+	public function getTemplate() {
+		return new Template($this->getDirectory() . '/templates');
+	}
 
 	/**
 	 * Set output's format
@@ -156,7 +163,7 @@ abstract class Module {
 	 * Render current module data to HTML using provided template
 	 */
 	public function render($templateName) {
-		$template = new Template($this->getDirectory() . '/templates');
+		$template = $this->getTemplate();
 		$template->set($this->getData());
 
 		return $template->render($templateName);
