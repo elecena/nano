@@ -65,12 +65,17 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'foo'));
 		$this->assertFalse($response->gzipSupported());
 
+		$response->setContent('foo');
+		$this->assertEquals('foo', $response->render());
+		$this->assertNull($response->getHeader('Content-Encoding'));
+
+		// response should be compressed
 		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
 		$this->assertTrue($response->gzipSupported());
 
-		// response should be compressed
 		$response->setContent('foo');
 		$this->assertNotEquals('foo', $response->render());
+		$this->assertEquals('gzip', $response->getHeader('Content-Encoding'));
 	}
 
 	public function testTextResponse() {
