@@ -12,8 +12,20 @@ class Response {
 	const DATE_RFC1123 = 'D, d M Y H:i:s \G\M\T';
 
 	// popular HTTP codes
+	// @see http://www.ietf.org/rfc/rfc2616.txt
+
+	// Successful 2xx
 	const OK = 200;
+	const NO_CONTENT = 204;
+	// Redirection 3xx
+	const MOVED_PERMANENTLY = 301;
+	const FOUND = 302;
+	const NOT_MODIFIED = 304;
+	// Client Error 4xx
+	const FORBIDDEN = 403;
 	const NOT_FOUND = 404;
+	// Server Error 5xx
+	const SERVICE_UNAVAILABLE = 503;
 
 	// HTML to be returned to the client
 	private $content;
@@ -93,7 +105,7 @@ class Response {
 		}
 
 		// emit response code
-		header("HTTP/1.1 {$this->responseCode}");
+		header("HTTP/1.1 {$this->responseCode}", true /* $replace */, $this->responseCode);
 
 		// emit headers
 		$headers = $this->getHeaders();
