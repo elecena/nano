@@ -8,13 +8,13 @@
 
 ini_set('memory_limit', '128M');
  
-require_once '../nano.php';
+require_once 'nano.php';
 
 // initialize instance of framework object
 Nano::init();
 
 // scan for helper classes for unit tests
-Autoloader::scanDirectory(dirname(__FILE__) . '/classes');
+Autoloader::scanDirectory(dirname(__FILE__) . '/classes/tests');
 
 // add PHPunit and libraries from PEAR to include_path
 Nano::addLibrary('phpunit');
@@ -31,7 +31,7 @@ $suite = TestSuite::init();
 $suite->addCoreTestSuite();
 
 // add tests for application from /tests/app directory
-$suite->addTestSuiteDirectory(dirname(__FILE__) . '/app/tests', 'nanoPortal test app suite');
+$suite->addTestSuiteDirectory(dirname(__FILE__) . '/tests/app/tests', 'nanoPortal test app suite');
 
 // run test suite
 $suite->run();

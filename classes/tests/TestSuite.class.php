@@ -80,7 +80,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 
 			// filter out /tests directories
 			$filter = $results->getCodeCoverage()->filter();
-			$filter->addDirectoryToBlacklist(realpath(dirname(__FILE__) . '/..'));
+			$filter->addDirectoryToBlacklist(realpath(dirname(__FILE__) . '/../tests'));
 		}
 
 		// "bind" printer to the results object
