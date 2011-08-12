@@ -81,9 +81,13 @@ class Response {
 	}
 
 	/**
-	 * Emit HTTP headers to the browser
+	 * (Try to) emit HTTP headers to the browser. Returns false in case headers were already sent.
 	 */
 	private function sendHeaders() {
+		if (headers_sent()) {
+			return false;
+		}
+
 		// emit response code
 		header("HTTP/1.1 {$this->responseCode}");
 
@@ -96,6 +100,8 @@ class Response {
 		foreach($headers as $name => $value) {
 			header("{$name}: {$value}");
 		}
+
+		return true;
 	}
 
 	/**
