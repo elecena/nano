@@ -84,15 +84,16 @@ class Response {
 	 * (Try to) emit HTTP headers to the browser. Returns false in case headers were already sent.
 	 */
 	private function sendHeaders() {
+		// set X-Response-Time header
+		$this->setHeader('X-Response-Time', $this->getResponseTime());
+
+		// don't emit, if already emitted :)
 		if (headers_sent()) {
 			return false;
 		}
 
 		// emit response code
 		header("HTTP/1.1 {$this->responseCode}");
-
-		// set X-Response-Time header
-		$this->setHeader('X-Response-Time', $this->getResponseTime());
 
 		// emit headers
 		$headers = $this->getHeaders();
