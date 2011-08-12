@@ -3,6 +3,33 @@ PHPUnit 3.5
 
 This is the list of changes for the PHPUnit 3.5 release series.
 
+PHPUnit 3.5.14
+--------------
+
+* Fixed GH-222: `assertAttribute*()` is too strict.
+* Fixed grouping of TestDox messages. Test method names should only be grouped if they are part of a sequence, starting with the initial test method not ending in a number.
+* `stream_resolve_include_path()` is now used when available.
+
+PHPUnit 3.5.13
+--------------
+
+* The `--debug` switch is now "public" (listed in `--help`).
+
+PHPUnit 3.5.12
+--------------
+
+* Fixed GH-14: Weird `RuntimeException` when running test suite with process isolation.
+* Fixed GH-27: Process isolation does not work on Windows 7 x64.
+* Fixed GH-41: Process isolation on Windows does not work.
+* Fixed GH-147: Parse error when using process isolation on Windows.
+
+PHPUnit 3.5.11
+--------------
+
+* Fixed GH-127: PHPUnit does not report errors in XML configuration files.
+* Fixed an issue with ticket listeners related to tests that use data providers.
+* Updated list of dependencies in `package.xml` and added missing runtime checks for optional dependencies.
+
 PHPUnit 3.5.10
 --------------
 

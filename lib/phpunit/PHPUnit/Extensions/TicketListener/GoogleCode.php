@@ -51,7 +51,7 @@
  * @author     Jan Sorgalla <jsorgalla@googlemail.com>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 3.5.10
+ * @version    Release: 3.5.14
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.5.0
  */
@@ -83,6 +83,10 @@ class PHPUnit_Extensions_TicketListener_GoogleCode extends PHPUnit_Extensions_Ti
     {
         if (!extension_loaded('curl')) {
             throw new RuntimeException('ext/curl is not available');
+        }
+
+        if (!extension_loaded('simplexml')) {
+            throw new RuntimeException('ext/simplexml is not available');
         }
 
         $this->email                   = $email;

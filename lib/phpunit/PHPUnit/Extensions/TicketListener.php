@@ -54,7 +54,7 @@
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 3.5.10
+ * @version    Release: 3.5.14
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.4.0
  */
@@ -147,7 +147,7 @@ abstract class PHPUnit_Extensions_TicketListener implements PHPUnit_Framework_Te
                 return;
             }
 
-            $name    = $test->getName();
+            $name    = $test->getName(FALSE);
             $tickets = PHPUnit_Util_Test::getTickets(get_class($test), $name);
 
             foreach ($tickets as $ticket) {
@@ -187,7 +187,7 @@ abstract class PHPUnit_Extensions_TicketListener implements PHPUnit_Framework_Te
                 return;
             }
 
-            $name    = $test->getName();
+            $name    = $test->getName(FALSE);
             $tickets = PHPUnit_Util_Test::getTickets(get_class($test), $name);
 
             foreach ($tickets as $ticket) {

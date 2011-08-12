@@ -35,61 +35,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    PHPUnit
- * @subpackage Framework_Constraint
+ * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
- * @since      File available since Release 3.4.0
+ * @since      File available since Release 3.5.12
  */
 
 /**
- * Constraint that asserts that the string it is evaluated for begins with a
- * given prefix.
+ * Default utility for PHP sub-processes.
  *
  * @package    PHPUnit
- * @subpackage Framework_Constraint
+ * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.5.14
  * @link       http://www.phpunit.de/
- * @since      Class available since Release 3.4.0
+ * @since      Class available since Release 3.5.12
  */
-class PHPUnit_Framework_Constraint_StringStartsWith extends PHPUnit_Framework_Constraint
+class PHPUnit_Util_PHP_Default extends PHPUnit_Util_PHP
 {
     /**
-     * @var string
+     * @param resource $pipe
+     * @since Method available since Release 3.5.12
      */
-    protected $prefix;
-
-    /**
-     * @param string $prefix
-     */
-    public function __construct($prefix)
+    protected function process($pipe, $job)
     {
-        $this->prefix = $prefix;
-    }
-
-    /**
-     * Evaluates the constraint for parameter $other. Returns TRUE if the
-     * constraint is met, FALSE otherwise.
-     *
-     * @param mixed $other Value or object to evaluate.
-     * @return bool
-     */
-    public function evaluate($other)
-    {
-        return strpos($other, $this->prefix) === 0;
-    }
-
-    /**
-     * Returns a string representation of the constraint.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        return 'starts with "' . $this->prefix . '"';
+        fwrite($pipe, $job);
     }
 }

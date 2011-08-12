@@ -78,7 +78,7 @@ require_once 'PHP/CodeCoverage.php';
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 3.5.10
+ * @version    Release: 3.5.14
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
  */
@@ -831,9 +831,9 @@ class PHPUnit_Framework_TestSuite implements PHPUnit_Framework_Test, PHPUnit_Fra
             $this->addTest(
               self::warning(
                 sprintf(
-                  'Test method "%s" is not public.',
-
-                  $name
+                  'Test method "%s" in test class "%s" is not public.',
+                  $name,
+                  $class->getName()
                 )
               )
             );

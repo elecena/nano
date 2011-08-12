@@ -53,7 +53,7 @@
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 3.5.10
+ * @version    Release: 3.5.14
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.5.0
  */
@@ -93,6 +93,16 @@ class PHPUnit_Util_Log_DBUS implements PHPUnit_Framework_TestListener
      * @var integer
      */
     protected $endedSuites = 0;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        if (!extension_loaded('dbus')) {
+            throw new RuntimeException('ext/dbus is not available');
+        }
+    }
 
     /**
      * An error occurred.

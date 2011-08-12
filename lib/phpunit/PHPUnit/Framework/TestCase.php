@@ -94,7 +94,7 @@ require_once 'Text/Template.php';
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
  * @copyright  2002-2011 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 3.5.10
+ * @version    Release: 3.5.14
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
  */
@@ -570,7 +570,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
             $this->prepareTemplate($template);
 
-            PHPUnit_Util_PHP::runJob($template->render(), $this, $result);
+            $php = PHPUnit_Util_PHP::factory();
+            $php->runJob($template->render(), $this, $result);
         } else {
             $result->run($this);
         }
