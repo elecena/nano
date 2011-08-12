@@ -58,6 +58,21 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(gmdate(Response::DATE_RFC1123), $response->getHeader('Last-Modified'));
 	}
 
+	public function testGzipSupported() {
+		$response = new Response();
+		$this->assertFalse($response->gzipSupported());
+
+		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'foo'));
+		$this->assertFalse($response->gzipSupported());
+
+		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+		$this->assertTrue($response->gzipSupported());
+
+		// response should be compressed
+		$response->setContent('foo');
+		$this->assertNotEquals('foo', $response->render());
+	}
+
 	public function testTextResponse() {
 		$text = "foo\nbar";
 

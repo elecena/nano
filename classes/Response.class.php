@@ -39,11 +39,15 @@ class Response {
 	// used for generating X-Response-Time header
 	private $responseStart;
 
+	// $_SERVER global
+	private $env;
+
 	/**
 	 * Set the timestamp of the response start
 	 */
-	public function __construct() {
+	public function __construct($env = array()) {
 		$this->responseStart = microtime(true);
+		$this->env = $env;
 	}
 
 	/**
@@ -104,8 +108,10 @@ class Response {
 			return false;
 		}
 
-		// emit response code
-		header("HTTP/1.1 {$this->responseCode}", true /* $replace */, $this->responseCode);
+		// emit HTTP protocol and response code
+		$protocol = isset($this->env['SERVER_PROTOCOL']) ? $this->env['SERVER_PROTOCOL'] : 'HTTP/1.1';
+
+		header("{$protocol} {$this->responseCode}", true /* $replace */, $this->responseCode);
 
 		// emit headers
 		$headers = $this->getHeaders();
@@ -167,11 +173,27 @@ class Response {
 	}
 
 	/**
+	 * Return whether HTTP client supports GZIP response compression
+	 */
+	public function gzipSupported() {
+		$supportedEncoding = isset($this->env['HTTP_ACCEPT_ENCODING']) ? $this->env['HTTP_ACCEPT_ENCODING'] : '';
+
+		return strpos($supportedEncoding, 'gzip') !== false;
+	}
+
+	/**
 	 * Return response and set HTTP headers
 	 */
 	public function render() {
-		$this->sendHeaders();
+		$response = $this->getContent();
 
-		return $this->getContent();
+		// compress the response (if supported)
+		if ($this->gzipSupported()) {
+			$this->setHeader('Content-Encoding', 'gzip');
+			$response = gzencode($response);
+		}
+
+		$this->sendHeaders();
+		return $response;
 	}
 }

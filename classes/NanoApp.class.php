@@ -74,7 +74,7 @@ class NanoApp {
 		$this->request = new Request($params, $env);
 
 		// response
-		$this->response = new Response();
+		$this->response = new Response($env);
 
 		// set connection to database
 		$this->database = Database::connect($this, $this->config->get('database', array()));
