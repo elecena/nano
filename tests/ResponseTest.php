@@ -59,23 +59,48 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGzipSupported() {
+		$content = 'foo';
+
 		$response = new Response();
-		$this->assertFalse($response->gzipSupported());
+		$this->assertFalse($response->getAcceptedEncoding());
 
 		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'foo'));
-		$this->assertFalse($response->gzipSupported());
+		$this->assertFalse($response->getAcceptedEncoding());
 
-		$response->setContent('foo');
-		$this->assertEquals('foo', $response->render());
+		$response->setContent($content);
+		$this->assertEquals($content, $response->render());
+		$this->assertEquals('Accept-Encoding', $response->getHeader('Vary'));
 		$this->assertNull($response->getHeader('Content-Encoding'));
 
-		// response should be compressed
-		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
-		$this->assertTrue($response->gzipSupported());
+		// deflate should be used
+		$compressed = gzdeflate($content, Response::COMPRESSION_LEVEL);
 
-		$response->setContent('foo');
-		$this->assertNotEquals('foo', $response->render());
-		$this->assertEquals('gzip', $response->getHeader('Content-Encoding'));
+		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+		$response->setContent($content);
+
+		$this->assertEquals(array('deflate', 'deflate'), $response->getAcceptedEncoding());
+		$this->assertEquals($compressed, $response->render());
+		$this->assertEquals('deflate', $response->getHeader('Content-Encoding'));
+
+		// gzip should be used
+		$compressed = gzencode($content, Response::COMPRESSION_LEVEL);
+
+		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'x-gzip'));
+		$response->setContent($content);
+
+		$this->assertEquals(array('gzip', 'x-gzip'), $response->getAcceptedEncoding());
+		$this->assertEquals($compressed, $response->render());
+		$this->assertEquals('x-gzip', $response->getHeader('Content-Encoding'));
+		
+		// compress should be used
+		$compressed = gzcompress($content, Response::COMPRESSION_LEVEL);
+
+		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'compress'));
+		$response->setContent($content);
+
+		$this->assertEquals(array('compress', 'compress'), $response->getAcceptedEncoding());
+		$this->assertEquals($compressed, $response->render());
+		$this->assertEquals('compress', $response->getHeader('Content-Encoding'));
 	}
 
 	public function testTextResponse() {

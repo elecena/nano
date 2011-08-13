@@ -27,6 +27,9 @@ class Response {
 	// Server Error 5xx
 	const SERVICE_UNAVAILABLE = 503;
 
+	// zlib compression level to be used
+	const COMPRESSION_LEVEL = 6;
+
 	// HTML to be returned to the client
 	private $content;
 
@@ -174,12 +177,108 @@ class Response {
 
 	/**
 	 * Return whether HTTP client supports GZIP response compression
+	 *
+	 * Based on HTTP_Encoder class from Minify project
+	 *
+	 * Returns array two values, 1st is the actual encoding method, 2nd is the alias of that method to use in the Content-Encoding header
+	 * (some browsers call gzip "x-gzip" etc.)
+	 *
+	 * @see http://www.codinghorror.com/blog/2008/10/youre-reading-the-worlds-most-dangerous-programming-blog.html
 	 */
-	public function gzipSupported() {
-		$supportedEncoding = isset($this->env['HTTP_ACCEPT_ENCODING']) ? $this->env['HTTP_ACCEPT_ENCODING'] : '';
+	public function getAcceptedEncoding() {
+		$allowDeflate = true;
+		$allowCompress = true;
 
-		return strpos($supportedEncoding, 'gzip') !== false;
+		$acceptedEncoding = isset($this->env['HTTP_ACCEPT_ENCODING']) ? $this->env['HTTP_ACCEPT_ENCODING'] : '';
+
+		if ($acceptedEncoding === '') {
+			return false;
+		}
+
+		if ($allowDeflate) {
+			// deflate checks
+			$acceptedEncodingRev = strrev($acceptedEncoding);
+			if (0 === strpos($acceptedEncodingRev, 'etalfed ,') // ie, webkit
+				|| 0 === strpos($acceptedEncodingRev, 'etalfed,') // gecko
+				|| 0 === strpos($acceptedEncoding, 'deflate,') // opera
+				// slow parsing
+				|| preg_match(
+					'@(?:^|,)\\s*deflate\\s*(?:$|,|;\\s*q=(?:0\\.|1))@', $acceptedEncoding)) {
+				return array('deflate', 'deflate');
+			}
+		}
+
+		// gzip checks (quick)
+		if (0 === strpos($acceptedEncoding, 'gzip,')             // most browsers
+			|| 0 === strpos($acceptedEncoding, 'deflate, gzip,') // opera
+		) {
+			return array('gzip', 'gzip');
+		}
+
+		// gzip checks (slow)
+		if (preg_match(
+				'@(?:^|,)\\s*((?:x-)?gzip)\\s*(?:$|,|;\\s*q=(?:0\\.|1))@'
+				,$acceptedEncoding
+				,$m)) {
+			return array('gzip', $m[1]);
+		}
+
+		if ($allowCompress && preg_match(
+				'@(?:^|,)\\s*((?:x-)?compress)\\s*(?:$|,|;\\s*q=(?:0\\.|1))@'
+				,$acceptedEncoding
+				,$m)) {
+			return array('compress', $m[1]);
+		}
+		return false;
 	}
+
+	/**
+	 * Encodes and returns given response content using provided compression method
+	 *
+	 * Sets all required HTTP headers
+	 *
+	 * Based on HTTP_Encoder class from Minify project
+	 */
+	public function encode($response, $encoding = false) {
+		// for proxies
+        $this->setHeader('Vary', 'Accept-Encoding');
+
+		// check whether zlib module is loaded
+		if ($encoding === false || !extension_loaded('zlib')) {
+			return $response;
+		}
+
+		// "unpack" parameter
+		$encodingMethod = $encoding[0];
+		$encodingMethodHeaderValue = $encoding[1];
+
+		switch ($encodingMethod) {
+			case 'deflate':
+				$encoded = gzdeflate($response, self::COMPRESSION_LEVEL);
+				break;
+
+			case 'gzip':
+				$encoded = gzencode($response, self::COMPRESSION_LEVEL);
+				break;
+
+			case 'compress':
+				$encoded = gzcompress($response, self::COMPRESSION_LEVEL);
+				break;
+
+			default:
+				return $response;
+		}
+
+		// error while compressing
+		if ($encoded === false) {
+			return $response;
+		}
+
+		$this->setHeader('Content-Length', strlen($encoded));
+		$this->setHeader('Content-Encoding', $encodingMethodHeaderValue);
+
+        return $encoded;
+    }
 
 	/**
 	 * Return response and set HTTP headers
@@ -188,10 +287,8 @@ class Response {
 		$response = $this->getContent();
 
 		// compress the response (if supported)
-		if ($this->gzipSupported()) {
-			$this->setHeader('Content-Encoding', 'gzip');
-			$response = gzencode($response);
-		}
+		$encoding = $this->getAcceptedEncoding();
+		$response = $this->encode($response, $encoding);
 
 		$this->sendHeaders();
 		return $response;
