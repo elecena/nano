@@ -44,6 +44,6 @@ class OutputTemplate extends Output {
 	 * @see http://www.ietf.org/rfc/rfc2854.txt
 	 */
 	public function getContentType() {
-		return 'text/html';
+		return 'text/html; charset=UTF-8';
 	}
 }

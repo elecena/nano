@@ -31,7 +31,7 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 	public function testOutputJSON() {
 		$output = Output::factory('json', $this->data);
 		$this->assertEquals('{"foo":"bar","test":["123","456"]}', $output->render());
-		$this->assertEquals('application/json', $output->getContentType());
+		$this->assertEquals('application/json; charset=UTF-8', $output->getContentType());
 		$this->assertEquals($this->data, $output->getData());
 
 		$output->setData(array('123', '456'));
@@ -41,14 +41,14 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 	public function testOutputXML() {
 		$output = Output::factory('xml', $this->data);
 		$this->assertEquals("<?xml version=\"1.0\"?>\n<root><foo>bar</foo><test><value>123</value><value>456</value></test></root>", $output->render());
-		$this->assertEquals('text/xml', $output->getContentType());
+		$this->assertEquals('text/xml; charset=UTF-8', $output->getContentType());
 		$this->assertEquals($this->data, $output->getData());
 	}
 
 	public function testOutputJSONP() {
 		$output = Output::factory('jsonp', $this->data);
 		$this->assertEquals('callback({"foo":"bar","test":["123","456"]})', $output->render());
-		$this->assertEquals('application/javascript', $output->getContentType());
+		$this->assertEquals('application/javascript; charset=UTF-8', $output->getContentType());
 		$this->assertEquals($this->data, $output->getData());
 
 		// custom callback
@@ -68,7 +68,7 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 		$output->setTemplateName('bar');
 
 		$this->assertEquals('<h1>foo</h1>', $output->render());
-		$this->assertEquals('text/html', $output->getContentType());
+		$this->assertEquals('text/html; charset=UTF-8', $output->getContentType());
 		$this->assertNull($output->getData());
 
 		// pass template's data to the Output object

@@ -47,6 +47,6 @@ class OutputXml extends Output {
 	 * @see http://www.ietf.org/rfc/rfc3023.txt
 	 */
 	public function getContentType() {
-		return 'text/xml';
+		return 'text/xml; charset=UTF-8';
 	}
 }
