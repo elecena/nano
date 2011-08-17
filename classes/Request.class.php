@@ -246,6 +246,22 @@ class Request {
 	}
 
 	/**
+	 * Get extension part of the URL
+	 */
+	public function getExtension() {
+		$path = $this->getPath();
+		$idx = strrpos($path, '.');
+
+		// no extension found
+		if ($idx === false) {
+			return null;
+		}
+
+		$ext = substr($path, $idx + 1);
+		return $ext;
+	}
+
+	/**
 	 * Get IP address of client
 	 *
 	 * Return null if IP is malformed or not provided (CLI?)

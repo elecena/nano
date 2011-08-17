@@ -12,4 +12,4 @@ include 'app.php';
 
 $request = $app->getRequest();
 
-var_dump(__FILE__); var_dump($request); die(); // debug
+var_dump(__FILE__); var_dump($request); var_dump($request->getExtension()); die(); // debug

@@ -108,6 +108,20 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(50, $request->getIntLimit('test', 0, 25, 50));
 	}
 
+	public function testGetExtension() {
+		$request = Request::newFromPath('/foo/bar');
+		$this->assertNull($request->getExtension());
+
+		$request = Request::newFromPath('/static/js/foo.js');
+		$this->assertEquals('js', $request->getExtension());
+
+		$request = Request::newFromPath('/static/foo.css');
+		$this->assertEquals('css', $request->getExtension());
+
+		$request = Request::newFromPath('/files/foo.bar.gz');
+		$this->assertEquals('gz', $request->getExtension());
+	}
+
 	public function testApi() {
 		$request = new Request(array(
 			'foo' => 'bar',
