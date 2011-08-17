@@ -25,6 +25,7 @@ class Response {
 	const FORBIDDEN = 403;
 	const NOT_FOUND = 404;
 	// Server Error 5xx
+	const NOT_IMPLEMENTED = 501;
 	const SERVICE_UNAVAILABLE = 503;
 
 	// zlib compression level to be used
@@ -241,7 +242,7 @@ class Response {
 	 */
 	public function encode($response, $encoding = false) {
 		// for proxies
-        $this->setHeader('Vary', 'Accept-Encoding');
+		$this->setHeader('Vary', 'Accept-Encoding');
 
 		// check whether zlib module is loaded
 		if ($encoding === false || !extension_loaded('zlib')) {
@@ -277,8 +278,8 @@ class Response {
 		$this->setHeader('Content-Length', strlen($encoded));
 		$this->setHeader('Content-Encoding', $encodingMethodHeaderValue);
 
-        return $encoded;
-    }
+		return $encoded;
+	}
 
 	/**
 	 * Return response and set HTTP headers
