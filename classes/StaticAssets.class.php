@@ -29,9 +29,7 @@ class StaticAssets {
 	);
 
 	/**
-	 * Binds given callback to be fired when given event occurs
-	 *
-	 * When can returns false, fire() method returns false too and no callbacks execution is stopped
+	 * Setup assets server
 	 */
 	public function __construct(NanoApp $app) {
 		$this->app = $app;
@@ -46,7 +44,7 @@ class StaticAssets {
 
 		if (is_null($ext) || !isset($this->types[$ext])) {
 			$response->setResponseCode(Response::NOT_IMPLEMENTED);
-			$response->setContent('/* this file type is not supported */');
+			$response->setContent('This file type is not supported!');
 			return false;
 		}
 
