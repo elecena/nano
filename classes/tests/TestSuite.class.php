@@ -77,10 +77,6 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 
 		if (!empty($codeCoverage)) {
 			$results->collectCodeCoverageInformation(true);
-
-			// filter out /tests directories
-			$filter = $results->getCodeCoverage()->filter();
-			$filter->addDirectoryToBlacklist(realpath(dirname(__FILE__) . '/../tests'));
 		}
 
 		// "bind" printer to the results object
@@ -101,6 +97,16 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 			foreach($codeCoverage as $file => $info) {
 				// blacklist files from libraries directory
 				if (strncmp($file, DIRECTORY_SEPARATOR . 'lib', 4) == 0) {
+					continue;
+				}
+
+				// ignore test classes
+				if (strpos($file, 'classes'. DIRECTORY_SEPARATOR . 'tests') !== false) {
+					continue;
+				}
+
+				// report *.class.php files only
+				if (strpos($file, '.class.php') === false) {
 					continue;
 				}
 

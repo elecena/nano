@@ -13,13 +13,13 @@ class TestResult extends PHPUnit_Framework_TestResult {
 	}
 
 	/**
-     * Returns the summarized coverage report
-     */
-    public function getCodeCoverageSummary() {
+	 * Returns the summarized coverage report
+	 */
+	public function getCodeCoverageSummary() {
 		$summary = array();
 		$codeCoverageSummary = $this->getCodeCoverage()->getSummary();
 
-        foreach($codeCoverageSummary as $file => $report) {
+		foreach($codeCoverageSummary as $file => $report) {
 			$linesCovered = 0;
 			$linesTotal = count($report);
 
