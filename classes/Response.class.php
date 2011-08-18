@@ -240,7 +240,7 @@ class Response {
 	 *
 	 * Based on HTTP_Encoder class from Minify project
 	 */
-	public function encode($response, $encoding = false) {
+	private function encode($response, $encoding = false) {
 		// for proxies
 		$this->setHeader('Vary', 'Accept-Encoding');
 
@@ -265,9 +265,6 @@ class Response {
 			case 'compress':
 				$encoded = gzcompress($response, self::COMPRESSION_LEVEL);
 				break;
-
-			default:
-				return $response;
 		}
 
 		// error while compressing

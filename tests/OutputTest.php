@@ -80,5 +80,9 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals('<h1>bar</h1>', $output->render());
 		$this->assertEquals(array('id' => 'bar'), $output->getData());
+
+		// template not provided
+		$output = Output::factory('template');
+		$this->assertFalse($output->render());
 	}
 }

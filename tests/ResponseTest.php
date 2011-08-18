@@ -59,48 +59,69 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGzipSupported() {
-		$content = 'foo';
+		// content to be compressed
+		$content = str_repeat('foo', 1024 * 64);
 
 		$response = new Response();
 		$this->assertFalse($response->getAcceptedEncoding());
 
-		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'foo'));
-		$this->assertFalse($response->getAcceptedEncoding());
+		// loop through following cases
+		$cases = array(
+			// none ("fake" compress method provided)
+			array(
+				'http_header' => 'foo',
+				'accepted_encoding' => false,
+				'content_encoding' => null,
+			),
+			// deflate
+			array(
+				'http_header' => 'gzip, deflate',
+				'accepted_encoding' => array('deflate', 'deflate'),
+				'content_encoding' => 'deflate',
+				'compress_function' => 'gzdeflate',
+			),
+			// gzip
+			array(
+				'http_header' => 'gzip, compress',
+				'accepted_encoding' => array('gzip', 'gzip'),
+				'content_encoding' => 'gzip',
+				'compress_function' => 'gzencode',
+			),
+			// gzip
+			array(
+				'http_header' => 'x-gzip',
+				'accepted_encoding' => array('gzip', 'x-gzip'),
+				'content_encoding' => 'x-gzip',
+				'compress_function' => 'gzencode',
+			),
+			// compress
+			array(
+				'http_header' => 'compress',
+				'accepted_encoding' => array('compress', 'compress'),
+				'content_encoding' => 'compress',
+				'compress_function' => 'gzcompress',
+			),
+		);
 
-		$response->setContent($content);
-		$this->assertEquals($content, $response->render());
-		$this->assertEquals('Accept-Encoding', $response->getHeader('Vary'));
-		$this->assertNull($response->getHeader('Content-Encoding'));
+		foreach($cases as $case) {
+			$response = new Response(array('HTTP_ACCEPT_ENCODING' => $case['http_header']));
+			$response->setContent($content);
 
-		// deflate should be used
-		$compressed = gzdeflate($content, Response::COMPRESSION_LEVEL);
+			$this->assertEquals($case['accepted_encoding'], $response->getAcceptedEncoding());
 
-		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
-		$response->setContent($content);
+			// check the compression itself
+			if (isset($case['compress_function'])) {
+				$compressed = call_user_func($case['compress_function'], $content, Response::COMPRESSION_LEVEL);
 
-		$this->assertEquals(array('deflate', 'deflate'), $response->getAcceptedEncoding());
-		$this->assertEquals($compressed, $response->render());
-		$this->assertEquals('deflate', $response->getHeader('Content-Encoding'));
+				$this->assertEquals($compressed, $response->render());
+				$this->assertEquals('Accept-Encoding', $response->getHeader('Vary'));
+			}
+			else {
+				$this->assertEquals($content, $response->render());
+			}
 
-		// gzip should be used
-		$compressed = gzencode($content, Response::COMPRESSION_LEVEL);
-
-		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'x-gzip'));
-		$response->setContent($content);
-
-		$this->assertEquals(array('gzip', 'x-gzip'), $response->getAcceptedEncoding());
-		$this->assertEquals($compressed, $response->render());
-		$this->assertEquals('x-gzip', $response->getHeader('Content-Encoding'));
-		
-		// compress should be used
-		$compressed = gzcompress($content, Response::COMPRESSION_LEVEL);
-
-		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'compress'));
-		$response->setContent($content);
-
-		$this->assertEquals(array('compress', 'compress'), $response->getAcceptedEncoding());
-		$this->assertEquals($compressed, $response->render());
-		$this->assertEquals('compress', $response->getHeader('Content-Encoding'));
+			$this->assertEquals($case['content_encoding'], $response->getHeader('Content-Encoding'));
+		}
 	}
 
 	public function testTextResponse() {
