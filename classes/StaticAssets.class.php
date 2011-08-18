@@ -52,7 +52,7 @@ class StaticAssets {
 
 		// set headers
 		$response->setResponseCode(Response::OK);
-		$response->setHeader('Content-type', $this->types[$ext]);
+		$response->setContentType($this->types[$ext]);
 
 		// caching
 		$response->setCacheDuration(30 * 86400 /* a month */);

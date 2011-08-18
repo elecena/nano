@@ -34,6 +34,16 @@ class Response {
 	// don't compress small responses
 	const COMPRESSION_LENGTH_THRESHOLD = 1024;
 
+	// don't compress following content types
+	private $compressionBlacklist = array(
+		'image/gif',
+		'image/png',
+		'image/jpg',
+	);
+
+	// this flag is be set when response is compressed
+	private $isCompressed = false;
+
 	// HTML to be returned to the client
 	private $content;
 
@@ -67,12 +77,19 @@ class Response {
 			$this->content = $content->render();
 
 			// use proper content type
-			$this->setHeader('Content-type', $content->getContentType());
+			$this->setContentType($content->getContentType());
 		}
 		// handle strings
 		else if (is_string($content)) {
 			$this->content = $content;
 		}
+	}
+	
+	/**
+	 * Set output's content type header
+	 */
+	public function setContentType($contentType) {
+		$this->setHeader('Content-type', $contentType);
 	}
 
 	/**
@@ -244,8 +261,8 @@ class Response {
 	 * Based on HTTP_Encoder class from Minify project
 	 */
 	private function encode($response, $encoding = false) {
-		// for proxies
-		$this->setHeader('Vary', 'Accept-Encoding');
+		// initial flag value
+		$this->isCompressed = false;
 
 		// check whether zlib module is loaded
 		if ($encoding === false || !extension_loaded('zlib')) {
@@ -254,6 +271,11 @@ class Response {
 
 		// response is too small to make compression pay out
 		if (strlen($response) < self::COMPRESSION_LENGTH_THRESHOLD) {
+			return $response;
+		}
+
+		// don't compress certain assets
+		if (in_array($this->getHeader('Content-type'), $this->compressionBlacklist)) {
 			return $response;
 		}
 
@@ -280,10 +302,23 @@ class Response {
 			return $response;
 		}
 
+		// response is compressed
+		$this->isCompressed = true;
+
+		// for proxies
+		$this->setHeader('Vary', 'Accept-Encoding');
+
 		$this->setHeader('Content-Length', strlen($encoded));
 		$this->setHeader('Content-Encoding', $encodingMethodHeaderValue);
 
 		return $encoded;
+	}
+
+	/**
+	 * Return true if response is compressed
+	 */
+	public function isCompressed() {
+		return $this->isCompressed;
 	}
 
 	/**
