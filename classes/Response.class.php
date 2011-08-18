@@ -31,6 +31,9 @@ class Response {
 	// zlib compression level to be used
 	const COMPRESSION_LEVEL = 6;
 
+	// don't compress small responses
+	const COMPRESSION_LENGTH_THRESHOLD = 1024;
+
 	// HTML to be returned to the client
 	private $content;
 
@@ -246,6 +249,11 @@ class Response {
 
 		// check whether zlib module is loaded
 		if ($encoding === false || !extension_loaded('zlib')) {
+			return $response;
+		}
+
+		// response is too small to make compression pay out
+		if (strlen($response) < self::COMPRESSION_LENGTH_THRESHOLD) {
 			return $response;
 		}
 

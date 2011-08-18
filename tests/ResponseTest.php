@@ -112,14 +112,14 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 			// check the compression itself
 			if (isset($case['compress_function'])) {
 				$compressed = call_user_func($case['compress_function'], $content, Response::COMPRESSION_LEVEL);
-
 				$this->assertEquals($compressed, $response->render());
-				$this->assertEquals('Accept-Encoding', $response->getHeader('Vary'));
 			}
 			else {
 				$this->assertEquals($content, $response->render());
 			}
 
+			// check the headers
+			$this->assertEquals('Accept-Encoding', $response->getHeader('Vary'));
 			$this->assertEquals($case['content_encoding'], $response->getHeader('Content-Encoding'));
 		}
 	}
@@ -147,5 +147,25 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals('{"foo":"bar"}', $response->getContent());
 		$this->assertEquals('application/json; charset=UTF-8', $response->getHeader('Content-type'));
+	}
+
+	public function testCompressionThreshold() {
+		// short response
+		$content = str_repeat('foo', 100);
+
+		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+		$response->setContent($content);
+
+		$this->assertEquals($content, $response->render());
+		$this->assertNull($response->getHeader('Content-Encoding'));
+
+		// longer response
+		$content = str_repeat('foo', 2048);
+
+		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+		$response->setContent($content);
+		$response->render();
+
+		$this->assertEquals('deflate', $response->getHeader('Content-Encoding'));
 	}
 }
