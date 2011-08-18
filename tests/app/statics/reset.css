@@ -1,0 +1,60 @@
+/* Reset */
+html, body,
+h1, h2, h3, h4, h5, h6,
+a, abbr, acronym, em, p, /*strong,*/
+address, blockquote, cite, q,
+dd, dfn, dl, dt, li, ol, ul,
+code, kbd, pre, samp, tt, var,
+big, del, ins, small,
+caption, table, tbody, td, tfoot, th, thead, tr,
+fieldset, iframe, img,
+figure {
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: none;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 100%;
+	line-height: normal;
+	text-align: left;
+	text-decoration: none;
+}
+
+html, body { background-color: #fff; color: #000; }
+textarea, input, option, optgroup, select { font-size: 100%; }
+a:focus { overflow: hidden; }
+q:lang(pl) { quotes: "\201E" "\201D" "\00AB" "\00BB"; }
+q::before { content: open-quote; }
+q::after { content: close-quote; }
+ol, ul { list-style: none; }
+code, kbd, pre, samp, textarea, tt, var { font-family: monospace; }
+table { border-collapse: collapse; border-spacing: 0; }
+hr { display: none; }
+
+@media handheld, projection, screen, tty, tv {
+	abbr[title], acronym[title] { cursor: help; }
+}
+
+fieldset {
+	padding: 5px;
+}
+
+/* HTML5 tags */
+header, section, footer, details,
+aside, nav, article, figure, summary {
+	display: block;
+}
+
+/* new clearfix */
+/* @see  http://perishablepress.com/press/2009/12/06/new-clearfix-hack/ */
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+	}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
