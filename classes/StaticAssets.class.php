@@ -94,6 +94,12 @@ class StaticAssets {
 			return false;
 		}
 
+		// security check - only serve files from within the application
+		if (!$this->app->isInAppDirectory($localPath)) {
+			$response->setResponseCode(Response::NOT_FOUND);
+			return false;
+		}
+
 		// process file content
 		switch($ext) {
 			case 'css':

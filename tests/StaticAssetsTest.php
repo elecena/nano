@@ -10,11 +10,13 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	private $app;
 
-	private function getStaticAssets() {
+	public function setUp() {
 		// use test application's directory
 		$dir = realpath(dirname(__FILE__) . '/app');
 		$this->app = Nano::app($dir);
+	}
 
+	private function getStaticAssets() {
 		// initialize static assets handler
 		return $this->app->factory('StaticAssets');;
 	}
@@ -109,9 +111,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testImageEncoding() {
-		$static = $this->getStaticAssets();
 		$dir = $this->app->getDirectory() . '/statics';
-
 		$processor = StaticAssets::factory('css');
 
 		// encode existing image
@@ -120,9 +120,20 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		// error handling
 		$this->assertFalse($processor->encodeImage($dir . '/not-existing.png'));
 		$this->assertFalse($processor->encodeImage($dir . '/file.xml'));
+		$this->assertFalse($processor->encodeImage(__FILE__));
 
 		// blank.gif embedding
 		$this->assertEquals('data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==', $processor->encodeImage($dir . '/blank.gif'));
-		$this->assertEquals('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->process($dir . '/blank.css'));
+		$this->assertContains('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->process($dir . '/blank.css'));
+	}
+
+	public function testCssInclude() {
+		$dir = $this->app->getDirectory() . '/statics';
+		$processor = StaticAssets::factory('css');
+
+		// include reset.css file
+		$out = $processor->process($dir . '/blank.css');
+		$this->assertNotContains('@include', $out);
+		$this->assertContains('html,body,h1,h2,h3,h4,h5,h6', $out);
 	}
 }

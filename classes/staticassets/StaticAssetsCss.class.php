@@ -19,7 +19,9 @@ class StaticAssetsCss implements IStaticAssetsProcessor {
 		// used for images / CSS embedding
 		$this->currentDir = dirname($file);
 
-		// TODO: embed CSS files included using @include
+		// embed CSS files included using @include
+		// @import url(css/foo.css);
+		$content = preg_replace_callback('#@import url\(["\']?([^)]+.css)["\']?\);#', array($this, 'importCssCallback'), $content);
 
 		// minify
 		// @see http://www.lateralcode.com/css-minifer/
@@ -34,7 +36,7 @@ class StaticAssetsCss implements IStaticAssetsProcessor {
 		$content = preg_replace('#[^\d]0(px|em|pt|%)#', '0', $content);
 
 		// embed GIF and PNG images in CSS
-		$content = preg_replace_callback('#url\(["\']?([^)]+.(gif|png)["\']?)\)#', array($this, 'embedImageCallback'), $content);
+		$content = preg_replace_callback('#url\(["\']?([^)]+.(gif|png))["\']?\)#', array($this, 'embedImageCallback'), $content);
 
 		$content = strtr(trim($content), array(
 			'; ' => ';',
@@ -60,14 +62,34 @@ class StaticAssetsCss implements IStaticAssetsProcessor {
 	}
 
 	/**
+	 * Callback method used to embed CSS files included via @import url(foo.css) statement
+	 *
+	 * Please note: included files must lie in the same directory as the "main" CSS file.
+	 * Currently there's no support for rewritting URLs in included CSS file.
+	 */
+	public function importCssCallback($matches) {
+		// get full path to CSS file
+		$cssFile = realpath($this->currentDir . '/' . $matches[1] /* CSS file name */);
+
+		if (file_exists($cssFile)) {
+			// read external CSS file
+			return file_get_contents($cssFile);
+		}
+		else {
+			// embedding failed - don't replace
+			return $matches[0];
+		}
+	}
+
+	/**
 	 * Callback method used to embed GIF and PNG files in CSS
 	 */
 	public function embedImageCallback($matches) {
 		// get full path to an image
-		$imagePath = realpath($this->currentDir . '/' . $matches[1] /* image name from CSS*/);
+		$imageFile = realpath($this->currentDir . '/' . $matches[1] /* image name from CSS*/);
 
 		// encode it
-		$encoded = $this->encodeImage($imagePath);
+		$encoded = $this->encodeImage($imageFile);
 
 		if ($encoded !== false) {
 			return "url({$encoded})";
