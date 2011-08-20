@@ -125,7 +125,6 @@ class StaticAssets {
 
 /**
  * Common interface for Static assets processors
- *
  */
 interface IStaticAssetsProcessor {
 	public function process($file);

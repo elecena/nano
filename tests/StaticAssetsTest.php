@@ -53,7 +53,6 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 	public function testNotFoundAsset() {
 		$assets = array(
 			// existing file
-			'/statics/head.js' => true,
 			'/statics/rss.png' => true,
 			// not existing file
 			'/statics/404.js' => false,
@@ -86,5 +85,26 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		foreach($assets as $path => $local) {
 			$this->assertEquals($local, $static->getLocalPath($path));
 		}
+	}
+
+	public function testCssMinify() {
+		$processor = StaticAssets::factory('css');
+
+		// original CSS => minifiied
+		$css = array(
+			'body, p {padding: 0px; margin:  10px;}' => 'body,p{padding:0;margin:10px}',
+			'mark    {background-color: #eeeeee; color: #333}' => 'mark{background-color:#eee;color:#333}',
+		);
+
+		// temporary file to use for processing
+		$file = Nano::getTempFile();
+
+		foreach($css as $in => $out) {
+			file_put_contents($file, $in);
+			$this->assertEquals($out, $processor->process($file));
+		}
+
+		// clean up
+		unlink($file);
 	}
 }
