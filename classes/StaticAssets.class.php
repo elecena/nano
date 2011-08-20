@@ -39,6 +39,13 @@ class StaticAssets {
 	}
 
 	/**
+	 * Creates an instance of given static assets processor
+	 */
+	public static function factory($driver) {
+		return Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets');
+	}
+
+	/**
 	 * Get full local path from request's path to given asset
 	 */
 	public function getLocalPath($requestPath) {
@@ -55,6 +62,13 @@ class StaticAssets {
 	 * Get full URL to given asset (include cache buster value)
 	 */
 	public function getUrlForAsset($asset) {
+
+	}
+
+	/**
+	 * Get full URL to given assets package (include cache buster value)
+	 */
+	public function getUrlForPackage($asset) {
 
 	}
 
@@ -80,10 +94,20 @@ class StaticAssets {
 			return false;
 		}
 
-		// get file's content
-		$content = file_get_contents($localPath);
+		// process file content
+		switch($ext) {
+			case 'css':
+				$content = self::factory('css')->process($localPath);
+				break;
 
-		// TODO: process file content
+			case 'js':
+				$content = self::factory('js')->process($localPath);
+				break;
+
+			// return file's content
+			default:
+				$content = file_get_contents($localPath);
+		}
 
 		// set headers and response's content
 		$response->setResponseCode(Response::OK);
@@ -91,8 +115,18 @@ class StaticAssets {
 		$response->setContent($content);
 
 		// caching
+		// @see @see http://developer.yahoo.com/performance/rules.html
 		$response->setCacheDuration(30 * 86400 /* a month */);
+		$response->setLastModified('1 January 2000');
 
 		return true;
 	}
+}
+
+/**
+ * Common interface for Static assets processors
+ *
+ */
+interface IStaticAssetsProcessor {
+	public function process($file);
 }
