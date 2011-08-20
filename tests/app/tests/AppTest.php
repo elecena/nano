@@ -53,6 +53,15 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertContains($libName, get_include_path());
 	}
 
+	public function testIsInAppDirectory() {
+		$this->assertTrue($this->app->isInAppDirectory($this->dir));
+		$this->assertTrue($this->app->isInAppDirectory($this->dir . '/modules'));
+		$this->assertTrue($this->app->isInAppDirectory($this->dir . '/modules/foo'));
+
+		$this->assertFalse($this->app->isInAppDirectory($this->dir . '/..'));
+		$this->assertFalse($this->app->isInAppDirectory($this->dir . '/../..'));
+	}
+
 	public function testCliApp() {
 		$app = Nano::cli($this->dir);
 

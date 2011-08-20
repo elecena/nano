@@ -87,6 +87,15 @@ class NanoApp {
 	}
 
 	/**
+	 * Checks whether given file / directory is inside application's directory (security stuff!)
+	 */
+	public function isInAppDirectory($resource) {
+		$resource = realpath($resource);
+
+		return strpos($resource, $this->getDirectory()) === 0;
+	}
+
+	/**
 	 * Load all modules
 	 */
 	private function loadModules() {

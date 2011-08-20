@@ -110,9 +110,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testImageEncoding() {
 		$static = $this->getStaticAssets();
-		$processor = StaticAssets::factory('css');
-
 		$dir = $this->app->getDirectory() . '/statics';
+
+		$processor = StaticAssets::factory('css');
 
 		// encode existing image
 		$this->assertContains('data:image/png;base64,', $processor->encodeImage($dir . '/rss.png'));
