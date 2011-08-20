@@ -107,4 +107,22 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		// clean up
 		unlink($file);
 	}
+
+	public function testImageEncoding() {
+		$static = $this->getStaticAssets();
+		$processor = StaticAssets::factory('css');
+
+		$dir = $this->app->getDirectory() . '/statics';
+
+		// encode existing image
+		$this->assertContains('data:image/png;base64,', $processor->encodeImage($dir . '/rss.png'));
+
+		// error handling
+		$this->assertFalse($processor->encodeImage($dir . '/not-existing.png'));
+		$this->assertFalse($processor->encodeImage($dir . '/file.xml'));
+
+		// blank.gif embedding
+		$this->assertEquals('data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==', $processor->encodeImage($dir . '/blank.gif'));
+		$this->assertEquals('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->process($dir . '/blank.css'));
+	}
 }

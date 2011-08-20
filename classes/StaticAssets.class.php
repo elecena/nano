@@ -26,7 +26,7 @@ class StaticAssets {
 		'js' => 'application/javascript; charset=utf-8',
 		'gif' => 'image/gif',
 		'png' => 'image/png',
-		'jpg' => 'image/jpg',
+		'jpg' => 'image/jpeg',
 	);
 
 	/**
