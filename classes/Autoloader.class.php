@@ -49,4 +49,22 @@ class Autoloader {
 			require_once self::$classes[$class];
 		}
 	}
+
+	/**
+	 * Factory helper
+	 *
+	 * Creates an instance of given class based on common prefix, class name and path to source files
+	 */
+	static public function factory($prefix, $name, $directory) {
+		$className = $prefix . ucfirst(strtolower($name));
+		$srcFile = $directory . '/' . $className . '.class.php';
+
+		// add to autoloader
+		if (file_exists($srcFile)) {
+			self::add($className, $srcFile);
+		}
+
+		// try to create class instance
+		return class_exists($className) ? new $className() : null;
+	}
 }

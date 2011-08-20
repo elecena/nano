@@ -15,22 +15,14 @@ abstract class Output {
 	 * Creates an instance of given cache driver
 	 */
 	public static function factory($driver, $data = null) {
-		$className = 'Output' . ucfirst(strtolower($driver));
+		$instance = Autoloader::factory('Output', $driver, dirname(__FILE__) . '/output');
 
-		$src = dirname(__FILE__) . '/output/' . $className . '.class.php';
-
-		if (file_exists($src)) {
-			require_once $src;
-
-			$instance = new $className();
-
+		if (!is_null($instance)) {
 			if (!is_null($data)) {
 				$instance->setData($data);
 			}
 		}
-		else {
-			$instance = null;
-		}
+
 		return $instance;
 	}
 
