@@ -84,7 +84,7 @@ class Response {
 			$this->content = $content;
 		}
 	}
-	
+
 	/**
 	 * Set output's content type header
 	 */

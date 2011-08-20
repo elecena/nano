@@ -12,6 +12,7 @@
 class StaticAssets {
 
 	private $app;
+	private $localRoot;
 
 	// registered packages
 	private $packages = array(
@@ -33,6 +34,28 @@ class StaticAssets {
 	 */
 	public function __construct(NanoApp $app) {
 		$this->app = $app;
+
+		$this->localRoot = $this->app->getDirectory();
+	}
+
+	/**
+	 * Get full local path from request's path to given asset
+	 */
+	public function getLocalPath($requestPath) {
+		// remove cache buster part
+		if (strpos($requestPath, '/r') === 0) {
+			$requestPath = preg_replace('#^/r\d+#', '', $requestPath);
+		}
+
+		$path = $this->localRoot . $requestPath;
+		return $path;
+	}
+
+	/**
+	 * Get full URL to given asset (include cache buster value)
+	 */
+	public function getUrlForAsset($asset) {
+
 	}
 
 	/**
@@ -48,11 +71,24 @@ class StaticAssets {
 			return false;
 		}
 
+		// get local path to the asset
+		$localPath = $this->getLocalPath($request->getPath());
+
+		// does file exist?
+		if (!file_exists($localPath)) {
+			$response->setResponseCode(Response::NOT_FOUND);
+			return false;
+		}
+
+		// get file's content
+		$content = file_get_contents($localPath);
+
 		// TODO: process file content
 
-		// set headers
+		// set headers and response's content
 		$response->setResponseCode(Response::OK);
 		$response->setContentType($this->types[$ext]);
+		$response->setContent($content);
 
 		// caching
 		$response->setCacheDuration(30 * 86400 /* a month */);

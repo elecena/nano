@@ -26,13 +26,12 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testServeTypeCheck() {
 		$assets = array(
-			'foo/bar' => false,
-			'test.xml' => false,
-			'statics/jquery.js' => true,
-			'statics/reset.css' => true,
-			'statics/logo.png' => true,
-			'statics/logo.gif' => true,
-			'statics/logo.jpg' => true,
+			'/foo/bar' => false,
+			'/test.xml' => false,
+			'/statics/head.js' => true,
+			'/statics/reset.css' => true,
+			'/statics/blank.gif' => true,
+			'/statics/rss.png' => true,
 		);
 
 		foreach($assets as $asset => $expected) {
@@ -42,6 +41,24 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 			$this->assertEquals($expected, $static->serve($request));
 			$this->assertEquals($expected ? Response::OK : Response::NOT_IMPLEMENTED, $response->getResponseCode());
+		}
+	}
+
+	public function testGetLocalPath() {
+		$static = $this->getStaticAssets();
+		$root = $this->app->getDirectory();
+
+		$assets = array(
+			'/statics/blank.gif' => $root . '/statics/blank.gif',
+			'/statics/r300.gif' => $root . '/statics/r300.gif',
+			'/release/blank.gif' => $root . '/release/blank.gif',
+			'/r1/statics/blank.gif' => $root . '/statics/blank.gif',
+			'/r200/statics/blank.gif' => $root . '/statics/blank.gif',
+			'/r200/statics/r300.gif' => $root . '/statics/r300.gif',
+		);
+
+		foreach($assets as $path => $local) {
+			$this->assertEquals($local, $static->getLocalPath($path));
 		}
 	}
 }
