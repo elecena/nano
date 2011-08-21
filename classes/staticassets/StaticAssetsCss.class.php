@@ -19,8 +19,7 @@ class StaticAssetsCss implements IStaticAssetsProcessor {
 		// used for images / CSS embedding
 		$this->currentDir = dirname($file);
 
-		// embed CSS files included using @include
-		// @import url(css/foo.css);
+		// embed CSS files included using @import url(css/foo.css);
 		$content = preg_replace_callback('#@import url\(["\']?([^)]+.css)["\']?\);#', array($this, 'importCssCallback'), $content);
 
 		// minify
@@ -33,7 +32,10 @@ class StaticAssetsCss implements IStaticAssetsProcessor {
         $content = preg_replace('/([^=])#([a-f\\d])\\2([a-f\\d])\\3([a-f\\d])\\4([\\s;\\}])/i', '$1#$2$3$4$5', $content);
 
 		// remove units from zero values (0px => 0)
-		$content = preg_replace('#[^\d]0(px|em|pt|%)#', '0', $content);
+		$content = preg_replace('#([^\d]0)(px|em|pt|%)#', '$1', $content);
+
+		// remove zeros from values within (0,1) range (0.5 => .5)
+		$content = preg_replace('#([^\d])0(.[\d]+(px|em|pt|%))#', '$1$2', $content);
 
 		// embed GIF and PNG images in CSS
 		$content = preg_replace_callback('#url\(["\']?([^)]+.(gif|png))["\']?\)#', array($this, 'embedImageCallback'), $content);

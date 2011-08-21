@@ -94,7 +94,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		// original CSS => minifiied
 		$css = array(
-			'body, p {padding: 0px; margin:  10px;}' => 'body,p{padding:0;margin:10px}',
+			'body, p {padding: 5px 0px; margin:  10px;}' => 'body,p{padding:5px 0;margin:10px}',
+			'.foo .bar {padding: 10px 1px 0em 0.5em}' => '.foo .bar{padding:10px 1px 0 .5em}',
+			'.foo > .bar {padding: 0.75em 0px;}' => '.foo > .bar{padding:.75em 0}',
 			'mark    {background-color: #eeeeee; color: #333}' => 'mark{background-color:#eee;color:#333}',
 		);
 
@@ -133,7 +135,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		// include reset.css file
 		$out = $processor->process($dir . '/blank.css');
-		$this->assertNotContains('@include', $out);
+		$this->assertNotContains('@import', $out);
 		$this->assertContains('html,body,h1,h2,h3,h4,h5,h6', $out);
 	}
 }
