@@ -18,7 +18,7 @@ class StaticAssetsJs implements IStaticAssetsProcessor {
 
 		// don't minify already minified files
 		if (strpos($file, '.min.js') === false) {
-			$content = JSMin::minify($content);
+			$content = JSMinPlus::minify($content);
 		}
 
 		return trim($content);

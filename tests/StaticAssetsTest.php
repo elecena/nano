@@ -36,7 +36,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 			'/foo/bar' => false,
 			'/test.xml' => false,
 			// correct file types
-			'/statics/head.js' => true,
+			'/statics/jquery.foo.js' => true,
 			'/statics/reset.css' => true,
 			'/statics/blank.gif' => true,
 			'/statics/rss.png' => true,
@@ -101,7 +101,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$static = $this->getStaticAssets();
 		$cb = $static->getCacheBuster();
 
-		$this->assertEquals("/site/r{$cb}/statics/head.js", $static->getUrlForAsset('/statics/head.js'));
+		$this->assertEquals("/site/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
 		$this->assertEquals("/site/r{$cb}/package/app.js", $static->getUrlForPackage('app.js'));
 
 		// cache buster appended
@@ -110,7 +110,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$static = $this->getStaticAssets();
 		$cb = $static->getCacheBuster();
 
-		$this->assertEquals("/site/statics/head.js?r={$cb}", $static->getUrlForAsset('/statics/head.js'));
+		$this->assertEquals("/site/statics/jquery.foo.js?r={$cb}", $static->getUrlForAsset('/statics/jquery.foo.js'));
 		$this->assertEquals("/site/package/app.js?r={$cb}", $static->getUrlForPackage('app.js'));
 	}
 
@@ -135,6 +135,17 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		// clean up
 		unlink($file);
+	}
+
+	public function testJsMinify() {
+		$dir = $this->app->getDirectory() . '/statics';
+		$processor = StaticAssets::factory('js');
+
+		// min.js file should not be touched
+		$this->assertEquals(file_get_contents($dir . '/head.load.min.js'), $processor->process($dir . '/head.load.min.js'));
+
+		// minify simple script
+		$this->assertEquals('jQuery.fn.foo=function(bar){return this.attr(bar)}', $processor->process($dir . '/jquery.foo.js'));
 	}
 
 	public function testImageEncoding() {
