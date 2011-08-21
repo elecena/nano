@@ -72,15 +72,25 @@ class StaticAssets {
 	}
 
 	/**
+	 * Get type of given package
+	 */
+	public function getPackageType($package) {
+		if (isset($this->packages['css'][$package])) {
+			return 'css';
+		}
+		else if (isset($this->packages['js'][$package])) {
+			return 'js';
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
 	 * Get full local path from request's path to given asset
 	 */
-	public function getLocalPath($requestPath) {
-		// remove cache buster part
-		if (strpos($requestPath, '/r') === 0) {
-			$requestPath = preg_replace('#^/r\d+#', '', $requestPath);
-		}
-
-		return $this->localRoot . $requestPath;
+	public function getLocalPath($path) {
+		return $this->localRoot . $this->preprocessRequestPath($path);
 	}
 
 	/**
@@ -108,17 +118,13 @@ class StaticAssets {
 	 */
 	public function getUrlForPackage($package) {
 		// detect package type
-		if (isset($this->packages['css'][$package])) {
-			$ext = 'css';
-		}
-		else if (isset($this->packages['js'][$package])) {
-			$ext = 'js';
-		}
-		else {
+		$type = $this->getPackageType($package);
+
+		if ($type === false) {
 			return false;
 		}
 
-		return $this->getUrlForAsset("package/{$package}.{$ext}");
+		return $this->getUrlForAsset("package/{$package}.{$type}");
 	}
 
 	/**
@@ -134,8 +140,11 @@ class StaticAssets {
 			return false;
 		}
 
+		// remove cache buster from request path
+		$requestPath = $this->preprocessRequestPath($request->getPath());
+
 		// get local path to the asset
-		$localPath = $this->getLocalPath($request->getPath());
+		$localPath = $this->getLocalPath($requestPath);
 
 		// does file exist?
 		if (!file_exists($localPath)) {
@@ -175,6 +184,17 @@ class StaticAssets {
 		$response->setLastModified('1 January 2000');
 
 		return true;
+	}
+
+	/**
+	 * Remove prepended cache buster part from request path
+	 */
+	private function preprocessRequestPath($path) {
+		if (strpos($path, '/r') === 0) {
+			$path = preg_replace('#^/r\d+#', '', $path);
+		}
+
+		return $path;
 	}
 }
 

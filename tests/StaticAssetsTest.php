@@ -22,7 +22,12 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 					'/statics/head.min.js',
 					'/statics/jquery.foo.js',
 				),
-			)
+			),
+			'css' => array(
+				'styles' => array(
+					'/statics/reset.css',
+				),
+			),
 		));
 	}
 
@@ -64,8 +69,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testNotFoundAsset() {
 		$assets = array(
-			// existing file
+			// existing file (and with cache buster)
 			'/statics/rss.png' => true,
+			'/r200/statics/rss.png' => true,
 			// not existing file
 			'/statics/404.js' => false,
 			'/statics/not-existing.png' => false,
@@ -113,6 +119,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals("/site/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
 		$this->assertEquals("/site/r{$cb}/package/app.js", $static->getUrlForPackage('app'));
+		$this->assertEquals("/site/r{$cb}/package/styles.css", $static->getUrlForPackage('styles'));
 		$this->assertFalse($static->getUrlForPackage('notExisting'));
 
 		// cache buster appended
@@ -123,6 +130,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals("/site/statics/jquery.foo.js?r={$cb}", $static->getUrlForAsset('/statics/jquery.foo.js'));
 		$this->assertEquals("/site/package/app.js?r={$cb}", $static->getUrlForPackage('app'));
+		$this->assertEquals("/site/package/styles.css?r={$cb}", $static->getUrlForPackage('styles'));
 		$this->assertFalse($static->getUrlForPackage('notExisting'));
 	}
 
@@ -147,17 +155,6 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		// clean up
 		unlink($file);
-	}
-
-	public function testJsMinify() {
-		$dir = $this->app->getDirectory() . '/statics';
-		$processor = StaticAssets::factory('js');
-
-		// min.js file should not be touched
-		$this->assertEquals(file_get_contents($dir . '/head.load.min.js'), $processor->process($dir . '/head.load.min.js'));
-
-		// minify simple script
-		$this->assertEquals('jQuery.fn.foo=function(bar){return this.attr(bar)}', $processor->process($dir . '/jquery.foo.js'));
 	}
 
 	public function testImageEncoding() {
@@ -185,5 +182,23 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$out = $processor->process($dir . '/blank.css');
 		$this->assertNotContains('@import', $out);
 		$this->assertContains('html,body,h1,h2,h3,h4,h5,h6', $out);
+	}
+
+	public function testJsMinify() {
+		$dir = $this->app->getDirectory() . '/statics';
+		$processor = StaticAssets::factory('js');
+
+		// min.js file should not be touched
+		$this->assertEquals(file_get_contents($dir . '/head.load.min.js'), $processor->process($dir . '/head.load.min.js'));
+
+		// minify simple script
+		$this->assertEquals('jQuery.fn.foo=function(bar){return this.attr(bar)}', $processor->process($dir . '/jquery.foo.js'));
+	}
+
+	public function testGetPackageType() {
+		$static = $this->getStaticAssets();
+
+		$this->assertEquals('js', $static->getPackageType('app'));
+		$this->assertEquals('css', $static->getPackageType('styles'));
 	}
 }
