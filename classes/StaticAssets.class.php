@@ -26,10 +26,7 @@ class StaticAssets {
 	private $prependCacheBuster;
 
 	// registered packages
-	private $packages = array(
-		'css' => array(),
-		'js' => array(),
-	);
+	private $packages;
 
 	// list of supported extensions with their mime types
 	private $types = array(
@@ -54,6 +51,10 @@ class StaticAssets {
 
 		$this->cb = intval($config->get('assets.cb', 1));
 		$this->prependCacheBuster = $config->get('assets.prependCacheBuster', true) === true;
+		$this->packages = $config->get('assets.packages', array(
+			'css' => array(),
+			'js' => array()
+		));
 	}
 
 	/**
@@ -106,8 +107,18 @@ class StaticAssets {
 	 * Get full URL to given assets package (include cache buster value)
 	 */
 	public function getUrlForPackage($package) {
-		// TODO: detect package types based on its name and append proper extension to URL
-		return $this->getUrlForAsset("package/{$package}");
+		// detect package type
+		if (isset($this->packages['css'][$package])) {
+			$ext = 'css';
+		}
+		else if (isset($this->packages['js'][$package])) {
+			$ext = 'js';
+		}
+		else {
+			return false;
+		}
+
+		return $this->getUrlForAsset("package/{$package}.{$ext}");
 	}
 
 	/**

@@ -14,6 +14,16 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		// use test application's directory
 		$dir = realpath(dirname(__FILE__) . '/app');
 		$this->app = Nano::app($dir);
+
+		// register a package
+		$this->app->getConfig()->set('assets.packages', array(
+			'js' => array(
+				'app' => array(
+					'/statics/head.min.js',
+					'/statics/jquery.foo.js',
+				),
+			)
+		));
 	}
 
 	private function getStaticAssets() {
@@ -102,7 +112,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$cb = $static->getCacheBuster();
 
 		$this->assertEquals("/site/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
-		$this->assertEquals("/site/r{$cb}/package/app.js", $static->getUrlForPackage('app.js'));
+		$this->assertEquals("/site/r{$cb}/package/app.js", $static->getUrlForPackage('app'));
+		$this->assertFalse($static->getUrlForPackage('notExisting'));
 
 		// cache buster appended
 		$this->app->getConfig()->set('assets.prependCacheBuster', false);
@@ -111,7 +122,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$cb = $static->getCacheBuster();
 
 		$this->assertEquals("/site/statics/jquery.foo.js?r={$cb}", $static->getUrlForAsset('/statics/jquery.foo.js'));
-		$this->assertEquals("/site/package/app.js?r={$cb}", $static->getUrlForPackage('app.js'));
+		$this->assertEquals("/site/package/app.js?r={$cb}", $static->getUrlForPackage('app'));
+		$this->assertFalse($static->getUrlForPackage('notExisting'));
 	}
 
 	public function testCssMinify() {
