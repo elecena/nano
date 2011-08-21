@@ -8,12 +8,15 @@
 
 class TestSuite extends PHPUnit_Framework_TestSuite {
 
+	private $performCodeCoverage;
+
 	/**
 	 * Return new instance of test suite class
 	 */
-	static public function init() {
+	static public function init($performCodeCoverage = false) {
 		$suite = new self;
 		$suite->setName('nanoPortal test suite');
+		$suite->peformCodeCoverage = $performCodeCoverage;
 
 		return $suite;
 	}
@@ -73,9 +76,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		$printer = new ResultPrinter();
 
 		// collect code coverage report
-		$codeCoverage = true;
-
-		if (!empty($codeCoverage)) {
+		if (!empty($this->performCodeCoverage)) {
 			$results->collectCodeCoverageInformation(true);
 		}
 
@@ -91,7 +92,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 		// code coverage report
 		$codeCoverage = $results->getCodeCoverageSummary();
 
-		if (!empty($codeCoverage)) {
+		if (!empty($this->performCodeCoverage)) {
 			echo "\nCode coverage report:\n";
 
 			foreach($codeCoverage as $file => $info) {

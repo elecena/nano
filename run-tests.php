@@ -25,7 +25,7 @@ Nano::addLibrary('pear/PHP');
 require_once 'PHPUnit/Autoload.php';
 
 // construct global wrapper for test suites
-$suite = TestSuite::init();
+$suite = TestSuite::init(false /* $performCodeCoverage */);
 
 // add "core" tests from /tests directory
 $suite->addCoreTestSuite();
