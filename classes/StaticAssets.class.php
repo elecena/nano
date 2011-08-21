@@ -12,7 +12,18 @@
 class StaticAssets {
 
 	private $app;
+	private $router;
+
+	// application's root directory
 	private $localRoot;
+
+	// cache buster value
+	private $cb;
+
+	// should cache buster value be prepended to an URL?
+	// example: /r200/foo/bar.js [true]
+	// example: /foo/bar.js?r=200 [false]
+	private $prependCacheBuster;
 
 	// registered packages
 	private $packages = array(
@@ -35,7 +46,14 @@ class StaticAssets {
 	public function __construct(NanoApp $app) {
 		$this->app = $app;
 
+		$this->router = $this->app->getRouter();
 		$this->localRoot = $this->app->getDirectory();
+
+		// read configuration
+		$config = $this->app->getConfig();
+
+		$this->cb = intval($config->get('assets.cb', 1));
+		$this->prependCacheBuster = $config->get('assets.prependCacheBuster', true) === true;
 	}
 
 	/**
@@ -43,6 +61,13 @@ class StaticAssets {
 	 */
 	public static function factory($driver) {
 		return Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets');
+	}
+
+	/**
+	 * Get current cache buster value (used to invalidate cached assets)
+	 */
+	public function getCacheBuster() {
+		return $this->cb;
 	}
 
 	/**
@@ -54,22 +79,35 @@ class StaticAssets {
 			$requestPath = preg_replace('#^/r\d+#', '', $requestPath);
 		}
 
-		$path = $this->localRoot . $requestPath;
-		return $path;
+		return $this->localRoot . $requestPath;
 	}
 
 	/**
 	 * Get full URL to given asset (include cache buster value)
 	 */
 	public function getUrlForAsset($asset) {
+		$cb = $this->getCacheBuster();
 
+		if ($this->prependCacheBuster) {
+			// /r200/foo/bar.js
+			$path = 'r' . $cb . Router::SEPARATOR . trim($asset, Router::SEPARATOR);
+			$params = array();
+		}
+		else {
+			// /foo/bar.js?r=200
+			$path = $asset;
+			$params = array('r' => $cb);
+		}
+
+		return $this->router->link($path, $params);
 	}
 
 	/**
 	 * Get full URL to given assets package (include cache buster value)
 	 */
-	public function getUrlForPackage($asset) {
-
+	public function getUrlForPackage($package) {
+		// TODO: detect package types based on its name and append proper extension to URL
+		return $this->getUrlForAsset("package/{$package}");
 	}
 
 	/**

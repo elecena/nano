@@ -71,6 +71,13 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	public function testGetCacheBuster() {
+		$static = $this->getStaticAssets();
+		$cb = $this->app->getConfig()->get('assets.cb');
+
+		$this->assertEquals($cb, $static->getCacheBuster());
+	}
+
 	public function testGetLocalPath() {
 		$static = $this->getStaticAssets();
 		$root = $this->app->getDirectory();
@@ -87,6 +94,24 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		foreach($assets as $path => $local) {
 			$this->assertEquals($local, $static->getLocalPath($path));
 		}
+	}
+
+	public function testGetUrlForAssetAndPackage() {
+		// cache buster prepended (default behaviour)
+		$static = $this->getStaticAssets();
+		$cb = $static->getCacheBuster();
+
+		$this->assertEquals("/site/r{$cb}/statics/head.js", $static->getUrlForAsset('/statics/head.js'));
+		$this->assertEquals("/site/r{$cb}/package/app.js", $static->getUrlForPackage('app.js'));
+
+		// cache buster appended
+		$this->app->getConfig()->set('assets.prependCacheBuster', false);
+
+		$static = $this->getStaticAssets();
+		$cb = $static->getCacheBuster();
+
+		$this->assertEquals("/site/statics/head.js?r={$cb}", $static->getUrlForAsset('/statics/head.js'));
+		$this->assertEquals("/site/package/app.js?r={$cb}", $static->getUrlForPackage('app.js'));
 	}
 
 	public function testCssMinify() {
