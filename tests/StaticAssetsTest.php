@@ -19,7 +19,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->app->getConfig()->set('assets.packages', array(
 			'js' => array(
 				'app' => array(
-					'/statics/head.min.js',
+					'/statics/head.load.min.js',
 					'/statics/jquery.foo.js',
 				),
 			),
@@ -50,11 +50,15 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 			// unsupported file types
 			'/foo/bar' => false,
 			'/test.xml' => false,
+			'/package/app' => false,
 			// correct file types
 			'/statics/jquery.foo.js' => true,
 			'/statics/reset.css' => true,
 			'/statics/blank.gif' => true,
 			'/statics/rss.png' => true,
+			// package
+			'/package/app.js' => true,
+			'/package/styles.css' => true,
 		);
 
 		foreach($assets as $asset => $expected) {
@@ -75,6 +79,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 			// not existing file
 			'/statics/404.js' => false,
 			'/statics/not-existing.png' => false,
+			// not existing package
+			'/package/test.js' => false,
+			'/package/not-existing.css' => false,
 		);
 
 		foreach($assets as $asset => $expected) {
@@ -200,5 +207,30 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals('js', $static->getPackageType('app'));
 		$this->assertEquals('css', $static->getPackageType('styles'));
+	}
+
+	public function testGetPackageName() {
+		$static = $this->getStaticAssets();
+		$prefix = StaticAssets::PACKAGE_URL_PREFIX;
+
+		$this->assertEquals('foo', $static->getPackageName($prefix . 'foo.js'));
+		$this->assertEquals('bar', $static->getPackageName($prefix . 'bar.css'));
+
+		$this->assertFalse($static->getPackageName($prefix));
+		$this->assertFalse($static->getPackageName($prefix . '/bar'));
+		$this->assertFalse($static->getPackageName('/statics/reset.css'));
+		$this->assertFalse($static->getPackageName('/statics/head.load.min.js'));
+	}
+
+	public function testServePackage() {
+		$static = $this->getStaticAssets();
+		$prefix = StaticAssets::PACKAGE_URL_PREFIX;
+
+		$request = Request::newFromPath($prefix . 'app.js');
+		$response = $this->app->getResponse();
+
+		$this->assertTrue($static->serve($request));
+		$this->assertContains('The only script in your <HEAD>', $response->getContent());
+		$this->assertContains('jQuery.fn.foo=function(bar){return this.attr(bar)}', $response->getContent());
 	}
 }

@@ -11,6 +11,8 @@
 
 class StaticAssets {
 
+	const PACKAGE_URL_PREFIX = '/package/';
+
 	private $app;
 	private $router;
 
@@ -87,6 +89,24 @@ class StaticAssets {
 	}
 
 	/**
+	 * Get package name from given path
+	 */
+	public function getPackageName($path) {
+		if (strpos($path, self::PACKAGE_URL_PREFIX) === 0) {
+			// remove package URL prefix
+			$path = substr($path, strlen(self::PACKAGE_URL_PREFIX));
+
+			// remove extension
+			$idx = strrpos($path, '.');
+			if ($idx > 0) {
+				return substr($path, 0, $idx);
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get full local path from request's path to given asset
 	 */
 	public function getLocalPath($path) {
@@ -124,11 +144,13 @@ class StaticAssets {
 			return false;
 		}
 
-		return $this->getUrlForAsset("package/{$package}.{$type}");
+		return $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
 	}
 
 	/**
 	 * Serve given request for a static asset / package
+	 *
+	 * This is an entry point
 	 */
 	public function serve(Request $request) {
 		$ext = $request->getExtension();
@@ -143,34 +165,21 @@ class StaticAssets {
 		// remove cache buster from request path
 		$requestPath = $this->preprocessRequestPath($request->getPath());
 
-		// get local path to the asset
-		$localPath = $this->getLocalPath($requestPath);
+		// check for package URL
+		$packageName = $this->getPackageName($requestPath);
 
-		// does file exist?
-		if (!file_exists($localPath)) {
-			$response->setResponseCode(Response::NOT_FOUND);
-			return false;
+		// serve package or a single file
+		if ($packageName !== false) {
+			$content = $this->servePackage($packageName, $ext);
+		}
+		else {
+			$content = $this->serveSingleAsset($requestPath, $ext);
 		}
 
-		// security check - only serve files from within the application
-		if (!$this->app->isInAppDirectory($localPath)) {
+		// error occured
+		if ($content === false) {
 			$response->setResponseCode(Response::NOT_FOUND);
 			return false;
-		}
-
-		// process file content
-		switch($ext) {
-			case 'css':
-				$content = self::factory('css')->process($localPath);
-				break;
-
-			case 'js':
-				$content = self::factory('js')->process($localPath);
-				break;
-
-			// return file's content
-			default:
-				$content = file_get_contents($localPath);
 		}
 
 		// set headers and response's content
@@ -184,6 +193,70 @@ class StaticAssets {
 		$response->setLastModified('1 January 2000');
 
 		return true;
+	}
+
+	/**
+	 * Serve single static asset
+	 *
+	 * Performs additional checks and returns minified version of an asset
+	 */
+	private function serveSingleAsset($requestPath, $ext) {
+		// get local path to the asset
+		$localPath = $this->getLocalPath($requestPath);
+
+		// does file exist?
+		if (!file_exists($localPath)) {
+			return false;
+		}
+
+		// security check - only serve files from within the application
+		if (!$this->app->isInAppDirectory($localPath)) {
+			return false;
+		}
+
+		// process file content
+		switch($ext) {
+			case 'css':
+				$content = self::factory('css')->process($localPath);
+				break;
+
+			case 'js':
+				$content = self::factory('js')->process($localPath);
+				break;
+
+			// return file's content (images)
+			default:
+				$content = file_get_contents($localPath);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Serve package of static assets
+	 */
+	private function servePackage($packageName, $ext) {
+		$packageType = $this->getPackageType($packageName);
+
+		if ($packageType !== $ext) {
+			return false;
+		}
+
+		// TODO: support packages in packages
+		$packageFiles = $this->packages[$packageType][$packageName];
+
+		// generate concatenated response
+		$content = '';
+
+		foreach($packageFiles as $file) {
+			$processedFile = $this->serveSingleAsset($file, $packageType);
+
+			if ($processedFile !== false) {
+				$content .= $processedFile;
+			}
+		}
+
+		return ($content != '') ? $content : false;
 	}
 
 	/**
