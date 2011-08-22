@@ -76,12 +76,28 @@ class StaticAssets {
 	/**
 	 * Get type of given package
 	 */
-	public function getPackageType($package) {
-		if (isset($this->packages['css'][$package])) {
+	public function getPackageType($packageName) {
+		if (isset($this->packages['css'][$packageName])) {
 			return 'css';
 		}
-		else if (isset($this->packages['js'][$package])) {
+		else if (isset($this->packages['js'][$packageName])) {
 			return 'js';
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
+	 * Get list of file from the given package
+	 *
+	 * TODO: support packages in packages
+	 */
+	private function getPackageItems($packageName) {
+		$packageType = $this->getPackageType($packageName);
+
+		if (!empty($this->packages[$packageType][$packageName])) {
+			return $this->packages[$packageType][$packageName];
 		}
 		else {
 			return false;
@@ -242,8 +258,7 @@ class StaticAssets {
 			return false;
 		}
 
-		// TODO: support packages in packages
-		$packageFiles = $this->packages[$packageType][$packageName];
+		$packageFiles = $this->getPackageItems($packageName);
 
 		// generate concatenated response
 		$content = '';
