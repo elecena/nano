@@ -7,9 +7,9 @@
 * redis client									[DONE]
 * general entry point (index.php)
 * API entry point (api.php)						[DONE]
-* JS / CSS loading + minification + packages
-* theming
-* PID file generator helper
+* JS / CSS loading + minification + packages	[DONE]
+* theming (skins)
+* PID file generator helper						[DONE]
 * locks support
 * XML sitemap generator
 * RSS feed generator
