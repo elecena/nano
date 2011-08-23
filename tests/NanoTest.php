@@ -22,17 +22,4 @@ class NanoTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertContains($libName, get_include_path());
 	}
-
-	public function testGetTempFile() {
-		$content = 'foobar';
-		$tmp = Nano::getTempFile();
-
-		$this->assertTrue(file_exists($tmp));
-
-		file_put_contents($tmp, $content);
-		$this->assertEquals($content, file_get_contents($tmp));
-
-		unlink($tmp);
-		$this->assertFalse(file_exists($tmp));
-	}
 }

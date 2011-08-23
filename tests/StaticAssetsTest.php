@@ -153,7 +153,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		);
 
 		// temporary file to use for processing
-		$file = Nano::getTempFile();
+		$file = Utils::getTempFile();
 
 		foreach($css as $in => $out) {
 			file_put_contents($file, $in);

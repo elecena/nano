@@ -99,13 +99,4 @@ class Nano {
 		// update include_path
 		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
 	}
-
-	/**
-	 * Creates temporary file and returns its name
-	 *
-	 * @see http://www.php.net/manual/en/function.tempnam.php
-	 */
-	static public function getTempFile() {
-		return tempnam(false /* use system default */, 'nano');
-	}
 }
