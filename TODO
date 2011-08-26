@@ -10,6 +10,7 @@
 * JS / CSS loading + minification + packages	[DONE]
 * theming (skins)
 * PID file generator helper						[DONE]
+* database layer for SQLite
 * locks support
 * XML sitemap generator
 * RSS feed generator
