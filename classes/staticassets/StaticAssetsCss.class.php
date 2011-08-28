@@ -35,7 +35,7 @@ class StaticAssetsCss implements IStaticAssetsProcessor {
 		$content = preg_replace('#([^\d]0)(px|em|pt|%)#', '$1', $content);
 
 		// remove zeros from values within (0,1) range (0.5 => .5)
-		$content = preg_replace('#([^\d])0(.[\d]+(px|em|pt|%))#', '$1$2', $content);
+		$content = preg_replace('#([^\d])0(\.[\d]+(px|em|pt|%))#', '$1$2', $content);
 
 		// embed GIF and PNG images in CSS
 		$content = preg_replace_callback('#url\(["\']?([^)]+.(gif|png))["\']?\)#', array($this, 'embedImageCallback'), $content);

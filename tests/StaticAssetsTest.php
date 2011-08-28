@@ -33,7 +33,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	private function getStaticAssets() {
 		// initialize static assets handler
-		return $this->app->factory('StaticAssets');;
+		return $this->app->factory('StaticAssets');
 	}
 
 	public function testFactory() {
@@ -150,6 +150,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 			'.foo .bar {padding: 10px 1px 0em 0.5em}' => '.foo .bar{padding:10px 1px 0 .5em}',
 			'.foo > .bar {padding: 0.75em 0px;}' => '.foo > .bar{padding:.75em 0}',
 			'mark    {background-color: #eeeeee; color: #333}' => 'mark{background-color:#eee;color:#333}',
+			'.foo {padding: 0 0 15px 0px;}' => '.foo{padding:0 0 15px 0}',
+			'.foo {margin: 0 0 25px;}' => '.foo{margin:0 0 25px}',
 		);
 
 		// temporary file to use for processing
