@@ -17,8 +17,9 @@
 * sessions handling
 * adding meta tags to HTML
 * static pages module (/pages/static)
-* GData client
+* GoogleData client
 * GoogleAnalytics API client
+* Google Shortener client
 * Wordpress XML-RPC API client
 * server-side GoogleAnalytics tracking
 * cron jobs
@@ -32,3 +33,10 @@
 @see http://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers/
 @see http://www.mnot.net/cache_docs/
 @see http://eriz.pcinside.pl/weblog/zdalne-publikowanie-notek-w-wordpressie-xml-rpc-w-php-204.html
+@see http://code.google.com/apis/youtube/2.0/developers_guide_php.html#Retrieving_Standard_Feeds
+@see http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html
+@see http://gdata.youtube.com/feeds/api/users/avrtvtube/uploads?v=2&alt=json
+@see http://google-data-api.blogspot.com/2008/05/clientlogin-with-php-curl.html
+@see http://code.google.com/apis/gdata/articles/using_cURL.html
+@see http://code.google.com/apis/gdata/docs/directory.html
+@see http://kovshenin.com/archives/google-url-shortener-googl-wordpress/
