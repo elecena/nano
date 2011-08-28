@@ -19,6 +19,7 @@
 * static pages module (/pages/static)
 * GData client
 * GoogleAnalytics API client
+* Wordpress XML-RPC API client
 * server-side GoogleAnalytics tracking
 * cron jobs
 
@@ -30,3 +31,4 @@
 @see http://stackoverflow.com/questions/35879/base64-encoding-image
 @see http://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers/
 @see http://www.mnot.net/cache_docs/
+@see http://eriz.pcinside.pl/weblog/zdalne-publikowanie-notek-w-wordpressie-xml-rpc-w-php-204.html
