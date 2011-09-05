@@ -55,9 +55,9 @@ class DOM {
 			$html = iconv($charset, 'utf-8', $html);
 		}
 		// perform encoding detection
-		else if (preg_match('#<meta[^>]+content=[^>]+charset=([A-Za-z0-9-]+)#i', $html, $matches)) {
-			if (!empty($matches[1])) {
-				$charset = strtolower(trim($matches[1]));
+		else if (preg_match('#<meta[^>]+content=[^>]+;\s?(charset=)?([A-Za-z0-9-]+)#i', $html, $matches)) {
+			if (!empty($matches[2])) {
+				$charset = strtolower(trim($matches[2]));
 
 				// convert to utf
 				if ($charset != 'utf-8') {
@@ -131,6 +131,23 @@ class DOM {
 		$node = $this->getNode($xpath);
 
 		return !empty($node[$attr]) ? (string) $node[$attr] : null;
+	}
+
+	/**
+	 * Remove the first node matching given XPath
+	 */
+	public function removeNode($xpath) {
+		$node = $this->getNode($xpath);
+
+		if (!empty($node)) {
+			$dom = dom_import_simplexml($node);
+			$dom->parentNode->removeChild($dom);
+
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**

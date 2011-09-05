@@ -48,6 +48,10 @@ HTML;
 		$this->assertEquals('123', $dom->getNodeContent('//foo/bar'));
 		$this->assertEquals('1', $dom->getNodeAttr('//foo/bar', 'data-foo'));
 		$this->assertEquals("\n\t\t123\n\t", $dom->getNodeTextContent('//foo'));
+
+		// remove node
+		$dom->removeNode('//root//bar');
+		$this->assertNull($dom->getNode('//root//bar'));
 	}
 
 	public function testParseXmlWithFallback() {
@@ -99,12 +103,17 @@ HTML;
 		$nodes = $dom->xpath('//ol/li');
 		$this->assertContains('123', (string) $nodes[0]);
 		$this->assertContains('456', (string) $nodes[1]);
+
+		// remove node
+		$this->assertEquals(3, count($dom->xpath('//ol/li')));
+		$dom->removeNode('//ol/li');
+		$this->assertEquals(2, count($dom->xpath('//ol/li')));
 	}
 
 	// provider for testHtmlCharset()
-	private function getHtml($text, $charset) {
+	private function getHtml($text, $contentType) {
 		$html = <<<HTML
-<head><meta http-equiv="Content-Type" content="text/html; charset=$charset"/></head>
+<head><meta http-equiv="Content-Type" content="$contentType"/></head>
 <p>$text</p>
 HTML;
 
@@ -112,19 +121,32 @@ HTML;
 	}
 
 	public function testHtmlCharset() {
-		$dom = DOM::newFromHtml($this->getHtml('ąę', 'utf-8'));
+		$utfContent = 'ąę';
+		$isoContent = "\xb1\xea";
+
+		$dom = DOM::newFromHtml($this->getHtml($utfContent, 'text/html; charset=utf-8'));
 		$this->assertContains('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('utf-8', $dom->getCharset());
 
-		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'iso-8859-2'));
+		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; charset=iso-8859-2'));
 		$this->assertContains('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 
-		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'iso-8859-2'), 'iso-8859-2' /* forced charset */);
+		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; charset=iso-8859-2'), 'iso-8859-2' /* forced charset */);
 		$this->assertContains('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 
-		$dom = DOM::newFromHtml($this->getHtml("\xb1\xea", 'utf-8'), 'iso-8859-2' /* forced charset */);
+		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; charset=utf-8'), 'iso-8859-2' /* forced charset */);
+		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertEquals('iso-8859-2', $dom->getCharset());
+
+		// some sites emit incorrect content type meta entry
+		// <meta http-equiv="content-type" content="text/html; iso-8859-2" />
+		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; iso-8859-2'));
+		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertEquals('iso-8859-2', $dom->getCharset());
+
+		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html;iso-8859-2'));
 		$this->assertContains('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 	}
