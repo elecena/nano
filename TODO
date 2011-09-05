@@ -35,8 +35,12 @@
 @see http://eriz.pcinside.pl/weblog/zdalne-publikowanie-notek-w-wordpressie-xml-rpc-w-php-204.html
 @see http://code.google.com/apis/youtube/2.0/developers_guide_php.html#Retrieving_Standard_Feeds
 @see http://code.google.com/apis/youtube/2.0/developers_guide_jsonc.html
+@see http://gdata.youtube.com/feeds/api/users/avrtvtube?v=2&alt=json
 @see http://gdata.youtube.com/feeds/api/users/avrtvtube/uploads?v=2&alt=json
+@see http://gdata.youtube.com/feeds/api/videos?q=google&orderby=viewCount&v=2&alt=json
 @see http://google-data-api.blogspot.com/2008/05/clientlogin-with-php-curl.html
 @see http://code.google.com/apis/gdata/articles/using_cURL.html
 @see http://code.google.com/apis/gdata/docs/directory.html
 @see http://kovshenin.com/archives/google-url-shortener-googl-wordpress/
+@see http://www.php.net/manual/en/function.curl-multi-exec.php#80977
+@see https://github.com/vrana/php-async/blob/master/CurlAsync.php

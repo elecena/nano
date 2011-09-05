@@ -18,10 +18,10 @@ class HttpClient {
 	// User-Agent wysy³any przy ¿¹daniach
 	private $userAgent;
 
-	// uchwyt do cURLa
+	// cURL resource
 	private $handle;
 
-	// wersja cURL'a
+	// cURL version
 	private $version;
 
 	// pobrane nag³ówki
@@ -38,10 +38,10 @@ class HttpClient {
 		$info = curl_version();
 		$this->version = $info['version'];
 
-		// ustaw nazwê przegl¹darki
+		// set user agent
 		$this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}");
 
-		// inicjalizuj i konfiguruj cURL'a
+		// set up cURL library
 		$this->handle = curl_init();
 
 		curl_setopt_array($this->handle, array(
