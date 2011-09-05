@@ -165,12 +165,17 @@ abstract class Database {
 	/**
 	 * Remove rows from a table using following WHERE statements
 	 */
-	abstract public function delete($table, $where, Array $options = array());
+	abstract public function delete($table, $where = array(), Array $options = array());
+
+	/**
+	 * Remove single row from a table using following WHERE statements
+	 */
+	abstract public function deleteRow($table, $where = array());
 
 	/**
 	 * Update a table using following values for rows matching WHERE statements
 	 */
-	abstract public function update($table, Array $value, $where, Array $options = array());
+	abstract public function update($table, Array $values, $where = array(), Array $options = array());
 
 	/**
 	 * Insert a single row into a table using following values

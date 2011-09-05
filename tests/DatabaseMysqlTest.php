@@ -25,13 +25,13 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		return addcslashes($value, "'\"\0");
 	}
 
-	public function testMySqlDatabaseMock() {
+	private function getDatabaseMock() {
 		// load MySQL driver
 		$app = Nano::app(dirname(__FILE__) . '/app');
 		$database = Database::connect($app, array('driver' => 'mysql'));
 
 		// mock the database driver
-		$database = $this->getMock('DatabaseMysql', array('query', 'escape', 'isConnected'), array(), 'DatabaseMysqlMock', false /* $callOriginalConstructor */);
+		$database = $this->getMock('DatabaseMysql', array('query', 'escape', 'isConnected'), array(), 'DatabaseMysqlMock' . mt_rand(), false /* $callOriginalConstructor */);
 
 		// mock certain methods
 		$database->expects($this->any())
@@ -46,6 +46,12 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 			->method('isConnected')
 			->will($this->returnValue(true));
 
+		return $database;
+	}
+
+	public function testMySqlDatabaseMock() {
+		$database = $this->getDatabaseMock();
+
 		// check mock
 		$this->assertInstanceOf('DatabaseMysql', $database);
 		$this->assertTrue($database->isConnected());
@@ -58,6 +64,10 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$performanceData = $database->getPerformanceData();
 		$this->assertEquals(0, $performanceData['queries']);
 		$this->assertEquals(0, $performanceData['time']);
+	}
+
+	public function testQuery() {
+		$database = $this->getDatabaseMock();
 
 		// test queries
 		$database->query('SET foo = 1');
@@ -65,8 +75,11 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->begin();
 		$this->assertQueryEquals('BEGIN');
+	}
 
-		// select() queries
+	public function testSelect() {
+		$database = $this->getDatabaseMock();
+
 		$database->select('pages', '*');
 		$this->assertQueryEquals('SELECT * FROM pages');
 
@@ -90,6 +103,25 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10));
 		$this->assertQueryEquals('SELECT id FROM pages LIMIT 5 OFFSET 10');
+	}
+
+	public function testDelete() {
+		$database = $this->getDatabaseMock();
+
+		$database->delete('pages');
+		$this->assertQueryEquals('DELETE FROM pages');
+
+		$database->delete('pages', array('id' => 2));
+		$this->assertQueryEquals('DELETE FROM pages WHERE id="2"');
+
+		$database->delete('pages', array('id > 5'));
+		$this->assertQueryEquals('DELETE FROM pages WHERE id > 5');
+
+		$database->delete('pages', array('id' => 2), array('limit' => 1));
+		$this->assertQueryEquals('DELETE FROM pages WHERE id="2" LIMIT 1');
+
+		$database->deleteRow('pages', array('id' => 2));
+		$this->assertQueryEquals('DELETE FROM pages WHERE id="2" LIMIT 1');
 	}
 
 	// requires server running on localhost:3306

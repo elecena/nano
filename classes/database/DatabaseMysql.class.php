@@ -137,15 +137,36 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Remove rows from a table using following WHERE statements
+	 *
+	 * @see http://dev.mysql.com/doc/refman/5.0/en/delete.html
 	 */
-	public function delete($table, $where, Array $options = array()) {
+	public function delete($table, $where = array(), Array $options = array()) {
+		$sql = 'DELETE FROM ' . $this->resolveList($table);
 
+		$whereSql = $this->resolveWhere($where);
+		if (!empty($whereSql)) {
+			$sql .= ' WHERE ' . $whereSql;
+		}
+
+		$optionsSql = $this->resolveOptions($options);
+		if (!empty($optionsSql)) {
+			$sql .= ' ' . $optionsSql;
+		}
+
+		return $this->query($sql);
+	}
+
+	/**
+	 * Remove single row from a table using following WHERE statements
+	 */
+	public function deleteRow($table, $where = array()) {
+		return $this->delete($table, $where, array('limit' => 1));
 	}
 
 	/**
 	 * Update a table using following values for rows matching WHERE statements
 	 */
-	public function update($table, Array $value, $where, Array $options = array()) {
+	public function update($table, Array $values, $where = array(), Array $options = array()) {
 
 	}
 
@@ -174,7 +195,7 @@ class DatabaseMysql extends Database {
 	 * Get number of rows affected by the recent query
 	 */
 	public function getRowsAffected() {
-
+		return $this->link->affected_rows;
 	}
 
 	/**
