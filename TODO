@@ -23,6 +23,7 @@
 * Wordpress XML-RPC API client
 * server-side GoogleAnalytics tracking
 * cron jobs
+* Google Weather API
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1474/serialize
@@ -44,3 +45,4 @@
 @see http://kovshenin.com/archives/google-url-shortener-googl-wordpress/
 @see http://www.php.net/manual/en/function.curl-multi-exec.php#80977
 @see https://github.com/vrana/php-async/blob/master/CurlAsync.php
+@see http://www.google.com/ig/api?weather=San%20Francisco
