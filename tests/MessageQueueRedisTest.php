@@ -15,7 +15,7 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 			'driver' => 'redis',
 			'host' => '89.248.171.138', /* s2 */
 			'port' => 60380,
-			'pass' => 'foobared',
+			//'pass' => 'foobared',
 			'prefix' => 'test',
 			'queue' => 'foo',
 		);

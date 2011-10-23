@@ -1,7 +1,7 @@
 <?php
 
 /**
- * nanoPortal application  entry point for HTTP requests
+ * nanoPortal application entry point for HTTP requests
  *
  * $Id$
  */
