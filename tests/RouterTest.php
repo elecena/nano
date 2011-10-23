@@ -18,6 +18,12 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		return new Router($this->app);
 	}
 
+	public function testGetPathPrefix() {
+		$router = $this->getRouter();
+
+		$this->assertEquals('/site/', $router->getPathPrefix());
+	}
+
 	public function testLink() {
 		$router = $this->getRouter();
 

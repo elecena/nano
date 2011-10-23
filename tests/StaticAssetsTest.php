@@ -124,6 +124,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$static = $this->getStaticAssets();
 		$cb = $static->getCacheBuster();
 
+		$this->assertFalse($static->getCDNPath());
+
 		$this->assertEquals("/site/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
 		$this->assertEquals("/site/r{$cb}/package/app.js", $static->getUrlForPackage('app'));
 		$this->assertEquals("/site/r{$cb}/package/styles.css", $static->getUrlForPackage('styles'));
@@ -138,6 +140,32 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("/site/statics/jquery.foo.js?r={$cb}", $static->getUrlForAsset('/statics/jquery.foo.js'));
 		$this->assertEquals("/site/package/app.js?r={$cb}", $static->getUrlForPackage('app'));
 		$this->assertEquals("/site/package/styles.css?r={$cb}", $static->getUrlForPackage('styles'));
+		$this->assertFalse($static->getUrlForPackage('notExisting'));
+	}
+
+	public function testGetUrlForAssetAndPackageWithCDN() {
+		$cdnPath = 'http://cdn.net/sitepath';
+		$this->app->getConfig()->set('assets.cdnPath', $cdnPath);
+
+		$static = $this->getStaticAssets();
+		$cb = $static->getCacheBuster();
+
+		$this->assertEquals($cdnPath, $static->getCDNPath());
+
+		$this->assertEquals("{$cdnPath}/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
+		$this->assertEquals("{$cdnPath}/r{$cb}/package/app.js", $static->getUrlForPackage('app'));
+		$this->assertEquals("{$cdnPath}/r{$cb}/package/styles.css", $static->getUrlForPackage('styles'));
+		$this->assertFalse($static->getUrlForPackage('notExisting'));
+
+		// cache buster appended
+		$this->app->getConfig()->set('assets.prependCacheBuster', false);
+
+		$static = $this->getStaticAssets();
+		$cb = $static->getCacheBuster();
+
+		$this->assertEquals("{$cdnPath}/statics/jquery.foo.js?r={$cb}", $static->getUrlForAsset('/statics/jquery.foo.js'));
+		$this->assertEquals("{$cdnPath}/package/app.js?r={$cb}", $static->getUrlForPackage('app'));
+		$this->assertEquals("{$cdnPath}/package/styles.css?r={$cb}", $static->getUrlForPackage('styles'));
 		$this->assertFalse($static->getUrlForPackage('notExisting'));
 	}
 

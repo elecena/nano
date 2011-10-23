@@ -19,7 +19,7 @@ class Router {
 	// last routed request info
 	private $lastRoute = null;
 
-	// URL to application's home page
+	// URL to application's home page (i.e. /)
 	private $homeUrl;
 
 	function __construct(NanoApp $app) {
@@ -213,9 +213,9 @@ class Router {
 	}
 
 	/**
-	 * Format a local link for a given route
+	 * Get path to application's home page
 	 */
-	public function link($path, $params = array()) {
+	public function getPathPrefix() {
 		// parse homepage's URL
 		$pathPrefix = self::SEPARATOR . $this->normalize(parse_url($this->homeUrl, PHP_URL_PATH));
 
@@ -223,8 +223,15 @@ class Router {
 			$pathPrefix .= self::SEPARATOR;
 		}
 
+		return $pathPrefix;
+	}
+
+	/**
+	 * Format a local link for a given route
+	 */
+	public function link($path, $params = array()) {
 		// build a link
-		$link = $pathPrefix . $this->normalize($path);
+		$link = $this->getPathPrefix() . $this->normalize($path);
 
 		// add request parameters
 		if (!empty($params)) {

@@ -22,6 +22,9 @@ class StaticAssets {
 	// cache buster value
 	private $cb;
 
+	// path to Content Delivery Network (if used)
+	private $cdnPath;
+
 	// should cache buster value be prepended to an URL?
 	// example: /r200/foo/bar.js [true]
 	// example: /foo/bar.js?r=200 [false]
@@ -52,6 +55,7 @@ class StaticAssets {
 		$config = $this->app->getConfig();
 
 		$this->cb = intval($config->get('assets.cb', 1));
+		$this->cdnPath = $config->get('assets.cdnPath', false);
 		$this->prependCacheBuster = $config->get('assets.prependCacheBuster', true) === true;
 		$this->packages = $config->get('assets.packages', array(
 			'css' => array(),
@@ -71,6 +75,13 @@ class StaticAssets {
 	 */
 	public function getCacheBuster() {
 		return $this->cb;
+	}
+
+	/**
+	 * Get path to CDN host
+	 */
+	public function getCDNPath() {
+		return $this->cdnPath;
 	}
 
 	/**
@@ -146,7 +157,16 @@ class StaticAssets {
 			$params = array('r' => $cb);
 		}
 
-		return $this->router->link($path, $params);
+		$url = $this->router->link($path, $params);
+
+		// perform a rewrite for CDN
+		$cdnPath = $this->getCDNPath();
+
+		if ($cdnPath !== false) {
+			$url = str_replace($this->router->getPathPrefix(), $cdnPath . Router::SEPARATOR, $url);
+		}
+
+		return $url;
 	}
 
 	/**
