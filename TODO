@@ -5,6 +5,7 @@
 * database layer								[DONE]
 * message queue layer							[DONE]
 * redis client									[DONE]
+* redis based caching
 * general entry point (index.php)
 * API entry point (api.php)						[DONE]
 * JS / CSS loading + minification + packages	[DONE]

@@ -79,7 +79,7 @@ abstract class Database {
 		}
 
 		// cache it
-		if (is_string($config) && $instance instanceof Database) {
+		if (is_string($config) && !is_null($instance)) {
 			self::$connectionsPoll[$config] = $instance;
 		}
 
