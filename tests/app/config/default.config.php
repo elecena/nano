@@ -6,9 +6,11 @@ $config['index'] = '/foo/index';
 $config['cache'] = array(
 	'driver' => 'file',
 );
-$config['database'] = array(
-	'driver' => 'mysql',
-	'utf' => true,
+$config['db'] = array(
+	'default' => array(
+		'driver' => 'mysql',
+		'utf' => true,
+	)
 );
 $config['foo']['bar'] = '123';
 $config['assets'] = array(

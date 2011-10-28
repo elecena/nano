@@ -34,6 +34,14 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		// existing driver (don't actually connect)
 		$database = Database::connect($app, array('driver' => 'mysql'));
 		$this->assertInstanceOf('DatabaseMysql', $database);
+
+		// connect by config entry name
+		$app->getConfig()->set('db.test123', array('driver' => 'mysql'));
+		$this->assertInstanceOf('DatabaseMysql', $database);
+		
+		// connection should be cached based on config entry name
+		$app->getConfig()->set('db.test123', array('driver' => 'foo'));
+		$this->assertInstanceOf('DatabaseMysql', $database);
 	}
 
 	public function testDatabaseMySql() {

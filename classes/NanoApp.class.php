@@ -76,8 +76,8 @@ class NanoApp {
 		// response
 		$this->response = new Response($env);
 
-		// set connection to database
-		$this->database = Database::connect($this, $this->config->get('database', array()));
+		// set connection to database (using db.default config entry)
+		$this->database = Database::connect($this);
 
 		// set private fields
 		$this->router = new Router($this);

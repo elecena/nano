@@ -24,7 +24,7 @@ abstract class Database {
 	protected $queriesTime = 0;
 
 	// already created connections
-	static private $connections = array();
+	static private $connectionsPoll = array();
 
 	/**
 	 * Force constructors to be protected - use Database::connect
@@ -36,21 +36,26 @@ abstract class Database {
 
 	/**
 	 * Connect to a given database
+	 *
+	 * @param NanoApp $app application instance
+	 * @param mixed $config config array or database config entry name to use to connect
+	 * @return Database instance of database model
 	 */
-	public static function connect(NanoApp $app, Array $settings) {
-		// try to reuse already created connection
-		$connectionsKey = md5(serialize($settings));
-
-		if (isset(self::$connections[$connectionsKey])) {
-			return self::$connections[$connectionsKey];
+	public static function connect(NanoApp $app, $config = 'default') {
+		// try to reuse already created connection (when getting database by name)
+		if (is_string($config) && isset(self::$connectionsPoll[$config])) {
+			return self::$connectionsPoll[$config];
 		}
 
-		$driver = isset($settings['driver']) ? $settings['driver'] : null;
+		// get settings from app config
+		$settings = is_string($config) ? $app->getConfig()->get("db.{$config}") : $config;
+
+		$driver = (is_array($settings) && isset($settings['driver'])) ? $settings['driver'] : null;
 		$instance = null;
 
 		$debug = $app->getDebug();
 
-		if (!empty($driver)) {
+		if (!is_null($driver)) {
 			$className = 'Database' . ucfirst(strtolower($driver));
 
 			$src = dirname(__FILE__) . '/database/' . $className . '.class.php';
@@ -62,18 +67,20 @@ abstract class Database {
 
 				try {
 					$instance = new $className($app, $settings);
-
-					// cache it
-					self::$connections[$connectionsKey] = $instance;
 				}
 				catch(Exception $e) {
 					// TODO: handle exception
-					//var_dump($e->getMessage());
+					#var_dump($e->getMessage());
 				}
 			}
 		}
 		else {
 			$debug->log(__METHOD__ . ' - no driver specified', DEBUG::ERROR);
+		}
+
+		// cache it
+		if (is_string($config) && $instance instanceof Database) {
+			self::$connectionsPoll[$config] = $instance;
 		}
 
 		return $instance;

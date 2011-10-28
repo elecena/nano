@@ -26,12 +26,20 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 	}
 
 	private function getDatabaseMock() {
-		// load MySQL driver
-		$app = Nano::app(dirname(__FILE__) . '/app');
-		$database = Database::connect($app, array('driver' => 'mysql'));
+
+		// set up DatabaseMysql class, so that mockup will work
+		if (!class_exists('DatabaseMysql')) {
+			// load MySQL driver
+			$app = Nano::app(dirname(__FILE__) . '/app');
+			$database = Database::connect($app, array('driver' => 'mysql'));
+		}
 
 		// mock the database driver
-		$database = $this->getMock('DatabaseMysql', array('query', 'escape', 'isConnected'), array(), 'DatabaseMysqlMock' . mt_rand(), false /* $callOriginalConstructor */);
+		$database = $this->getMockBuilder('DatabaseMysql')
+			->disableOriginalConstructor()
+			->setMethods(array('query', 'escape', 'isConnected'))
+			->setMockClassName('DatabaseMysqlMock' . mt_rand())
+			->getMock();
 
 		// mock certain methods
 		$database->expects($this->any())
