@@ -24,6 +24,21 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('/site/', $router->getPathPrefix());
 	}
 
+	public function testSanitize() {
+		$router = $this->getRouter();
+
+		$this->assertEquals('foobar', $router->sanitize('foobar'));
+		$this->assertEquals('foo-bar', $router->sanitize('foo/bar'));
+		$this->assertEquals('foobar-123', $router->sanitize('foobar 123'));
+		$this->assertEquals('foo-bar', $router->sanitize('foo bar'));
+		$this->assertEquals('foo-bar', $router->sanitize('foo bar $'));
+		$this->assertEquals('foo-bar', $router->sanitize('foo $ bar'));
+		$this->assertEquals('foo-bar', $router->sanitize('foo  bar'));
+		$this->assertEquals('foo-bar', $router->sanitize(' foo bar '));
+
+		$this->assertEquals('aez-test', $router->sanitize('¹êŸ test-'));
+	}
+
 	public function testLink() {
 		$router = $this->getRouter();
 
@@ -32,6 +47,11 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('/site/foo/bar', $router->link('foo/bar'));
 		$this->assertEquals('/site/foo/bar', $router->link('/foo/bar/'));
 		$this->assertEquals('/site/foo/bar?q=test', $router->link('foo/bar/', array('q' => 'test')));
+	}
+
+	public function testExternalLink() {
+		$router = $this->getRouter();
+
 		$this->assertEquals('http://example.org/site/', $router->externalLink('/'));
 		$this->assertEquals('http://example.org/site/foo/bar?q=test&foo=1', $router->externalLink('/foo/bar/', array('q' => 'test', 'foo' => 1)));
 	}

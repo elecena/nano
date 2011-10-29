@@ -227,6 +227,30 @@ class Router {
 	}
 
 	/**
+	 * Sanitize given string to be used in URL
+	 *
+	 * Replace all non alphanumeric characters with a dash
+	 */
+	public function sanitize($string) {
+		$string = mb_strtolower(trim($string));
+		$string = strtr($string,array(
+			'¹' => 'a',
+			'æ' => 'c',
+			'ê' => 'e',
+			'³' => 'l',
+			'ñ' => 'n',
+			'ó' => 'o',
+			'œ' => 's',
+			'¿' => 'z',
+			'Ÿ' => 'z'
+		));
+		$string = preg_replace('#[^a-z0-9\-]+#', '-', $string);
+		$string = trim($string, '-');
+
+		return $string;
+	}
+
+	/**
 	 * Format a local link for a given route
 	 */
 	public function link($path, $params = array()) {
