@@ -24,7 +24,7 @@ class DatabaseMysql extends Database {
 		// prepare connection settings
 		// @see http://www.php.net/manual/en/mysqli.real-connect.php
 		$params = array();
-		$keys = array('host', 'user', 'pass', 'database', 'port', 'socket');
+		$keys = array('host', 'user', 'pass', 'database', 'port', 'socket', 'flags');
 
 		foreach($keys as $key) {
 			if (isset($settings[$key])) {
