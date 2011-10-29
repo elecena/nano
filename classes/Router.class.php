@@ -247,7 +247,7 @@ class Router {
 			'ż' => 'z',
 			'ź' => 'z'
 		));
-		$string = preg_replace('#[^a-z0-9\-]+#', '-', $string);
+		$string = preg_replace('#[^a-z0-9]+#', '-', $string);
 		$string = trim($string, '-');
 
 		return $string;
