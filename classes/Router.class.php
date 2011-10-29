@@ -236,16 +236,16 @@ class Router {
 	 */
 	public function sanitize($string) {
 		$string = mb_strtolower(trim($string));
-		$string = strtr($string,array(
-			'¹' => 'a',
-			'æ' => 'c',
-			'ê' => 'e',
-			'³' => 'l',
-			'ñ' => 'n',
-			'ó' => 'o',
-			'œ' => 's',
-			'¿' => 'z',
-			'Ÿ' => 'z'
+		$string = strtr($string, array(
+			'Ä…' => 'a',
+			'Ä‡' => 'c',
+			'Ä™' => 'e',
+			'Å‚' => 'l',
+			'Å„' => 'n',
+			'Ã³' => 'o',
+			'Å›' => 's',
+			'Å¼' => 'z',
+			'Åº' => 'z'
 		));
 		$string = preg_replace('#[^a-z0-9\-]+#', '-', $string);
 		$string = trim($string, '-');
