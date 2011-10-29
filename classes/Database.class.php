@@ -126,8 +126,8 @@ abstract class Database {
 	 *
 	 * @see http://dev.mysql.com/doc/refman/5.0/en/select.html
 	 */
-	public function select($table, $fields, $where = array(), Array $options = array()) {
-		$sql = 'SELECT ' . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
+	public function select($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::select') {
+		$sql = "SELECT /* {$fname} */ " . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
 
 		$whereSql = $this->resolveWhere($where);
 		if (!empty($whereSql)) {
@@ -145,9 +145,9 @@ abstract class Database {
 	/**
 	 * Select given fields from a table using following WHERE statements (return single row)
 	 */
-	public function selectRow($table, $fields, $where = array(), Array $options = array()) {
+	public function selectRow($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::selectRow') {
 		$options['limit'] = 1;
-		$res = $this->select($table, $fields, $where, $options);
+		$res = $this->select($table, $fields, $where, $options, $fname);
 
 		if (!empty($res)) {
 			$ret = $res->fetchRow();
@@ -163,8 +163,8 @@ abstract class Database {
 	/**
 	 * Select given fields from a table using following WHERE statements (return single field)
 	 */
-	public function selectField($table, $field, $where = array(), Array $options = array()) {
-		$row = $this->selectRow($table, $field, $where, $options);
+	public function selectField($table, $field, $where = array(), Array $options = array(), $fname = 'Database::selectField') {
+		$row = $this->selectRow($table, $field, $where, $options, $fname);
 
 		return !empty($row) ? reset($row) : false;
 	}
@@ -172,27 +172,27 @@ abstract class Database {
 	/**
 	 * Remove rows from a table using following WHERE statements
 	 */
-	abstract public function delete($table, $where = array(), Array $options = array());
+	abstract public function delete($table, $where = array(), Array $options = array(), $fname = 'Database::delete');
 
 	/**
 	 * Remove single row from a table using following WHERE statements
 	 */
-	abstract public function deleteRow($table, $where = array());
+	abstract public function deleteRow($table, $where = array(), $fname = 'Database::deleteRow');
 
 	/**
 	 * Update a table using following values for rows matching WHERE statements
 	 */
-	abstract public function update($table, Array $values, $where = array(), Array $options = array());
+	abstract public function update($table, Array $values, $where = array(), Array $options = array(), $fname = 'Database::update');
 
 	/**
 	 * Insert a single row into a table using following values
 	 */
-	abstract public function insert($table, Array $row, Array $options = array());
+	abstract public function insert($table, Array $row, Array $options = array(), $fname = 'Database::insert');
 
 	/**
 	 * Insert multiple rows into a table using following values
 	 */
-	abstract public function insertRows($table, Array $rows, Array $options = array());
+	abstract public function insertRows($table, Array $rows, Array $options = array(), $fname = 'Database::insertRows');
 
 	/**
 	 * Get primary key value for recently inserted row

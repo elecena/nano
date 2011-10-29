@@ -140,8 +140,8 @@ class DatabaseMysql extends Database {
 	 *
 	 * @see http://dev.mysql.com/doc/refman/5.0/en/delete.html
 	 */
-	public function delete($table, $where = array(), Array $options = array()) {
-		$sql = 'DELETE FROM ' . $this->resolveList($table);
+	public function delete($table, $where = array(), Array $options = array(), $fname = 'Database::delete') {
+		$sql = "DELETE /* {$fname} */ FROM " . $this->resolveList($table);
 
 		$whereSql = $this->resolveWhere($where);
 		if (!empty($whereSql)) {
@@ -159,28 +159,28 @@ class DatabaseMysql extends Database {
 	/**
 	 * Remove single row from a table using following WHERE statements
 	 */
-	public function deleteRow($table, $where = array()) {
+	public function deleteRow($table, $where = array(), $fname = 'Database::deleteRow') {
 		return $this->delete($table, $where, array('limit' => 1));
 	}
 
 	/**
 	 * Update a table using following values for rows matching WHERE statements
 	 */
-	public function update($table, Array $values, $where = array(), Array $options = array()) {
+	public function update($table, Array $values, $where = array(), Array $options = array(), $fname = 'Database::update') {
 
 	}
 
 	/**
 	 * Insert a single row into a table using following values
 	 */
-	public function insert($table, Array $row, Array $options = array()) {
+	public function insert($table, Array $row, Array $options = array(), $fname = 'Database::insert') {
 
 	}
 
 	/**
 	 * Insert multiple rows into a table using following values
 	 */
-	public function insertRows($table, Array $rows, Array $options = array()) {
+	public function insertRows($table, Array $rows, Array $options = array(), $fname = 'Database::insertRows') {
 
 	}
 

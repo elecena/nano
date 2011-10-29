@@ -89,47 +89,50 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$database = $this->getDatabaseMock();
 
 		$database->select('pages', '*');
-		$this->assertQueryEquals('SELECT * FROM pages');
+		$this->assertQueryEquals('SELECT /* Database::select */ * FROM pages');
 
 		$database->select('pages', 'id');
-		$this->assertQueryEquals('SELECT id FROM pages');
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages');
 
 		$database->select('pages', 'id', array('user' => 42));
-		$this->assertQueryEquals('SELECT id FROM pages WHERE user="42"');
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages WHERE user="42"');
 
 		$database->select('pages', 'id', array('title' => "foo's"));
-		$this->assertQueryEquals('SELECT id FROM pages WHERE title="foo\\\'s"');
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages WHERE title="foo\\\'s"');
 
 		$database->select('pages', array('id', 'content'), array('user' => 42));
-		$this->assertQueryEquals('SELECT id,content FROM pages WHERE user="42"');
+		$this->assertQueryEquals('SELECT /* Database::select */ id,content FROM pages WHERE user="42"');
 
 		$database->select(array('pages', 'users'), array('pages.id AS id', 'user.name AS author'), array('users.id = pages.author'));
-		$this->assertQueryEquals('SELECT pages.id AS id,user.name AS author FROM pages,users WHERE users.id = pages.author');
+		$this->assertQueryEquals('SELECT /* Database::select */ pages.id AS id,user.name AS author FROM pages,users WHERE users.id = pages.author');
 
 		$database->select('pages', 'id', array(), array('limit' => 5));
-		$this->assertQueryEquals('SELECT id FROM pages LIMIT 5');
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LIMIT 5');
 
 		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10));
-		$this->assertQueryEquals('SELECT id FROM pages LIMIT 5 OFFSET 10');
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LIMIT 5 OFFSET 10');
+		
+		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10), __METHOD__);
+		$this->assertQueryEquals('SELECT /* DatabaseMysqlTest::testSelect */ id FROM pages LIMIT 5 OFFSET 10');
 	}
 
 	public function testDelete() {
 		$database = $this->getDatabaseMock();
 
 		$database->delete('pages');
-		$this->assertQueryEquals('DELETE FROM pages');
+		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages');
 
 		$database->delete('pages', array('id' => 2));
-		$this->assertQueryEquals('DELETE FROM pages WHERE id="2"');
+		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages WHERE id="2"');
 
 		$database->delete('pages', array('id > 5'));
-		$this->assertQueryEquals('DELETE FROM pages WHERE id > 5');
+		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages WHERE id > 5');
 
 		$database->delete('pages', array('id' => 2), array('limit' => 1));
-		$this->assertQueryEquals('DELETE FROM pages WHERE id="2" LIMIT 1');
+		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages WHERE id="2" LIMIT 1');
 
 		$database->deleteRow('pages', array('id' => 2));
-		$this->assertQueryEquals('DELETE FROM pages WHERE id="2" LIMIT 1');
+		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages WHERE id="2" LIMIT 1');
 	}
 
 	// requires server running on localhost:3306
