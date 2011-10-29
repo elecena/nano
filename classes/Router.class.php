@@ -186,7 +186,10 @@ class Router {
 					$data = $module->getData();
 					$format = $module->getFormat();
 
-					if (!is_null($format)) {
+					if ($ret instanceof Output) {
+						// do nothing - output is already formatted
+					}
+					else if (!is_null($format)) {
 						// use provided format to render the data
 						$ret = Output::factory($format, $data);
 					}
