@@ -165,8 +165,8 @@ class Router {
 
 			if (is_callable(array($module, $methodName))) {
 				// use provided request when executing module's method
-				$module->setRequest($request);
 				$module->clearState();
+				$module->setRequest($request);
 
 				// call the module's method and pass provided parameters
 				$ret = call_user_func_array(array($module, $methodName), $params);

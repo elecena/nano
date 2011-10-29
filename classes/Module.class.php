@@ -100,6 +100,11 @@ abstract class Module {
 	 */
 	public function setRequest(Request $request) {
 		$this->request = $request;
+
+		// default API response format
+		if ($this->request->isAPI()) {
+			$this->setFormat('json');
+		}
 	}
 
 	/**
@@ -108,7 +113,7 @@ abstract class Module {
 	public function getDirectory() {
 		return $this->dir;
 	}
-	
+
 	/**
 	 * Get module's template
 	 */
