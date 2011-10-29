@@ -36,7 +36,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('foo-bar', $router->sanitize('foo  bar'));
 		$this->assertEquals('foo-bar', $router->sanitize(' foo bar '));
 
-		$this->assertEquals('aez-test', $router->sanitize('¹êŸ test-'));
+		$this->assertEquals('a-a', $router->sanitize('aÄ…a'));
 	}
 
 	public function testLink() {
