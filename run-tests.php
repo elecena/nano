@@ -3,11 +3,18 @@
 /**
  * CLI script for running nanoPortal tests
  *
+ * Usage:
+ *  php run-tests.php
+ *    run Nano core tests
+ *
+ *  php run-tests.php /home/user/myapp/tests
+ *    run myapp test suite
+ *
  * $Id$
  */
 
 ini_set('memory_limit', '256M');
- 
+
 require_once 'nano.php';
 
 // initialize instance of framework object
@@ -27,11 +34,25 @@ require_once 'PHPUnit/Autoload.php';
 // construct global wrapper for test suites
 $suite = TestSuite::init(false /* $performCodeCoverage */);
 
-// add "core" tests from /tests directory
-$suite->addCoreTestSuite();
+// run-tests.php can be run with tests directory name as a parameter
+if (!empty($argv[1])) {
+	$currentDirectory = getcwd();
+	$testsDirectory = $argv[1];
 
-// add tests for application from /tests/app directory
-$suite->addTestSuiteDirectory(dirname(__FILE__) . '/tests/app/tests', 'nanoPortal test app suite');
+	// get absolute path for test directory
+	$testsDirectory = realpath($currentDirectory . $testsDirectory);
+}
+
+if (!empty($testsDirectory)) {
+	$suite->addTestSuiteDirectory($testsDirectory, 'myapp test suite');
+}
+else {
+	// add "core" tests from /tests directory
+	$suite->addCoreTestSuite();
+
+	// add tests for application from /tests/app directory
+	$suite->addTestSuiteDirectory(dirname(__FILE__) . '/tests/app/tests', 'nanoPortal test app suite');
+}
 
 // run test suite
 $suite->run();
