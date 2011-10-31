@@ -106,14 +106,25 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$database->select(array('pages', 'users'), array('pages.id AS id', 'user.name AS author'), array('users.id = pages.author'));
 		$this->assertQueryEquals('SELECT /* Database::select */ pages.id AS id,user.name AS author FROM pages,users WHERE users.id = pages.author');
 
+		// options
 		$database->select('pages', 'id', array(), array('limit' => 5));
 		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LIMIT 5');
 
 		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10));
 		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LIMIT 5 OFFSET 10');
-		
+
 		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10), __METHOD__);
 		$this->assertQueryEquals('SELECT /* DatabaseMysqlTest::testSelect */ id FROM pages LIMIT 5 OFFSET 10');
+
+		// joins
+		$database->select('pages', 'id', array(), array('joins' => array('foo' => array('LEFT JOIN', 'foo=bar'))));
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LEFT JOIN foo ON foo=bar');
+
+		$database->select('pages', 'id', array(), array('joins' => array('foo' => array('LEFT JOIN', 'foo=bar'), 'tbl' => array('JOIN', 'test = foo'))));
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LEFT JOIN foo ON foo=bar JOIN tbl ON test = foo');
+
+		$database->select('pages', 'id', array(), array('limit' => 5, 'offset' => 10, 'joins' => array('foo' => array('LEFT JOIN', 'foo=bar'))));
+		$this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LEFT JOIN foo ON foo=bar LIMIT 5 OFFSET 10');
 	}
 
 	public function testDelete() {

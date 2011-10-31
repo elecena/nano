@@ -129,11 +129,19 @@ abstract class Database {
 	public function select($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::select') {
 		$sql = "SELECT /* {$fname} */ " . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
 
+		// JOINS
+		$joinsSql = $this->resolveJoins($options);
+		if (!empty($joinsSql)) {
+			$sql .= ' ' . $joinsSql;
+		}
+
+		// WHERE part
 		$whereSql = $this->resolveWhere($where);
 		if (!empty($whereSql)) {
 			$sql .= ' WHERE ' . $whereSql;
 		}
 
+		// variuos options part
 		$optionsSql = $this->resolveOptions($options);
 		if (!empty($optionsSql)) {
 			$sql .= ' ' . $optionsSql;
@@ -258,6 +266,30 @@ abstract class Database {
 		}
 		else {
 			$sql = $values;
+		}
+
+		return $sql;
+	}
+
+	/**
+	 * Return part of SQL for given set of join options
+	 *
+	 * http://svn.wikimedia.org/doc/classDatabaseBase.html#a6ca54fb2c2c1713604b8b77a4fa7b318
+	 */
+	public function resolveJoins(Array &$options) {
+		$sql = false;
+
+		if (isset($options['joins']) && is_array($options['joins'])) {
+			$sqlParts = array();
+
+			foreach($options['joins'] as $table => $params) {
+				// LEFT JOIN table ON foo = bar
+				$sqlParts[] = "{$params[0]} {$table} ON {$params[1]}";
+			}
+
+			$sql = implode(' ', $sqlParts);
+
+			unset($options['joins']);
 		}
 
 		return $sql;
