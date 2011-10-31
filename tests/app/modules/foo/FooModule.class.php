@@ -42,7 +42,7 @@ class FooModule extends Module {
 	 */
 	public function json($id) {
 		$this->setFormat('json');
-		$this->set(array('id' => intval($id)));
+		return Output::factory('json', array('id' => intval($id)));
 	}
 
 	/**

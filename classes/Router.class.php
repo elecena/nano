@@ -125,20 +125,20 @@ class Router {
 			// module name only: /product (or an empty path)
 			case 1:
 				$moduleName = $pathParts[0];
+				$methodName = null;
 				break;
 
 			// module and method name: /product/bar (with parameters)
 			case 2:
 			default:
 				$moduleName = $pathParts[0];
-				$methodName = $pathParts[1];
+				$methodName = strtolower($pathParts[1]);
 
 				$methodParams = array_slice($pathParts, 2) + $methodParams;
 		}
 
 		// sanitize and normalize
 		$moduleName = ucfirst(strtolower($moduleName));
-		$methodName = strtolower($methodName);
 
 		#var_dump(array($moduleName, $methodName, $methodParams));
 
@@ -150,10 +150,17 @@ class Router {
 		$module = $this->app->getModule($moduleName);
 
 		if (!empty($module)) {
+			// use routeAPI method to route API requests
+			if ($request->isAPI() && is_callable(array($module, 'routeAPI'))) {
+				$defaultMethodName = 'routeAPI';
+			}
+
 			// call selected method, otherwise call route method
 			if (!is_callable(array($module, $methodName))) {
 				// if method doesn't exist, push it as a first parameter
-				array_unshift($methodParams, $methodName);
+				if (is_string($methodName)) {
+					array_unshift($methodParams, $methodName);
+				}
 
 				$methodName = $defaultMethodName;
 			}
