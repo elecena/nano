@@ -45,6 +45,15 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->data, $output->getData());
 	}
 
+	public function testOutputComplexXML() {
+		$output = Output::factory('xml', array(
+			array('foo' => 'bar'),
+			array('foo' => 'test'),
+		));
+		$this->assertEquals("<?xml version=\"1.0\"?>\n<root><item><foo>bar</foo></item><item><foo>test</foo></item></root>", $output->render());
+		$this->assertEquals('text/xml; charset=UTF-8', $output->getContentType());
+	}
+
 	public function testOutputJSONP() {
 		$output = Output::factory('jsonp', $this->data);
 		$this->assertEquals('callback({"foo":"bar","test":["123","456"]})', $output->render());

@@ -17,14 +17,15 @@ class OutputXml extends Output {
 	private function arrayToXml(Array &$data, SimpleXMLElement $node) {
 		foreach($data as $key => $val) {
 			if (is_array($val)) {
-				$this->arrayToXml($val, $node->addChild($key));
+				$child = is_numeric($key) ? $node->addChild('item') : $node->addChild($key);
+				$this->arrayToXml($val, $child);
 			}
 			else {
 				if (is_numeric($key)) {
 					$node->addChild('value', $val);
 				}
 				else {
-					$node->addChild($key, $val);
+					$node->$key = $val;
 				}
 			}
 		}
