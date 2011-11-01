@@ -104,12 +104,12 @@ abstract class Database {
 	/**
 	 * Start a transaction
 	 */
-	abstract public function begin();
+	abstract public function begin($fname = 'Database::begin');
 
 	/**
 	 * Commit the current transaction
 	 */
-	abstract public function commit();
+	abstract public function commit($fname = 'Database::commit');
 
 	/**
 	 * Rollback the current transaction

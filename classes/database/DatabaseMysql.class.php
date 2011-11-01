@@ -109,15 +109,15 @@ class DatabaseMysql extends Database {
 	/**
 	 * Start a transaction
 	 */
-	public function begin() {
-		$this->query('BEGIN');
+	public function begin($fname = 'Database::begin') {
+		return $this->query("BEGIN /* {$fname} */");
 	}
 
 	/**
 	 * Commit the current transaction
 	 */
-	public function commit() {
-		return $this->link->commit();
+	public function commit($fname = 'Database::commit') {
+		return $this->query("COMMIT /* {$fname} */");
 	}
 
 	/**
@@ -176,22 +176,14 @@ class DatabaseMysql extends Database {
 	 * @see http://dev.mysql.com/doc/refman/5.5/en/insert.html
 	 */
 	public function insert($table, Array $row, Array $options = array(), $fname = 'Database::insert') {
-		$fields = implode(',', array_keys($row));
-
-		$values = array_values($row);
-		$values = array_map(array($this, 'escape'), $row);
-		$values = implode('","', $values);
-
-		$sql = "INSERT INTO /* {$fname} */ {$table} ({$fields}) VALUES (\"{$values}\")";
-
-		return $this->query($sql);
+		return $this->insertRows($table, array($row), $options, $fname);
 	}
 
 	/**
 	 * Insert multiple rows into a table using following values
 	 */
 	public function insertRows($table, Array $rows, Array $options = array(), $fname = 'Database::insertRows') {
-		$fields = implode(',', array_keys(reset($rows)));
+		$fields = implode('`,`', array_keys(reset($rows)));
 
 		$values = array();
 
@@ -203,7 +195,7 @@ class DatabaseMysql extends Database {
 
 		$values = implode(',', $values);
 
-		$sql = "INSERT INTO /* {$fname} */ {$table} ({$fields}) VALUES {$values}";
+		$sql = "INSERT INTO /* {$fname} */ {$table} (`{$fields}`) VALUES {$values}";
 
 		return $this->query($sql);
 	}
