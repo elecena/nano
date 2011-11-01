@@ -146,6 +146,25 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages WHERE id="2" LIMIT 1');
 	}
 
+	public function testInsert() {
+		$database = $this->getDatabaseMock();
+
+		$database->insert('pages', array('foo' => 'bar'));
+		$this->assertQueryEquals('INSERT INTO /* Database::insert */ pages (foo) VALUES ("bar")');
+
+		$database->insert('pages', array('foo' => 'bar', 'test' => 123));
+		$this->assertQueryEquals('INSERT INTO /* Database::insert */ pages (foo,test) VALUES ("bar","123")');
+
+		$database->insert('pages', array('foo' => 'b"b', 'test' => 123), array(), __METHOD__);
+		$this->assertQueryEquals('INSERT INTO /* DatabaseMysqlTest::testInsert */ pages (foo,test) VALUES ("b\\"b","123")');
+
+		$database->insertRows('pages', array(array('id' => 1), array('id' => 2)));
+		$this->assertQueryEquals('INSERT INTO /* Database::insertRows */ pages (id) VALUES ("1"),("2")');
+
+		$database->insertRows('pages', array(array('bar' => 1, 'foo' => 123), array('bar' => 2, 'foo' => 456)));
+		$this->assertQueryEquals('INSERT INTO /* Database::insertRows */ pages (bar,foo) VALUES ("1","123"),("2","456")');
+	}
+
 	// requires server running on localhost:3306
 	public function testMySqlDatabase() {
 		return;

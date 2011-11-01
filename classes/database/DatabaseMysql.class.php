@@ -172,16 +172,40 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Insert a single row into a table using following values
+	 *
+	 * @see http://dev.mysql.com/doc/refman/5.5/en/insert.html
 	 */
 	public function insert($table, Array $row, Array $options = array(), $fname = 'Database::insert') {
+		$fields = implode(',', array_keys($row));
 
+		$values = array_values($row);
+		$values = array_map(array($this, 'escape'), $row);
+		$values = implode('","', $values);
+
+		$sql = "INSERT INTO /* {$fname} */ {$table} ({$fields}) VALUES (\"{$values}\")";
+
+		return $this->query($sql);
 	}
 
 	/**
 	 * Insert multiple rows into a table using following values
 	 */
 	public function insertRows($table, Array $rows, Array $options = array(), $fname = 'Database::insertRows') {
+		$fields = implode(',', array_keys(reset($rows)));
 
+		$values = array();
+
+		foreach($rows as $row) {
+			$data = array_values($row);
+			$data = array_map(array($this, 'escape'), $data);
+			$values[] = '("' . implode('","', $data) . '")';
+		}
+
+		$values = implode(',', $values);
+
+		$sql = "INSERT INTO /* {$fname} */ {$table} ({$fields}) VALUES {$values}";
+
+		return $this->query($sql);
 	}
 
 	/**
