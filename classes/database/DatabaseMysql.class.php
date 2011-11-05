@@ -8,6 +8,12 @@
 
 class DatabaseMysql extends Database {
 
+	// "MySQL server has gone away" error ID
+	const ERR_SERVER_HAS_GONE_AWAY = 2006;
+
+	// current connection settings
+	private $settings;
+
 	/**
 	 * Connect to a database
 	 */
@@ -16,12 +22,24 @@ class DatabaseMysql extends Database {
 
 		$this->link = mysqli_init();
 
+		// store connection settings
+		$this->settings = $settings;
+
 		// set UTF8 as connection encoding
 		if (!empty($settings['utf'])) {
 			$this->link->options(MYSQLI_INIT_COMMAND, 'SET NAMES "utf8"');
 		}
 
-		// prepare connection settings
+		$this->reconnect();
+	}
+
+	/**
+	 * (Re)connect using settings passed to the constructor
+	 */
+	protected function reconnect() {
+		// reuse connection settings
+		$settings = $this->settings;
+
 		// @see http://www.php.net/manual/en/mysqli.real-connect.php
 		$params = array();
 		$keys = array('host', 'user', 'pass', 'database', 'port', 'socket', 'flags');
@@ -84,6 +102,15 @@ class DatabaseMysql extends Database {
 		$res = $this->link->query($sql, MYSQLI_USE_RESULT);
 		$time = microtime(true) - $time;
 
+		// reconnect and retry the query
+		if ($this->link->errno == self::ERR_SERVER_HAS_GONE_AWAY) {
+			$this->reconnect();
+
+			$time = microtime(true);
+			$res = $this->link->query($sql, MYSQLI_USE_RESULT);
+			$time = microtime(true) - $time;
+		}
+
 		// update stats
 		$this->queries++;
 		$this->queriesTime += $time;
@@ -95,7 +122,7 @@ class DatabaseMysql extends Database {
 
 		// check for errors
 		if (empty($res)) {
-			$this->debug->log(__METHOD__ . ': ' . $this->link->error, Debug::ERROR);
+			$this->debug->log(__METHOD__ . ": error #{$this->link->errno} - {$this->link->error}", Debug::ERROR);
 
 			// TODO: raise an excpetion
 
