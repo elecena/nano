@@ -93,7 +93,7 @@ class Debug {
 	/**
 	 * Log given message to log file
 	 */
-	public function log($msg, $level = 5) {
+	public function log($msg = '', $level = 5) {
 		// check if logging is enabled
 		if ($this->logEnabled == false) {
 			return false;
