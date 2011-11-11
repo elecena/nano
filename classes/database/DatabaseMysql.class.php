@@ -192,9 +192,23 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Update a table using following values for rows matching WHERE statements
+	 *
+	 * @see http://dev.mysql.com/doc/refman/5.5/en/update.html
 	 */
 	public function update($table, Array $values, $where = array(), Array $options = array(), $fname = 'Database::update') {
+		$sql = "UPDATE /* {$fname} */ " . $this->resolveList($table) . ' SET ' . $this->resolveSet($values);
 
+		$whereSql = $this->resolveWhere($where);
+		if (!empty($whereSql)) {
+			$sql .= ' WHERE ' . $whereSql;
+		}
+
+		$optionsSql = $this->resolveOptions($options);
+		if (!empty($optionsSql)) {
+			$sql .= ' ' . $optionsSql;
+		}
+
+		return $this->query($sql);
 	}
 
 	/**

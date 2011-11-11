@@ -83,7 +83,7 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->begin();
 		$this->assertQueryEquals('BEGIN /* Database::begin */');
-		
+
 		$database->commit();
 		$this->assertQueryEquals('COMMIT /* Database::commit */');
 	}
@@ -147,6 +147,25 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->deleteRow('pages', array('id' => 2));
 		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages WHERE id="2" LIMIT 1');
+	}
+
+	public function testUpdate() {
+		$database = $this->getDatabaseMock();
+
+		$database->update('pages', array('foo' => 'bar'), array('id' => 1));
+		$this->assertQueryEquals('UPDATE /* Database::update */ pages SET foo="bar" WHERE id="1"');
+
+		$database->update('pages', array('foo' => 'bar', 'id' => 3), array('id' => 1));
+		$this->assertQueryEquals('UPDATE /* Database::update */ pages SET foo="bar",id="3" WHERE id="1"');
+
+		$database->update('pages', array('foo' => 'bar', 'id' => 3), array('id' => 1), array('limit' => 1));
+		$this->assertQueryEquals('UPDATE /* Database::update */ pages SET foo="bar",id="3" WHERE id="1" LIMIT 1');
+
+		$database->update('pages', array('foo' => 'bar'), array('id' => 1), array(), __METHOD__);
+		$this->assertQueryEquals('UPDATE /* DatabaseMysqlTest::testUpdate */ pages SET foo="bar" WHERE id="1"');
+
+		$database->update(array('pages', 'users'), array('pages.author=users.id'), array('users.id' => 1));
+		$this->assertQueryEquals('UPDATE /* Database::update */ pages,users SET pages.author=users.id WHERE users.id="1"');
 	}
 
 	public function testInsert() {

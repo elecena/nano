@@ -328,6 +328,29 @@ abstract class Database {
 	}
 
 	/**
+	 * Return part of SQL for given SET statements
+	 *
+	 * Used to form UPDATE queries
+	 */
+	public function resolveSet(Array $values) {
+		$set = array();
+
+		foreach($values as $col => $value) {
+			if (is_numeric($col)) {
+				$set[] = $value;
+			}
+			else {
+				$value = $this->escape($value);
+				$set[] = "{$col}=\"{$value}\"";
+			}
+		}
+
+		$sql = implode(',', $set);
+
+		return $sql;
+	}
+
+	/**
 	 * Return part of SQL for given ORDER BY conditions
 	 */
 	public function resolveOrderBy($orderBy) {
