@@ -15,6 +15,3 @@ require_once 'nano.php';
 Nano::init();
 
 $app = Nano::app(dirname(__FILE__));
-
-// debug log
-$app->getDebug()->clearLogFile();

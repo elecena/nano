@@ -43,7 +43,7 @@ class NanoApp {
 	/**
 	 * Create application based on given config
 	 */
-	function __construct($dir, $configSet = 'default') {
+	function __construct($dir, $configSet = 'default', $logFile = 'debug') {
 		$this->dir = realpath($dir);
 		$this->libraryDir = $this->dir . '/lib';
 
@@ -53,12 +53,21 @@ class NanoApp {
 		// events handler
 		$this->events = new Events();
 
-		// debug
-		$this->debug = new Debug($this->dir . '/log');
-
 		// read configuration
 		$this->config = new Config($this->dir . '/config');
 		$this->config->load($configSet);
+
+		// debug
+		$this->debug = new Debug($this->dir . '/log', $logFile);
+
+		if ($this->config->get('debug.enabled', false)) {
+			$this->debug->enableLog();
+			$this->debug->clearLogFile();
+
+			// log nano version and when app was started
+			$this->debug->log('Nano v' . Nano::VERSION . ' started at ' . date('Y-m-d H:i:s'));
+			$this->debug->log('----');
+		}
 
 		// setup cache (using default driver if none provided)
 		$cacheSettings = $this->config->get('cache', array(

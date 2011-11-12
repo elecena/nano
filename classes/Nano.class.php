@@ -26,7 +26,7 @@ class Nano {
 		// setup autoloader
 		Autoloader::init();
 
-		// add /classes and /classes/utils dictionaries
+		// add /classes and /classes/utils directories
 		Autoloader::scanDirectory(dirname(__FILE__));
 		Autoloader::scanDirectory(dirname(__FILE__) . '/utils');
 
@@ -59,18 +59,7 @@ class Nano {
 		Nano::init();
 
 		// create new application
-		$app = new NanoCliApp($dir, $configSet);
-
-		// set debug log
-		$debug = $app->getDebug();
-
-		$debug->enableLog();
-		$debug->setLogFile($logFile);
-		$debug->clearLogFile();
-
-		// log nano version and when app was started
-		$debug->log('Nano v' . self::VERSION . ' CLI app started at ' . date('Y-m-d H:i:s'));
-		$debug->log('----');
+		$app = new NanoCliApp($dir, $configSet, $logFile);
 
 		return $app;
 	}
