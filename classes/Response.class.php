@@ -34,6 +34,8 @@ class Response {
 	// don't compress small responses
 	const COMPRESSION_LENGTH_THRESHOLD = 1024;
 
+	private $app;
+
 	// don't compress following content types
 	private $compressionBlacklist = array(
 		'image/gif',
@@ -53,18 +55,17 @@ class Response {
 	// response HTTP code (defaults to 404 - Not Found)
 	private $responseCode = 404;
 
-	// used for generating X-Response-Time header
-	private $responseStart;
-
 	// $_SERVER global
 	private $env;
 
 	/**
 	 * Set the timestamp of the response start
 	 */
-	public function __construct($env = array()) {
-		$this->responseStart = microtime(true);
+	public function __construct(NanoApp $app, $env = array()) {
+		$this->app = $app;
 		$this->env = $env;
+
+		$this->app->getDebug()->time('response');
 	}
 
 	/**
@@ -151,7 +152,7 @@ class Response {
 	 * Get current response time
 	 */
 	public function getResponseTime() {
-		return round(microtime(true) - $this->responseStart, 3);
+		return $this->app->getDebug()->timeEnd('response');
 	}
 
 	/**

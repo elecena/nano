@@ -8,63 +8,66 @@
 
 class ResponseTest extends PHPUnit_Framework_TestCase {
 
+	private $app;
+	private $response;
+
+	public function setUp() {
+		// use test application's directory
+		$dir = realpath(dirname(__FILE__) . '/../app');
+		$this->app = Nano::app($dir);
+		$this->response = new Response($this->app);
+	}
+
 	public function testHeaders() {
-		$response = new Response();
-		$response->setHeader('foo', 'bar');
+		$this->response->setHeader('foo', 'bar');
 
-		$this->assertEquals('bar', $response->getHeader('foo'));
-		$this->assertEquals(array('foo' => 'bar'), $response->getHeaders());
+		$this->assertEquals('bar', $this->response->getHeader('foo'));
+		$this->assertEquals(array('foo' => 'bar'), $this->response->getHeaders());
 
-		$response->setHeader('foo', 'test');
-		$response->setHeader('bar', '123');
+		$this->response->setHeader('foo', 'test');
+		$this->response->setHeader('bar', '123');
 
-		$this->assertEquals('test', $response->getHeader('foo'));
-		$this->assertEquals('123', $response->getHeader('bar'));
-		$this->assertEquals(array('foo' => 'test', 'bar' => '123'), $response->getHeaders());
+		$this->assertEquals('test', $this->response->getHeader('foo'));
+		$this->assertEquals('123', $this->response->getHeader('bar'));
+		$this->assertEquals(array('foo' => 'test', 'bar' => '123'), $this->response->getHeaders());
 	}
 
 	public function testResponseCode() {
-		$response = new Response();
-
 		// default response code
-		$this->assertEquals(404, $response->getResponseCode());
+		$this->assertEquals(404, $this->response->getResponseCode());
 
-		$response->setResponseCode(200);
-		$this->assertEquals(200, $response->getResponseCode());
+		$this->response->setResponseCode(200);
+		$this->assertEquals(200, $this->response->getResponseCode());
 	}
 
 	public function testSetCacheDuration() {
-		$response = new Response();
-		$response->setCacheDuration(7 * 86400 /* 7 days */);
+		$this->response->setCacheDuration(7 * 86400 /* 7 days */);
 
-		$this->assertEquals('max-age=604800', $response->getHeader('Cache-Control'));
-		$this->assertContains('GMT', $response->getHeader('Expires'));
-		$this->assertContains(gmdate('H:i:s'), $response->getHeader('Expires'));
-		$this->assertContains(gmdate('D,'), $response->getHeader('Expires'));
+		$this->assertEquals('max-age=604800', $this->response->getHeader('Cache-Control'));
+		$this->assertContains('GMT', $this->response->getHeader('Expires'));
+		$this->assertContains(gmdate('H:i:s'), $this->response->getHeader('Expires'));
+		$this->assertContains(gmdate('D,'), $this->response->getHeader('Expires'));
 	}
 
 	public function testSetLastModified() {
-		$response = new Response();
-
 		$time = time();
-		$response->setLastModified($time);
-		$this->assertEquals(gmdate(Response::DATE_RFC1123, $time), $response->getHeader('Last-Modified'));
+		$this->response->setLastModified($time);
+		$this->assertEquals(gmdate(Response::DATE_RFC1123, $time), $this->response->getHeader('Last-Modified'));
 
 		$time = gmdate(Response::DATE_RFC1123, time() - 3600);
-		$response->setLastModified($time);
-		$this->assertEquals($time, $response->getHeader('Last-Modified'));
+		$this->response->setLastModified($time);
+		$this->assertEquals($time, $this->response->getHeader('Last-Modified'));
 
-		$response->setLastModified(date('Y-m-d H:i:s'));
-		$this->assertEquals(gmdate(Response::DATE_RFC1123), $response->getHeader('Last-Modified'));
+		$this->response->setLastModified(date('Y-m-d H:i:s'));
+		$this->assertEquals(gmdate(Response::DATE_RFC1123), $this->response->getHeader('Last-Modified'));
 	}
 
 	public function testGzipSupported() {
 		// content to be compressed
 		$content = str_repeat('foo', 1024 * 64);
 
-		$response = new Response();
-		$this->assertFalse($response->getAcceptedEncoding());
-		$this->assertFalse($response->isCompressed());
+		$this->assertFalse($this->response->getAcceptedEncoding());
+		$this->assertFalse($this->response->isCompressed());
 
 		// loop through following cases
 		$cases = array(
@@ -105,58 +108,56 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		);
 
 		foreach($cases as $case) {
-			$response = new Response(array('HTTP_ACCEPT_ENCODING' => $case['http_header']));
-			$response->setContent($content);
+			$this->response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => $case['http_header']));
+			$this->response->setContent($content);
 
-			$this->assertEquals($case['accepted_encoding'], $response->getAcceptedEncoding());
+			$this->assertEquals($case['accepted_encoding'], $this->response->getAcceptedEncoding());
 
 			// check the compression itself
 			if (isset($case['compress_function'])) {
 				$compressed = call_user_func($case['compress_function'], $content, Response::COMPRESSION_LEVEL);
-				$this->assertEquals($compressed, $response->render());
-				$this->assertEquals('Accept-Encoding', $response->getHeader('Vary'));
-				$this->assertTrue($response->isCompressed());
+				$this->assertEquals($compressed, $this->response->render());
+				$this->assertEquals('Accept-Encoding', $this->response->getHeader('Vary'));
+				$this->assertTrue($this->response->isCompressed());
 			}
 			else {
-				$this->assertEquals($content, $response->render());
-				$this->assertNull($response->getHeader('Vary'));
-				$this->assertFalse($response->isCompressed());
+				$this->assertEquals($content, $this->response->render());
+				$this->assertNull($this->response->getHeader('Vary'));
+				$this->assertFalse($this->response->isCompressed());
 			}
 
-			$this->assertEquals($case['content_encoding'], $response->getHeader('Content-Encoding'));
+			$this->assertEquals($case['content_encoding'], $this->response->getHeader('Content-Encoding'));
 		}
 	}
 
 	public function testTextResponse() {
 		$text = "foo\nbar";
 
-		$response = new Response();
-		$response->setContent($text);
+		$this->response->setContent($text);
 
-		$this->assertEquals($text, $response->getContent());
-		$this->assertEquals(array(), $response->getHeaders());
+		$this->assertEquals($text, $this->response->getContent());
+		$this->assertEquals(array(), $this->response->getHeaders());
 
 		// render the response (check the content and the headers)
-		$this->assertEquals($text, $response->render());
-		$this->assertNotNull($response->getHeader('X-Response-Time'));
+		$this->assertEquals($text, $this->response->render());
+		$this->assertNotNull($this->response->getHeader('X-Response-Time'));
 	}
 
 	public function testJSONResponse() {
 		$data = array('foo' => 'bar');
 		$content = Output::factory('json', $data);
 
-		$response = new Response();
-		$response->setContent($content);
+		$this->response->setContent($content);
 
-		$this->assertEquals('{"foo":"bar"}', $response->getContent());
-		$this->assertEquals('application/json; charset=UTF-8', $response->getHeader('Content-type'));
+		$this->assertEquals('{"foo":"bar"}', $this->response->getContent());
+		$this->assertEquals('application/json; charset=UTF-8', $this->response->getHeader('Content-type'));
 	}
 
 	public function testCompressionThreshold() {
 		// short response
 		$content = str_repeat('foo', 100);
 
-		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+		$response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
 		$response->setContent($content);
 
 		$this->assertEquals($content, $response->render());
@@ -165,7 +166,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		// longer response
 		$content = str_repeat('foo', 2048);
 
-		$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+		$response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
 		$response->setContent($content);
 		$response->render();
 
@@ -188,7 +189,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$content = str_repeat('foo', 2048);
 
 		foreach($contentTypes as $contentType => $isCompressed) {
-			$response = new Response(array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+			$response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
 			$response->setContent($content);
 			$response->setContentType($contentType);
 			$response->render();
