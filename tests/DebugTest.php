@@ -91,4 +91,27 @@ class DebugTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($debug->log('bar', Debug::ERROR));
 		$this->assertNotContains('bar', file_get_contents($logFile));
 	}
+
+	public function testTimers() {
+		$debug = new Debug($this->logDir);
+
+		$this->assertNull($debug->timeEnd('foo'));
+
+		// start timers
+		$debug->time('foo');
+		usleep(100000); // 100 ms
+		$debug->time('bar');
+		usleep(100000); // 100 ms
+
+		// get rimers
+		$timerFoo = $debug->timeEnd('foo');
+		$timerBar = $debug->timeEnd('bar');
+
+		$this->assertTrue($timerFoo > $timerBar);
+		$this->assertTrue($timerFoo > 0.2);
+		$this->assertTrue($timerBar > 0.1);
+
+		$this->assertNull($debug->timeEnd('foo'));
+		$this->assertNull($debug->timeEnd('bar'));
+	}
 }

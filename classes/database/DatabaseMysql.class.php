@@ -30,13 +30,13 @@ class DatabaseMysql extends Database {
 			$this->link->options(MYSQLI_INIT_COMMAND, 'SET NAMES "utf8"');
 		}
 
-		$this->reconnect();
+		$this->doConnect();
 	}
 
 	/**
 	 * (Re)connect using settings passed to the constructor
 	 */
-	protected function reconnect() {
+	protected function doConnect($reconnect = true) {
 		// reuse connection settings
 		$settings = $this->settings;
 
@@ -55,8 +55,12 @@ class DatabaseMysql extends Database {
 
 		// try to connect
 		if (!empty($params)) {
-			if (@call_user_func_array(array($this->link, 'real_connect'), $params)) {
-				$this->debug->log(__METHOD__ . ' - connected with ' . $settings['host']);
+			$this->debug->time('connect');
+			$res = @call_user_func_array(array($this->link, 'real_connect'), $params);
+			$time = $this->debug->timeEnd('connect');
+
+			if ($res) {
+				$this->debug->log(__METHOD__ . ' - connected with ' . $settings['host'] . ' [' . round($time, 3) . ' s]');
 
 				$this->connected = true;
 			}
@@ -98,18 +102,18 @@ class DatabaseMysql extends Database {
 	 * @see http://www.php.net/manual/en/mysqli.real-query.php
 	 */
 	public function query($sql) {
-		$time = microtime(true);
+		$this->debug->time('query');
+
 		$res = $this->link->query($sql, MYSQLI_USE_RESULT);
-		$time = microtime(true) - $time;
 
 		// reconnect and retry the query
 		if ($this->link->errno == self::ERR_SERVER_HAS_GONE_AWAY) {
-			$this->reconnect();
+			$this->doConnect(true /* $reconnect*/ );
 
-			$time = microtime(true);
 			$res = $this->link->query($sql, MYSQLI_USE_RESULT);
-			$time = microtime(true) - $time;
 		}
+
+		$time = $this->debug->timeEnd('query');
 
 		// update stats
 		$this->queries++;

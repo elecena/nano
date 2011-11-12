@@ -30,6 +30,9 @@ class Debug {
 	// timestamp when object was created
 	private $start;
 
+	// timers (used by time() / timeEnd() methods)
+	private $timers = array();
+
 	/**
 	 * Set directory for log files and log file name
 	 */
@@ -117,6 +120,28 @@ class Debug {
 		file_put_contents($this->getLogFile(), $msgLine, FILE_APPEND | LOCK_EX);
 
 		return true;
+	}
+
+	/**
+	 * Starts timer under given name
+	 */
+	public function time($timer) {
+		$this->timers[$timer] = microtime(true /* get_as_float */);
+	}
+
+	/**
+	 * Get elapsed time from given timer and remove it
+	 */
+	public function timeEnd($timer) {
+		if (isset($this->timers[$timer])) {
+			$time = microtime(true /* get_as_float */) - $this->timers[$timer];
+			unset($this->timers[$timer]);
+
+			return round($time, 3);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
