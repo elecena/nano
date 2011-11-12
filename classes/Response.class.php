@@ -29,12 +29,13 @@ class Response {
 	const SERVICE_UNAVAILABLE = 503;
 
 	// zlib compression level to be used
-	const COMPRESSION_LEVEL = 6;
+	const COMPRESSION_LEVEL = 9;
 
 	// don't compress small responses
 	const COMPRESSION_LENGTH_THRESHOLD = 1024;
 
 	private $app;
+	private $debug;
 
 	// don't compress following content types
 	private $compressionBlacklist = array(
@@ -65,7 +66,8 @@ class Response {
 		$this->app = $app;
 		$this->env = $env;
 
-		$this->app->getDebug()->time('response');
+		$this->debug = $this->app->getDebug();
+		$this->debug->time('response');
 	}
 
 	/**
@@ -152,7 +154,7 @@ class Response {
 	 * Get current response time
 	 */
 	public function getResponseTime() {
-		return $this->app->getDebug()->timeEnd('response');
+		return $this->debug->timeEnd('response');
 	}
 
 	/**
@@ -331,6 +333,8 @@ class Response {
 		// compress the response (if supported)
 		$encoding = $this->getAcceptedEncoding();
 		$response = $this->encode($response, $encoding);
+
+		$this->debug->log(__METHOD__ . " - HTTP {$this->responseCode}");
 
 		$this->sendHeaders();
 		return $response;
