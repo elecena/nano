@@ -23,6 +23,9 @@ abstract class Database {
 	// total time of queries (in seconds)
 	protected $queriesTime = 0;
 
+	// connection's name (either config entry name or DB driver's name)
+	protected $name;
+
 	// already created connections
 	static private $connectionsPoll = array();
 
@@ -67,6 +70,9 @@ abstract class Database {
 
 				try {
 					$instance = new $className($app, $settings);
+
+					// store connection's name
+					$instance->setName(is_string($config) ? $config : $driver);
 				}
 				catch(Exception $e) {
 					// TODO: handle exception
@@ -84,6 +90,27 @@ abstract class Database {
 		}
 
 		return $instance;
+	}
+
+	/**
+	 * Debug logging helper
+	 */
+	protected function log($method, $msg, $time = false) {
+		$msg =  "{$method} [{$this->name}] - {$msg}";
+
+		if (is_numeric($time)) {
+			$time = round($time, 3);
+			$msg .= " [{$time} s]";
+		}
+
+		$this->debug->log($msg);
+	}
+
+	/**
+	 * Set's connection name
+	 */
+	public function setName($name) {
+		$this->name = $name;
 	}
 
 	/**

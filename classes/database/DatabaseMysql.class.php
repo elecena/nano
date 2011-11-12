@@ -59,15 +59,17 @@ class DatabaseMysql extends Database {
 			$res = @call_user_func_array(array($this->link, 'real_connect'), $params);
 			$time = $this->debug->timeEnd('connect');
 
+			$hostInfo = $settings['host'] . (isset($settings['port']) ? ":{$settings['port']}" : '');
+
 			if ($res) {
-				$this->debug->log(__METHOD__ . ' - connected with ' . $settings['host'] . ' [' . round($time, 3) . ' s]');
+				$this->log(__METHOD__, 'connected with ' . $hostInfo, $time);
 
 				$this->connected = true;
 			}
 			else {
 				$errorMsg = trim(mysqli_connect_error());
 
-				$this->debug->log(__METHOD__ . ' - connecting with ' . $settings['host'] . ' failed (' . $errorMsg .')', Debug::ERROR);
+				$this->debug->log(__METHOD__ . ' - connecting with ' . $hostInfo . ' failed (' . $errorMsg .')', Debug::ERROR);
 
 				throw new Exception($errorMsg);
 			}
@@ -120,13 +122,11 @@ class DatabaseMysql extends Database {
 		$this->queriesTime += $time;
 
 		// log query
-		$timeFormatted = ' [' . sprintf('%.3f', $time) . ' s]';
-
-		$this->debug->log(__METHOD__ . ': ' . $sql . $timeFormatted, Debug::NOTICE);
+		$this->log(__METHOD__, $sql, $time);
 
 		// check for errors
 		if (empty($res)) {
-			$this->debug->log(__METHOD__ . ": error #{$this->link->errno} - {$this->link->error}", Debug::ERROR);
+			$this->log(__METHOD__, "error #{$this->link->errno} - {$this->link->error}");
 
 			// TODO: raise an excpetion
 
