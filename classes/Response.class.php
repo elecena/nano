@@ -334,7 +334,11 @@ class Response {
 		$encoding = $this->getAcceptedEncoding();
 		$response = $this->encode($response, $encoding);
 
+		// log
+		$responseSize = round(strlen($response) / 1024, 3);
+
 		$this->debug->log(__METHOD__ . " - HTTP {$this->responseCode}");
+		$this->debug->log(__METHOD__ . " - serving {$responseSize} kB with content type '{$this->headers['Content-type']}'");
 
 		$this->sendHeaders();
 		return $response;

@@ -96,6 +96,16 @@ class NanoApp {
 	}
 
 	/**
+	 * Send an event informing that application has finished its work
+	 */
+	public function tearDown() {
+		$this->debug->log('----');
+		$this->debug->log('Script is completed');
+
+		$this->events->fire('tearDown');
+	}
+
+	/**
 	 * Checks whether given file / directory is inside application's directory (security stuff!)
 	 */
 	public function isInAppDirectory($resource) {
