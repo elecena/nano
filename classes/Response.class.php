@@ -336,9 +336,10 @@ class Response {
 
 		// log
 		$responseSize = round(strlen($response) / 1024, 3);
+		$contentType = isset($this->headers['Content-type']) ? $this->headers['Content-type'] : '<unknown>';
 
 		$this->debug->log(__METHOD__ . " - HTTP {$this->responseCode}");
-		$this->debug->log(__METHOD__ . " - serving {$responseSize} kB with content type '{$this->headers['Content-type']}'");
+		$this->debug->log(__METHOD__ . " - serving {$responseSize} kB with content type '{$contentType}'");
 
 		$this->sendHeaders();
 		return $response;
