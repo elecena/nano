@@ -166,6 +166,6 @@ class DatabaseTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('offset 2 limit 5', $optionsSql);
 
 		$optionsSql = $database->resolveOptions(array('limit' => 5, 'offset 2'));
-		$this->assertEquals('LIMIT 5', $optionsSql);
+		$this->assertEquals('LIMIT 5 offset 2', $optionsSql);
 	}
 }

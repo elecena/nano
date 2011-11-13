@@ -424,8 +424,8 @@ abstract class Database {
 		}
 
 		// parse options it they were provided as a simple list
-		if (empty($sqlParts)) {
-			foreach($options as $opt) {
+		foreach($options as $key => $opt) {
+			if (is_numeric($key)) {
 				$sqlParts[] = $opt;
 			}
 		}
