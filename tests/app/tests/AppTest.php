@@ -83,6 +83,9 @@ class AppTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull($obj->foo);
 		$this->assertNull($obj->bar);
 
+		$obj->bar = 123;
+		$this->assertEquals(123, $obj->bar);
+
 		// "complex" factory call (with extra params)
 		$obj = $this->app->factory('ExampleModel', array('test'));
 
@@ -99,6 +102,22 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 		// test creation of not existing class
 		$this->assertNull($this->app->factory('NotExistingClass'));
+	}
+
+	public function testAppGetInstance() {
+		$obj = $this->app->getInstance('ExampleModel');
+		$this->assertInstanceOf('ExampleModel', $obj);
+		$this->assertInstanceOf('NanoApp', $obj->app);
+
+		$this->assertNull($obj->bar);
+
+		$obj->bar = 123;
+		$this->assertEquals(123, $obj->bar);
+
+		// this call should return reference to $obj (including $obj->bar)
+		$obj2 = $this->app->getInstance('ExampleModel');
+		$this->assertInstanceOf('ExampleModel', $obj2);
+		$this->assertEquals(123, $obj2->bar);
 	}
 
 	public function testModules() {

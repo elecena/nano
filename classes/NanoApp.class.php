@@ -40,6 +40,9 @@ class NanoApp {
 	// apllications' libraries directory
 	protected $libraryDir = '';
 
+	// objects instances used by getInstance()
+	protected $instances = array();
+
 	/**
 	 * Create application based on given config
 	 */
@@ -131,24 +134,37 @@ class NanoApp {
 	 * Returns instance of given class from /classes directory
 	 *
 	 * Class constructor is provided with application's instance and with extra parameters (if provided)
+	 *
+	 * NanoApp::factory() will ALWAYS return fresh class instance
 	 */
 	public function factory($className, Array $params = array()) {
 		if (class_exists($className)) {
 			$instance = new $className($this);
 
-			if (!empty($params)) {
-				// add NanoApp instance as the first constructor parameter
-				array_unshift($params, $this);
+			// add NanoApp instance as the first constructor parameter
+			array_unshift($params, $this);
 
-				// @see http://www.php.net/manual/en/function.call-user-func-array.php#91565
-				call_user_func_array(array($instance, '__construct'), $params);
-			}
+			// @see http://www.php.net/manual/en/function.call-user-func-array.php#91565
+			call_user_func_array(array($instance, '__construct'), $params);
 		}
 		else {
 			$instance = null;
 		}
 
 		return $instance;
+	}
+
+	/**
+	 * Returns instance of given class from /classes directory
+	 *
+	 * NanoApp::getInstance() follows singleton pattern
+	 */
+	public function getInstance($className) {
+		if (!isset($this->instances[$className])) {
+			$this->instances[$className] = $this->factory($className);
+		}
+
+		return $this->instances[$className];
 	}
 
 	/**
