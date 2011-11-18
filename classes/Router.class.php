@@ -242,7 +242,7 @@ class Router {
 	 * Replace all non alphanumeric characters with a dash
 	 */
 	public function sanitize($string) {
-		$string = mb_strtolower(trim($string), 'UTF-8');
+		$string = mb_strtolower(trim($string));
 		$string = strtr($string, array(
 			'ą' => 'a',
 			'ć' => 'c',
