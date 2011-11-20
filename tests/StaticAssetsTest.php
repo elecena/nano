@@ -209,6 +209,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		// blank.gif embedding
 		$this->assertEquals('data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==', $processor->encodeImage($dir . '/blank.gif'));
 		$this->assertContains('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->process($dir . '/blank.css'));
+
+		// big files should not be encoded
+		$this->assertContains('.foo{background-image:url(php-logo.jpg)}', $processor->process($dir . '/php-logo.css'));
 	}
 
 	public function testCssInclude() {

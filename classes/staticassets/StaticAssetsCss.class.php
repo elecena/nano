@@ -8,6 +8,9 @@
 
 class StaticAssetsCss implements IStaticAssetsProcessor {
 
+	// embed images smaller then (size in bytes)
+	const IMAGE_EMBED_THRESHOLD = 2048;
+
 	private $currentDir;
 
 	/**
@@ -91,7 +94,12 @@ class StaticAssetsCss implements IStaticAssetsProcessor {
 		$imageFile = realpath($this->currentDir . '/' . $matches[1] /* image name from CSS*/);
 
 		// encode it
-		$encoded = $this->encodeImage($imageFile);
+		if (filesize($imageFile) < self::IMAGE_EMBED_THRESHOLD) {
+			$encoded = $this->encodeImage($imageFile);
+		}
+		else {
+			$encoded = false;
+		}
 
 		if ($encoded !== false) {
 			return "url({$encoded})";
