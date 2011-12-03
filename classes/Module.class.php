@@ -13,30 +13,6 @@ abstract class Module {
 	// module's directory
 	protected $dir;
 
-	// cache object
-	protected $cache;
-
-	// debug
-	protected $debug;
-
-	// DB connection
-	protected $database;
-
-	// HTTP request
-	protected $request;
-
-	// response
-	protected $response;
-
-	// router
-	protected $router;
-
-	// config
-	protected $config;
-
-	// events handler
-	protected $events;
-
 	// module's name
 	protected $name;
 
@@ -53,16 +29,21 @@ abstract class Module {
 		$this->name = $name;
 		$this->data = array();
 
-		// set protected fields
+		// set reference to the application
 		$this->app = $app;
-		$this->cache = $app->getCache();
-		$this->config = $app->getConfig();
-		$this->database = $app->getDatabase();
-		$this->debug = $app->getDebug();
-		$this->events = $app->getEvents();
-		$this->request = $app->getRequest();
-		$this->response = $app->getResponse();
-		$this->router = $app->getRouter();
+	}
+
+	/**
+	 * Lazy loading of application objects
+	 *
+	 * Get them from NanoApp instance when needed
+	 */
+	public function __get($name) {
+		$methodName = 'get' . ucfirst($name);
+
+		if (method_exists($this->app, $methodName)) {
+			return $this->app->$methodName();
+		}
 	}
 
 	/**

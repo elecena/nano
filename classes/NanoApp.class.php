@@ -17,7 +17,7 @@ class NanoApp {
 	protected $debug;
 
 	// database connection
-	protected $database;
+	protected $database = false;
 
 	// events handler
 	protected $events;
@@ -87,9 +87,6 @@ class NanoApp {
 
 		// response
 		$this->response = new Response($this, $env);
-
-		// set connection to database (using db.default config entry)
-		$this->database = Database::connect($this);
 
 		// set private fields
 		$this->router = new Router($this);
@@ -295,6 +292,12 @@ class NanoApp {
 	 * Return database
 	 */
 	public function getDatabase() {
+		// lazy connection handling
+		if ($this->database === false) {
+			// set connection to database (using db.default config entry)
+			$this->database = Database::connect($this);
+		}
+
 		return $this->database;
 	}
 
