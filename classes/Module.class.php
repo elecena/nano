@@ -13,6 +13,12 @@ abstract class Module {
 	// module's directory
 	protected $dir;
 
+	// HTTP request
+	protected $request;
+
+	// response
+	protected $response;
+
 	// module's name
 	protected $name;
 
@@ -31,6 +37,9 @@ abstract class Module {
 
 		// set reference to the application
 		$this->app = $app;
+
+		$this->request = $app->getRequest();
+		$this->response = $app->getResponse();
 	}
 
 	/**
