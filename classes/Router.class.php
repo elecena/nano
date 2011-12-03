@@ -190,7 +190,7 @@ class Router {
 				}
 				else {
 					// get module's data
-					$data = $module->getData();
+					$data = is_array($ret) ? $ret : $module->getData();
 					$format = $module->getFormat();
 
 					if ($ret instanceof Output) {
