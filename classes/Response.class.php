@@ -314,6 +314,10 @@ class Response {
 		$this->setHeader('Content-Length', strlen($encoded));
 		$this->setHeader('Content-Encoding', $encodingMethodHeaderValue);
 
+		// stats
+		$ratio = round(strlen($response) / strlen($encoded), 2);
+		$this->debug->log(__METHOD__ . " - using {$encodingMethod} (x{$ratio} compression)");
+
 		return $encoded;
 	}
 
