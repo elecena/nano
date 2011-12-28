@@ -40,6 +40,12 @@ class DatabaseMysql extends Database {
 		// reuse connection settings
 		$settings = $this->settings;
 
+		// (try to) activate persistent connections
+		// @see http://www.php.net/manual/en/mysqli.persistconns.php
+		if (!empty($settings['persistent']) && isset($settings['host'])) {
+			$settings['host'] = 'p:' . $settings['host'];
+		}
+
 		// @see http://www.php.net/manual/en/mysqli.real-connect.php
 		$params = array();
 		$keys = array('host', 'user', 'pass', 'database', 'port', 'socket', 'flags');
