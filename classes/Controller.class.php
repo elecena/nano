@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Abstract class for representing nanoPortal's modules
+ * Abstract class for representing nanoPortal's controllers
  *
  * $Id$
  */
 
-abstract class Module {
+abstract class Controller {
 	// application
 	protected $app;
 
-	// module's directory
+	// controller's directory
 	protected $dir;
 
 	// HTTP request
@@ -19,17 +19,17 @@ abstract class Module {
 	// response
 	protected $response;
 
-	// module's name
+	// controller's name
 	protected $name;
 
 	// output's format
 	protected $format;
 
-	// module's data
+	// controller's data
 	protected $data;
 
 	/**
-	 * Setup the module usin ggiven application
+	 * Setup the controller usin ggiven application
 	 */
 	protected function __construct(NanoApp $app, $name) {
 		$this->name = $name;
@@ -56,18 +56,18 @@ abstract class Module {
 	}
 
 	/**
-	 * Create and setup instance of given module for given application
+	 * Create and setup instance of given controller for given application
 	 */
-	public static function factory(NanoApp $app, $moduleName) {
-		$className = $moduleName . 'Module';
+	public static function factory(NanoApp $app, $controllerName) {
+		$className = $controllerName . 'Controller';
 
 		// request given file
-		$dir = $app->getDirectory() . '/modules/' . strtolower($moduleName);
+		$dir = $app->getDirectory() . '/controllers/' . strtolower($controllerName);
 		$src = $dir . '/' . $className . '.class.php';
 
 		if (file_exists($src)) {
 			require_once $src;
-			$instance = new $className($app, $moduleName);
+			$instance = new $className($app, $controllerName);
 			$instance->dir = $dir;
 		}
 		else {
@@ -78,7 +78,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Clean up the module before routing the request
+	 * Clean up the controller before routing the request
 	 */
 	public function clearState() {
 		$this->setFormat(null);
@@ -98,14 +98,14 @@ abstract class Module {
 	}
 
 	/**
-	 * Get module's directory
+	 * Get controller's directory
 	 */
 	public function getDirectory() {
 		return $this->dir;
 	}
 
 	/**
-	 * Get module's template
+	 * Get controller's template
 	 */
 	public function getTemplate() {
 		return new Template($this->getDirectory() . '/templates');
@@ -126,7 +126,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Set module's data to be passed to the template or formatted by the Router
+	 * Set controller's data to be passed to the template or formatted by the Router
 	 */
 	protected function set($key, $val = null) {
 		// key/value array can be provided set more entries
@@ -139,7 +139,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Set module's data using automagical feature of PHP
+	 * Set controller's data using automagical feature of PHP
 	 *
 	 * Example: $this->itemId = 123;
 	 */
@@ -148,14 +148,14 @@ abstract class Module {
 	}
 
 	/**
-	 * Get module's data
+	 * Get controller's data
 	 */
 	public function getData() {
 		return $this->data;
 	}
 
 	/**
-	 * Render current module data to HTML using provided template
+	 * Render current controller data to HTML using provided template
 	 */
 	public function render($templateName) {
 		$template = $this->getTemplate();
@@ -165,7 +165,7 @@ abstract class Module {
 	}
 
 	/**
-	 * Binds given module's method to be fired when given event occurs
+	 * Binds given controller's method to be fired when given event occurs
 	 *
 	 * When can false is returned, fire() method returns false too and no callbacks execution is stopped
 	 */

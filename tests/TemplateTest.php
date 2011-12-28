@@ -9,7 +9,7 @@
 class TemplateTest extends PHPUnit_Framework_TestCase {
 
 	private function getTemplate() {
-		$dir = dirname(__FILE__). '/app/modules/foo/templates';
+		$dir = dirname(__FILE__). '/app/controllers/foo/templates';
 
 		return new Template($dir);
 	}

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Nano application's test module
+ * Nano application's test controller
  *
  * $Id$
  */
 
-class FooModule extends Module {
+class FooController extends Controller {
 
 	protected function __construct(NanoApp $app, $name) {
 		parent::__construct($app, $name);
@@ -16,7 +16,7 @@ class FooModule extends Module {
 	}
 
 	/**
-	 * Default method used for routing requests for this module
+	 * Default method used for routing requests for this controller
 	 */
 	public function route($param) {
 		return false;
@@ -34,7 +34,7 @@ class FooModule extends Module {
 	 */
 	public function search() {
 		$this->isInternal = $this->request->isInternal();
-		$this->set('query', $this->request->get('q', '')); // null values are not passed to the module's data
+		$this->set('query', $this->request->get('q', '')); // null values are not passed to the controller's data
 	}
 
 	/**

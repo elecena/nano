@@ -90,9 +90,6 @@ class NanoApp {
 
 		// set private fields
 		$this->router = new Router($this);
-
-		// load and setup all modules
-		$this->loadModules();
 	}
 
 	/**
@@ -112,19 +109,6 @@ class NanoApp {
 		$resource = realpath($resource);
 
 		return strpos($resource, $this->getDirectory()) === 0;
-	}
-
-	/**
-	 * Load all modules
-	 */
-	private function loadModules() {
-		$this->modules = array();
-		$moduleFiles = glob($this->dir . '/modules/*');
-
-		foreach($moduleFiles as $module) {
-			$moduleName = ucfirst(basename($module));
-			$this->modules[$moduleName] = Module::factory($this, $moduleName);
-		}
 	}
 
 	/**
@@ -165,6 +149,13 @@ class NanoApp {
 	}
 
 	/**
+	 * Return fresh instance of a given controller
+	 */
+	public function getController($controllerName) {
+		return Controller::factory($this, $controllerName);
+	}
+
+	/**
 	 * Internally route the request and return raw data (array) or an Output object wrapping the response
 	 */
 	protected function route(Request $request) {
@@ -197,7 +188,7 @@ class NanoApp {
 	 *
 	 * Returns raw data returned by the module
 	 */
-	public function dispatch($controllerName, $methodName = '', $params = array()) {
+	public function dispatch($controllerName, $methodName = '', Array $params = array()) {
 		$request = Request::newFromControllerName($controllerName, $methodName, $params, Request::INTERNAL);
 
 		// route given request
@@ -225,28 +216,11 @@ class NanoApp {
 	 *
 	 * Returns template's output for data returned by the module
 	 */
-	public function render($controllerName, $methodName = '', $params = array()) {
+	public function render($controllerName, $methodName = '', Array $params = array()) {
 		$request = Request::newFromControllerName($controllerName, $methodName, $params, Request::INTERNAL);
 
 		// render given request
 		return $this->renderRequest($request);
-	}
-
-	/**
-	 * Return an instance of given module
-	 */
-	public function getModule($moduleName) {
-		$moduleName = ucfirst(strtolower($moduleName));
-		$instance = isset($this->modules[$moduleName]) ? $this->modules[$moduleName] : null;
-
-		return $instance;
-	}
-
-	/**
-	 * Return list of names of loaded modules
-	 */
-	public function getModules() {
-		return array_keys($this->modules);
 	}
 
 	/**

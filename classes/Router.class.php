@@ -97,7 +97,7 @@ class Router {
 	/**
 	 * Route given request
 	 *
-	 * Returns either raw module's data, data wrapped in Output object or false
+	 * Returns either raw controller's data, data wrapped in Output object or false
 	 */
 	public function route(Request $request) {
 		// get and normalize path
@@ -112,51 +112,51 @@ class Router {
 
 		/*
 		 * Parse path /product/show/123/456 to:
-		 *  - module name: product
+		 *  - controller name: product
 		 *  - method: show
 		 *  - parameters: 123, 456
 		 */
 
-		// default module's method used for routing
+		// default controller's method used for routing
 		$methodName = $defaultMethodName = 'route';
 		$methodParams = array();
 
 		switch (count($pathParts)) {
-			// module name only: /product (or an empty path)
+			// controller name only: /product (or an empty path)
 			case 1:
-				$moduleName = $pathParts[0];
+				$controllerName = $pathParts[0];
 				$methodName = null;
 				break;
 
-			// module and method name: /product/bar (with parameters)
+			// controller and method name: /product/bar (with parameters)
 			case 2:
 			default:
-				$moduleName = $pathParts[0];
+				$controllerName = $pathParts[0];
 				$methodName = strtolower($pathParts[1]);
 
 				$methodParams = array_slice($pathParts, 2) + $methodParams;
 		}
 
 		// sanitize and normalize
-		$moduleName = ucfirst(strtolower($moduleName));
+		$controllerName = ucfirst(strtolower($controllerName));
 
-		#var_dump(array($moduleName, $methodName, $methodParams));
+		#var_dump(array($controllerName, $methodName, $methodParams));
 
 		// default value - means 404
 		$ret = false;
 		$this->lastRoute = null;
 
-		// call selected module and method (with parameters)
-		$module = $this->app->getModule($moduleName);
+		// call selected controller and method (with parameters)
+		$controller = $this->app->getController($controllerName);
 
-		if (!empty($module)) {
+		if (!empty($controller)) {
 			// use routeAPI method to route API requests
-			if ($request->isAPI() && is_callable(array($module, 'routeAPI'))) {
+			if ($request->isAPI() && is_callable(array($controller, 'routeAPI'))) {
 				$defaultMethodName = 'routeAPI';
 			}
 
 			// call selected method, otherwise call route method
-			if (!is_callable(array($module, $methodName))) {
+			if (!is_callable(array($controller, $methodName))) {
 				// if method doesn't exist, push it as a first parameter
 				if (is_string($methodName)) {
 					array_unshift($methodParams, $methodName);
@@ -165,22 +165,22 @@ class Router {
 				$methodName = $defaultMethodName;
 			}
 
-			#var_dump(array($moduleName, $methodName, $methodParams));
+			#var_dump(array($controllerName, $methodName, $methodParams));
 
 			// fill array of parameters passed with null values
 			$params = array_merge($methodParams, array_fill(0, 5, null));
 
-			if (is_callable(array($module, $methodName))) {
-				// use provided request when executing module's method
-				$module->clearState();
-				$module->setRequest($request);
+			if (is_callable(array($controller, $methodName))) {
+				// use provided request when executing controller's method
+				$controller->clearState();
+				$controller->setRequest($request);
 
-				// call the module's method and pass provided parameters
-				$ret = call_user_func_array(array($module, $methodName), $params);
+				// call the controller's method and pass provided parameters
+				$ret = call_user_func_array(array($controller, $methodName), $params);
 
 				// store info about this route
 				$this->lastRoute = array(
-					'module' => strtolower($moduleName),
+					'controller' => strtolower($controllerName),
 					'method' => $methodName,
 					'params' => $methodParams,
 				);
@@ -189,9 +189,9 @@ class Router {
 					// this basically means that the request can't be routed (i.e. HTTP 404)
 				}
 				else {
-					// get module's data
-					$data = is_array($ret) ? $ret : $module->getData();
-					$format = $module->getFormat();
+					// get controller's data
+					$data = is_array($ret) ? $ret : $controller->getData();
+					$format = $controller->getFormat();
 
 					if ($ret instanceof Output) {
 						// do nothing - output is already formatted
@@ -202,7 +202,7 @@ class Router {
 					}
 					else {
 						// wrap data in a template
-						$template = $module->getTemplate();
+						$template = $controller->getTemplate();
 
 						$ret = Output::factory('template', $data);
 						$ret->setTemplate($template);

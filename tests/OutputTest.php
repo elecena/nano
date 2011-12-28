@@ -68,7 +68,7 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testOutputTemplate() {
-		$dir = dirname(__FILE__). '/app/modules/foo/templates';
+		$dir = dirname(__FILE__). '/app/controllers/foo/templates';
 		$template = new Template($dir);
 		$template->set(array('id' => 'foo'));
 

@@ -11,42 +11,40 @@ include_once(dirname(__FILE__) . '/AppTest.php');
 class AppControllerTest extends AppTest {
 
 	public function testControllers() {
-		$this->assertEquals(array('Foo', 'Static'), $this->app->getModules());
+		$obj = $this->app->getController('Foo');
 
-		$obj = $this->app->getModule('Foo');
-
-		$this->assertInstanceOf('FooModule', $obj);
+		$this->assertInstanceOf('FooController', $obj);
 		$this->assertNull($obj->bar('123'));
 		$this->assertEquals(array('id' => 123), $obj->getData());
 
-		// test creation of not existing module
-		$this->assertNull($this->app->getModule('NotExistingModule'));
-		$this->assertNull(Module::factory($this->app, 'NotExistingModule'));
+		// test creation of not existing controller
+		$this->assertNull($this->app->getController('NotExistingController'));
+		$this->assertNull(Controller::factory($this->app, 'NotExistingController'));
 
-		// normalize modules names
-		$this->assertInstanceOf('FooModule', $this->app->getModule('foo'));
-		$this->assertInstanceOf('FooModule', $this->app->getModule('FOO'));
-		$this->assertInstanceOf('FooModule', $this->app->getModule('FoO'));
+		// normalize controllers names
+		$this->assertInstanceOf('FooController', $this->app->getController('foo'));
+		$this->assertInstanceOf('FooController', $this->app->getController('FOO'));
+		$this->assertInstanceOf('FooController', $this->app->getController('FoO'));
 
 		// output's format
-		$module = $this->app->getModule('Foo');
+		$controller = $this->app->getController('Foo');
 
-		$this->assertNull($module->getFormat());
+		$this->assertNull($controller->getFormat());
 
-		$module->setFormat('json');
-		$this->assertEquals('json', $module->getFormat());
+		$controller->setFormat('json');
+		$this->assertEquals('json', $controller->getFormat());
 
 		// render HTML
-		$module->id = 123;
-		$this->assertEquals('<h1>123</h1>', $module->render('bar'));
+		$controller->id = 123;
+		$this->assertEquals('<h1>123</h1>', $controller->render('bar'));
 
-		$module->id = 'test';
-		$this->assertEquals('<h1>test</h1>', $module->render('bar'));
+		$controller->id = 'test';
+		$this->assertEquals('<h1>test</h1>', $controller->render('bar'));
 	}
 
 	public function testControllerEvents() {
 		$events = $this->app->getEvents();
-		$module = $this->app->getModule('Foo');
+		$controller = $this->app->getController('Foo');
 
 		$value = 'foo';
 
@@ -54,6 +52,6 @@ class AppControllerTest extends AppTest {
 		$this->assertEquals('footest', $value);
 
 		// events firing
-		$this->assertEquals('footest', $module->event('foo'));
+		$this->assertEquals('footest', $controller->event('foo'));
 	}
 }

@@ -43,7 +43,7 @@ abstract class Cache {
 		$instance = null;
 
 		if (!empty($driver)) {
-				$className = 'Cache' . ucfirst(strtolower($driver));
+			$className = 'Cache' . ucfirst(strtolower($driver));
 
 			$src = dirname(__FILE__) . '/cache/' . $className . '.class.php';
 
