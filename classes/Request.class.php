@@ -142,12 +142,25 @@ class Request {
 	/**
 	 * Creates new instance of Request class from given path and params
 	 */
-	public static function newFromPath($path, $params = array(), $type = self::GET) {
+	public static function newFromPath($path, Array $params = array(), $type = self::GET) {
 		$request = new self($params);
 		$request->type = $type;
 		$request->setPath($path);
 
 		return $request;
+	}
+
+	/**
+	 * Creates new instance of Request class from given controller and method name (and optional parameters)
+	 */
+	public static function newFromControllerName($controllerName, $methodName = '', Array $params = array(), $type = self::GET) {
+		if (is_array($methodName)) {
+			$methodName = implode(Router::SEPARATOR, $methodName);
+		}
+
+		$path = Router::SEPARATOR . $controllerName . Router::SEPARATOR . $methodName;
+
+		return self::newFromPath($path, $params, $type);
 	}
 
 	/**

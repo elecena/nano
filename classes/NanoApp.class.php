@@ -193,12 +193,12 @@ class NanoApp {
 	}
 
 	/**
-	 * Dispatch request given by the path and optional parameters
+	 * Dispatch request given by the controller and method name (and optional parameters)
 	 *
 	 * Returns raw data returned by the module
 	 */
-	public function dispatch($path, $params = array()) {
-		$request = Request::newFromPath($path, $params, Request::INTERNAL);
+	public function dispatch($controllerName, $methodName = '', $params = array()) {
+		$request = Request::newFromControllerName($controllerName, $methodName, $params, Request::INTERNAL);
 
 		// route given request
 		return $this->dispatchRequest($request);
@@ -221,12 +221,12 @@ class NanoApp {
 	}
 
 	/**
-	 * Render the results of request given by the path and optional parameters
+	 * Render the results of request given by the controller and method name (and optional parameters)
 	 *
 	 * Returns template's output for data returned by the module
 	 */
-	public function render($path, $params = array()) {
-		$request = Request::newFromPath($path, $params, Request::INTERNAL);
+	public function render($controllerName, $methodName = '', $params = array()) {
+		$request = Request::newFromControllerName($controllerName, $methodName, $params, Request::INTERNAL);
 
 		// render given request
 		return $this->renderRequest($request);

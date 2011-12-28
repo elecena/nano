@@ -236,13 +236,13 @@ class AppTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testDispatch() {
-		$resp = $this->app->dispatch('/foo/search');
+		$resp = $this->app->dispatch('foo', 'search');
 		$this->assertEquals(array('query' => null, 'isInternal' => true), $resp);
 
-		$resp = $this->app->dispatch('/foo/search', array('q' => 'foo bar'));
+		$resp = $this->app->dispatch('foo', 'search', array('q' => 'foo bar'));
 		$this->assertEquals(array('query' => 'foo bar', 'isInternal' => true), $resp);
 
-		$resp = $this->app->dispatch('/foo/json/123');
+		$resp = $this->app->dispatch('foo', array('json', '123'));
 		$this->assertEquals(array('id' => 123), $resp);
 	}
 
@@ -262,12 +262,12 @@ class AppTest extends PHPUnit_Framework_TestCase {
 
 	public function testRender() {
 		// method returns raw data - template will be used to render the response
-		$this->assertEquals('<h1>123</h1>', $this->app->render('/foo/bar/123'));
+		$this->assertEquals('<h1>123</h1>', $this->app->render('foo', array('bar', '123')));
 
 		// method returns data wrapped in JSON
-		$this->assertEquals('{"id":123}', $this->app->render('/foo/json/123'));
+		$this->assertEquals('{"id":123}', $this->app->render('foo', array('json', '123')));
 
 		// incorrect route
-		$this->assertFalse($this->app->render('/foo'));
+		$this->assertFalse($this->app->render('foo'));
 	}
 }
