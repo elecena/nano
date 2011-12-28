@@ -32,9 +32,10 @@ abstract class Database {
 	/**
 	 * Force constructors to be protected - use Database::connect
 	 */
-	protected function __construct(NanoApp $app, Array $settings) {
+	protected function __construct(NanoApp $app, Array $settings, $name) {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
+		$this->setName($name);
 	}
 
 	/**
@@ -69,10 +70,8 @@ abstract class Database {
 				//$debug->log(__METHOD__ . ' - connecting using "' . $driver . '" driver');
 
 				try {
-					$instance = new $className($app, $settings);
-
-					// store connection's name
-					$instance->setName(is_string($config) ? $config : $driver);
+					$name = is_string($config) ? $config : $driver;
+					$instance = new $className($app, $settings, $name);
 				}
 				catch(Exception $e) {
 					// TODO: handle exception

@@ -17,8 +17,8 @@ class DatabaseMysql extends Database {
 	/**
 	 * Connect to a database
 	 */
-	protected function __construct(NanoApp $app, Array $settings) {
-		parent::__construct($app, $settings);
+	protected function __construct(NanoApp $app, Array $settings, $name) {
+		parent::__construct($app, $settings, $name);
 
 		$this->link = mysqli_init();
 
