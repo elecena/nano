@@ -25,11 +25,6 @@ class DatabaseMysql extends Database {
 		// store connection settings
 		$this->settings = $settings;
 
-		// set UTF8 as connection encoding
-		if (!empty($settings['utf'])) {
-			$this->link->options(MYSQLI_INIT_COMMAND, 'SET NAMES "utf8"');
-		}
-
 		$this->doConnect();
 	}
 
@@ -71,6 +66,12 @@ class DatabaseMysql extends Database {
 				$this->log(__METHOD__, 'connected with ' . $hostInfo, $time);
 
 				$this->connected = true;
+
+				// set UTF8 as connection encoding
+				if (!empty($settings['utf'])) {
+					$this->query('SET NAMES "utf8"');
+				}
+
 			}
 			else {
 				$errorMsg = trim(mysqli_connect_error());
