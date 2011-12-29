@@ -264,7 +264,15 @@ class Router {
 	/**
 	 * Format a local link for a given route
 	 */
-	public function link($path, $params = array()) {
+	public function formatUrl(/* $controllerName, $methodName, ..., $params = array() */) {
+		$args = func_get_args();
+
+		// GET params can be provided as the last function argument
+		$params = is_array(end($args)) ? array_pop($args) : array();
+
+		// format request path
+		$path = implode(self::SEPARATOR, $args);
+
 		// build a link
 		$link = $this->getPathPrefix() . $this->normalize($path);
 
@@ -279,11 +287,11 @@ class Router {
 	/**
 	 * Format a external link (i.e. with host name) for a given route
 	 */
-	public function externalLink($path, $params = array()) {
+	public function formatFullUrl(/* $controllerName, $methodName, ..., $params = array() */) {
 		// parse homepage's URL
 		$scheme = parse_url($this->homeUrl, PHP_URL_SCHEME);
 		$host = parse_url($this->homeUrl, PHP_URL_HOST);
 
-		return $scheme . '://' . $host . $this->link($path, $params);
+		return $scheme . '://' . $host . call_user_func_array(array($this, 'formatUrl'), func_get_args());
 	}
 }

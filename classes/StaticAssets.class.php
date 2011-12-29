@@ -157,7 +157,7 @@ class StaticAssets {
 			$params = array('r' => $cb);
 		}
 
-		$url = $this->router->link($path, $params);
+		$url = $this->router->formatUrl($path, $params);
 
 		// perform a rewrite for CDN
 		$cdnPath = $this->getCDNPath();

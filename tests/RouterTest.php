@@ -42,21 +42,25 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('zazolc-gesla-jazn', $router->sanitize('zażółć gęślą jaźń'));
 	}
 
-	public function testLink() {
+	public function testFormatUrl() {
 		$router = $this->getRouter();
 
 		// home URL: http://example.org/site/
-		$this->assertEquals('/site/', $router->link(''));
-		$this->assertEquals('/site/foo/bar', $router->link('foo/bar'));
-		$this->assertEquals('/site/foo/bar', $router->link('/foo/bar/'));
-		$this->assertEquals('/site/foo/bar?q=test', $router->link('foo/bar/', array('q' => 'test')));
+		$this->assertEquals('/site/', $router->formatUrl(''));
+		$this->assertEquals('/site/foo/bar', $router->formatUrl('foo/bar'));
+		$this->assertEquals('/site/foo/bar', $router->formatUrl('/foo/bar/'));
+		$this->assertEquals('/site/foo/bar', $router->formatUrl('foo', 'bar'));
+		$this->assertEquals('/site/foo/bar?q=test', $router->formatUrl('foo/bar/', array('q' => 'test')));
+		$this->assertEquals('/site/foo/bar?q=test', $router->formatUrl('foo', 'bar', array('q' => 'test')));
+		$this->assertEquals('/site/foo/bar/test?q=test&foo=bar+test', $router->formatUrl('foo', 'bar', 'test', array('q' => 'test', 'foo' => 'bar test')));
 	}
 
-	public function testExternalLink() {
+	public function testFormatFullUrl() {
 		$router = $this->getRouter();
 
-		$this->assertEquals('http://example.org/site/', $router->externalLink('/'));
-		$this->assertEquals('http://example.org/site/foo/bar?q=test&foo=1', $router->externalLink('/foo/bar/', array('q' => 'test', 'foo' => 1)));
+		$this->assertEquals('http://example.org/site/', $router->formatFullUrl('/'));
+		$this->assertEquals('http://example.org/site/foo/bar?q=test&foo=1', $router->formatFullUrl('/foo/bar/', array('q' => 'test', 'foo' => 1)));
+		$this->assertEquals('http://example.org/site/foo/bar/test?q=test&foo=bar+test', $router->formatFullUrl('foo', 'bar', 'test', array('q' => 'test', 'foo' => 'bar test')));
 	}
 
 	public function testLastRoute() {
