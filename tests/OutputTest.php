@@ -47,8 +47,8 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 
 	public function testOutputComplexXML() {
 		$output = Output::factory('xml', array(
-			array('foo' => 'bar'),
-			array('foo' => 'test'),
+			array('FOO' => 'bar'),
+			array('Foo' => 'test'),
 		));
 		$this->assertEquals("<?xml version=\"1.0\"?>\n<root><item><foo>bar</foo></item><item><foo>test</foo></item></root>", $output->render());
 		$this->assertEquals('text/xml; charset=UTF-8', $output->getContentType());

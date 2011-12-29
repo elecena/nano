@@ -34,8 +34,8 @@ class AppCoreTest extends AppTest {
 
 	public function testIsInAppDirectory() {
 		$this->assertTrue($this->app->isInAppDirectory($this->dir));
-		$this->assertTrue($this->app->isInAppDirectory($this->dir . '/modules'));
-		$this->assertTrue($this->app->isInAppDirectory($this->dir . '/modules/foo'));
+		$this->assertTrue($this->app->isInAppDirectory($this->dir . '/controllers'));
+		$this->assertTrue($this->app->isInAppDirectory($this->dir . '/controllers/foo'));
 
 		$this->assertFalse($this->app->isInAppDirectory($this->dir . '/..'));
 		$this->assertFalse($this->app->isInAppDirectory($this->dir . '/../..'));

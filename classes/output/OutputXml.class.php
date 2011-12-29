@@ -16,6 +16,8 @@ class OutputXml extends Output {
 	 */
 	private function arrayToXml(Array &$data, SimpleXMLElement $node) {
 		foreach($data as $key => $val) {
+			$key = strtolower($key);
+
 			if (is_array($val)) {
 				$child = is_numeric($key) ? $node->addChild('item') : $node->addChild($key);
 				$this->arrayToXml($val, $child);
