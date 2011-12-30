@@ -23,8 +23,7 @@ class MessageQueueRedis extends MessageQueue {
 
 		// load php-redis library
 		Nano::addLibrary('php-redis');
-
-		require_once 'Redis.php';
+		Autoloader::add('Redis', 'Redis.php');
 
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';

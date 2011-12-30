@@ -62,7 +62,9 @@ class CacheFile extends Cache {
 	 * Deletes given key
 	 */
 	public function delete($key) {
-		return unlink($this->getFilePath($key));
+		$path = $this->getFilePath($key);
+
+		return file_exists($path) ? unlink($path) : true;
 	}
 
 	/**
@@ -71,10 +73,9 @@ class CacheFile extends Cache {
 	public function incr($key, $by = 1) {
 		$value = $this->get($key);
 
-		if (!is_null($value)) {
-			$value = intval($value) + $by;
-			$this->set($key, $value);
-		}
+		// if the keys does not exist, it is set to 0 before incr happens
+		$value = (is_null($value) ? 0 : intval($value)) + $by;
+		$this->set($key, $value);
 
 		return $value;
 	}

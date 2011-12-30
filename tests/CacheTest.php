@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Set of unit tests for Cache class
+ * Generic class for unit tests for Cache drivers
  *
  * $Id$
  */
 
-class CacheTest extends PHPUnit_Framework_TestCase {
+abstract class CacheTest extends PHPUnit_Framework_TestCase {
 
-	private function getCache($driver = 'file', $settings = array()) {
+	protected function getCache($driver, Array $settings = array()) {
 		// use test application's directory
 		$dir = realpath(dirname(__FILE__) . '/app');
 		$app = Nano::app($dir);
@@ -23,23 +23,18 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 	public function testCacheFactory() {
 		$this->assertInstanceOf('CacheFile', $this->getCache('file'));
 		$this->assertInstanceOf('CacheFile', $this->getCache('FiLe'));
-		$this->assertInstanceOf('CacheRedis', $this->getCache('redis', array('ip' => '127.0.0.1')));
+		$this->assertInstanceOf('CacheRedis', $this->getCache('redis', array('host' => '127.0.0.1')));
 		$this->assertNull($this->getCache('Unknown'));
 	}
 
-	private function getCacheFile($settings = array()) {
-		$dir = dirname(__FILE__) . '/app/cache';
-
-		$settings = array_merge(array(
-			'directory' => $dir,
-		), $settings);
-
-		return $this->getCache('file', $settings);
+	// extend this method to run the following tests
+	protected function getCacheInstance($settings = array()) {
+		return false;
 	}
 
 	public function testCacheGetSet() {
-		$cache = $this->getCacheFile();
-		$this->assertInstanceOf('CacheFile', $cache);
+		$cache = $this->getCacheInstance();
+		if ($cache === false) return;
 
 		$key = 'foo';
 		$value = array(
@@ -78,15 +73,15 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCacheIncrDecr() {
-		$cache = $this->getCacheFile();
-		$this->assertInstanceOf('CacheFile', $cache);
+		$cache = $this->getCacheInstance();
+		if ($cache === false) return;
 
 		$key = 'bar';
 		$value = 12;
 
+		$cache->delete($key);
 		$this->assertFalse($cache->exists($key));
-		$this->assertNull($cache->incr($key));
-		$this->assertNull($cache->decr($key));
+		$this->assertEquals(1, $cache->incr($key));
 
 		$cache->set($key, $value, 60);
 
@@ -102,18 +97,19 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 		$cache->delete($key);
 
 		$this->assertFalse($cache->exists($key));
-		$this->assertNull($cache->incr($key));
-		$this->assertNull($cache->decr($key));
 	}
 
 	public function testCachePrefix() {
-		$cacheA = $this->getCacheFile();
-		$cacheB = $this->getCacheFile(array('prefix' => 'foo'));
+		$cacheA = $this->getCacheInstance();
+		$cacheB = $this->getCacheInstance(array('prefix' => 'foo'));
+
+		if ($cacheA === false) return;
 
 		$key = 'bar';
 		$value = 12;
 
 		$cacheA->set($key, $value, 60);
+		$cacheA->delete('test');
 
 		$this->assertTrue($cacheA->exists($key));
 		$this->assertFalse($cacheB->exists($key));

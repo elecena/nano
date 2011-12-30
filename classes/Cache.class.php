@@ -90,16 +90,16 @@ abstract class Cache {
 	 * Serialize data before storing in the cache
 	 */
 	protected function serialize($data) {
-		#return json_encode($data);
-		return serialize($data);
+		return json_encode($data);
+		#return serialize($data);
 	}
 
 	/**
 	 * Unserialize data after returning them from the cache
 	 */
 	protected function unserialize($data) {
-		#return json_decode($data, true /* as array */);
-		return unserialize($data);
+		return json_decode($data, true /* as array */);
+		#return unserialize($data);
 	}
 
 	/**
