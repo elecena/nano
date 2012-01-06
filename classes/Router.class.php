@@ -292,6 +292,8 @@ class Router {
 		$scheme = parse_url($this->homeUrl, PHP_URL_SCHEME);
 		$host = parse_url($this->homeUrl, PHP_URL_HOST);
 
-		return $scheme . '://' . $host . call_user_func_array(array($this, 'formatUrl'), func_get_args());
+		$args = func_get_args();
+
+		return $scheme . '://' . $host . call_user_func_array(array($this, 'formatUrl'), $args);
 	}
 }
