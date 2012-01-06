@@ -59,7 +59,7 @@ abstract class Controller {
 	 * Create and setup instance of given controller for given application
 	 */
 	public static function factory(NanoApp $app, $controllerName) {
-		$className = $controllerName . 'Controller';
+		$className = ucfirst(strtolower($controllerName)) . 'Controller';
 
 		// request given file
 		$dir = $app->getDirectory() . '/controllers/' . strtolower($controllerName);
