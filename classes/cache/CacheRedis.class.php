@@ -43,7 +43,18 @@ class CacheRedis extends Cache {
 		$key = $this->getStorageKey($key);
 		$resp = $this->redis->get($key);
 
-		return $resp === null ? $default : $this->unserialize($resp);
+		if ($resp !== null) {
+			$value = $this->unserialize($resp);
+
+			$this->hits++;
+		}
+		else {
+			$value = $default;
+
+			$this->misses++;
+		}
+
+		return $value;
 	}
 
 	/**

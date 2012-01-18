@@ -88,7 +88,7 @@ class NanoApp {
 		// response
 		$this->response = new Response($this, $env);
 
-		// set private fields
+		// requests router
 		$this->router = new Router($this);
 	}
 
@@ -99,7 +99,7 @@ class NanoApp {
 		$this->debug->log('----');
 		$this->debug->log('Script is completed');
 
-		$this->events->fire('tearDown');
+		$this->events->fire('NanoAppTearDown', array($this));
 	}
 
 	/**

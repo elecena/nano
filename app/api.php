@@ -55,4 +55,6 @@ if ($data !== false) {
 
 echo $response->render();
 
+$app->tearDown();
+
 #var_dump(__FILE__); var_dump($format); var_dump($request); var_dump($data); var_dump($response); die(); // debug

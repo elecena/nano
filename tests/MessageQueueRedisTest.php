@@ -13,7 +13,8 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 	public function __construct() {
 		$this->settings = array(
 			'driver' => 'redis',
-			'host' => '89.248.171.138', /* s2 */
+			#'host' => '89.248.171.138', /* s2 */
+			'host' => '89.248.166.201', /* korn */
 			'port' => 60380,
 			//'pass' => 'foobared',
 			'prefix' => 'test',

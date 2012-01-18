@@ -26,9 +26,13 @@ class CacheFile extends Cache {
 		if ($this->exists($key)) {
 			$data = file_get_contents($this->getFilePath($key));
 			$value = $this->unserialize($data);
+
+			$this->hits++;
 		}
 		else {
 			$value = $default;
+
+			$this->misses++;
 		}
 
 		return $value;

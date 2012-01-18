@@ -3,14 +3,17 @@
 * templating system								[DONE]
 * output formatter (json, xml, jsonp)			[DONE]
 * database layer								[DONE]
+* database performance reporting
 * message queue layer							[DONE]
 * redis client									[DONE]
 * redis based caching							[DONE]
+* cache performance reporting (hits/misses)		[DONE]
 * general entry point (index.php)
 * API entry point (api.php)						[DONE]
 * JS / CSS loading + minification + packages	[DONE]
 * theming (skins)
 * PID file generator helper						[DONE]
+* View class wrapping Controller's response
 * database layer for SQLite
 * locks support
 * XML sitemap generator

@@ -30,6 +30,10 @@ abstract class Cache {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
 
+		// add performance report
+		$events = $app->getEvents();
+		$events->bind('NanoAppTearDown', array($this, 'onNanoAppTearDown'));
+
 		// set prefix
 		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
 	}
@@ -91,7 +95,6 @@ abstract class Cache {
 	 */
 	protected function serialize($data) {
 		return json_encode($data);
-		#return serialize($data);
 	}
 
 	/**
@@ -99,7 +102,6 @@ abstract class Cache {
 	 */
 	protected function unserialize($data) {
 		return json_decode($data, true /* as array */);
-		#return unserialize($data);
 	}
 
 	/**
@@ -117,5 +119,29 @@ abstract class Cache {
 		}
 
 		return $key;
+	}
+
+	/**
+	 * Get number of cache hits
+	 */
+	public function getHits() {
+		return $this->hits;
+	}
+
+	/**
+	 * Get number of cache misses
+	 */
+	public function getMisses() {
+		return $this->misses;
+	}
+
+	/**
+	 * Add performance report to the log
+	 */
+	public function onNanoAppTearDown(NanoApp $app) {
+		$debug = $app->getDebug();
+		$response = $app->getResponse();
+
+		$debug->log("Cache: {$this->hits} hits and {$this->misses} misses");
 	}
 }

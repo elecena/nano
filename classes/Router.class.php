@@ -11,6 +11,7 @@ class Router {
 	const SEPARATOR = '/';
 
 	private $app;
+	private $debug;
 
 	// URL mapping
 	private $map = array();
@@ -24,6 +25,7 @@ class Router {
 
 	function __construct(NanoApp $app) {
 		$this->app = $app;
+		$this->debug = $this->app->getDebug();
 
 		$config = $this->app->getConfig();
 
@@ -106,6 +108,8 @@ class Router {
 
 		// apply route mapping
 		$path = $this->applyMap($path);
+
+		$this->debug->log(__METHOD__ . " - routing '{$path}'");
 
 		// split path by separators
 		$pathParts = explode(self::SEPARATOR, $path);
