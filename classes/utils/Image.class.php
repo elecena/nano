@@ -120,21 +120,103 @@ class Image {
 	 * Crop an image to fit given box
 	 */
 	public function crop($width, $height) {
+		// calculate scale-down ratio
+		$ratio = max($width / $this->width, $height / $this->height);
 
+		// don't scale up
+		if ($ratio >= 1) {
+			return false;
+		}
+
+		// create new image
+		$thumb = ImageCreateTrueColor($width, $height);
+
+		if (!is_resource($thumb)) {
+			return false;
+		}
+
+		// new dimensions
+		#$width = round($this->width * $ratio);
+		#$height = round($this->height * $ratio);
+
+		// 500x300 (src) -> 333x200
+		// 200x200 (dest)
+		//  ratio = 2/3
+		// dst_x = 333 - 200 / 2 -> ((500 x 2/3) - 200) / 2
+		// dst_y = 200 - 200 / 2 -> ((200 x 2/3) - 200) / 2
+
+		// paste rescaled image
+		// @see http://pl.php.net/imageCopyResampled
+		$res = imageCopyResampled(
+			// destination
+			$thumb,
+			// source
+			$this->img,
+			// destination upper left coordinates
+			round(($this->width * $ratio - $width) / 2) * -1,
+			round(($this->height * $ratio - $height) / 2) * -1,
+			// source upper left coordinates
+			0, 0,
+			// destination dimensions
+			round($this->width * $ratio), round($this->height * $ratio),
+			// source dimensions
+			$this->width, $this->height
+		);
+
+		if ($res === false) {
+			return true;
+		}
+
+		// free memory
+		imagedestroy($this->img);
+
+		// update image data
+		$this->img = $thumb;
+		$this->width = $width;
+		$this->height = $height;
+
+		return true;
 	}
 
 	/**
 	 * Return image raw data
 	 */
-	public function output($type, $quality = false) {
+	public function render($type, $quality = false) {
+		ob_start();
 
+		switch($type) {
+			case 'jpeg':
+				imagejpeg($this->img, null, $quality ? $quality : 75);
+				break;
+
+			case 'gif':
+				imagegif($this->img);
+				break;
+
+			case 'png':
+				imagepng($this->img, null, $quality ? $quality : 9);
+				break;
+
+			default:
+				return false;
+		}
+
+		// get an image
+		$raw = ob_get_contents();
+		ob_end_clean();
+
+		if (!empty($raw)) {
+			$this->type = $type;
+		}
+
+		return $raw;
 	}
 
 	/**
 	 * Save image raw data to a given file
 	 */
 	public function save($filename, $type, $quality = false) {
-		$raw = $this->output($type, $quality);
+		$raw = $this->render($type, $quality);
 
 		return !empty($raw) && file_put_contents($filename, $raw) !== false;
 	}

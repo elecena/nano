@@ -25,6 +25,8 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertInstanceOf('Image', $img);
 
+		#$img->save('img.jpg', 'jpeg');
+
 		// scaling up no permitted
 		$this->assertFalse($img->scale(600, 500));
 		$this->assertFalse($img->scale(578, 406));
@@ -34,5 +36,30 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(142, $img->getWidth());
 		$this->assertEquals(100, $img->getHeight());
+
+		// render an image
+		$this->assertFalse($img->render('tiff'));
+		$this->assertTrue($img->render('jpeg') !== false);
+		$this->assertEquals('jpeg', $img->getType());
+
+		#$img->save('img-scaled.jpg', 'jpeg');
+	}
+
+	public function testCrop() {
+		$img = Image::newFromFile($this->file);
+
+		$this->assertInstanceOf('Image', $img);
+
+		// scaling up no permitted
+		$this->assertFalse($img->crop(600, 500));
+		$this->assertFalse($img->crop(578, 406));
+
+		// scale down
+		$this->assertTrue($img->crop(300, 100));
+
+		$this->assertEquals(300, $img->getWidth());
+		$this->assertEquals(100, $img->getHeight());
+
+		#$img->save('img-crop.jpg', 'jpeg');
 	}
 }
