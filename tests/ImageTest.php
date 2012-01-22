@@ -12,7 +12,7 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 		$this->file = dirname(__FILE__) . '/app/statics/php-logo.jpg';
 	}
 
-	public function testNewFromUrl() {
+	public function testNewFromFile() {
 		$img = Image::newFromFile($this->file);
 
 		$this->assertInstanceOf('Image', $img);
@@ -40,7 +40,8 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 		// render an image
 		$this->assertFalse($img->render('tiff'));
 		$this->assertTrue($img->render('jpeg') !== false);
-		$this->assertEquals('jpeg', $img->getType());
+		$this->assertEquals(IMAGETYPE_JPEG, $img->getType());
+		$this->assertEquals('image/jpeg', $img->getMimeType());
 
 		#$img->save('img-scaled.jpg', 'jpeg');
 	}

@@ -135,10 +135,6 @@ class Image {
 			return false;
 		}
 
-		// new dimensions
-		#$width = round($this->width * $ratio);
-		#$height = round($this->height * $ratio);
-
 		// 500x300 (src) -> 333x200
 		// 200x200 (dest)
 		//  ratio = 2/3
@@ -186,14 +182,17 @@ class Image {
 
 		switch($type) {
 			case 'jpeg':
+				$type = IMAGETYPE_JPEG;
 				imagejpeg($this->img, null, $quality ? $quality : 75);
 				break;
 
 			case 'gif':
+				$type = IMAGETYPE_GIF;
 				imagegif($this->img);
 				break;
 
 			case 'png':
+				$type = IMAGETYPE_PNG;
 				imagepng($this->img, null, $quality ? $quality : 9);
 				break;
 
