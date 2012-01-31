@@ -19,6 +19,9 @@ abstract class Controller {
 	// response
 	protected $response;
 
+	// view
+	protected $view;
+
 	// controller's name
 	protected $name;
 
@@ -78,14 +81,6 @@ abstract class Controller {
 	}
 
 	/**
-	 * Clean up the controller before routing the request
-	 */
-	public function clearState() {
-		$this->setFormat(null);
-		$this->data = array();
-	}
-
-	/**
 	 * Use provided request
 	 */
 	public function setRequest(Request $request) {
@@ -95,6 +90,13 @@ abstract class Controller {
 		if ($this->request->isAPI()) {
 			$this->setFormat('json');
 		}
+	}
+
+	/**
+	 * Use provided view
+	 */
+	public function setView(View $view) {
+		$this->view = $view;
 	}
 
 	/**

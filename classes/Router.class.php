@@ -175,9 +175,12 @@ class Router {
 			$params = array_merge($methodParams, array_fill(0, 5, null));
 
 			if (is_callable(array($controller, $methodName))) {
-				// use provided request when executing controller's method
-				$controller->clearState();
+				// create a view
+				$view = new View($this->app, $controller);
+
+				// use provided request and created view when executing controller's method
 				$controller->setRequest($request);
+				$controller->setView($view);
 
 				// call the controller's method and pass provided parameters
 				$ret = call_user_func_array(array($controller, $methodName), $params);
