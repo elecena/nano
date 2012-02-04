@@ -177,15 +177,19 @@ class Router {
 			if (is_callable(array($controller, $methodName))) {
 				// create a view
 				$view = new View($this->app, $controller);
+				$view->setMethod($methodName);
+				$view->setTemplateName($methodName);
+				
+				$controller->setView($view);
 
 				// use provided request and created view when executing controller's method
 				$controller->setRequest($request);
-				$controller->setView($view);
 
 				// call the controller's method and pass provided parameters
 				$ret = call_user_func_array(array($controller, $methodName), $params);
 
 				// store info about this route
+				// TODO: store in view object
 				$this->lastRoute = array(
 					'controller' => strtolower($controllerName),
 					'method' => $methodName,

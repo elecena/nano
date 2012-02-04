@@ -46,6 +46,13 @@ abstract class Controller {
 	}
 
 	/**
+	 * Get controller's directory
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
 	 * Lazy loading of application objects
 	 *
 	 * Get them from NanoApp instance when needed
@@ -110,21 +117,21 @@ abstract class Controller {
 	 * Get controller's template
 	 */
 	public function getTemplate() {
-		return new Template($this->getDirectory() . '/templates');
+		return $this->view->getTemplate();
 	}
 
 	/**
 	 * Set output's format
 	 */
 	public function setFormat($format) {
-		$this->format = $format;
+		$this->view->setFormat($format);
 	}
 
 	/**
 	 * Get output's format
 	 */
 	public function getFormat() {
-		return $this->format;
+		return $this->view->getFormat();
 	}
 
 	/**

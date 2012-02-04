@@ -9,7 +9,6 @@
 include_once(dirname(__FILE__) . '/AppTest.php');
 
 class AppControllerTest extends AppTest {
-
 	public function testControllers() {
 		$obj = $this->app->getController('Foo');
 
@@ -29,10 +28,19 @@ class AppControllerTest extends AppTest {
 		// output's format
 		$controller = $this->app->getController('Foo');
 
+		$view = new View($this->app, $controller);
+		$controller->setView($view);
+
 		$this->assertNull($controller->getFormat());
 
 		$controller->setFormat('json');
 		$this->assertEquals('json', $controller->getFormat());
+	}
+
+	public function testControllersView() {
+		$controller = $this->app->getController('Foo');
+		$view = new View($this->app, $controller);
+		$controller->setView($view);
 
 		// render HTML
 		$controller->id = 123;
