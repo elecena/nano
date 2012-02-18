@@ -1,4 +1,4 @@
-<h1><?= htmlspecialchars($title) ?></h1>
+<h1><?php echo htmlspecialchars($title) ?></h1>
 <?php
 	if (!empty($items) && is_array($items)) {
 ?>
@@ -6,7 +6,7 @@
 <?php
 	foreach($items as $item) {
 ?>
-	<li><?= htmlspecialchars($item)  ?></li>
+	<li><?php echo htmlspecialchars($item)  ?></li>
 <?php
 	}
 ?>
