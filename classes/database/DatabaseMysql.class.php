@@ -56,6 +56,11 @@ class DatabaseMysql extends Database {
 
 		// try to connect
 		if (!empty($params)) {
+			// set connect timeout
+			if (isset($settings['connect_timeout'])) {
+				$this->link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $settings['connect_timeout']);
+			}
+
 			$this->debug->time('connect');
 			$res = @call_user_func_array(array($this->link, 'real_connect'), $params);
 			$time = $this->debug->timeEnd('connect');
@@ -76,7 +81,7 @@ class DatabaseMysql extends Database {
 			else {
 				$errorMsg = trim(mysqli_connect_error());
 
-				$this->debug->log(__METHOD__ . ' - connecting with ' . $hostInfo . ' failed (' . $errorMsg .')', Debug::ERROR);
+				$this->debug->log(__METHOD__ . ' - connecting with "' . $hostInfo . '" failed (' . $errorMsg .')', Debug::ERROR);
 
 				throw new Exception($errorMsg);
 			}
