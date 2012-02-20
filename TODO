@@ -28,6 +28,7 @@
 * server-side GoogleAnalytics tracking
 * cron jobs
 * Google Weather API
+* "Google-style" hash generator
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1474/serialize
@@ -51,3 +52,5 @@
 @see http://www.php.net/manual/en/function.curl-multi-exec.php#80977
 @see https://github.com/vrana/php-async/blob/master/CurlAsync.php
 @see http://www.google.com/ig/api?weather=San%20Francisco
+@see http://snook.ca/archives/php/url-shortener
+@see http://programanddesign.com/php/base62-encode/
