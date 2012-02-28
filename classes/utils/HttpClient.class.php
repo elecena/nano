@@ -38,11 +38,11 @@ class HttpClient {
 		$info = curl_version();
 		$this->version = $info['version'];
 
-		// set user agent
-		$this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}");
-
 		// set up cURL library
 		$this->handle = curl_init();
+
+		// set user agent
+		$this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}");
 
 		curl_setopt_array($this->handle, array(
 			CURLOPT_ENCODING => 'gzip',
@@ -53,7 +53,6 @@ class HttpClient {
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_TIMEOUT => $this->timeout,
-			CURLOPT_USERAGENT => $this->userAgent,
 		));
 	}
 
@@ -65,17 +64,20 @@ class HttpClient {
 	}
 
 	/**
+	 * Set proxy to be used for HTTP requests
+	 */
+	public function setProxy($proxy, $type = CURLPROXY_HTTP) {
+		curl_setopt($this->handle, CURLOPT_PROXY, $proxy);
+		curl_setopt($this->handle, CURLOPT_PROXYTYPE, $type);
+	}
+
+	/**
 	 * Set user agent identification used by HTTP client
 	 */
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $userAgent;
-	}
 
-	/**
-	 * Get user agent identification used by HTTP client
-	 */
-	public function getUserAgent() {
-		return $this->userAgent;
+		curl_setopt($this->handle, CURLOPT_USERAGENT, $this->userAgent);
 	}
 
 	/**
