@@ -3,12 +3,13 @@
 /**
  * Helper class for handling image manipulations
  *
+ * @see http://www.php.net/manual/en/class.imagick.php
+ *
  * $Id$
  */
 
 class Image {
-
-	// image handler from GD
+	// image handler from GD / Imagick
 	private $img;
 
 	// image type
@@ -24,8 +25,16 @@ class Image {
 		if (is_resource($this->img)) {
 			$this->width = imagesx($this->img);
 			$this->height = imagesy($this->img);
-			#$this->type = imagesy($this->img);
 		}
+	}
+
+	/**
+	 * Returns an instance of proper image driver
+	 *
+	 * Auto-detects which library to use: Imagick or GD
+	 */
+	public function getInstance() {
+		// TODO
 	}
 
 	/**
@@ -51,6 +60,8 @@ class Image {
 	 */
 	public static function newFromRaw($raw) {
 		if (!empty($raw)) {
+
+			// TODO: use self::getInstance
 			$img = imagecreatefromstring($raw);
 
 			if (is_resource($img)) {
@@ -233,6 +244,7 @@ class Image {
 	}
 
 	public function getMimeType() {
+		// Note from PHP manual: this function does not require the GD image library.
 		return image_type_to_mime_type($this->type);
 	}
 }
