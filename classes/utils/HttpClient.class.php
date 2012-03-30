@@ -79,6 +79,13 @@ class HttpClient {
 
 		curl_setopt($this->handle, CURLOPT_USERAGENT, $this->userAgent);
 	}
+	
+	/**
+	 * Get user agent identification used by HTTP client
+	 */
+	public function getUserAgent() {
+		return $this->userAgent;
+	}
 
 	/**
 	 * Set timeout for a single request
