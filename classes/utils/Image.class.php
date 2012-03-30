@@ -2,9 +2,7 @@
 
 /**
  * Helper class for handling image manipulations
- *
- * @see http://www.php.net/manual/en/class.imagick.php
- *
+  *
  * $Id$
  */
 
@@ -64,8 +62,8 @@ abstract class Image {
 	 * Auto-detects which library to use: Imagick or GD
 	 */
 	private static function getInstance($raw) {
-		// TODO: Imagick
-		if (false) {
+		// Image Magick
+		if (class_exists('Imagick')) {
 			$driverName = 'ImageImagick';
 		}
 		// fallback to GD

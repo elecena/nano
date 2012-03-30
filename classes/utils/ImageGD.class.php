@@ -87,7 +87,7 @@ class ImageGD extends Image {
 		$ratio = max($width / $this->width, $height / $this->height);
 
 		// don't scale up
-		if ($ratio >= 1) {
+		if ($ratio > 1) {
 			return false;
 		}
 

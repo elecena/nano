@@ -8,7 +8,10 @@
 
 class ImageTest extends PHPUnit_Framework_TestCase {
 
+	const DEBUG = true;
+
 	public function setUp() {
+		// 578x406
 		$this->file = dirname(__FILE__) . '/app/statics/php-logo.jpg';
 	}
 
@@ -25,7 +28,7 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertInstanceOf('Image', $img);
 
-		#$img->save('img.jpg', 'jpeg');
+		if (self::DEBUG) $img->save('img.jpg', 'jpeg');
 
 		// scaling up no permitted
 		$this->assertFalse($img->scale(600, 500));
@@ -43,7 +46,7 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(IMAGETYPE_JPEG, $img->getType());
 		$this->assertEquals('image/jpeg', $img->getMimeType());
 
-		#$img->save('img-scaled.jpg', 'jpeg');
+		if (self::DEBUG) $img->save('img-scaled.jpg', 'jpeg');
 	}
 
 	public function testCrop() {
@@ -53,14 +56,33 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 
 		// scaling up no permitted
 		$this->assertFalse($img->crop(600, 500));
-		$this->assertFalse($img->crop(578, 406));
 
-		// scale down
+		// crop (leave just the middle part)
+		$this->assertTrue($img->crop(578, 250));
+		if (self::DEBUG) $img->save('img-crop1a.jpg', 'jpeg');
+
+		$this->assertEquals(578, $img->getWidth());
+		$this->assertEquals(250, $img->getHeight());
+		
+		// crop (leave just the middle part)
+		$this->assertTrue($img->crop(450, 250));
+		if (self::DEBUG) $img->save('img-crop1b.jpg', 'jpeg');
+
+		$this->assertEquals(450, $img->getWidth());
+		$this->assertEquals(250, $img->getHeight());
+	}
+
+	public function testCropAndResize() {
+		$img = Image::newFromFile($this->file);
+
+		$this->assertInstanceOf('Image', $img);
+
+		// crop
 		$this->assertTrue($img->crop(300, 100));
+
+		if (self::DEBUG) $img->save('img-crop2.jpg', 'jpeg');
 
 		$this->assertEquals(300, $img->getWidth());
 		$this->assertEquals(100, $img->getHeight());
-
-		#$img->save('img-crop.jpg', 'jpeg');
 	}
 }
