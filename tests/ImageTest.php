@@ -8,7 +8,7 @@
 
 class ImageTest extends PHPUnit_Framework_TestCase {
 
-	const DEBUG = true;
+	const DEBUG = false;
 
 	public function setUp() {
 		// 578x406
@@ -63,7 +63,7 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(578, $img->getWidth());
 		$this->assertEquals(250, $img->getHeight());
-		
+
 		// crop (leave just the middle part)
 		$this->assertTrue($img->crop(450, 250));
 		if (self::DEBUG) $img->save('img-crop1b.jpg', 'jpeg');
