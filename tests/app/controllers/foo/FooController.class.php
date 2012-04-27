@@ -41,8 +41,10 @@ class FooController extends Controller {
 	 * Method used for routing requests matching /foo/json/*
 	 */
 	public function json($id) {
+		$this->setData(array(
+			'id' => intval($id)
+		));
 		$this->setFormat('json');
-		return Output::factory('json', array('id' => intval($id)));
 	}
 
 	/**

@@ -179,7 +179,7 @@ class Router {
 				$view = new View($this->app, $controller);
 				$view->setMethod($methodName);
 				$view->setTemplateName($methodName);
-				
+
 				$controller->setView($view);
 
 				// use provided request and created view when executing controller's method
@@ -201,13 +201,10 @@ class Router {
 				}
 				else {
 					// get controller's data
-					$data = is_array($ret) ? $ret : $controller->getData();
+					$data = $controller->getData();
 					$format = $controller->getFormat();
 
-					if ($ret instanceof Output) {
-						// do nothing - output is already formatted
-					}
-					else if (!is_null($format)) {
+					if (!is_null($format)) {
 						// use provided format to render the data
 						$ret = Output::factory($format, $data);
 					}

@@ -37,6 +37,20 @@ class AppControllerTest extends AppTest {
 		$this->assertEquals('json', $controller->getFormat());
 	}
 
+	public function testControllersVariables() {
+		$controller = $this->app->getController('Foo');
+
+		$this->assertTrue(empty($controller->foo));
+
+		$controller->foo = 'foo';
+		$this->assertFalse(empty($controller->foo));
+		$this->assertEquals($controller->foo, 'foo');
+
+		// unset
+		unset($controller->foo);
+		$this->assertTrue(empty($controller->foo));
+	}
+
 	public function testControllersView() {
 		$controller = $this->app->getController('Foo');
 		$view = new View($this->app, $controller);

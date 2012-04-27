@@ -53,19 +53,6 @@ abstract class Controller {
 	}
 
 	/**
-	 * Lazy loading of application objects
-	 *
-	 * Get them from NanoApp instance when needed
-	 */
-	public function __get($name) {
-		$methodName = 'get' . ucfirst($name);
-
-		if (method_exists($this->app, $methodName)) {
-			return $this->app->$methodName();
-		}
-	}
-
-	/**
 	 * Create and setup instance of given controller for given application
 	 */
 	public static function factory(NanoApp $app, $controllerName) {
@@ -137,14 +124,8 @@ abstract class Controller {
 	/**
 	 * Set controller's data to be passed to the template or formatted by the Router
 	 */
-	protected function set($key, $val = null) {
-		// key/value array can be provided set more entries
-		if (is_array($key)) {
-			$this->data = array_merge($this->data, $key);
-		}
-		else if (!is_null($val)) {
-			$this->data[$key] = $val;
-		}
+	protected function set($key, $val) {
+		$this->data[$key] = $val;
 	}
 
 	/**
@@ -154,6 +135,46 @@ abstract class Controller {
 	 */
 	public function __set($key , $val) {
 		$this->data[$key] = $val;
+	}
+
+	/**
+	 * Lazy loading of application objects
+	 *
+	 * Get them from NanoApp instance when needed
+	 */
+	public function __get($name) {
+		$methodName = 'get' . ucfirst($name);
+
+		if (method_exists($this->app, $methodName)) {
+			return $this->app->$methodName();
+		}
+		else if (isset($this->data[$name])) {
+			return $this->data[$name];
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Check if given controller data entry exists
+	 */
+	public function __isset($key) {
+		return isset($this->data[$key]);
+	}
+
+	/**
+	 * Remove controller data entry
+	 */
+	public function __unset($key) {
+		unset($this->data[$key]);
+	}
+
+	/**
+	 * Set controller's data to be passed to the template or formatted by the Router
+	 */
+	protected function setData(Array $data) {
+		$this->data = $data;
 	}
 
 	/**
