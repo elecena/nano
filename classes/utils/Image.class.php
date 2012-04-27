@@ -98,7 +98,11 @@ abstract class Image {
 	public function save($filename, $type, $quality = false) {
 		$raw = $this->render($type, $quality);
 
-		return !empty($raw) && file_put_contents($filename, $raw) !== false;
+		if (empty($raw)) {
+			return false;
+		}
+
+		return file_put_contents($filename, $raw);
 	}
 
 	public function getWidth() {
