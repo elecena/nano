@@ -6,36 +6,38 @@
  * $Id$
  */
 
-abstract class Model {
+abstract class Model extends NanoObject {
 
-	// application
-	protected $app;
+	protected $data = array();
 
-	// cache object
-	protected $cache;
-
-	// debug
-	protected $debug;
-
-	// DB connection
-	protected $database;
-
-	// config
-	protected $config;
-
-	// events handler
-	protected $events;
+	function __construct(NanoApp $app) {
+		parent::__construct($app);
+	}
 
 	/**
-	 * Use given application
+	 * Get given data entry
+	 *
+	 * Example: $model->getName() returns $model->data['name']
 	 */
-	function __construct(NanoApp $app) {
-		$this->app = $app;
+	public function __call($name, $parameters) {
+		$res = null;
 
-		$this->cache = $app->getCache();
-		$this->config = $app->getConfig();
-		$this->database = $app->getDatabase();
-		$this->debug = $app->getDebug();
-		$this->events = $app->getEvents();
+		// getXXX()
+		if (substr($name, 0, 3) == 'get') {
+			$entry = strtolower(substr($name, 3));
+
+			if (isset($this->data[$entry])) {
+				$res = $this->data[$entry];
+			}
+		}
+
+		return $res;
+	}
+	
+	/**
+	 * Get model data
+	 */
+	public function getData() {
+		return $this->data;
 	}
 }
