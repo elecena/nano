@@ -54,7 +54,7 @@ class NanoApp {
 		Autoloader::scanDirectory($this->dir. '/classes');
 
 		// events handler
-		$this->events = new Events();
+		$this->events = new Events($this);
 
 		// read configuration
 		$this->config = new Config($this->dir . '/config');

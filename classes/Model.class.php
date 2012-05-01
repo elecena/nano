@@ -33,7 +33,7 @@ abstract class Model extends NanoObject {
 
 		return $res;
 	}
-	
+
 	/**
 	 * Get model data
 	 */

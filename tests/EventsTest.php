@@ -8,8 +8,16 @@
 
 class EventsTest extends PHPUnit_Framework_TestCase {
 
+	private $app;
+
+	public function setUp() {
+		// use test application's directory
+		$dir = realpath(dirname(__FILE__) . '/app');
+		$this->app = Nano::app($dir);
+	}
+
 	public function testOnFire() {
-		$events = new Events();
+		$events = new Events($this->app);
 		$events->bind('event', array($this, 'handlerTrue'));
 
 		$this->assertTrue($events->fire('event'));
@@ -17,7 +25,7 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testOnFireStop() {
-		$events = new Events();
+		$events = new Events($this->app);
 		$events->bind('event', array($this, 'handlerFalse'));
 
 		$this->assertFalse($events->fire('event'));
@@ -26,7 +34,7 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 	public function testOnFirePass() {
 		$value = '0';
 
-		$events = new Events();
+		$events = new Events($this->app);
 		$events->bind('event', array($this, 'handlerTrue'));
 
 		$this->assertTrue($events->fire('event', array(&$value)));
@@ -36,7 +44,7 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 	public function testOnFirePassQueue() {
 		$value = '0';
 
-		$events = new Events();
+		$events = new Events($this->app);
 		$events->bind('event', array($this, 'handlerTrue'));
 		$events->bind('event', array($this, 'handlerFalse'));
 
@@ -47,7 +55,7 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 	public function testOnFirePassStop() {
 		$value = '0';
 
-		$events = new Events();
+		$events = new Events($this->app);
 		$events->bind('event', array($this, 'handlerFalse'));
 		$events->bind('event', array($this, 'handlerTrue'));
 
