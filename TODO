@@ -19,6 +19,7 @@
 * XML sitemap generator
 * RSS feed generator
 * Google Weather API
+* "Google-style" hash generator					[DONE]
 * sessions handling
 * adding meta tags to HTML
 * static pages module (/pages/static)
@@ -28,7 +29,6 @@
 * Wordpress XML-RPC API client
 * server-side GoogleAnalytics tracking
 * cron jobs
-* "Google-style" hash generator
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1474/serialize

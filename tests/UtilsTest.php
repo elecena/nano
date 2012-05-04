@@ -32,4 +32,12 @@ class UtilsTest extends PHPUnit_Framework_TestCase {
 		unlink($pidFile);
 		$this->assertFalse(file_exists($pidFile));
 	}
+
+	public function testBase62Encoding() {
+		$hash = sha1('foobar') . md5('foobar');
+		$value = base_convert($hash, 16, 10);
+
+		$encoded = Utils::baseEncode($value);
+		$this->assertEquals(Utils::baseDecode($encoded), $value);
+	}
 }
