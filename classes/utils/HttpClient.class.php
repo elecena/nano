@@ -30,7 +30,9 @@ class HttpClient {
 	// timeout
 	private $timeout = 15;
 
-	//
+	// for optional debug logging
+	private $app;
+	private $debug;
 
 	/**
 	 * Setup HTTP client
