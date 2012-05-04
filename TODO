@@ -3,7 +3,7 @@
 * templating system								[DONE]
 * output formatter (json, xml, jsonp)			[DONE]
 * database layer								[DONE]
-* database performance reporting
+* database performance reporting				[DONE]
 * message queue layer							[DONE]
 * redis client									[DONE]
 * redis based caching							[DONE]
@@ -18,6 +18,7 @@
 * locks support
 * XML sitemap generator
 * RSS feed generator
+* Google Weather API
 * sessions handling
 * adding meta tags to HTML
 * static pages module (/pages/static)
@@ -27,7 +28,6 @@
 * Wordpress XML-RPC API client
 * server-side GoogleAnalytics tracking
 * cron jobs
-* Google Weather API
 * "Google-style" hash generator
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class

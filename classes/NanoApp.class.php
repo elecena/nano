@@ -96,10 +96,12 @@ class NanoApp {
 	 * Send an event informing that application has finished its work
 	 */
 	public function tearDown() {
-		$this->debug->log('----');
-		$this->debug->log('Script is completed');
+		$this->debug->log();
 
 		$this->events->fire('NanoAppTearDown', array($this));
+
+		$this->debug->log('----');
+		$this->debug->log('Script is completed');
 	}
 
 	/**

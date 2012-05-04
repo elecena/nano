@@ -42,7 +42,6 @@ abstract class Cache {
 	 * Creates an instance of given cache driver
 	 */
 	public static function factory(NanoApp $app, Array $settings) {
-
 		$driver = isset($settings['driver']) ? $settings['driver'] : null;
 		$instance = null;
 
@@ -140,7 +139,6 @@ abstract class Cache {
 	 */
 	public function onNanoAppTearDown(NanoApp $app) {
 		$debug = $app->getDebug();
-		$response = $app->getResponse();
 
 		$debug->log("Cache: {$this->hits} hits and {$this->misses} misses");
 	}

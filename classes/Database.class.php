@@ -36,6 +36,10 @@ abstract class Database {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
 		$this->setName($name);
+
+		// add performance report
+		$events = $app->getEvents();
+		$events->bind('NanoAppTearDown', array($this, 'onNanoAppTearDown'));
 	}
 
 	/**
@@ -438,7 +442,17 @@ abstract class Database {
 	public function getPerformanceData() {
 		return array(
 			'queries' => $this->queries,
-			'time' => $this->queriesTime,
+			'time' => round($this->queriesTime, 4),
 		);
+	}
+
+	/**
+	 * Add performance report to the log
+	 */
+	public function onNanoAppTearDown(NanoApp $app) {
+		$debug = $app->getDebug();
+		$perf = $this->getPerformanceData();
+
+		$debug->log("Database [{$this->name}]: {$perf['queries']} queries in {$perf['time']} s");
 	}
 }
