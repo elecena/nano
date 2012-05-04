@@ -184,6 +184,7 @@ class Router {
 
 				// use provided request and created view when executing controller's method
 				$controller->setRequest($request);
+				$controller->init();
 
 				// call the controller's method and pass provided parameters
 				$ret = call_user_func_array(array($controller, $methodName), $params);

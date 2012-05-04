@@ -75,6 +75,11 @@ abstract class Controller {
 	}
 
 	/**
+	 * This method is called for each controller dispatch
+	 */
+	public function init() {}
+
+	/**
 	 * Use provided request
 	 */
 	public function setRequest(Request $request) {
