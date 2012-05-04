@@ -15,7 +15,7 @@ class HttpClient {
 	const POST = 2;
 	const HEAD = 3;
 
-	// User-Agent wysy³any przy ¿¹daniach
+	// User-Agent
 	private $userAgent;
 
 	// cURL resource
@@ -24,16 +24,24 @@ class HttpClient {
 	// cURL version
 	private $version;
 
-	// pobrane nag³ówki
+	// response headers
 	private $headers = array();
 
 	// timeout
 	private $timeout = 15;
 
+	//
+
 	/**
 	 * Setup HTTP client
 	 */
-	function __construct() {
+	function __construct($app = null) {
+		// use NanoApp if provided
+		if ($app instanceof NanoApp) {
+			$this->app = $app;
+			$this->debug = $app->getDebug();
+		}
+
 		// info o cURLu
 		$info = curl_version();
 		$this->version = $info['version'];
@@ -56,6 +64,12 @@ class HttpClient {
 		));
 	}
 
+	private function log($msg = '') {
+		if (!is_null($this->debug)) {
+			$this->debug->log(__CLASS__ . ': ' . $msg);
+		}
+	}
+
 	/**
 	 * Close a session,free all resources and store cookies in jar file
 	 */
@@ -69,6 +83,8 @@ class HttpClient {
 	public function setProxy($proxy, $type = CURLPROXY_HTTP) {
 		curl_setopt($this->handle, CURLOPT_PROXY, $proxy);
 		curl_setopt($this->handle, CURLOPT_PROXYTYPE, $type);
+
+		$this->log("using proxy {$proxy}");
 	}
 
 	/**
@@ -78,8 +94,10 @@ class HttpClient {
 		$this->userAgent = $userAgent;
 
 		curl_setopt($this->handle, CURLOPT_USERAGENT, $this->userAgent);
+
+		$this->log("using '{$this->userAgent}' as user agent");
 	}
-	
+
 	/**
 	 * Get user agent identification used by HTTP client
 	 */
@@ -115,6 +133,8 @@ class HttpClient {
 			$url .= '?' . http_build_query($query);
 		}
 
+		$this->log("GET {$url}");
+
 		return $this->sendRequest(self::GET, $url);
 	}
 
@@ -127,6 +147,8 @@ class HttpClient {
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, http_build_query($fields));
 		}
 
+		$this->log("POST {$url}");
+
 		return $this->sendRequest(self::POST, $url);
 	}
 
@@ -138,6 +160,8 @@ class HttpClient {
 		if (!empty($query)) {
 			$url .= '?' . http_build_query($query);
 		}
+
+		$this->log("HEAD {$url}");
 
 		return $this->sendRequest(self::HEAD, $url);
 	}
@@ -194,12 +218,17 @@ class HttpClient {
 
 			// set response location (useful for redirects)
 			$response->setLocation($info['url']);
+
+			// debug log
+			$size = round($info['size_download'] / 1024, 2);
+			$transfer = round($info['speed_download'] / 1024, 2);
+			$this->log("HTTP {$info['http_code']} ({$size} kB fetched in {$info['total_time']} s with {$transfer} kB/s)");
 		}
 		else {
 			// return an error
 			$response = false;
 
-			// curl_error($this->handle)
+			$this->log('request failed: ' . curl_error($this->handle));
 		}
 
 		return $response;
