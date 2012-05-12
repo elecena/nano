@@ -16,5 +16,9 @@ class NanoCliApp extends NanoApp {
 
 		// set request
 		$this->request = new Request(array(), array('REQUEST_METHOD' => 'CLI'));
+
+		// run bootstrap file - web application runs bootstrap from app.php
+		$app = $this;
+		require $this->getDirectory() . '/config/bootstrap.php';
 	}
 }
