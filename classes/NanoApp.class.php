@@ -122,13 +122,15 @@ class NanoApp {
 	 */
 	public function factory($className, Array $params = array()) {
 		if (class_exists($className)) {
-			$instance = new $className($this);
-
 			// add NanoApp instance as the first constructor parameter
 			array_unshift($params, $this);
 
-			// @see http://www.php.net/manual/en/function.call-user-func-array.php#91565
-			call_user_func_array(array($instance, '__construct'), $params);
+			// http://www.php.net/manual/en/function.call-user-func-array.php#74427
+			// make a reflection object
+			$reflectionObj = new ReflectionClass($className);
+
+			// use Reflection to create a new instance, using the $args (since PHP 5.1.3)
+			$instance = $reflectionObj->newInstanceArgs($params);
 		}
 		else {
 			$instance = null;
