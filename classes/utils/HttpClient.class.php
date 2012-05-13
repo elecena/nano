@@ -25,7 +25,10 @@ class HttpClient {
 	private $version;
 
 	// response headers
-	private $headers = array();
+	private $respHeaders = array();
+
+	// request headers
+	private $reqHeaders = array();
 
 	// timeout
 	private $timeout = 15;
@@ -105,6 +108,15 @@ class HttpClient {
 	 */
 	public function getUserAgent() {
 		return $this->userAgent;
+	}
+
+	/**
+	 * Set request headers
+	 */
+	public function setRequestHeader($header, $value) {
+		$this->reqHeaders[$header] = $value;
+
+		$this->log("setting '{$header}' request header to '{$value}'");
 	}
 
 	/**
@@ -193,8 +205,12 @@ class HttpClient {
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 
+		// set request headers
+		curl_setopt($this->handle, CURLOPT_HEADER, $this->reqHeaders);
+
 		// cleanup
-		$this->headers = array();
+		$this->reqHeaders = array();
+		$this->respHeaders = array();
 
 		// send request and grab response
 		ob_start();
@@ -213,7 +229,7 @@ class HttpClient {
 			$response->setResponseCode($info['http_code']);
 
 			// set response headers
-			$response->setHeaders($this->headers);
+			$response->setHeaders($this->respHeaders);
 
 			// set response content
 			$response->setContent($content);
@@ -246,7 +262,7 @@ class HttpClient {
 		$parts = explode(': ', trim($raw), 2);
 
 		if (count($parts) == 2) {
-			$this->headers[$parts[0]] = $parts[1];
+			$this->respHeaders[$parts[0]] = $parts[1];
 		}
 
 		return strlen($raw);
