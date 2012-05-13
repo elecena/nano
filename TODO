@@ -16,7 +16,7 @@
 * View class wrapping Controller's response
 * database layer for SQLite
 * locks support
-* XML sitemap generator
+* XML sitemap generator							[DONE]
 * RSS feed generator
 * Google Weather API
 * "Google-style" hash generator					[DONE]

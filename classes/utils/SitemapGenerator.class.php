@@ -10,6 +10,7 @@
 
 class SitemapGenerator {
 
+	const SITEMAP_FILE = 'sitemap.xml';
 	const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9';
 	const URLS_PER_FILE = 30000;
 
@@ -189,7 +190,7 @@ class SitemapGenerator {
 		$this->addSitemap();
 
 		// store sitemap files index
-		$this->saveIndex('sitemap.xml', false /* $gzip */);
+		$this->saveIndex(self::SITEMAP_FILE, false /* $gzip */);
 		return $this->countUrls();
 	}
 
@@ -197,6 +198,12 @@ class SitemapGenerator {
 	 * Notify given search engine about updated sitemap
 	 */
 	public function ping($host) {
-		// TODO
+		$http = $this->app->factory('HttpClient');
+
+		$res = $http->get($host . '/ping', array(
+			'sitemap' => $this->router->formatFullUrl() . self::SITEMAP_FILE
+		));
+
+		return $res->getResponseCode() === 200;
 	}
 }
