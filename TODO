@@ -27,7 +27,7 @@
 * GoogleAnalytics API client
 * Google Shortener client
 * Wordpress XML-RPC API client
-* server-side GoogleAnalytics tracking
+* server-side GoogleAnalytics tracking			[DONE]
 * cron jobs
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class
