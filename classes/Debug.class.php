@@ -114,12 +114,25 @@ class Debug {
 		$msg = trim($msg);
 
 		// line to be added
-		$msgLine = "{$timestamp}: {$msg}\n";
+		$msgLine = "{$timestamp}: {$msg}";
 
 		// log to file
-		file_put_contents($this->getLogFile(), $msgLine, FILE_APPEND | LOCK_EX);
+		self::logToFile($this->getLogFile(), $msgLine, false /* we formatted our own timestamp */);
 
 		return true;
+	}
+
+	/**
+	 * "Statically" log to a given file
+	 */
+	public static function logToFile($file, $msg = '', $addTimestamp = true) {
+		$prefix = ($addTimestamp === true) ? ('[' . date('Y-m-d H:i:s') . '] ') : '';
+
+		// line to be added
+		$msgLine = "{$prefix}{$msg}\n";
+
+		// log to file
+		return file_put_contents($file, $msgLine, FILE_APPEND | LOCK_EX) !== false;
 	}
 
 	/**
