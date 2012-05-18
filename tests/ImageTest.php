@@ -32,7 +32,7 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 
 		// scaling up no permitted
 		$this->assertFalse($img->scale(600, 500));
-		$this->assertFalse($img->scale(578, 406));
+		$this->assertFalse($img->scale(580, 450));
 
 		// scale down
 		$this->assertTrue($img->scale(300, 100));
@@ -47,6 +47,15 @@ class ImageTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('image/jpeg', $img->getMimeType());
 
 		if (self::DEBUG) $img->save('img-scaled.jpg', 'jpeg');
+
+		// scale down to 300x410 bounding box
+		$img = Image::newFromFile($this->file);
+		$this->assertTrue($img->scale(300, 410));
+
+		$this->assertEquals(300, $img->getWidth());
+		$this->assertEquals(210, $img->getHeight());
+
+		if (self::DEBUG) $img->save('img-scaled-bounding.jpg', 'jpeg');
 	}
 
 	public function testCrop() {

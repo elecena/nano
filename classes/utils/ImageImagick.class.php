@@ -26,15 +26,19 @@ class ImageImagick extends Image {
 	}
 
 	/**
-	 * Scale an image to fit given box
+	 * Scale an image to fit given box and keeping proportions
 	 */
 	public function scale($width, $height) {
+		// calculate new dimension
+		// @see http://www.php.net/manual/en/imagick.scaleimage.php#93667
+		$ratio = min($width / $this->width, $height / $this->height);
+
 		// don't scale up
-		if ($width >= $this->width || $height >= $this->height) {
+		if ($ratio > 1) {
 			return false;
 		}
 
-		$res = $this->img->scaleImage($width, $height, true /* $bestfit */);
+		$res = $this->img->scaleImage($this->width * $ratio, $this->height * $ratio, false /* exact scaling */);
 
 		if ($res !== true) {
 			return false;
