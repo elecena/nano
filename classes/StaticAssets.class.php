@@ -68,8 +68,12 @@ class StaticAssets {
 	/**
 	 * Creates an instance of given static assets processor
 	 */
-	public static function factory(NanoApp $app, $driver) {
-		return Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($app));
+	public function getProcessor($assetType) {
+		// use the default one
+		$driver = $assetType;
+
+		$instance = Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($this->app));
+		return $instance;
 	}
 
 	/**
@@ -270,11 +274,11 @@ class StaticAssets {
 		// process file content
 		switch($ext) {
 			case 'css':
-				$content = self::factory($this->app, 'css')->process($localPath);
+				$content = $this->getProcessor('css')->process($localPath);
 				break;
 
 			case 'js':
-				$content = self::factory($this->app, 'js')->process($localPath);
+				$content = $this->getProcessor('js')->process($localPath);
 				break;
 
 			// return file's content (images)

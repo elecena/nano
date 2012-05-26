@@ -36,13 +36,13 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		return $this->app->factory('StaticAssets');
 	}
 
-	public function testFactory() {
+	public function testGetProcessor() {
 		$static = $this->getStaticAssets();
 		$this->assertInstanceOf('StaticAssets', $static);
 
 		// processors
-		$this->assertInstanceOf('StaticAssetsCss', StaticAssets::factory($this->app, 'css'));
-		$this->assertInstanceOf('StaticAssetsJs', StaticAssets::factory($this->app, 'js'));
+		$this->assertInstanceOf('StaticAssetsCss', $static->getProcessor('css'));
+		$this->assertInstanceOf('StaticAssetsJs', $static->getProcessor('js'));
 	}
 
 	public function testServeTypeCheck() {
@@ -170,7 +170,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCssMinify() {
-		$processor = StaticAssets::factory($this->app, 'css');
+		$static = $this->getStaticAssets();
+		$processor = $static->getProcessor('css');
 
 		// original CSS => minifiied
 		$css = array(
@@ -196,7 +197,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testImageEncoding() {
 		$dir = $this->app->getDirectory() . '/statics';
-		$processor = StaticAssets::factory($this->app, 'css');
+		$static = $this->getStaticAssets();
+		$processor = $static->getProcessor('css');
 
 		// encode existing image
 		$this->assertContains('data:image/png;base64,', $processor->encodeImage($dir . '/rss.png'));
@@ -216,7 +218,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testCssInclude() {
 		$dir = $this->app->getDirectory() . '/statics';
-		$processor = StaticAssets::factory($this->app, 'css');
+		$static = $this->getStaticAssets();
+		$processor = $static->getProcessor('css');
 
 		// include reset.css file
 		$out = $processor->process($dir . '/blank.css');
@@ -226,7 +229,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testJsMinify() {
 		$dir = $this->app->getDirectory() . '/statics';
-		$processor = StaticAssets::factory($this->app, 'js');
+		$static = $this->getStaticAssets();
+		$processor = $static->getProcessor('js');
 
 		// min.js file should not be touched
 		$this->assertEquals(file_get_contents($dir . '/head.load.min.js'), $processor->process($dir . '/head.load.min.js'));
