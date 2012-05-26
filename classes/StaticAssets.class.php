@@ -14,6 +14,7 @@ class StaticAssets {
 	const PACKAGE_URL_PREFIX = '/package/';
 
 	private $app;
+	private $debug;
 	private $router;
 
 	// application's root directory
@@ -48,6 +49,7 @@ class StaticAssets {
 	public function __construct(NanoApp $app) {
 		$this->app = $app;
 
+		$this->debug = $this->app->getDebug();
 		$this->router = $this->app->getRouter();
 		$this->localRoot = $this->app->getDirectory();
 
@@ -66,8 +68,8 @@ class StaticAssets {
 	/**
 	 * Creates an instance of given static assets processor
 	 */
-	public static function factory($driver) {
-		return Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets');
+	public static function factory(NanoApp $app, $driver) {
+		return Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($app));
 	}
 
 	/**
@@ -131,6 +133,17 @@ class StaticAssets {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Remove prepended cache buster part from request path
+	 */
+	private function preprocessRequestPath($path) {
+		if (strpos($path, '/r') === 0) {
+			$path = preg_replace('#^/r\d+#', '', $path);
+		}
+
+		return $path;
 	}
 
 	/**
@@ -201,6 +214,8 @@ class StaticAssets {
 		// remove cache buster from request path
 		$requestPath = $this->preprocessRequestPath($request->getPath());
 
+		$this->debug->log("Serving static asset - {$requestPath}");
+
 		// check for package URL
 		$packageName = $this->getPackageName($requestPath);
 
@@ -250,20 +265,25 @@ class StaticAssets {
 			return false;
 		}
 
+		$this->debug->time('asset');
+
 		// process file content
 		switch($ext) {
 			case 'css':
-				$content = self::factory('css')->process($localPath);
+				$content = self::factory($this->app, 'css')->process($localPath);
 				break;
 
 			case 'js':
-				$content = self::factory('js')->process($localPath);
+				$content = self::factory($this->app, 'js')->process($localPath);
 				break;
 
 			// return file's content (images)
 			default:
 				$content = file_get_contents($localPath);
 		}
+
+		$time = $this->debug->timeEnd('asset');
+		$this->debug->log("Asset {$requestPath} processed in {$time} s");
 
 		return $content;
 	}
@@ -274,9 +294,17 @@ class StaticAssets {
 	private function servePackage($packageName, $ext) {
 		$packageType = $this->getPackageType($packageName);
 
-		if ($packageType !== $ext) {
+		if ($packageType === false) {
+			$this->debug->log("Package doesn't exist");
 			return false;
 		}
+
+		if ($packageType !== $ext) {
+			$this->debug->log("Package type doesn't match extension in the request");
+			return false;
+		}
+
+		$this->debug->log("Serving assets package - {$packageName}");
 
 		$packageFiles = $this->getPackageItems($packageName);
 
@@ -293,22 +321,17 @@ class StaticAssets {
 
 		return ($content != '') ? $content : false;
 	}
-
-	/**
-	 * Remove prepended cache buster part from request path
-	 */
-	private function preprocessRequestPath($path) {
-		if (strpos($path, '/r') === 0) {
-			$path = preg_replace('#^/r\d+#', '', $path);
-		}
-
-		return $path;
-	}
 }
 
 /**
- * Common interface for Static assets processors
+ * Common class for Static assets processors
  */
-interface IStaticAssetsProcessor {
-	public function process($file);
+abstract class StaticAssetsProcessor {
+	private $app;
+
+	public function __construct(NanoApp $app) {
+		$this->app = $app;
+	}
+
+	abstract public function process($file);
 }

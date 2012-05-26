@@ -20,3 +20,5 @@ $assets = $app->factory('StaticAssets');
 $assets->serve($request);
 
 echo $response->render();
+
+$app->tearDown();

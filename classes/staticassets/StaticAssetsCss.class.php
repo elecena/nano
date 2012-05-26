@@ -6,7 +6,7 @@
  * $Id$
  */
 
-class StaticAssetsCss implements IStaticAssetsProcessor {
+class StaticAssetsCss extends StaticAssetsProcessor {
 
 	// embed images smaller then (size in bytes)
 	const IMAGE_EMBED_THRESHOLD = 2048;

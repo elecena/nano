@@ -41,8 +41,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('StaticAssets', $static);
 
 		// processors
-		$this->assertInstanceOf('StaticAssetsCss', StaticAssets::factory('css'));
-		$this->assertInstanceOf('StaticAssetsJs', StaticAssets::factory('js'));
+		$this->assertInstanceOf('StaticAssetsCss', StaticAssets::factory($this->app, 'css'));
+		$this->assertInstanceOf('StaticAssetsJs', StaticAssets::factory($this->app, 'js'));
 	}
 
 	public function testServeTypeCheck() {
@@ -170,7 +170,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCssMinify() {
-		$processor = StaticAssets::factory('css');
+		$processor = StaticAssets::factory($this->app, 'css');
 
 		// original CSS => minifiied
 		$css = array(
@@ -196,7 +196,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testImageEncoding() {
 		$dir = $this->app->getDirectory() . '/statics';
-		$processor = StaticAssets::factory('css');
+		$processor = StaticAssets::factory($this->app, 'css');
 
 		// encode existing image
 		$this->assertContains('data:image/png;base64,', $processor->encodeImage($dir . '/rss.png'));
@@ -216,7 +216,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testCssInclude() {
 		$dir = $this->app->getDirectory() . '/statics';
-		$processor = StaticAssets::factory('css');
+		$processor = StaticAssets::factory($this->app, 'css');
 
 		// include reset.css file
 		$out = $processor->process($dir . '/blank.css');
@@ -226,7 +226,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	public function testJsMinify() {
 		$dir = $this->app->getDirectory() . '/statics';
-		$processor = StaticAssets::factory('js');
+		$processor = StaticAssets::factory($this->app, 'js');
 
 		// min.js file should not be touched
 		$this->assertEquals(file_get_contents($dir . '/head.load.min.js'), $processor->process($dir . '/head.load.min.js'));

@@ -8,7 +8,7 @@
  * $Id$
  */
 
-class StaticAssetsJs implements IStaticAssetsProcessor {
+class StaticAssetsJs extends StaticAssetsProcessor {
 
 	/**
 	 * Process given JS file
