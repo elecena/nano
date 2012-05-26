@@ -53,9 +53,10 @@ class Autoloader {
 	/**
 	 * Factory helper
 	 *
-	 * Creates an instance of given class based on common prefix, class name and path to source files
+	 * Creates an instance of given class based on common prefix, class name and path to source files.
+	 * Additional params can be provided for class constructor.
 	 */
-	static public function factory($prefix, $name, $directory) {
+	static public function factory($prefix, $name, $directory, Array $params = array()) {
 		$className = $prefix . ucfirst(strtolower($name));
 		$srcFile = $directory . '/' . $className . '.class.php';
 
@@ -65,6 +66,16 @@ class Autoloader {
 		}
 
 		// try to create class instance
-		return class_exists($className) ? new $className() : null;
+		if (!class_exists($className)) {
+			return null;
+		}
+
+		// http://www.php.net/manual/en/function.call-user-func-array.php#74427
+		// make a reflection object
+		$reflectionObj = new ReflectionClass($className);
+
+		// use Reflection to create a new instance, using the $args (since PHP 5.1.3)
+		$instance = $reflectionObj->newInstanceArgs($params);
+		return $instance;
 	}
 }
