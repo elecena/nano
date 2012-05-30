@@ -188,7 +188,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		foreach($css as $in => $out) {
 			file_put_contents($file, $in);
-			$this->assertEquals($out, $processor->process($file));
+			$this->assertEquals($out, $processor->processFiles(array($file)));
 		}
 
 		// clean up
@@ -210,10 +210,10 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		// blank.gif embedding
 		$this->assertEquals('data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==', $processor->encodeImage($dir . '/blank.gif'));
-		$this->assertContains('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->process($dir . '/blank.css'));
+		$this->assertContains('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->processFiles(array($dir . '/blank.css')));
 
 		// big files should not be encoded
-		$this->assertContains('.foo{background-image:url(php-logo.jpg)}', $processor->process($dir . '/php-logo.css'));
+		$this->assertContains('.foo{background-image:url(php-logo.jpg)}', $processor->processFiles(array($dir . '/php-logo.css')));
 	}
 
 	public function testCssInclude() {
@@ -222,7 +222,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$processor = $static->getProcessor('css');
 
 		// include reset.css file
-		$out = $processor->process($dir . '/blank.css');
+		$out = $processor->processFiles(array($dir . '/blank.css'));
 		$this->assertNotContains('@import', $out);
 		$this->assertContains('html,body,h1,h2,h3,h4,h5,h6', $out);
 	}
@@ -233,10 +233,10 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$processor = $static->getProcessor('js');
 
 		// min.js file should not be touched
-		$this->assertEquals(file_get_contents($dir . '/head.load.min.js'), $processor->process($dir . '/head.load.min.js'));
+		$this->assertEquals(file_get_contents($dir . '/head.load.min.js'), $processor->processFiles(array($dir . '/head.load.min.js')));
 
 		// minify simple script
-		$this->assertEquals('jQuery.fn.foo=function(bar){return this.attr(bar)}', $processor->process($dir . '/jquery.foo.js'));
+		$this->assertEquals('jQuery.fn.foo=function(bar){return this.attr(bar)}', $processor->processFiles(array($dir . '/jquery.foo.js')));
 	}
 
 	public function testGetPackageType() {
@@ -267,7 +267,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$response = $this->app->getResponse();
 
 		$this->assertTrue($static->serve($request));
-		$this->assertContains('The only script in your <HEAD>', $response->getContent());
+		$this->assertContains('"head"', $response->getContent());
 		$this->assertContains('jQuery.fn.foo=function(bar){return this.attr(bar)}', $response->getContent());
 	}
 }

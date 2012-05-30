@@ -224,6 +224,8 @@ class StaticAssets {
 		$packageName = $this->getPackageName($requestPath);
 
 		// serve package or a single file
+		$this->debug->time('asset');
+
 		if ($packageName !== false) {
 			$content = $this->servePackage($packageName, $ext);
 		}
@@ -236,6 +238,10 @@ class StaticAssets {
 			$response->setResponseCode(Response::NOT_FOUND);
 			return false;
 		}
+
+		// benchmark
+		$time = $this->debug->timeEnd('asset');
+		$this->debug->log("Request {$requestPath} processed in {$time} s");
 
 		// set headers and response's content
 		$response->setResponseCode(Response::OK);
@@ -269,25 +275,22 @@ class StaticAssets {
 			return false;
 		}
 
-		$this->debug->time('asset');
-
 		// process file content
+		$files = array($localPath);
+
 		switch($ext) {
 			case 'css':
-				$content = $this->getProcessor('css')->process($localPath);
+				$content = $this->getProcessor('css')->processFiles($files);
 				break;
 
 			case 'js':
-				$content = $this->getProcessor('js')->process($localPath);
+				$content = $this->getProcessor('js')->processFiles($files);
 				break;
 
 			// return file's content (images)
 			default:
 				$content = file_get_contents($localPath);
 		}
-
-		$time = $this->debug->timeEnd('asset');
-		$this->debug->log("Asset {$requestPath} processed in {$time} s");
 
 		return $content;
 	}
@@ -308,20 +311,26 @@ class StaticAssets {
 			return false;
 		}
 
+		if (!in_array($packageType, array('css', 'js'))) {
+			$this->debug->log("Package can only be JS or CSS package");
+			return false;
+		}
+
 		$this->debug->log("Serving assets package - {$packageName}");
 
+		// make local paths to package files
 		$packageFiles = $this->getPackageItems($packageName);
 
-		// generate concatenated response
-		$content = '';
-
+		$files = array();
 		foreach($packageFiles as $file) {
-			$processedFile = $this->serveSingleAsset($file, $packageType);
+			$this->debug->log("> {$file}");
 
-			if ($processedFile !== false) {
-				$content .= $processedFile;
-			}
+			$files[] = $this->getLocalPath($file);
 		}
+
+		// process the whole package
+		$processor = $this->getProcessor($packageType);
+		$content = $processor->processFiles($files);
 
 		return ($content != '') ? $content : false;
 	}
@@ -337,5 +346,5 @@ abstract class StaticAssetsProcessor {
 		$this->app = $app;
 	}
 
-	abstract public function process($file);
+	abstract public function processFiles(Array $files);
 }

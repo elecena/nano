@@ -13,10 +13,20 @@ class StaticAssetsCss extends StaticAssetsProcessor {
 
 	private $currentDir;
 
+	public function processFiles(Array $files) {
+		$content = '';
+
+		foreach($files as $file) {
+			$content .= $this->processFile($file);
+		}
+
+		return $content;
+	}
+
 	/**
 	 * Process given CSS file
 	 */
-	public function process($file) {
+	private function processFile($file) {
 		$content = file_get_contents($file);
 
 		// used for images / CSS embedding

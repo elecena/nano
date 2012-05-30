@@ -11,10 +11,14 @@
 class StaticAssetsJs extends StaticAssetsProcessor {
 
 	/**
-	 * Process given JS file
+	 * Process given JS files
 	 */
-	public function process($file) {
-		$content = file_get_contents($file);
+	public function processFiles(Array $files) {
+		$content = '';
+
+		foreach($files as $file) {
+			$content .= file_get_contents($file);
+		}
 
 		// don't minify already minified files
 		if (strpos($file, '.min.js') === false) {
