@@ -122,6 +122,40 @@ class StaticAssets {
 	}
 
 	/**
+	 * Resolve given packages dependencies
+	 *
+	 * Returns ordered list of modules to be loaded to satisfy dependencies (including modules that defined these dependencies)
+	 *
+	 * Dependencies are returned before provided packages to maintain correct loading order
+	 */
+	public function resolveDependencies(Array $packages) {
+		$ret = $packages;
+
+		foreach($packages as $packageName) {
+			// package not found - return an error
+			if (!isset($this->packages[$packageName])) {
+				return false;
+			}
+
+			$packageData = $this->packages[$packageName];
+
+			if (isset($packageData['deps'])) {
+				foreach((array)$packageData['deps'] as $dep) {
+					$deps = $this->resolveDependencies((array)$dep);
+
+					// add dependencies to the returned value
+					$ret = array_merge($deps, $ret);
+				}
+			}
+		}
+
+		// make array contains unique values and fix indexing
+		$ret = array_values(array_unique($ret));
+
+		return $ret;
+	}
+
+	/**
 	 * Get package name from given path
 	 */
 	public function getPackageName($path) {

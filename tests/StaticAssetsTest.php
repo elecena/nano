@@ -71,6 +71,62 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	public function testResolveDependencies() {
+		// fake packages config
+		$packages = array(
+			'core' => array(
+				// no dependencies
+			),
+			'libFoo' => array(
+				'deps' => 'core',
+			),
+			'libBar' => array(
+				'deps' => 'libFoo',
+			),
+			'libTest' => array(
+				'deps' => array('libBar', 'libFoo')
+			)
+		);
+		$this->app->getConfig()->set('assets.packages', $packages);
+
+		$static = $this->getStaticAssets();
+
+		// fake package dependency
+		$this->assertFalse($static->resolveDependencies(array('fake')));
+
+		// single package dependencies
+		$this->assertEquals(
+			array('core'),
+			$static->resolveDependencies(array('core'))
+		);
+		$this->assertEquals(
+			array('core', 'libFoo'),
+			$static->resolveDependencies(array('libFoo'))
+		);
+		$this->assertEquals(
+			array('core', 'libFoo'),
+			$static->resolveDependencies(array('libFoo'))
+		);
+		$this->assertEquals(
+			array('core', 'libFoo', 'libBar', 'libTest'),
+			$static->resolveDependencies(array('libTest'))
+		);
+
+		// multiple packages dependencies
+		$this->assertEquals(
+			array('core', 'libFoo', 'libBar'),
+			$static->resolveDependencies(array('libFoo', 'libBar'))
+		);
+		$this->assertEquals(
+			array('core', 'libFoo', 'libBar'),  // keep the order of dependencies
+			$static->resolveDependencies(array('libBar', 'libFoo'))
+		);
+		$this->assertEquals(
+			array('core', 'libFoo', 'libBar', 'libTest'),
+			$static->resolveDependencies(array('libBar', 'libFoo', 'libTest'))
+		);
+	}
+
 	public function testNotFoundAsset() {
 		$assets = array(
 			// existing file (and with cache buster)
