@@ -6,13 +6,11 @@ $config['debug'] = array(
 );
 
 $config['assets.packages'] = array(
-	'js' => array(
-		'app' => array(
-			'/statics/head.js',
-		),
+	'app' => array(
+		'js' => '/statics/head.js',
 	),
-	'css' => array(
-		'styles' => array(
+	'styles' => array(
+		'css' => array(
 			'/statics/reset.css',
 		),
 	),

@@ -17,16 +17,16 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 		// register a package
 		$this->app->getConfig()->set('assets.packages', array(
-			'js' => array(
-				'app' => array(
+			'core' => array(
+				'js' => array(
+					#'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
 					'/statics/head.load.min.js',
-					'/statics/jquery.foo.js',
 				),
 			),
-			'css' => array(
-				'styles' => array(
-					'/statics/reset.css',
-				),
+			'foo' => array(
+				'js' => '/statics/jquery.foo.js',
+				'css' => '/statics/reset.css',
+				'deps' => 'core',
 			),
 		));
 	}
@@ -57,8 +57,8 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 			'/statics/blank.gif' => true,
 			'/statics/rss.png' => true,
 			// package
-			'/package/app.js' => true,
-			'/package/styles.css' => true,
+			'/package/core.js' => true,
+			'/package/foo.css' => true,
 		);
 
 		foreach($assets as $asset => $expected) {
@@ -183,9 +183,11 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($static->getCDNPath());
 
 		$this->assertEquals("/site/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
-		$this->assertEquals("/site/r{$cb}/package/app.js", $static->getUrlForPackage('app'));
-		$this->assertEquals("/site/r{$cb}/package/styles.css", $static->getUrlForPackage('styles'));
-		$this->assertFalse($static->getUrlForPackage('notExisting'));
+		$this->assertEquals("/site/r{$cb}/package/core.js", $static->getUrlForPackage('core', 'js'));
+		$this->assertEquals("/site/r{$cb}/package/foo.css", $static->getUrlForPackage('foo', 'css'));
+		$this->assertFalse($static->getUrlForPackage('notExisting', 'css'));
+
+		$this->assertEquals("/site/r{$cb}/package/core,lib.js", $static->getUrlForPackages(array('core', 'lib'), 'js'));
 
 		// cache buster appended
 		$this->app->getConfig()->set('assets.prependCacheBuster', false);
@@ -194,9 +196,10 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$cb = $static->getCacheBuster();
 
 		$this->assertEquals("/site/statics/jquery.foo.js?r={$cb}", $static->getUrlForAsset('/statics/jquery.foo.js'));
-		$this->assertEquals("/site/package/app.js?r={$cb}", $static->getUrlForPackage('app'));
-		$this->assertEquals("/site/package/styles.css?r={$cb}", $static->getUrlForPackage('styles'));
-		$this->assertFalse($static->getUrlForPackage('notExisting'));
+		$this->assertEquals("/site/package/core.js?r={$cb}", $static->getUrlForPackage('core', 'js'));
+		$this->assertEquals("/site/package/foo.css?r={$cb}", $static->getUrlForPackage('foo', 'css'));
+		$this->assertFalse($static->getUrlForPackage('notExisting', 'css'));
+		$this->assertEquals("/site/package/core,lib.js?r={$cb}", $static->getUrlForPackages(array('core', 'lib'), 'js'));
 	}
 
 	public function testGetUrlForAssetAndPackageWithCDN() {
@@ -209,9 +212,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($cdnPath, $static->getCDNPath());
 
 		$this->assertEquals("{$cdnPath}/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
-		$this->assertEquals("{$cdnPath}/r{$cb}/package/app.js", $static->getUrlForPackage('app'));
-		$this->assertEquals("{$cdnPath}/r{$cb}/package/styles.css", $static->getUrlForPackage('styles'));
-		$this->assertFalse($static->getUrlForPackage('notExisting'));
+		$this->assertEquals("{$cdnPath}/r{$cb}/package/core.js", $static->getUrlForPackage('core', 'js'));
+		$this->assertEquals("{$cdnPath}/r{$cb}/package/foo.css", $static->getUrlForPackage('foo', 'css'));
+		$this->assertFalse($static->getUrlForPackage('notExisting', 'css'));
 
 		// cache buster appended
 		$this->app->getConfig()->set('assets.prependCacheBuster', false);
@@ -220,9 +223,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$cb = $static->getCacheBuster();
 
 		$this->assertEquals("{$cdnPath}/statics/jquery.foo.js?r={$cb}", $static->getUrlForAsset('/statics/jquery.foo.js'));
-		$this->assertEquals("{$cdnPath}/package/app.js?r={$cb}", $static->getUrlForPackage('app'));
-		$this->assertEquals("{$cdnPath}/package/styles.css?r={$cb}", $static->getUrlForPackage('styles'));
-		$this->assertFalse($static->getUrlForPackage('notExisting'));
+		$this->assertEquals("{$cdnPath}/package/core.js?r={$cb}", $static->getUrlForPackage('core', 'js'));
+		$this->assertEquals("{$cdnPath}/package/foo.css?r={$cb}", $static->getUrlForPackage('foo', 'css'));
+		$this->assertFalse($static->getUrlForPackage('notExisting', 'css'));
 	}
 
 	public function testCssMinify() {
@@ -295,13 +298,6 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('jQuery.fn.foo=function(bar){return this.attr(bar)}', $processor->processFiles(array($dir . '/jquery.foo.js')));
 	}
 
-	public function testGetPackageType() {
-		$static = $this->getStaticAssets();
-
-		$this->assertEquals('js', $static->getPackageType('app'));
-		$this->assertEquals('css', $static->getPackageType('styles'));
-	}
-
 	public function testGetPackageName() {
 		$static = $this->getStaticAssets();
 		$prefix = StaticAssets::PACKAGE_URL_PREFIX;
@@ -315,11 +311,11 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($static->getPackageName('/statics/head.load.min.js'));
 	}
 
-	public function testServePackage() {
+	public function testServePackages() {
 		$static = $this->getStaticAssets();
 		$prefix = StaticAssets::PACKAGE_URL_PREFIX;
 
-		$request = Request::newFromPath($prefix . 'app.js');
+		$request = Request::newFromPath($prefix . 'core,foo.js');
 		$response = $this->app->getResponse();
 
 		$this->assertTrue($static->serve($request));

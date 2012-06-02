@@ -12,6 +12,10 @@
 class StaticAssets {
 
 	const PACKAGE_URL_PREFIX = '/package/';
+	const PACKAGES_SEPARATOR = ',';
+
+	const PACKAGE_JS = 'js';
+	const PACKAGE_CSS = 'css';
 
 	private $app;
 	private $debug;
@@ -59,10 +63,7 @@ class StaticAssets {
 		$this->cb = intval($config->get('assets.cb', 1));
 		$this->cdnPath = $config->get('assets.cdnPath', false);
 		$this->prependCacheBuster = $config->get('assets.prependCacheBuster', true) === true;
-		$this->packages = $config->get('assets.packages', array(
-			'css' => array(),
-			'js' => array()
-		));
+		$this->packages = $config->get('assets.packages', array());
 	}
 
 	/**
@@ -91,34 +92,29 @@ class StaticAssets {
 	}
 
 	/**
-	 * Get type of given package
+	 * Returns whether given package exists
 	 */
-	public function getPackageType($packageName) {
-		if (isset($this->packages['css'][$packageName])) {
-			return 'css';
-		}
-		else if (isset($this->packages['js'][$packageName])) {
-			return 'js';
-		}
-		else {
-			return false;
-		}
+	public function packageExists($packageName) {
+		return isset($this->packages[$packageName]);
 	}
 
 	/**
-	 * Get list of file from the given package
-	 *
-	 * TODO: support packages in packages
+	 * Get list of assets of given type from given packages
 	 */
-	private function getPackageItems($packageName) {
-		$packageType = $this->getPackageType($packageName);
+	private function getPackagesItems(Array $packagesNames, $type) {
+		$assets = array();
 
-		if (!empty($this->packages[$packageType][$packageName])) {
-			return $this->packages[$packageType][$packageName];
+		foreach($packagesNames as $package) {
+			if (!$this->packageExists($package)) {
+				return false;
+			}
+
+			if (isset($this->packages[$package][$type])) {
+				$assets = array_merge($assets, (array) $this->packages[$package][$type]);
+			}
 		}
-		else {
-			return false;
-		}
+
+		return $assets;
 	}
 
 	/**
@@ -133,7 +129,7 @@ class StaticAssets {
 
 		foreach($packages as $packageName) {
 			// package not found - return an error
-			if (!isset($this->packages[$packageName])) {
+			if (!$this->packageExists($packageName)) {
 				return false;
 			}
 
@@ -221,15 +217,17 @@ class StaticAssets {
 	}
 
 	/**
-	 * Get full URL to given assets package (include cache buster value)
+	 * Get full URL to given single package (include cache buster value)
 	 */
-	public function getUrlForPackage($package) {
-		// detect package type
-		$type = $this->getPackageType($package);
+	public function getUrlForPackage($package, $type) {
+		return $this->packageExists($package) ? $this->getUrlForPackages(array($package), $type) : false;
+	}
 
-		if ($type === false) {
-			return false;
-		}
+	/**
+	 * Get full URL to given assets packages (include cache buster value)
+	 */
+	public function getUrlForPackages(Array $packages, $type) {
+		$package = implode(self::PACKAGES_SEPARATOR, $packages);
 
 		return $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
 	}
@@ -330,30 +328,28 @@ class StaticAssets {
 	}
 
 	/**
-	 * Serve package of static assets
+	 * Serve package(s) of static assets
 	 */
-	private function servePackage($packageName, $ext) {
-		$packageType = $this->getPackageType($packageName);
-
-		if ($packageType === false) {
-			$this->debug->log("Package doesn't exist");
-			return false;
-		}
-
-		if ($packageType !== $ext) {
-			$this->debug->log("Package type doesn't match extension in the request");
-			return false;
-		}
-
-		if (!in_array($packageType, array('css', 'js'))) {
+	private function servePackage($package, $ext) {
+		if (!in_array($ext, array(self::PACKAGE_CSS, self::PACKAGE_JS))) {
 			$this->debug->log("Package can only be JS or CSS package");
 			return false;
 		}
 
-		$this->debug->log("Serving assets package - {$packageName}");
+		// get assets of given type ($ext) to serve
+		$packages = array_unique( explode(self::PACKAGES_SEPARATOR, $package) );
+		$assets = $this->getPackagesItems($packages, $ext);
+
+		// no assets to serve or given package doesn't exist
+		if (empty($assets)) {
+			$this->debug->log("Packages don't exist or are empty");
+			return false;
+		}
+
+		$this->debug->log('Serving assets package(s) - ' . implode(', ', $packages));
 
 		// make local paths to package files
-		$packageFiles = $this->getPackageItems($packageName);
+		$packageFiles = $this->getPackagesItems($packages, $ext);
 
 		$files = array();
 		foreach($packageFiles as $file) {
@@ -363,7 +359,7 @@ class StaticAssets {
 		}
 
 		// process the whole package
-		$processor = $this->getProcessor($packageType);
+		$processor = $this->getProcessor($ext);
 		$content = $processor->processFiles($files);
 
 		return ($content != '') ? $content : false;
