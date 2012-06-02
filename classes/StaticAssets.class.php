@@ -118,6 +118,21 @@ class StaticAssets {
 	}
 
 	/**
+	 * Remove packages with no assets of a given type
+	 */
+	public function filterOutEmptyPackages(Array $packages, $type) {
+		$ret = array();
+
+		foreach($packages as $package) {
+			if ($this->packageExists($package) && isset($this->packages[$package][$type])) {
+				$ret[] = $package;
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * Resolve given packages dependencies
 	 *
 	 * Returns ordered list of modules to be loaded to satisfy dependencies (including modules that defined these dependencies)
@@ -227,9 +242,17 @@ class StaticAssets {
 	 * Get full URL to given assets packages (include cache buster value)
 	 */
 	public function getUrlForPackages(Array $packages, $type) {
-		$package = implode(self::PACKAGES_SEPARATOR, $packages);
+		// remove packages with no assets of a given type
+		$packages = $this->filterOutEmptyPackages($packages, $type);
 
-		return $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
+		$ret = false;
+
+		if (!empty($packages)) {
+			$package = implode(self::PACKAGES_SEPARATOR, $packages);
+			$ret = $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
+		}
+
+		return $ret;
 	}
 
 	/**
