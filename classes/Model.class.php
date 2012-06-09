@@ -10,10 +10,6 @@ abstract class Model extends NanoObject {
 
 	protected $data = array();
 
-	function __construct(NanoApp $app) {
-		parent::__construct($app);
-	}
-
 	/**
 	 * Get given data entry
 	 *

@@ -15,3 +15,6 @@ require_once 'nano.php';
 Nano::init();
 
 $app = Nano::app(dirname(__FILE__));
+
+// run bootstrap file
+require $app->getDirectory() . '/config/bootstrap.php';
