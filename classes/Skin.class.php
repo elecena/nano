@@ -12,6 +12,7 @@ abstract class Skin {
 
 	protected $app;
 	protected $skinName;
+	protected $skinDirectory;
 
 	// static assets handler
 	protected $staticAssets;
@@ -55,11 +56,11 @@ abstract class Skin {
 		$this->app = $app;
 		$this->skinName = $skinName;
 
-		$skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
+		$this->skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
 
 		// setup objects
 		$this->staticAssets = $this->app->factory('StaticAssets');
-		$this->template = new Template($skinDirectory . '/templates');
+		$this->template = new Template($this->skinDirectory . '/templates');
 	}
 
 	/**
@@ -140,6 +141,7 @@ abstract class Skin {
 			'staticAssets' => $this->staticAssets,
 
 			// additional data
+			'skinPath' => $this->staticAssets->getUrlForFile($this->skinDirectory),
 			'pageTitle' => $this->pageTitle,
 			'renderTime' => $this->app->getResponse()->getResponseTime(),
 		);
