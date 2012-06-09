@@ -125,7 +125,7 @@ abstract class Skin {
 	 * Add a given assets package (and its dependencies)
 	 */
 	function addPackages(Array $packages) {
-		$this->packages = array_merge($this->packages. $packages);
+		$this->packages += $packages;
 	}
 
 	/**
@@ -137,11 +137,37 @@ abstract class Skin {
 			'app' => $this->app,
 			'router' => $this->app->getRouter(),
 			'skin' => $this,
+			'staticAssets' => $this->staticAssets,
 
 			// additional data
 			'pageTitle' => $this->pageTitle,
 			'renderTime' => $this->app->getResponse()->getResponseTime(),
 		);
+	}
+
+	/**
+	 * Renders set of <link> elements to be used to include CSS files
+	 * requested via $skin->addPackage and $skin->addAsset
+	 */
+	function renderCssInclude($sep = "\n") {
+		$urls = array();
+
+		// packages
+		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'css');
+
+		// single assets
+		// TODO
+
+		// render <link> elements
+		$elements = array();
+
+		foreach($urls as $url) {
+			if ($url !== false) {
+				$elements[] = '<link href="' . $url . '" rel="stylesheet" />';
+			}
+		}
+
+		return implode($sep, $elements);
 	}
 
 	/**

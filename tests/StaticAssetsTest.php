@@ -193,7 +193,6 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 			$this->assertEquals($local, $static->getLocalPath($path));
 		}
 	}
-
 	public function testGetUrlForAssetAndPackage() {
 		// cache buster prepended (default behaviour)
 		$static = $this->getStaticAssets();
@@ -219,6 +218,18 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("/site/package/foo.css?r={$cb}", $static->getUrlForPackage('foo', 'css'));
 		$this->assertFalse($static->getUrlForPackage('notExisting', 'css'));
 		$this->assertEquals("/site/package/core,foo.js?r={$cb}", $static->getUrlForPackages(array('core', 'foo'), 'js'));
+	}
+
+	public function testGetUrlForFile() {
+		// cache buster prepended (default behaviour)
+		$static = $this->getStaticAssets();
+		$cb = $static->getCacheBuster();
+
+		$root = $this->app->getDirectory();
+
+		$this->assertFalse($static->getCDNPath());
+
+		$this->assertEquals("/site/r{$cb}/statics/head.js", $static->getUrlForFile($root . '/statics/head.js'));
 	}
 
 	public function testGetUrlForAssetAndPackageWithCDN() {
@@ -293,7 +304,7 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		$this->assertContains('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->processFiles(array($dir . '/blank.css')));
 
 		// big files should not be encoded
-		$this->assertContains('.foo{background-image:url(php-logo.jpg)}', $processor->processFiles(array($dir . '/php-logo.css')));
+		$this->assertContains('php-logo.jpg', $processor->processFiles(array($dir . '/php-logo.css')));
 	}
 
 	public function testCssInclude() {

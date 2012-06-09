@@ -73,7 +73,7 @@ class StaticAssets {
 		// use the default one
 		$driver = $assetType;
 
-		$instance = Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($this->app));
+		$instance = Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($this->app, $this));
 		return $instance;
 	}
 
@@ -208,6 +208,11 @@ class StaticAssets {
 	public function getUrlForAsset($asset) {
 		$cb = $this->getCacheBuster();
 
+		$asset = ltrim($asset, '/\\');
+
+		// fix windows path
+		$asset = str_replace(DIRECTORY_SEPARATOR, '/', $asset);
+
 		if ($this->prependCacheBuster) {
 			// /r200/foo/bar.js
 			$path = 'r' . $cb . Router::SEPARATOR . trim($asset, Router::SEPARATOR);
@@ -229,6 +234,16 @@ class StaticAssets {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Get full URL to a given file
+	 */
+	public function getUrlForFile($file) {
+		$appDir = $this->app->getDirectory();
+		$filePath = str_replace($appDir, '/', $file);
+
+		return $this->getUrlForAsset($filePath);
 	}
 
 	/**
@@ -393,10 +408,12 @@ class StaticAssets {
  * Common class for Static assets processors
  */
 abstract class StaticAssetsProcessor {
-	private $app;
+	protected $app;
+	protected $staticAssets;
 
-	public function __construct(NanoApp $app) {
+	public function __construct(NanoApp $app, StaticAssets $staticAssets) {
 		$this->app = $app;
+		$this->staticAssets = $staticAssets;
 	}
 
 	abstract public function processFiles(Array $files);

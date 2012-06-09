@@ -53,6 +53,9 @@ class StaticAssetsCss extends StaticAssetsProcessor {
 		// embed GIF and PNG images in CSS
 		$content = preg_replace_callback('#url\(["\']?([^)]+.(gif|png))["\']?\)#', array($this, 'embedImageCallback'), $content);
 
+		// fix relative paths
+		$content = preg_replace_callback('#url\(["\']?([^)]+.)["\']?\)#', array($this, 'fixRelativeImagePath'), $content);
+
 		$content = strtr(trim($content), array(
 			'; ' => ';',
 			': ' => ':',
@@ -152,5 +155,29 @@ class StaticAssetsCss extends StaticAssetsProcessor {
 		$encoded = base64_encode($content);
 
 		return "data:image/{$type};base64,{$encoded}";
+	}
+
+	/**
+	 * Callback method used to fix relative paths to images
+	 */
+	public function fixRelativeImagePath($matches) {
+		// base64 encoded image - ignore
+		if (strpos($matches[1], 'data:') === 0) {
+			return $matches[0];
+		}
+
+		// get full path to an image
+		$imageFile = realpath($this->currentDir . '/' . $matches[1] /* image name from CSS*/);
+
+		// path relative to app's root directory
+		$imageUrl = $this->staticAssets->getUrlForFile($imageFile);
+
+		if ($imageUrl !== false) {
+			return "url({$imageUrl})";
+		}
+		else {
+			// don't replace
+			return $matches[0];
+		}
 	}
 }

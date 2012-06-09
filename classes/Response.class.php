@@ -132,6 +132,7 @@ class Response {
 
 		// don't emit, if already emitted :)
 		if (headers_sent()) {
+			$this->debug->log(__METHOD__ . " - headers already emitted");
 			return false;
 		}
 
