@@ -13,7 +13,7 @@ class CacheFile extends Cache {
 	/**
 	 * Creates an instance of cache driver
 	 */
-	protected function __construct(NanoApp $app, Array $settings) {
+	public function __construct(NanoApp $app, Array $settings) {
 		parent::__construct($app, $settings);
 
 		$this->dir = isset($settings['directory']) ? $settings['directory'] : ($app->getDirectory() . '/cache');

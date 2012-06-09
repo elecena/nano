@@ -24,9 +24,18 @@ abstract class Cache {
 	private $misses = 0;
 
 	/**
-	 * Force constructors to be protected - use Cache::factory
+	 * Creates an instance of given cache driver
 	 */
-	protected function __construct(NanoApp $app, Array $settings) {
+	public static function factory(NanoApp $app, Array $settings) {
+		$driver = isset($settings['driver']) ? $settings['driver'] : null;
+
+		return Autoloader::factory('Cache', $driver, dirname(__FILE__) . '/cache', array($app, $settings));
+	}
+
+	/**
+	 * Use Cache::factory
+	 */
+	public function __construct(NanoApp $app, Array $settings) {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
 
@@ -36,27 +45,6 @@ abstract class Cache {
 
 		// set prefix
 		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
-	}
-
-	/**
-	 * Creates an instance of given cache driver
-	 */
-	public static function factory(NanoApp $app, Array $settings) {
-		$driver = isset($settings['driver']) ? $settings['driver'] : null;
-		$instance = null;
-
-		if (!empty($driver)) {
-			$className = 'Cache' . ucfirst(strtolower($driver));
-
-			$src = dirname(__FILE__) . '/cache/' . $className . '.class.php';
-
-			if (file_exists($src)) {
-				require_once $src;
-
-				$instance = new $className($app, $settings);
-			}
-		}
-		return $instance;
 	}
 
 	/**

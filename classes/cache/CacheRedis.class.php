@@ -14,7 +14,7 @@ class CacheRedis extends Cache {
 	/**
 	 * Creates an instance of cache driver
 	 */
-	protected function __construct(NanoApp $app, Array $settings) {
+	public function __construct(NanoApp $app, Array $settings) {
 		parent::__construct($app, $settings);
 
 		// load php-redis library
