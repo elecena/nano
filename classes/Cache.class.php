@@ -18,10 +18,10 @@ abstract class Cache {
 	protected $prefix;
 
 	// number of hits for cache keys
-	private $hits = 0;
+	protected $hits = 0;
 
 	// number of misses for cache keys
-	private $misses = 0;
+	protected $misses = 0;
 
 	/**
 	 * Creates an instance of given cache driver
@@ -38,11 +38,12 @@ abstract class Cache {
 	public function __construct(NanoApp $app, Array $settings) {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
+		$this->debug->log("Cache: using '{$settings['driver']}' driver");
 
 		// add performance report
 		$events = $app->getEvents();
 		$events->bind('NanoAppTearDown', array($this, 'onNanoAppTearDown'));
-
+		
 		// set prefix
 		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
 	}

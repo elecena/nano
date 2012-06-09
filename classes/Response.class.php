@@ -41,7 +41,7 @@ class Response {
 	private $compressionBlacklist = array(
 		'image/gif',
 		'image/png',
-		'image/jpg',
+		'image/jpeg',
 	);
 
 	// this flag is be set when response is compressed

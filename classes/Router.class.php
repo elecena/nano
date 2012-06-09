@@ -153,7 +153,7 @@ class Router {
 		// call selected controller and method (with parameters)
 		$controller = $this->app->getController($controllerName);
 
-		if (!empty($controller)) {
+		if ($controller instanceof Controller) {
 			// use routeAPI method to route API requests
 			if ($request->isAPI() && is_callable(array($controller, 'routeAPI'))) {
 				$defaultMethodName = 'routeAPI';
@@ -199,6 +199,7 @@ class Router {
 
 				if ($ret === false) {
 					// this basically means that the request can't be routed (i.e. HTTP 404)
+					$this->debug->log(__METHOD__ . " - controller '{$controllerName}' returned 404 status");
 				}
 				else {
 					// get controller's data
@@ -206,6 +207,8 @@ class Router {
 					$format = $controller->getFormat();
 
 					if (!is_null($format)) {
+						$this->debug->log(__METHOD__ . " - {$format} format forced");
+
 						// use provided format to render the data
 						$ret = Output::factory($format, $data);
 					}
@@ -217,8 +220,16 @@ class Router {
 						$ret->setTemplate($template);
 						$ret->setTemplateName($methodName);
 					}
+
+					$this->debug->log(__METHOD__ . " - {$controllerName}::{$methodName} done");
 				}
 			}
+			else {
+				$this->debug->log(__METHOD__ . " - {$controllerName}::{$methodName} is not callable!");
+			}
+		}
+		else {
+			$this->debug->log(__METHOD__ . " - routing '{$controllerName}' controller failed!");
 		}
 
 		return $ret;

@@ -56,6 +56,8 @@ abstract class Skin {
 		$this->app = $app;
 		$this->skinName = $skinName;
 
+		$this->app->getDebug()->log("Skin: using '{$this->skinName}'");
+
 		$this->skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
 
 		// setup objects

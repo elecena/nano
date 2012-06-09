@@ -328,8 +328,6 @@ class NanoApp {
 
 			// allow to override the default choice
 			$this->events->fire('NanoAppGetSkin', array($this, &$skinName));
-			
-			$this->debug->log('Skin: using ' . $skinName);
 
 			// create a instance of a skin
 			$this->skin = Skin::factory($this, $skinName);
