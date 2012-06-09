@@ -11,9 +11,10 @@
 abstract class Skin {
 
 	protected $app;
+	protected $skinName;
 
 	// static assets handler
-	protected $static;
+	protected $staticAssets;
 
 	// template used to render the skin
 	protected $template;
@@ -25,8 +26,9 @@ abstract class Skin {
 	protected $assets = array(
 		'css' => array(),
 		'js' => array(),
-		'package' => array(),
 	);
+
+	protected $packages = array();
 
 	// meta tags
 	protected $meta = array();
@@ -37,14 +39,48 @@ abstract class Skin {
 	// global JS variables
 	protected $jsVariables = array();
 
-	function __construct(NanoApp $app) {
+	/**
+	 * Return an instance of a given skin
+	 */
+	public static function factory(NanoApp $app, $skinName) {
+		$skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
+
+		return Autoloader::factory('Skin', $skinName, $skinDirectory, array($app, $skinName));
+	}
+
+	/**
+	 * Use Skin::factory
+	 */
+	function __construct(NanoApp $app, $skinName) {
 		$this->app = $app;
+		$this->skinName = $skinName;
+
+		$skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
 
 		// setup objects
-		$this->static = $this->app->factory('StaticAssets');
-		$this->template = new Template(dirname(__FILE__));
+		$this->staticAssets = $this->app->factory('StaticAssets');
+		$this->template = new Template($skinDirectory . '/templates');
+	}
 
-		$config = $this->app->getConfig();
+	/**
+	 * Get name of the skin
+	 */
+	function getName() {
+		return $this->skinName;
+	}
+
+	/**
+	 * Sets page title
+	 */
+	function setPageTitle($title) {
+		$this->pageTitle = $title;
+	}
+
+	/**
+	 * Add <meta> tag entry
+	 */
+	function addMeta($name, $value) {
+		$this->meta[$name] = $value;
 	}
 
 	/**
@@ -60,13 +96,7 @@ abstract class Skin {
 	function addAsset($name, $type = false) {
 		if ($type === false) {
 			$dot = strrpos($name, '.');
-
-			if ($dot !== false) {
-				$ext = substr($name, $dot +1);
-			}
-			else {
-				$ext = false;
-			}
+			$ext = ($dot !== false) ? substr($name, $dot +1) : false;
 
 			switch($ext) {
 				case 'css':
@@ -76,9 +106,6 @@ abstract class Skin {
 				case 'js':
 					$type = 'js';
 					break;
-
-				default:
-					$type = 'package';
 			}
 		}
 
@@ -87,4 +114,46 @@ abstract class Skin {
 		}
 	}
 
+	/**
+	 * Add a given assets package (and its dependencies)
+	 */
+	function addPackage($package) {
+		$this->addPackages(array($package));
+	}
+
+	/**
+	 * Add a given assets package (and its dependencies)
+	 */
+	function addPackages(Array $packages) {
+		$this->packages = array_merge($this->packages. $packages);
+	}
+
+	/**
+	 * Get skin data - variables available in skin template
+	 */
+	protected function getSkinData() {
+		return array(
+			// object instances
+			'app' => $this->app,
+			'router' => $this->app->getRouter(),
+			'skin' => $this,
+
+			// additional data
+			'pageTitle' => $this->pageTitle,
+			'renderTime' => $this->app->getResponse()->getResponseTime(),
+		);
+	}
+
+	/**
+	 * Returns HTML of rendered page
+	 */
+	function render($content) {
+		// set skin template's data
+		$this->template->set($this->getSkinData());
+		$this->template->set('content', $content);
+
+		// render the skin and set the app response
+		$html = $this->template->render('main');
+		$this->app->getResponse()->setContent($html);
+	}
 }

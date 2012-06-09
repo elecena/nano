@@ -31,6 +31,9 @@ class NanoApp {
 	// router
 	protected $router;
 
+	// skin
+	protected $skin = false;
+
 	// an array of loaded modules
 	protected $modules;
 
@@ -312,5 +315,26 @@ class NanoApp {
 	 */
 	public function getRouter() {
 		return $this->router;
+	}
+
+	/**
+	 * Return skin
+	 */
+	public function getSkin() {
+		// lazy connection handling
+		if ($this->skin === false) {
+			// use the default skin
+			$skinName = $this->config->get('skin', 'default');
+
+			// allow to override the default choice
+			$this->events->fire('NanoAppGetSkin', array($this, &$skinName));
+			
+			$this->debug->log('Skin: using ' . $skinName);
+
+			// create a instance of a skin
+			$this->skin = Skin::factory($this, $skinName);
+		}
+
+		return $this->skin;
 	}
 }
