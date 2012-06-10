@@ -178,7 +178,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 			// these should not be compressed
 			'image/gif' => false,
 			'image/png' => false,
-			'image/jpg' => false,
+			'image/jpeg' => false,
 
 			// these should be compressed
 			'text/css' => true,

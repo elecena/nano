@@ -210,7 +210,7 @@ class StaticAssets {
 		if (strpos($asset, 'http') === 0) {
 			return $asset;
 		}
-	
+
 		$cb = $this->getCacheBuster();
 
 		$asset = ltrim($asset, '/\\');
@@ -262,6 +262,9 @@ class StaticAssets {
 	 * Get full URL to given assets packages (include cache buster value)
 	 */
 	public function getUrlForPackages(Array $packages, $type) {
+		// resolve dependencies
+		$packages = $this->resolveDependencies($packages);
+
 		// remove packages with no assets of a given type
 		$packages = $this->filterOutEmptyPackages($packages, $type);
 

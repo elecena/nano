@@ -128,7 +128,7 @@ abstract class Skin {
 	 * Add a given assets package (and its dependencies)
 	 */
 	function addPackages(Array $packages) {
-		$this->packages += $packages;
+		$this->packages = array_merge($this->packages, $packages);
 	}
 
 	/**
@@ -156,11 +156,11 @@ abstract class Skin {
 	function renderCssInclude($sep = "\n") {
 		$urls = array();
 
-		// packages
-		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'css');
-
 		// single assets
 		// TODO
+
+		// packages
+		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'css');
 
 		// render <link> elements
 		$elements = array();
@@ -181,13 +181,13 @@ abstract class Skin {
 	function renderJsInclude($sep = "\n") {
 		$urls = array();
 
-		// packages
-		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'js');
-
 		// single assets
 		foreach($this->assets['js'] as $asset) {
 			$urls[] = $this->staticAssets->getUrlForAsset($asset);
 		}
+
+		// packages
+		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'js');
 
 		// render <link> elements
 		$elements = array();
