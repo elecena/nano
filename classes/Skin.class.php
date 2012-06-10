@@ -175,6 +175,33 @@ abstract class Skin {
 	}
 
 	/**
+	 * Renders set of <link> elements to be used to include CSS files
+	 * requested via $skin->addPackage and $skin->addAsset
+	 */
+	function renderJsInclude($sep = "\n") {
+		$urls = array();
+
+		// packages
+		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'js');
+
+		// single assets
+		foreach($this->assets['js'] as $asset) {
+			$urls[] = $this->staticAssets->getUrlForAsset($asset);
+		}
+
+		// render <link> elements
+		$elements = array();
+
+		foreach($urls as $url) {
+			if ($url !== false) {
+				$elements[] = '<script src="' . $url . '"></script>';
+			}
+		}
+
+		return implode($sep, $elements);
+	}
+
+	/**
 	 * Returns HTML of rendered page
 	 */
 	function render($content) {

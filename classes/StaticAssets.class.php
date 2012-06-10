@@ -206,6 +206,11 @@ class StaticAssets {
 	 * Get full URL to given asset (include cache buster value)
 	 */
 	public function getUrlForAsset($asset) {
+		// check for external assets
+		if (strpos($asset, 'http') === 0) {
+			return $asset;
+		}
+	
 		$cb = $this->getCacheBuster();
 
 		$asset = ltrim($asset, '/\\');
