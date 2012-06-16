@@ -118,6 +118,25 @@ class StaticAssets {
 	}
 
 	/**
+	 * Get list of external assets of given type from given packages
+	 */
+	private function getPackagesExternalItems(Array $packagesNames, $type) {
+		$assets = array();
+
+		foreach($packagesNames as $package) {
+			if (!$this->packageExists($package)) {
+				return false;
+			}
+
+			if (!empty($this->packages[$package]['ext'][$type])) {
+				$assets = array_merge($assets, (array) $this->packages[$package]['ext'][$type]);
+			}
+		}
+
+		return $assets;
+	}
+
+	/**
 	 * Remove packages with no assets of a given type
 	 */
 	public function filterOutEmptyPackages(Array $packages, $type) {
@@ -252,16 +271,16 @@ class StaticAssets {
 	}
 
 	/**
-	 * Get full URL to given single package (include cache buster value)
+	 * Get flist of full URLs to get all assets defined by given single package (include cache buster value)
 	 */
-	public function getUrlForPackage($package, $type) {
-		return $this->packageExists($package) ? $this->getUrlForPackages(array($package), $type) : false;
+	public function getUrlsForPackage($package, $type) {
+		return $this->packageExists($package) ? $this->getUrlsForPackages(array($package), $type) : false;
 	}
 
 	/**
-	 * Get full URL to given assets packages (include cache buster value)
+	 * Get list of full URLs to get all assets defined by given packages (include cache buster value)
 	 */
-	public function getUrlForPackages(Array $packages, $type) {
+	public function getUrlsForPackages(Array $packages, $type) {
 		// resolve dependencies
 		$packages = $this->resolveDependencies($packages);
 
@@ -272,7 +291,14 @@ class StaticAssets {
 
 		if (!empty($packages)) {
 			$package = implode(self::PACKAGES_SEPARATOR, $packages);
-			$ret = $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
+
+			$ret = array();
+			
+			// external assets
+			$ret = array_merge($ret, $this->getPackagesExternalItems($packages, $type));
+
+			// merged package(s)
+			$ret[] = $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
 		}
 
 		return $ret;

@@ -150,17 +150,32 @@ abstract class Skin {
 	}
 
 	/**
+	 * Returns list of URLs of a given type (CSS/JS) to be rendered by the skin
+	 */
+	protected function getAssetsUrls($type) {
+		$urls = array();
+
+		// single assets
+		foreach($this->assets[$type] as $asset) {
+			$urls[] = $this->staticAssets->getUrlForAsset($asset);
+		}
+
+		// packages
+		$packagesUrls = $this->staticAssets->getUrlsForPackages($this->packages, $type);
+
+		if ($packagesUrls !== false) {
+			$urls = array_merge($urls, $packagesUrls);
+		}
+
+		return $urls;
+	}
+
+	/**
 	 * Renders set of <link> elements to be used to include CSS files
 	 * requested via $skin->addPackage and $skin->addAsset
 	 */
 	function renderCssInclude($sep = "\n") {
-		$urls = array();
-
-		// single assets
-		// TODO
-
-		// packages
-		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'css');
+		$urls = $this->getAssetsUrls('css');
 
 		// render <link> elements
 		$elements = array();
@@ -179,15 +194,7 @@ abstract class Skin {
 	 * requested via $skin->addPackage and $skin->addAsset
 	 */
 	function renderJsInclude($sep = "\n") {
-		$urls = array();
-
-		// single assets
-		foreach($this->assets['js'] as $asset) {
-			$urls[] = $this->staticAssets->getUrlForAsset($asset);
-		}
-
-		// packages
-		$urls[] = $this->staticAssets->getUrlForPackages($this->packages, 'js');
+		$urls = $this->getAssetsUrls('js');
 
 		// render <link> elements
 		$elements = array();
