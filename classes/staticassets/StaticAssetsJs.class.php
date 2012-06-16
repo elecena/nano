@@ -20,10 +20,8 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 			$content .= file_get_contents($file);
 		}
 
-		// don't minify already minified files
-		if (strpos($file, '.min.js') === false) {
-			$content = JSMinPlus::minify($content);
-		}
+		#ini_set('memory_limit', '256M');
+		#$content = JSMinPlus::minify($content);
 
 		return trim($content);
 	}

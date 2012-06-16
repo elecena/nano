@@ -89,7 +89,7 @@ class Debug {
 		$file = $this->getLogFile();
 
 		if (file_exists($file)) {
-			unlink($file);
+			@unlink($file);
 		}
 	}
 

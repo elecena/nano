@@ -284,24 +284,24 @@ class StaticAssets {
 		// resolve dependencies
 		$packages = $this->resolveDependencies($packages);
 
-		// remove packages with no assets of a given type
-		$packages = $this->filterOutEmptyPackages($packages, $type);
-
-		$ret = false;
+		$ret = array();
 
 		if (!empty($packages)) {
-			$package = implode(self::PACKAGES_SEPARATOR, $packages);
 
 			$ret = array();
-			
+
 			// external assets
 			$ret = array_merge($ret, $this->getPackagesExternalItems($packages, $type));
+
+			// remove packages with no assets of a given type
+			$packages = $this->filterOutEmptyPackages($packages, $type);
+			$package = implode(self::PACKAGES_SEPARATOR, $packages);
 
 			// merged package(s)
 			$ret[] = $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
 		}
 
-		return $ret;
+		return count($ret) > 0 ? $ret : false;
 	}
 
 	/**
