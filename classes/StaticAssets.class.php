@@ -35,6 +35,10 @@ class StaticAssets {
 	// example: /foo/bar.js?r=200 [false]
 	private $prependCacheBuster;
 
+	// is StaticAssets in debug mode?
+	// add debug=1 to URL
+	private $debugMode = false;
+
 	// registered packages
 	private $packages;
 
@@ -57,6 +61,8 @@ class StaticAssets {
 		$this->router = $this->app->getRouter();
 		$this->localRoot = $this->app->getDirectory();
 
+		$this->setDebugMode($this->app->getRequest()->get('debug'));
+
 		// read configuration
 		$config = $this->app->getConfig();
 
@@ -64,6 +70,17 @@ class StaticAssets {
 		$this->cdnPath = $config->get('assets.cdnPath', false);
 		$this->prependCacheBuster = $config->get('assets.prependCacheBuster', true) === true;
 		$this->packages = $config->get('assets.packages', array());
+	}
+
+	/**
+	 * Turn debug mode on/off
+	 */
+	public function setDebugMode($inDebugMode) {
+		$this->debugMode = ($inDebugMode != false);
+
+		if ($this->debugMode) {
+			$this->debug->log(__METHOD__ . ': in debug mode');
+		}
 	}
 
 	/**
@@ -287,18 +304,24 @@ class StaticAssets {
 		$ret = array();
 
 		if (!empty($packages)) {
-
-			$ret = array();
-
 			// external assets
 			$ret = array_merge($ret, $this->getPackagesExternalItems($packages, $type));
 
 			// remove packages with no assets of a given type
 			$packages = $this->filterOutEmptyPackages($packages, $type);
-			$package = implode(self::PACKAGES_SEPARATOR, $packages);
 
-			// merged package(s)
-			$ret[] = $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
+			if ($this->debugMode) {
+				$assets = $this->getPackagesItems($packages, $type);
+				
+				foreach($assets as $asset) {
+					$ret[] = $this->getUrlForAsset($asset);
+				}
+			}
+			else {
+				// merged package(s)
+				$package = implode(self::PACKAGES_SEPARATOR, $packages);
+				$ret[] = $this->getUrlForAsset(self::PACKAGE_URL_PREFIX . "{$package}.{$type}");
+			}
 		}
 
 		return count($ret) > 0 ? $ret : false;
