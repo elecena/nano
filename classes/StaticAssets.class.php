@@ -84,6 +84,13 @@ class StaticAssets {
 	}
 
 	/**
+	 * Is debug mode on?
+	 */
+	public function inDebugMode() {
+		return $this->debugMode === true;
+	}
+
+	/**
 	 * Creates an instance of given static assets processor
 	 */
 	public function getProcessor($assetType) {
@@ -265,6 +272,10 @@ class StaticAssets {
 			$params = array('r' => $cb);
 		}
 
+		if ($this->inDebugMode()) {
+			$params['debug'] = 1;
+		}
+
 		$url = $this->router->formatUrl($path, $params);
 
 		// perform a rewrite for CDN
@@ -310,9 +321,9 @@ class StaticAssets {
 			// remove packages with no assets of a given type
 			$packages = $this->filterOutEmptyPackages($packages, $type);
 
-			if ($this->debugMode) {
+			if ($this->inDebugMode()) {
 				$assets = $this->getPackagesItems($packages, $type);
-				
+
 				foreach($assets as $asset) {
 					$ret[] = $this->getUrlForAsset($asset);
 				}
@@ -471,6 +482,10 @@ abstract class StaticAssetsProcessor {
 	public function __construct(NanoApp $app, StaticAssets $staticAssets) {
 		$this->app = $app;
 		$this->staticAssets = $staticAssets;
+	}
+
+	protected function inDebugMode() {
+		return $this->staticAssets->inDebugMode();
 	}
 
 	abstract public function processFiles(Array $files);

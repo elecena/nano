@@ -132,7 +132,7 @@ class Debug {
 		$msgLine = "{$prefix}{$msg}\n";
 
 		// log to file
-		return file_put_contents($file, $msgLine, FILE_APPEND | LOCK_EX) !== false;
+		return @file_put_contents($file, $msgLine, FILE_APPEND | LOCK_EX) !== false;
 	}
 
 	/**

@@ -19,9 +19,11 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 		foreach($files as $file) {
 			$content .= file_get_contents($file);
 		}
-
-		ini_set('memory_limit', '256M');
-		$content = JSMinPlus::minify($content);
+		
+		if (!$this->inDebugMode()) {
+			ini_set('memory_limit', '256M');
+			$content = JSMinPlus::minify($content);
+		}
 
 		return trim($content);
 	}
