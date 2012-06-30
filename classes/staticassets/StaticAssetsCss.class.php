@@ -13,7 +13,7 @@ class StaticAssetsCss extends StaticAssetsProcessor {
 
 	private $currentDir;
 
-	public function processFiles(Array $files) {
+	protected function process(Array $files) {
 		$content = '';
 
 		foreach($files as $file) {

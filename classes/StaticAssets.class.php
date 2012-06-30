@@ -97,7 +97,7 @@ class StaticAssets {
 		// use the default one
 		$driver = $assetType;
 
-		$instance = Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($this->app, $this));
+		$instance = Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($this->app, $this, $assetType));
 		return $instance;
 	}
 
@@ -470,23 +470,4 @@ class StaticAssets {
 
 		return ($content != '') ? $content : false;
 	}
-}
-
-/**
- * Common class for Static assets processors
- */
-abstract class StaticAssetsProcessor {
-	protected $app;
-	protected $staticAssets;
-
-	public function __construct(NanoApp $app, StaticAssets $staticAssets) {
-		$this->app = $app;
-		$this->staticAssets = $staticAssets;
-	}
-
-	protected function inDebugMode() {
-		return $this->staticAssets->inDebugMode();
-	}
-
-	abstract public function processFiles(Array $files);
 }
