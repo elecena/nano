@@ -282,7 +282,8 @@ class StaticAssets {
 		$cdnPath = $this->getCDNPath();
 
 		if ($cdnPath !== false) {
-			$url = str_replace($this->router->getPathPrefix(), $cdnPath . Router::SEPARATOR, $url);
+			$prefix = $this->router->getPathPrefix();
+			$url = $cdnPath . Router::SEPARATOR . substr($url, strlen($prefix));
 		}
 
 		return $url;
