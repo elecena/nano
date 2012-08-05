@@ -34,6 +34,7 @@ class View {
 		$this->controller = $controller;
 
 		$this->template = new Template($this->controller->getDirectory() . '/templates');
+		$this->template->set('app', $app);
 	}
 
 	public function setTemplateName($templateName) {

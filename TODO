@@ -29,6 +29,7 @@
 * Wordpress XML-RPC API client
 * server-side GoogleAnalytics tracking			[DONE]
 * cron jobs
+* MongoDB driver
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1474/serialize
@@ -54,3 +55,4 @@
 @see http://www.google.com/ig/api?weather=San%20Francisco
 @see http://snook.ca/archives/php/url-shortener
 @see http://programanddesign.com/php/base62-encode/
+@see http://www.mongodb.org/display/DOCS/PHP+Language+Center

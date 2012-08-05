@@ -78,8 +78,7 @@ abstract class Database {
 					$instance = new $className($app, $settings, $name);
 				}
 				catch(Exception $e) {
-					// TODO: handle exception
-					#var_dump($e->getMessage());
+					die($e->getMessage());
 				}
 			}
 		}

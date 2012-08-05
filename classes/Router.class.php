@@ -201,6 +201,10 @@ class Router {
 					// this basically means that the request can't be routed (i.e. HTTP 404)
 					$this->debug->log(__METHOD__ . " - controller '{$controllerName}' returned 404 status");
 				}
+				else if (is_string($ret)) {
+					// pass through any string
+					$this->debug->log(__METHOD__ . " - string passed");
+				}
 				else {
 					// get controller's data
 					$data = $controller->getData();
