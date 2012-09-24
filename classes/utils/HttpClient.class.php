@@ -37,6 +37,9 @@ class HttpClient {
 	private $app;
 	private $debug;
 
+	// request cookies set manually
+	private $cookies = array();
+
 	/**
 	 * Setup HTTP client
 	 */
@@ -139,6 +142,15 @@ class HttpClient {
 	}
 
 	/**
+	 * Manually sets request cookie
+	 */
+	public function setCookie($name, $value) {
+		$this->cookies[$name] = $value;
+
+		$this->log("setting '{$name}' cookie to '{$value}'");
+	}
+
+	/**
 	 * Send GET HTTP request for a given URL
 	 */
 	public function get($url, Array $query = array()) {
@@ -207,6 +219,17 @@ class HttpClient {
 
 		// set request headers
 		curl_setopt($this->handle, CURLOPT_HEADER, $this->reqHeaders);
+
+		// set cookies
+		// @see http://stackoverflow.com/questions/6453347/php-curl-and-setcookie-problem
+		if (!empty($this->cookies)) {
+			$cookies = array();
+			foreach( $this->cookies as $key => $value ) {
+				$cookies[] = "{$key}={$value}";
+			}
+
+			curl_setopt($this->handle, CURLOPT_COOKIE, implode('; ', $cookies));
+		}
 
 		// cleanup
 		$this->reqHeaders = array();
