@@ -34,8 +34,17 @@ abstract class NanoObject {
 
 		$this->cache = $app->getCache();
 		$this->config = $app->getConfig();
-		$this->database = $app->getDatabase();
 		$this->debug = $app->getDebug();
 		$this->events = $app->getEvents();
+
+		// use lazy-resolving
+		$this->database = static::getDatabase($app);
+	}
+	
+	/**
+	 * Allow models and services to use different database
+	 */
+	static protected function getDatabase(NanoApp $app) {
+		return $app->getDatabase();
 	}
 }
