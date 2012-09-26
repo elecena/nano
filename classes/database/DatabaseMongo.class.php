@@ -34,14 +34,14 @@ class DatabaseMongo extends Database {
 
 		$this->log(__METHOD__, 'connected');
 	}
-	
+
 	/**
 	 * Start benchmarking current query
 	 */
 	protected function time() {
 		$this->debug->time('query');
 	}
-	
+
 	/**
 	 * Finish benchmarking current query and update the stats
 	 */
@@ -99,6 +99,69 @@ class DatabaseMongo extends Database {
 	public function escape($value) {}
 
 	/**
+	 * Select given fields from a collection using following WHERE statements
+	 *
+	 * @see http://php.net/manual/en/mongocollection.find.php
+	 */
+	public function select($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::select') {
+		$this->log(__METHOD__, "/* {$fname} */ {$table}: SELECT WHERE " . json_encode($where));
+
+		if ($fields === '*') {
+			$fields = array();
+		}
+
+		// The array is in the format array('fieldname' => true, 'fieldname2' => true)
+		if (!empty($fields)) {
+			$fields = array_combine(array_values($fields), array_fill(0, count($fields), true));
+		}
+
+		$this->time();
+		$cursor = $this->db->selectCollection($table)->find($where, $fields);
+		$this->timeEnd();
+
+		// @see http://php.net/manual/en/class.mongocursor.php
+		if (isset($options['order'])) {
+			$cursor->sort($options['order']);
+		}
+
+		if (isset($options['limit'])) {
+			$cursor->limit(intval($options['limit']));
+		}
+
+		//return $cursor;
+
+		// wrap results into iterator
+		return new DatabaseResult($this, $cursor);
+	}
+
+	/**
+	 * Select given fields from a table using following WHERE statements (return single row)
+	 */
+	public function selectRow($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::selectRow') {
+		$options['limit'] = 1;
+		$res = $this->select($table, $fields, $where, $options, $fname);
+
+		if (!empty($res)) {
+			$row = $res->fetchRow();
+			$res->free();
+
+			return $row;
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
+	 * Select given fields from a table using following WHERE statements (return single field)
+	 */
+	public function selectField($table, $field, $where = array(), Array $options = array(), $fname = 'Database::selectField') {
+		$row = $this->selectRow($table, array($field), $where, $options, $fname);
+
+		return !empty($row) && isset($row[$field]) ? $row[$field] : false;
+	}
+
+	/**
 	 * Remove rows from a table using following WHERE statements
 	 *
 	 * @see http://dev.mysql.com/doc/refman/5.0/en/delete.html
@@ -128,8 +191,6 @@ class DatabaseMongo extends Database {
 	public function update($table, Array $values, $where = array(), Array $options = array(), $fname = 'Database::update') {
 		$this->log(__METHOD__, "/* {$fname} */ {$table}: UPDATE " . json_encode($values) . ' WHERE ' . json_encode($where));
 
-		
-
 		// LIMIT 1
 		$options['multiple'] = !empty($options['multiple']);
 
@@ -155,6 +216,9 @@ class DatabaseMongo extends Database {
 	 * Insert multiple rows into a table using following values
 	 */
 	public function insertRows($table, Array $rows, Array $options = array(), $fname = 'Database::insertRows') {
+		foreach($rows as $row) {
+			$this->insert($table, $row, $options, $fname);
+		}
 	}
 
 	/**
@@ -170,17 +234,28 @@ class DatabaseMongo extends Database {
 	/**
 	 * Get number of rows in given results set
 	 */
-	public function numRows($results) {}
+	public function numRows($results) {
+		return $results->count();
+	}
 
 	/**
 	 * Change the position of results cursor
 	 */
-	public function seekRow($results, $rowId) {}
+	public function seekRow($results, $rowId) {
+		if ($rowId === 0) {
+			$results->reset();
+		}
+	}
 
 	/**
 	 * Get data for current row
 	 */
-	public function fetchRow($results) {}
+	public function fetchRow($results) {
+		$results->next();
+		$row = $results->current();
+
+		return !is_null($row) ? $row : false;
+	}
 
 	/**
 	 * Free the memory
