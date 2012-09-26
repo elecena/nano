@@ -222,6 +222,13 @@ class DatabaseMongo extends Database {
 	}
 
 	/**
+	 * Returns number of items in a given collection
+	 */
+	public function count($table, $method) {
+		return $this->db->selectCollection($table)->count();
+	}
+
+	/**
 	 * Get primary key value for recently inserted row
 	 */
 	public function getInsertId() {}
