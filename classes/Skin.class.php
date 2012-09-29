@@ -10,6 +10,8 @@
 
 abstract class Skin {
 
+	const SUBTITLE_SEPARATOR = ' &raquo; ';
+
 	protected $app;
 	protected $skinName;
 	protected $skinDirectory;
@@ -22,6 +24,9 @@ abstract class Skin {
 
 	// page title
 	protected $pageTitle = '';
+
+	// page title parts
+	protected $subTitles = array();
 
 	// JS/CSS files and packages requested to be fetched
 	protected $assets = array(
@@ -73,10 +78,29 @@ abstract class Skin {
 	}
 
 	/**
-	 * Sets page title
+	 * Sets page title (clears subtitles stack)
 	 */
 	function setPageTitle($title) {
 		$this->pageTitle = $title;
+		$this->subTitles = array();
+	}
+
+	/**
+	 * Add page subtitle to the stack
+	 *
+	 * Example:
+	 *  $skin->addPageSubtitle('search');
+	 *  $skin->addPageSubtitle('foo');
+	 */
+	function addPageSubtitle($subtitle) {
+		$this->subTitles[] = $subtitle;
+	}
+
+	/**
+	 * Get page title
+	 */
+	function getPageTitle() {
+		return !empty($this->subTitles) ? implode(self::SUBTITLE_SEPARATOR, array_reverse($this->subTitles)) : $this->pageTitle;
 	}
 
 	/**
@@ -144,7 +168,7 @@ abstract class Skin {
 
 			// additional data
 			'skinPath' => $this->staticAssets->getUrlForFile($this->skinDirectory),
-			'pageTitle' => $this->pageTitle,
+			'pageTitle' => $this->getPageTitle(),
 			'renderTime' => $this->app->getResponse()->getResponseTime(),
 		);
 	}
