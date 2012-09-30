@@ -195,6 +195,20 @@ abstract class Skin {
 	}
 
 	/**
+	 * Renders set of <meta> elements to be used in page's head section
+	 */
+	function renderHead($sep = "\n") {
+		// render <meta> elements
+		$elements = array();
+
+		foreach($this->meta as $name => $value) {
+			$elements[] = '<meta name="' . htmlspecialchars($name) . '"  content="' . htmlspecialchars($value) . '" />';
+		}
+
+		return rtrim($sep . implode($sep, $elements));
+	}
+
+	/**
 	 * Renders set of <link> elements to be used to include CSS files
 	 * requested via $skin->addPackage and $skin->addAsset
 	 */
@@ -210,7 +224,7 @@ abstract class Skin {
 			}
 		}
 
-		return implode($sep, $elements);
+		return rtrim($sep . implode($sep, $elements));
 	}
 
 	/**
