@@ -18,7 +18,7 @@ class FooController extends Controller {
 	/**
 	 * Default method used for routing requests for this controller
 	 */
-	public function route($param) {
+	public function index($param) {
 		return false;
 	}
 

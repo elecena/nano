@@ -42,7 +42,8 @@ class Template {
 
 		// check if given template file exists
 		if (!file_exists($templateFile)) {
-			die(__METHOD__ . ": file <strong>{$templateFile}</strong> not found!");
+			return false;
+			//throw new Exception(__METHOD__ . ": file <strong>{$templateFile}</strong> not found!");
 		}
 
 		// extract template's variables into current scope

@@ -9,6 +9,7 @@
 class Router {
 
 	const SEPARATOR = '/';
+	const DEFAULT_METHOD = 'index';
 
 	private $app;
 	private $debug;
@@ -122,7 +123,7 @@ class Router {
 		 */
 
 		// default controller's method used for routing
-		$methodName = $defaultMethodName = 'route';
+		$methodName = $defaultMethodName = self::DEFAULT_METHOD;
 		$methodParams = array();
 
 		switch (count($pathParts)) {
@@ -154,9 +155,11 @@ class Router {
 		$controller = $this->app->getController($controllerName);
 
 		if ($controller instanceof Controller) {
-			// use routeAPI method to route API requests
-			if ($request->isAPI() && is_callable(array($controller, 'routeAPI'))) {
-				$defaultMethodName = 'routeAPI';
+			// use indexAPI method to route API requests
+			$defaultAPImethod = self::DEFAULT_METHOD . 'API';
+
+			if ($request->isAPI() && is_callable(array($controller, $defaultAPImethod))) {
+				$defaultMethodName = $defaultAPImethod;
 			}
 
 			// call selected method, otherwise call route method

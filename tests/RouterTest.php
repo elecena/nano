@@ -72,7 +72,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		// $config['index'] = '/foo/index';
 		$request->setPath('/');
 		$router->route($request);
-		$this->assertEquals(array('controller' => 'foo', 'method' => 'route', 'params' => array('index')), $router->getLastRoute());
+		$this->assertEquals(array('controller' => 'foo', 'method' => Router::DEFAULT_METHOD, 'params' => array()), $router->getLastRoute());
 
 		$request->setPath('/bar');
 		$router->route($request);
@@ -80,7 +80,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 
 		$request->setPath('/foo');
 		$router->route($request);
-		$this->assertEquals(array('controller' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
+		$this->assertEquals(array('controller' => 'foo', 'method' => Router::DEFAULT_METHOD, 'params' => array()), $router->getLastRoute());
 
 		$request->setPath('/foo/bar');
 		$router->route($request);
@@ -100,7 +100,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 
 		$request->setPath('/foo/test');
 		$router->route($request);
-		$this->assertEquals(array('controller' => 'foo', 'method' => 'route', 'params' => array('test')), $router->getLastRoute());
+		$this->assertEquals(array('controller' => 'foo', 'method' => Router::DEFAULT_METHOD, 'params' => array('test')), $router->getLastRoute());
 
 		// unroutable requests
 		$request->setPath('/bar/_test/123');
@@ -139,15 +139,15 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 
 		$request->setPath('/show');
 		$router->route($request);
-		$this->assertEquals(array('controller' => 'foo', 'method' => 'route', 'params' => array()), $router->getLastRoute());
+		$this->assertEquals(array('controller' => 'foo', 'method' => Router::DEFAULT_METHOD, 'params' => array()), $router->getLastRoute());
 
 		$request->setPath('/show/abc');
 		$router->route($request);
-		$this->assertEquals(array('controller' => 'foo', 'method' => 'route', 'params' => array('test')), $router->getLastRoute());
+		$this->assertEquals(array('controller' => 'foo', 'method' => Router::DEFAULT_METHOD, 'params' => array('test')), $router->getLastRoute());
 
 		$request->setPath('/');
 		$router->route($request);
-		$this->assertEquals(array('controller' => 'foo', 'method' => 'route', 'params' => array('123')), $router->getLastRoute());
+		$this->assertEquals(array('controller' => 'foo', 'method' => Router::DEFAULT_METHOD, 'params' => array('123')), $router->getLastRoute());
 
 		// empty path mapping
 		$router->map('', '');
