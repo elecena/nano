@@ -16,10 +16,16 @@ class Nano {
 	// core libraries directory
 	static private $libraryDir = '';
 
+	static private $initialized = false;
+
 	/**
 	 * Initialize framework (initialize classes autoloader, set directories)
 	 */
 	static public function init() {
+		if (self::$initialized) {
+			return;
+		}
+
 		// load autoloader class
 		require_once 'Autoloader.class.php';
 
@@ -36,6 +42,8 @@ class Nano {
 		// setup paths
 		self::$dir = realpath($dir);
 		self::$libraryDir = self::$dir . '/lib';
+
+		self::$initialized = true;
 	}
 
 	/**
@@ -52,7 +60,24 @@ class Nano {
 	}
 
 	/**
+	 * Creates a CLI script from given class
+	 */
+	static public function script($dir, $scriptClass, $configSet = 'default') {
+		// initialize framework
+		Nano::init();
+
+		// create new application
+		$app = new NanoCliApp($dir, $configSet, $scriptClass::LOGFILE);
+
+		$script = new $scriptClass($app);
+
+		return $script;
+	}
+
+	/**
 	 * Creates new instance of Nano application for command line
+	 *
+	 * @deprecated use Nano::script
 	 */
 	static public function cli($dir, $logFile = 'script', $configSet = 'default') {
 		// initialize framework
@@ -89,3 +114,5 @@ class Nano {
 		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
 	}
 }
+
+Nano::init();
