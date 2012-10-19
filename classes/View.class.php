@@ -41,6 +41,10 @@ class View {
 		$this->templateName = $templateName;
 	}
 
+	public function getTemplateName() {
+		return $this->templateName;
+	}
+
 	public function getTemplate() {
 		return $this->template;
 	}

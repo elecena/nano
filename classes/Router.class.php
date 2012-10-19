@@ -221,11 +221,12 @@ class Router {
 					}
 					else {
 						// wrap data in a template
-						$template = $controller->getTemplate();
+						$template = $view->getTemplate();
+						$templateName = $view->getTemplateName();
 
 						$ret = Output::factory('template', $data);
 						$ret->setTemplate($template);
-						$ret->setTemplateName($methodName);
+						$ret->setTemplateName($templateName);
 					}
 
 					$this->debug->log(__METHOD__ . " - {$controllerName}::{$methodName} done");
