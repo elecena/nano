@@ -76,12 +76,12 @@ class DatabaseMysql extends Database {
 				if (!empty($settings['utf'])) {
 					$this->query('SET NAMES "utf8"');
 				}
-
 			}
 			else {
-				$errorMsg = trim(mysqli_connect_error());
+				$errorNo = $this->link->connect_errno;
+				$errorMsg = trim($this->link->connect_error);
 
-				$this->debug->log(__METHOD__ . ' - connecting with "' . $hostInfo . '" failed (' . $errorMsg .')', Debug::ERROR);
+				$this->debug->log(__METHOD__ . " - connecting with '{$hostInfo}' failed (#{$errorNo}: {$errorMsg})", Debug::ERROR);
 
 				throw new Exception($errorMsg);
 			}
