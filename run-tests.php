@@ -39,12 +39,14 @@ if (!empty($argv[1])) {
 	$currentDirectory = getcwd();
 	$testsDirectory = $argv[1];
 
-	// get absolute path for test directory
-	$testsDirectory = realpath($currentDirectory . $testsDirectory);
+	if (!realpath($testsDirectory)) {
+		// get absolute path for test directory
+		$testsDirectory = realpath($currentDirectory . $testsDirectory);
+	}
 }
 
 if (!empty($testsDirectory)) {
-	$suite->addTestSuiteDirectory($testsDirectory, 'myapp test suite');
+	$suite->addTestSuiteDirectory($testsDirectory, 'Application test suite');
 }
 else {
 	// add "core" tests from /tests directory
