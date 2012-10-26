@@ -36,11 +36,9 @@ abstract class Skin {
 
 	protected $packages = array();
 
-	// meta tags
+	// meta and link tags in head section
 	protected $meta = array();
-
-	// link tags
-	protected $links = array();
+	protected $link = array();
 
 	// global JS variables
 	protected $jsVariables = array();
@@ -108,6 +106,20 @@ abstract class Skin {
 	 */
 	function addMeta($name, $value) {
 		$this->meta[$name] = $value;
+	}
+
+	/**
+	 * Add <link> tag entry
+	 */
+	function addLink($rel, $value) {
+		$this->link[$rel] = $value;
+	}
+
+	/**
+	 * Set the canonical URL of the page
+	 */
+	function setCanonicalUrl($url) {
+		$this->addLink('canonical', $url);
 	}
 
 	/**
@@ -202,7 +214,11 @@ abstract class Skin {
 		$elements = array();
 
 		foreach($this->meta as $name => $value) {
-			$elements[] = '<meta name="' . htmlspecialchars($name) . '"  content="' . htmlspecialchars($value) . '" />';
+			$elements[] = '<meta name="' . htmlspecialchars($name) . '"  content="' . htmlspecialchars($value) . '">';
+		}
+
+		foreach($this->link as $rel => $value) {
+			$elements[] = '<link rel="' . htmlspecialchars($rel) . '"  href="' . htmlspecialchars($value) . '">';
 		}
 
 		return rtrim($sep . implode($sep, $elements));
