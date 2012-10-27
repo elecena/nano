@@ -50,6 +50,12 @@ abstract class StaticAssetsProcessor {
 		}
 		else {
 			if (!is_string($ret)) {
+				foreach($files as $file) {
+					if (!file_exists($file)) {
+						throw new Exception("File '{$file}' doesn't exist");
+					}
+				}
+
 				$ret = $this->process($files);
 
 				$ret .= "\n\n/* Cached as {$key} */";
