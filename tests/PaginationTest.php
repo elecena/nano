@@ -69,4 +69,17 @@ class PaginationTest extends PHPUnit_Framework_TestCase {
 		$this->assertContains('/foo/bar?q=foo&p=1', $pager->getUrlForFirstPage());
 		$this->assertContains('/foo/bar?q=foo&p=5', $pager->getUrlForLastPage());
 	}
+
+	public function testGetItems() {
+		$pager = $this->getPager();
+
+		$pager->setCurrentPage(3);
+		$items = $pager->getItems(); var_dump($items);
+
+		$pager->setCurrentPage(1);
+		$items = $pager->getItems(); var_dump($items);
+
+		$pager->setCurrentPage(5);
+		$items = $pager->getItems(); var_dump($items);
+	}
 }

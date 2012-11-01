@@ -50,7 +50,7 @@ class Pagination {
 	 * Set number of pages pager is generated for
 	 */
 	function setPages($pages) {
-		$this->count = $pages * $this->limit;
+		$this->count = intval($pages * $this->limit);
 	}
 
 	/**
@@ -60,7 +60,7 @@ class Pagination {
 		$page = max($this->getFirstPage(), $page);
 		$page = min($this->getLastPage(), $page);
 
-		$this->page = $page;
+		$this->page = intval($page);
 	}
 
 	function getCurrentPage() {
@@ -78,7 +78,7 @@ class Pagination {
 	 * Get ID of the last page
 	 */
 	function getLastPage() {
-		return ceil($this->count / $this->limit);
+		return intval(ceil($this->count / $this->limit));
 	}
 
 	function isFirstPage() {
@@ -122,5 +122,72 @@ class Pagination {
 	 */
 	function getUrlForLastPage() {
 		return $this->getUrlForPage($this->getLastPage());
+	}
+
+	/**
+	 * Get paginator items
+	 */
+	function getItems($limit = 5) {
+		$items = array();
+
+		if ($this->getLastPage() == 1) {
+			return $items;
+		}
+
+		// add the previous page
+		if ($this->getPrevPage()) {
+			$items[] = array(
+				'class' => 'prev',
+				'url' => $this->getUrlForPage($this->getPrevPage()),
+				'page' => $this->getPrevPage(),
+			);
+		}
+
+		// render neighbours of the current page
+		$current = $this->getCurrentPage();
+		$range = intval(floor($limit / 2));
+
+		$from = max($current - $range, $this->getFirstPage());
+		$to = min($current + $range, $this->getLastPage());
+
+		// add left spacer
+		if ($current - $range > $this->getFirstPage()) {
+			$items[] = array(
+				'url' => $this->getUrlForFirstPage(),
+				'page' => $this->getFirstPage(),
+			);
+
+			$items[] = false;
+		}
+
+		// render current page
+		for ($p = $from; $p <= $to; $p++) {
+			$items[] = array_filter(array(
+				'class' => ($p === $current) ? 'current' : false,
+				'url' => $this->getUrlForPage($p),
+				'page' => $p,
+			));
+		}
+
+		// add right spacer
+		if ($current + $range  < $this->getLastPage()) {
+			$items[] = false;
+
+			$items[] = array(
+				'url' => $this->getUrlForLastPage(),
+				'page' => $this->getLastPage(),
+			);
+		}
+
+		// add the next page
+		if ($this->getNextPage()) {
+			$items[] = array(
+				'class' => 'next',
+				'url' => $this->getUrlForPage($this->getNextPage()),
+				'page' => $this->getNextPage(),
+			);
+		}
+
+		return $items;
 	}
 }

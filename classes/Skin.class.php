@@ -214,11 +214,11 @@ abstract class Skin {
 		$elements = array();
 
 		foreach($this->meta as $name => $value) {
-			$elements[] = '<meta name="' . htmlspecialchars($name) . '"  content="' . htmlspecialchars($value) . '">';
+			$elements[] = '<meta name="' . htmlspecialchars($name) . '" content="' . htmlspecialchars($value) . '">';
 		}
 
 		foreach($this->link as $rel => $value) {
-			$elements[] = '<link rel="' . htmlspecialchars($rel) . '"  href="' . htmlspecialchars($value) . '">';
+			$elements[] = '<link rel="' . htmlspecialchars($rel) . '" href="' . htmlspecialchars($value) . '">';
 		}
 
 		return rtrim($sep . implode($sep, $elements));
