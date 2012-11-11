@@ -258,8 +258,15 @@ class DatabaseMongo extends Database {
 	 * Get data for current row
 	 */
 	public function fetchRow($results) {
-		$results->next();
-		$row = $results->current();
+		try {
+			$results->next();
+			$row = $results->current();
+		}
+		catch (Exception $ex) {
+			$row = null;
+
+			$this->log(__METHOD__, $ex->getMessage());
+		}
 
 		return !is_null($row) ? $row : false;
 	}
