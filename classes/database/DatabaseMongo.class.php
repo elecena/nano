@@ -224,8 +224,24 @@ class DatabaseMongo extends Database {
 	/**
 	 * Returns number of items in a given collection
 	 */
-	public function count($table, $method) {
-		return $this->db->selectCollection($table)->count();
+	public function count($table, Array $query = array(), $fname = 'DatabaseMongo::count') {
+		$this->log(__METHOD__, "/* {$fname} */ COUNT {$table} WHERE " . json_encode($query));
+
+		return $this->db->selectCollection($table)->count($query);
+	}
+
+	/**
+	 * Returns a list of distinct values for the given key across a collection
+	 *
+	 * @see http://www.php.net/manual/en/mongodb.command.php
+	 * @see http://www.php.net/manual/en/mongocollection.distinct.php (PECL mongo >=1.2.11)
+	 */
+	public function distinct($table, $key, Array $query = array(), $fname = 'DatabaseMongo::distinct') {
+		$this->log(__METHOD__, "/* {$fname} */ DISTINCT {$key} IN {$table} WHERE " . json_encode($query));
+
+		$res = $this->db->command(array('distinct' => $table, 'key' => $key, 'query' => $query));
+
+		return !empty($res['ok']) ? $res['values'] : false;
 	}
 
 	/**
