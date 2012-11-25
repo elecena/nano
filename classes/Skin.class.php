@@ -105,7 +105,22 @@ abstract class Skin {
 	 * Add <meta> tag entry
 	 */
 	function addMeta($name, $value) {
-		$this->meta[$name] = $value;
+		$this->meta[] = array(
+			'name' => $name,
+			'value' => $value
+		);
+	}
+	
+	/**
+	 * Add <meta> OpenGraph entry
+	 *
+	 * @see http://ogp.me/
+	 */
+	function addOpenGraph($name, $value) {
+		$this->meta[] = array(
+			'property' => "og:{$name}",
+			'value' => $value
+		);
 	}
 
 	/**
@@ -213,8 +228,17 @@ abstract class Skin {
 		// render <meta> elements
 		$elements = array();
 
-		foreach($this->meta as $name => $value) {
-			$elements[] = '<meta name="' . htmlspecialchars($name) . '" content="' . htmlspecialchars($value) . '">';
+		foreach($this->meta as $item) {
+			$node = '<meta';
+
+			foreach($item as $name => $value) {
+				$value = htmlspecialchars($value);
+				$node .= " {$name}=\"{$value}\"";
+			}
+
+			$node .= '>';
+
+			$elements[] = $node;
 		}
 
 		foreach($this->link as $rel => $value) {
