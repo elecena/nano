@@ -236,7 +236,7 @@ abstract class Skin {
 
 		foreach($urls as $url) {
 			if ($url !== false) {
-				$elements[] = '<link href="' . $url . '" rel="stylesheet" />';
+				$elements[] = '<link href="' . $url . '" rel="stylesheet">';
 			}
 		}
 
