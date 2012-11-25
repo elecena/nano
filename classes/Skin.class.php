@@ -119,7 +119,7 @@ abstract class Skin {
 	function addOpenGraph($name, $value) {
 		$this->meta[] = array(
 			'property' => "og:{$name}",
-			'value' => $value
+			'content' => $value
 		);
 	}
 
