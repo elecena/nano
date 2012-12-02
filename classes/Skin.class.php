@@ -110,7 +110,7 @@ abstract class Skin {
 			'value' => $value
 		);
 	}
-	
+
 	/**
 	 * Add <meta> OpenGraph entry
 	 *
@@ -241,8 +241,14 @@ abstract class Skin {
 			$elements[] = $node;
 		}
 
+		// render <link> elements
 		foreach($this->link as $rel => $value) {
 			$elements[] = '<link rel="' . htmlspecialchars($rel) . '" href="' . htmlspecialchars($value) . '">';
+		}
+
+		// render global JS variables (wrapped in nano object)
+		if (!empty($this->jsVariables)) {
+			$elements[] = '<script>nano = ' . json_encode($this->jsVariables) . '</script>';
 		}
 
 		return rtrim($sep . implode($sep, $elements));
