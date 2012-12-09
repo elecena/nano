@@ -16,6 +16,7 @@ class DebugTest extends PHPUnit_Framework_TestCase {
 
 	public function testDirectory() {
 		$debug = new Debug($this->logDir);
+		$this->assertEquals($this->logDir, $debug->getLogDirectory());
 		$this->assertEquals($this->logDir . '/debug.log', $debug->getLogFile());
 
 		$debug = new Debug($this->logDir, 'scriptFoo');

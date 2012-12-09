@@ -94,6 +94,13 @@ class Debug {
 	}
 
 	/**
+	 * Get log directory
+	 */
+	public function getLogDirectory() {
+		return $this->dir;
+	}
+
+	/**
 	 * Log given message to log file
 	 */
 	public function log($msg = '', $level = 5) {
