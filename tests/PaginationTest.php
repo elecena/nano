@@ -74,12 +74,12 @@ class PaginationTest extends PHPUnit_Framework_TestCase {
 		$pager = $this->getPager();
 
 		$pager->setCurrentPage(3);
-		$items = $pager->getItems(); var_dump($items);
+		$items = $pager->getItems(); #var_dump($items);
 
 		$pager->setCurrentPage(1);
-		$items = $pager->getItems(); var_dump($items);
+		$items = $pager->getItems(); #var_dump($items);
 
 		$pager->setCurrentPage(5);
-		$items = $pager->getItems(); var_dump($items);
+		$items = $pager->getItems(); #var_dump($items);
 	}
 }
