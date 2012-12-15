@@ -102,7 +102,7 @@ class Request {
 	 * Gets path part from request's URI
 	 */
 	private static function getPathFromURI($uri) {
-		return parse_url($uri, PHP_URL_PATH);
+		return urldecode(parse_url($uri, PHP_URL_PATH));
 	}
 
 	/**

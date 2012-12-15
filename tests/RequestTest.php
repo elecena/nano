@@ -231,6 +231,12 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('123', $request->get('q'));
 	}
 
+	public function testRequestPathDecoding() {
+		$request = new Request(array(), array('REQUEST_URI' => '/foo/bar%20test'));
+
+		$this->assertEquals('/foo/bar test', $request->getPath());
+	}
+
 	public function testIP() {
 		// crawl-66-249-66-248.googlebot.com
 		$ip = '66.249.66.248';
