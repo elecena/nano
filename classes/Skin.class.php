@@ -91,7 +91,7 @@ abstract class Skin {
 	 *  $skin->addPageSubtitle('foo');
 	 */
 	function addPageSubtitle($subtitle) {
-		$this->subTitles[] = $subtitle;
+		$this->subTitles[] = htmlspecialchars($subtitle);
 	}
 
 	/**
