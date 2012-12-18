@@ -163,12 +163,11 @@ class DatabaseMongo extends Database {
 
 	/**
 	 * Remove rows from a table using following WHERE statements
-	 *
-	 * @see http://dev.mysql.com/doc/refman/5.0/en/delete.html
 	 */
 	public function delete($table, $where = array(), Array $options = array(), $fname = 'Database::delete') {
 		$this->log(__METHOD__, "/* {$fname} */ {$table}: REMOVE WHERE " . json_encode($where));
 
+		// @see http://php.net/manual/en/mongocollection.remove.php
 		$this->time();
 		$this->db->selectCollection($table)->remove($where, $options);
 		$this->timeEnd();
