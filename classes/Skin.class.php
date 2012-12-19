@@ -183,6 +183,13 @@ abstract class Skin {
 	}
 
 	/**
+	 * Return URL to a given local file
+	 */
+	function getUrlForAsset($asset) {
+		return $this->staticAssets->getUrlForAsset($asset);
+	}
+
+	/**
 	 * Get skin data - variables available in skin template
 	 */
 	protected function getSkinData() {
