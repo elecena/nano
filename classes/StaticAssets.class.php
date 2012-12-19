@@ -49,6 +49,7 @@ class StaticAssets {
 		'gif' => 'image/gif',
 		'png' => 'image/png',
 		'jpg' => 'image/jpeg',
+		'ico' => 'image/x-icon',
 	);
 
 	/**
