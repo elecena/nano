@@ -275,6 +275,15 @@ class Request {
 	}
 
 	/**
+	 * Returns HTTP header value
+	 */
+	public function getHeader($name, $default = null) {
+		$key = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
+
+		return isset($this->env[$key]) ? $this->env[$key] : $default;
+	}
+
+	/**
 	 * Get IP address of client
 	 *
 	 * Return null if IP is malformed or not provided (CLI?)

@@ -237,6 +237,16 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('/foo/bar test', $request->getPath());
 	}
 
+	public function testGetHeader() {
+		$request = new Request(array(), array('HTTP_FOO' => 'bar'));
+
+		$this->assertEquals('bar', $request->getHeader('Foo'));
+
+		// not existing header
+		$this->assertNull($request->getHeader('test'));
+		$this->assertEquals('foo', $request->getHeader('test', 'foo'));
+	}
+
 	public function testIP() {
 		// crawl-66-249-66-248.googlebot.com
 		$ip = '66.249.66.248';

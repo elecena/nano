@@ -56,6 +56,9 @@ class Response {
 	// response HTTP code (defaults to 404 - Not Found)
 	private $responseCode = 404;
 
+	// timestamp of Last-Modified header
+	private $lastModified = false;
+
 	// $_SERVER global
 	private $env;
 
@@ -191,13 +194,13 @@ class Response {
 	 */
 	public function setLastModified($lastModified) {
 		if (is_string($lastModified)) {
-			$lastModified = strtotime($lastModified);
+			$this->lastModified = strtotime($lastModified);
 		}
 		else {
-			$lastModified = intval($lastModified);
+			$this->lastModified = intval($lastModified);
 		}
 
-		$this->setHeader('Last-Modified', gmdate(self::DATE_RFC1123, $lastModified));
+		$this->setHeader('Last-Modified', gmdate(self::DATE_RFC1123, $this->lastModified));
 	}
 
 	/**
@@ -330,9 +333,38 @@ class Response {
 	}
 
 	/**
+	 * Return true if the resource was NOT modified since the last time browser requested it
+	 *
+	 * @see http://stackoverflow.com/questions/10847157/handling-if-modified-since-header-in-a-php-script
+	 */
+	public function isNotModifiedSince() {
+		$ifModifiedSince = $this->app->getRequest()->getHeader('If-Modified-Since');
+
+		if (($this->lastModified !== false) && $ifModifiedSince) {
+			// parse provided header
+			$ifModifiedSinceTimestamp = strtotime($ifModifiedSince);
+
+			if (($ifModifiedSinceTimestamp > 0) && ($ifModifiedSinceTimestamp >= $this->lastModified)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Return response and set HTTP headers
 	 */
 	public function render() {
+		// handle If-Modified-Since to reduce bandwidth
+		if ($this->isNotModifiedSince()) {
+			$this->debug->log(__METHOD__ . ' - sending 304 Not Modified');
+
+			$this->setResponseCode(self::NOT_MODIFIED);
+			$this->sendHeaders();
+			return '';
+		}
+
 		$response = $this->getContent();
 
 		// compress the response (if supported)

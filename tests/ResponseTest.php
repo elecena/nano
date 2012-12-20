@@ -197,4 +197,54 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 			$this->assertEquals($isCompressed, $response->isCompressed());
 		}
 	}
+
+	/**
+	 * @dataProvider ifModifiedSinceDataProvider
+	 */
+	public function testIfModifiedSince($lastModified, $headerValue, $expected) {
+		if (!is_null($headerValue)) {
+			$headers = array('HTTP_IF_MODIFIED_SINCE' => $headerValue);
+		}
+		else {
+			$headers = array();
+		}
+
+		$request = new Request(array(), $headers);
+
+		// mock NanoApp
+		// TODO: add mockXXX method to mock certain app fields
+		// mockRequest, mockDatabase, mockDebug, ...
+		$app = $this->getMockBuilder('NanoApp')
+			->disableOriginalConstructor()
+			->setMethods(array('getRequest', 'getDebug'))
+			->getMock();
+
+		$app->expects($this->any())->method('getRequest')->will($this->returnValue($request));
+		$app->expects($this->any())->method('getDebug')->will($this->returnValue($this->app->getDebug()));
+
+		$response = new Response($app);
+
+		if (!is_null($lastModified)) {
+			$response->setLastModified($lastModified);
+		}
+
+		$this->assertEquals($expected, $response->isNotModifiedSince());
+	}
+
+	public function ifModifiedSinceDataProvider() {
+		return array(
+			array(null, null, false),
+			array('Wed, 19 Dec 2012 14:42:24 GMT', null, false),
+			array(null, 'Wed, 19 Dec 2012 14:42:24 GMT', false),
+			array('Wed, 19 Dec 2012 14:42:24 GMT', 'Wed, 19 Dec 2012 13:42:24 GMT', false),
+
+			// broken dates
+			array('Wed, 19 Dec 2012 14:42:24 GMT', 'Wed, 19 Decc 2012 13:42:24 GMT', false),
+			array('Wed, 19 Dec 2012 14:42:24 GMT', 'Wed, 19-12-2012 13:42:24 GMT', false),
+
+			// ok
+			array('Wed, 19 Dec 2012 14:42:24 GMT', 'Wed, 19 Dec 2012 14:42:24 GMT', true),
+			array('Wed, 19 Dec 2012 14:42:24 GMT', 'Wed, 19 Dec 2012 15:42:24 GMT', true),
+		);
+	}
 }
