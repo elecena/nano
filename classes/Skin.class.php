@@ -43,6 +43,9 @@ abstract class Skin {
 	// global JS variables
 	protected $jsVariables = array();
 
+	// skin will not wrap the content
+	protected $bodyOnly = false;
+
 	/**
 	 * Return an instance of a given skin
 	 */
@@ -73,6 +76,13 @@ abstract class Skin {
 	 */
 	function getName() {
 		return $this->skinName;
+	}
+
+	/**
+	 * The skin will not be used to wrap content
+	 */
+	function setBodyOnly($val = true) {
+		$this->bodyOnly = $val;
 	}
 
 	/**
@@ -127,7 +137,23 @@ abstract class Skin {
 	 * Add <link> tag entry
 	 */
 	function addLink($rel, $value) {
-		$this->link[$rel] = $value;
+		$this->link[] = array(
+			'rel' => $rel,
+			'value' => $value
+		);
+	}
+
+	/**
+	 * Add RSS feed
+	 */
+	function addFeed($href, $title = false) {
+		// <link rel="alternate" href="/feed/rss" type="application/rss+xml" title="RSS feed" />
+		$this->link[] = array(
+			'rel' => 'alternate',
+			'href' => $href,
+			'type' => 'application/rss+xml',
+			'title' => $title,
+		);
 	}
 
 	/**
@@ -249,8 +275,17 @@ abstract class Skin {
 		}
 
 		// render <link> elements
-		foreach($this->link as $rel => $value) {
-			$elements[] = '<link rel="' . htmlspecialchars($rel) . '" href="' . htmlspecialchars($value) . '">';
+		foreach($this->link as $item) {
+			$node = '<link';
+
+			foreach($item as $name => $value) {
+				$value = htmlspecialchars($value);
+				$node .= " {$name}=\"{$value}\"";
+			}
+
+			$node .= '>';
+
+			$elements[] = $node;
 		}
 
 		// render global JS variables (wrapped in nano object)
@@ -303,6 +338,12 @@ abstract class Skin {
 	 * Returns HTML of rendered page
 	 */
 	function render($content) {
+		// don't wrap the content
+		if ($this->bodyOnly) {
+			$this->app->getResponse()->setContent($content);
+			return;
+		}
+
 		// set skin template's data
 		$this->template->set($this->getSkinData());
 		$this->template->set('content', $content);
