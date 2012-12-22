@@ -244,6 +244,36 @@ class DatabaseMongo extends Database {
 	}
 
 	/**
+	 * Returns a result of Map/Reduce operation
+	 *
+	 * @see http://docs.mongodb.org/manual/applications/map-reduce/
+	 * @see http://stackoverflow.com/questions/3002841/mongo-map-reduce-first-time
+	 */
+	public function mapReduce($table, $map, $reduce, Array $query = array(), $fname = 'DatabaseMongo::mapReduce') {
+		$mapFunc = new MongoCode($map);
+		$reduceFunc = new MongoCode($reduce);
+
+		$this->log(__METHOD__, "/* {$fname} */ MAP REDUCE ON {$table} WHERE " . json_encode($query));
+
+		$res = $this->db->command(array(
+			'mapreduce' => $table,
+			'map' => $mapFunc,
+			'reduce' => $reduceFunc,
+			'out' => array('inline' => 1),
+			'query' => $query,
+		));
+
+		if (!empty($res['ok'])) {
+			$this->log(__METHOD__, "took {$res['timeMillis']} ms");
+
+			return $res['results'];
+		}
+		else {
+			return false;
+		}
+	}
+
+	/**
 	 * Get primary key value for recently inserted row
 	 */
 	public function getInsertId() {}
