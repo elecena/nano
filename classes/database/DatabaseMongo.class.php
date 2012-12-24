@@ -33,6 +33,9 @@ class DatabaseMongo extends Database {
 		$this->db = $this->link->selectDB($settings['database']);
 
 		$this->log(__METHOD__, 'connected');
+
+		// @see http://learnmongo.com/posts/mongodb-and-64-bit-php/
+		ini_set('mongo.native_long', 1);
 	}
 
 	/**
