@@ -13,7 +13,7 @@
  * $Id$
  */
 
-ini_set('memory_limit', '256M');
+ini_set('memory_limit', '350M');
 
 require_once 'nano.php';
 
