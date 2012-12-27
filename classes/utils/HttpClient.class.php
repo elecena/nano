@@ -167,10 +167,13 @@ class HttpClient {
 	/**
 	 * Send POST HTTP request for a given URL
 	 */
-	public function post($url, Array $fields = array()) {
+	public function post($url, $fields = false) {
 		// add request POST fields
-		if (!empty($fields)) {
+		if (is_array($fields)) {
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, http_build_query($fields));
+		}
+		else if (is_string($fields)) {
+			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $fields);
 		}
 
 		$this->log("POST {$url}");
