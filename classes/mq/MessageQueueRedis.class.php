@@ -7,6 +7,9 @@
  *  - lastid - stores ID of recently added message
  *  - messages - messages stored in the queue
  *
+ * mq::<queue_name>::messages
+ * mq::<queue_name>::lastid
+ *
  * $Id$
  */
 
@@ -55,7 +58,7 @@ class MessageQueueRedis extends MessageQueue {
 		// encode message
 		$rawMsg = json_encode($msg);
 
-		$this->redis->push($this->getQueueKey(), $rawMsg);
+		$this->redis->push($this->getQueueKey(), $rawMsg); // RPUSH
 
 		// return wrapped message
 		return new ResultsWrapper($msg);
@@ -65,7 +68,7 @@ class MessageQueueRedis extends MessageQueue {
 	 * Get and remove (left pop) message from the beginning of current queue
 	 */
 	public function pop() {
-		$rawMsg = $this->redis->pop($this->getQueueKey());
+		$rawMsg = $this->redis->pop($this->getQueueKey()); // RPOP
 
 		if (!is_null($rawMsg)) {
 			// decode the message
