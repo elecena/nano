@@ -64,15 +64,16 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('foo', $msgPopped->getData());
 
 		// "multi" pop
+		$mq->clean();
 		$msgPushed = $mq->push('foo');
 		$msgPushed = $mq->push('foo');
 		$msgPushed = $mq->push('foo');
 
 		$this->assertEquals(3, $mq->getLength());
 
-		// test message ID
-		$msgPopped = $mq->pop();
-		$this->assertEquals(4, $msgPopped->getId());
+		// test mq as FIFO
+		$this->assertEquals(1, $mq->pop()->getId());
+		$this->assertEquals(2, $mq->pop()->getId());
 
 		// remove the queue
 		$mq->clean();
@@ -102,10 +103,10 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($length, $mq->getLength());
 
 		// read them
-		for($n=$length - 1; $n >= 0; $n--) {
+		for($n=0; $n < $length; $n++) {
 			$msg = $mq->pop();
 
-			$this->assertEquals($n, $mq->getLength());
+			$this->assertEquals($length - $n - 1, $mq->getLength());
 			$this->assertEquals($n+1, $msg->getId());
 
 			$this->assertEquals(array('foo' => $n, 'string' => "Foo bar\n123", 'test' => false), $msg->getData());

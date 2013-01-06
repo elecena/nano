@@ -68,7 +68,7 @@ class MessageQueueRedis extends MessageQueue {
 	 * Get and remove (left pop) message from the beginning of current queue
 	 */
 	public function pop() {
-		$rawMsg = $this->redis->pop($this->getQueueKey()); // RPOP
+		$rawMsg = $this->redis->pop($this->getQueueKey(), false); // LPOP
 
 		if (!is_null($rawMsg)) {
 			// decode the message
