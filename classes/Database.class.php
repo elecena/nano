@@ -413,6 +413,10 @@ abstract class Database {
 	public function resolveOptions(Array $options) {
 		$sqlParts = array();
 
+		if (isset($options['group'])) {
+			$sqlParts[] = 'GROUP BY ' . $this->escape($options['group']);
+		}
+
 		if (isset($options['order'])) {
 			$sqlParts[] = 'ORDER BY ' . $this->resolveOrderBy($options['order']);
 		}
