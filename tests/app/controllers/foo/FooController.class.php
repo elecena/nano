@@ -65,7 +65,7 @@ class FooController extends Controller {
 	/**
 	 * Event handler
 	 */
-	public function onFoo($value) {
+	public function onFoo(&$value) {
 		$value .= 'test';
 	}
 }

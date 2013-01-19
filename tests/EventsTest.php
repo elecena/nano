@@ -63,12 +63,12 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('0456', $value);
 	}
 
-	public function handlerTrue($foo = '') {
+	public function handlerTrue(&$foo = '') {
 		$foo .= '123';
 		return true;
 	}
 
-	public function handlerFalse($foo = '') {
+	public function handlerFalse(&$foo = '') {
 		$foo .= '456';
 		return false;
 	}
