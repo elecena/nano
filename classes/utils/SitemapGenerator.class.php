@@ -12,7 +12,12 @@ class SitemapGenerator {
 
 	const SITEMAP_FILE = 'sitemap.xml';
 	const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9';
-	const URLS_PER_FILE = 30000;
+
+	// Sitemap file that you provide must have no more than 50,000 URLs and must be no larger than 10MB (10,485,760 bytes).
+	// @see http://www.sitemaps.org/protocol.html#index
+	const URLS_PER_FILE = 15000;
+
+	const USE_GZIP = false;
 
 	private $app;
 	private $debug;
@@ -21,7 +26,12 @@ class SitemapGenerator {
 
 	// list of sitemap's URLs
 	private $urls;
+
+	// count URLs in all sitemaps
 	private $urlsCount = 0;
+
+	// name of the currently built sitemap
+	private $currentSitemap = '';
 
 	// list of sitemaps to be stored in sitemapindex file
 	private $sitemaps = array();
@@ -80,8 +90,14 @@ class SitemapGenerator {
 	 * Store sitemap's links in a given file
 	 */
 	private function saveSitemap($fileName, $gzip = true) {
+		// nothing to store
+		if (empty($this->urls)) {
+			return false;
+		}
+
 		// generate XML
 		$xml = $this->initXML('urlset');
+		$xml->writeComment(count($this->urls) . ' items');
 
 		foreach($this->urls as $item) {
 			$xml->startElement('url');
@@ -103,8 +119,13 @@ class SitemapGenerator {
 			$xml->endElement();
 		}
 
+		$this->debug->log(__METHOD__ . ": {$this->countUrls()} items to be stored as {$fileName}");
+
 		// add an entry to sitemaps index
 		$this->sitemaps[] = $fileName . ($gzip ? '.gz' : '');
+
+		// reset the list of items
+		$this->urls = array();
 
 		return $this->saveXML($xml, $fileName, $gzip);
 	}
@@ -115,6 +136,7 @@ class SitemapGenerator {
 	private function saveIndex($fileName, $gzip = true) {
 		// generate XML
 		$xml = $this->initXML('sitemapindex');
+		$xml->writeComment($this->urlsCount . ' items');
 
 		foreach($this->sitemaps as $item) {
 			$xml->startElement('sitemap');
@@ -136,14 +158,35 @@ class SitemapGenerator {
 	 */
 	private function addSitemap() {
 		// nothing to store
-		if (count($this->urls) == 0) {
+		if (count($this->urls) === 0) {
 			return;
 		}
 
-		$fileName = sprintf('sitemap-%02d.xml', count($this->sitemaps) + 1);
+		$fileName = sprintf('sitemap-%02d%s.xml', count($this->sitemaps) + 1, ($this->currentSitemap !== '' ? ('-' . $this->currentSitemap) : ''));
 
 		// store file
-		$this->saveSitemap($fileName, true);
+		$this->saveSitemap($fileName, self::USE_GZIP);
+	}
+
+	/**
+	 * Start new sitemap under given name
+	 */
+	public function startSitemap($name) {
+		// store previously added urls
+		$this->addSitemap();
+
+		$this->currentSitemap = $name;
+
+		$this->debug->log(__METHOD__ . ": {$this->currentSitemap}");
+	}
+
+	/**
+	 * Closes sitemap created using startSitemap
+	 */
+	public function endSitemap() {
+		// store previously added urls
+		$this->addSitemap();
+		$this->currentSitemap = '';
 	}
 
 	/**
