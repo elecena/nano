@@ -175,7 +175,7 @@ class DatabaseMysql extends Database {
 	 */
 	public function escape($value) {
 		//return $this->link->escape_string($value);
-		return mysql_escape_string($value);
+		return @mysql_real_escape_string($value);
 	}
 
 	/**
