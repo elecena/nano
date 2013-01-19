@@ -112,7 +112,7 @@ class DOM {
 	public function getNodeContent($xpath) {
 		$node = $this->getNode($xpath);
 
-		return !empty($node) ? (string) $node : null;
+		return !is_null($node) ? (string) $node : null;
 	}
 
 	/**
@@ -121,7 +121,7 @@ class DOM {
 	public function getNodeTextContent($xpath) {
 		$node = $this->getNode($xpath);
 
-		return !empty($node) ? strip_tags($node->asXML()) : null;
+		return !is_null($node) ? strip_tags($node->asXML()) : null;
 	}
 
 	/**
@@ -130,7 +130,7 @@ class DOM {
 	public function getNodeAttr($xpath, $attr) {
 		$node = $this->getNode($xpath);
 
-		return !empty($node[$attr]) ? (string) $node[$attr] : null;
+		return !is_null($node[$attr]) ? (string) $node[$attr] : null;
 	}
 
 	/**
@@ -139,7 +139,7 @@ class DOM {
 	public function removeNode($xpath) {
 		$node = $this->getNode($xpath);
 
-		if (!empty($node)) {
+		if (!is_null($node)) {
 			$dom = dom_import_simplexml($node);
 			$dom->parentNode->removeChild($dom);
 
