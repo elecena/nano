@@ -207,6 +207,20 @@ abstract class Database {
 	}
 
 	/**
+	 * Select given field from a table using following WHERE statements (return a set of rows)
+	 */
+	public function selectFields($table, $field, $where = array(), Array $options = array(), $fname = 'Database::selectFields') {
+		$res = $this->select($table, $field, $where, $options, $fname);
+
+		$fields = array();
+		foreach($res as $row) {
+			$fields[] = reset($row);
+		}
+
+		return !empty($fields) ? $fields : false;
+	}
+
+	/**
 	 * Remove rows from a table using following WHERE statements
 	 */
 	abstract public function delete($table, $where = array(), Array $options = array(), $fname = 'Database::delete');
