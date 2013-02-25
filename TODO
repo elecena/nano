@@ -21,15 +21,16 @@
 * Google Weather API
 * "Google-style" hash generator					[DONE]
 * sessions handling
-* adding meta tags to HTML
-* static pages module (/pages/static)
+* adding meta tags to HTML						[DONE]
+* static pages module (/pages/static)			[DONE]
 * GoogleData client
 * GoogleAnalytics API client
 * Google Shortener client
 * Wordpress XML-RPC API client
 * server-side GoogleAnalytics tracking			[DONE]
 * cron jobs
-* MongoDB driver
+* MongoDB driver								[DONE]
+* OAuth2 client
 
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1191/Using-the-Debugger-Class
 @see http://book.cakephp.org/pl/complete/879/Pocz¹tki-z-CakePHP#!/pl/view/1474/serialize
@@ -56,3 +57,5 @@
 @see http://snook.ca/archives/php/url-shortener
 @see http://programanddesign.com/php/base62-encode/
 @see http://www.mongodb.org/display/DOCS/PHP+Language+Center
+@see https://code.google.com/apis/console
+@see https://developers.google.com/accounts/docs/OAuth2ServiceAccount
