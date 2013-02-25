@@ -21,7 +21,7 @@ class Redis {
 	private function connect() {
 		if ($this->_sock)
 			return;
-		if ($sock = fsockopen ( $this->host, $this->port, $errno, $errstr )) {
+		if ($sock = pfsockopen ( $this->host, $this->port, $errno, $errstr )) {
 			$this->_sock = $sock;
 			$this->debug('Connected');
 			return;

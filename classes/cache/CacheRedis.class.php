@@ -34,6 +34,8 @@ class CacheRedis extends Cache {
 		if ($pass !== false) {
 			$this->redis->auth($pass);
 		}
+
+		$this->debug->log(__CLASS__ . ": using {$host}:{$port}");
 	}
 
 	/**
@@ -54,6 +56,7 @@ class CacheRedis extends Cache {
 			$this->misses++;
 		}
 
+		#$this->debug->log(__METHOD__ . ": {$key}");
 		return $value;
 	}
 
@@ -67,6 +70,8 @@ class CacheRedis extends Cache {
 		if (!is_null($ttl)) {
 			$this->redis->expire($key, $ttl);
 		}
+
+		#$this->debug->log(__METHOD__ . ": {$key}");
 
 		// Status code reply: always OK since SET can't fail.
 		return true;
