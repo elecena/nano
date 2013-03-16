@@ -136,7 +136,8 @@ class StaticAssetsCss extends StaticAssetsProcessor {
 		}
 
 		// get file's extension
-		$ext = end(explode('.', $imageFile));
+		$parts = explode('.', $imageFile);
+		$ext = end($parts);
 
 		switch($ext) {
 			case 'gif':
