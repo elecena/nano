@@ -239,16 +239,16 @@ abstract class Skin {
 	protected function getAssetsUrls($type) {
 		$urls = array();
 
-		// single assets
-		foreach($this->assets[$type] as $asset) {
-			$urls[] = $this->staticAssets->getUrlForAsset($asset);
-		}
-
 		// packages
 		$packagesUrls = $this->staticAssets->getUrlsForPackages($this->packages, $type);
 
 		if ($packagesUrls !== false) {
 			$urls = array_merge($urls, $packagesUrls);
+		}
+		
+		// single assets
+		foreach($this->assets[$type] as $asset) {
+			$urls[] = $this->staticAssets->getUrlForAsset($asset);
 		}
 
 		return $urls;
