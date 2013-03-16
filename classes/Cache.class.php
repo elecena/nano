@@ -43,7 +43,7 @@ abstract class Cache {
 		// add performance report
 		$events = $app->getEvents();
 		$events->bind('NanoAppTearDown', array($this, 'onNanoAppTearDown'));
-		
+
 		// set prefix
 		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
 	}
@@ -106,7 +106,7 @@ abstract class Cache {
 			$key = $this->prefix . self::SEPARATOR . $key;
 		}
 
-		return $key;
+		return str_replace(' ' , '_', $key);
 	}
 
 	/**
