@@ -35,10 +35,17 @@ class Template {
 	}
 
 	/**
+	 * Get full path to template file
+	 */
+	public function getPath($templateName) {
+		return $this->dir . '/' . basename($templateName) . '.tmpl.php';
+	}
+
+	/**
 	 * Render given template
 	 */
 	public function render($templateName) {
-		$templateFile = $this->dir . '/' . basename($templateName) . '.tmpl.php';
+		$templateFile = $this->getPath($templateName);
 
 		// check if given template file exists
 		if (!file_exists($templateFile)) {

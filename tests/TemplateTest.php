@@ -8,10 +8,20 @@
 
 class TemplateTest extends PHPUnit_Framework_TestCase {
 
-	private function getTemplate() {
-		$dir = dirname(__FILE__). '/app/controllers/foo/templates';
+	private $dir;
 
-		return new Template($dir);
+	public function setUp() {
+		$this->dir = realpath(dirname(__FILE__). '/app/controllers/foo/templates');
+	}
+
+	private function getTemplate() {
+		return new Template($this->dir);
+	}
+
+	public function testTemplateGetPath() {
+		$template = $this->getTemplate();
+		$this->assertEquals($this->dir . '/test.tmpl.php' , $template->getPath('test'));
+		$this->assertEquals($this->dir . '/notExistingTemplate.tmpl.php' , $template->getPath('notExistingTemplate'));
 	}
 
 	public function testNotExistingTemplate() {
