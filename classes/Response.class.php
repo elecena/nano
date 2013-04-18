@@ -214,7 +214,7 @@ class Response {
 	 * @see http://www.codinghorror.com/blog/2008/10/youre-reading-the-worlds-most-dangerous-programming-blog.html
 	 */
 	public function getAcceptedEncoding() {
-		$allowDeflate = true;
+		$allowDeflate = !true; // IE fix
 		$allowCompress = true;
 
 		$acceptedEncoding = isset($this->env['HTTP_ACCEPT_ENCODING']) ? $this->env['HTTP_ACCEPT_ENCODING'] : '';
