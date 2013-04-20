@@ -3,9 +3,14 @@
 /**
  * Abstract class for representing nanoPortal's controllers
  *
- * $Id$
+ * @property Cache $cache
+ * @property Database $database
+ * @property Debug $debug
+ * @property Events $events
+ * @property Router $router
+ * @property Skin $skin
+ * @property View $view
  */
-
 abstract class Controller {
 	// application
 	protected $app;

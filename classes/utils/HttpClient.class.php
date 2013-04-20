@@ -166,6 +166,9 @@ class HttpClient {
 
 	/**
 	 * Send POST HTTP request for a given URL
+	 *
+	 * @param string $url
+	 * @param mixed|false $fields URL parameters
 	 */
 	public function post($url, $fields = false) {
 		// add request POST fields

@@ -78,12 +78,14 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 				'content_encoding' => null,
 			),
 			// deflate
+			/**
 			array(
 				'http_header' => 'gzip, deflate',
 				'accepted_encoding' => array('deflate', 'deflate'),
 				'content_encoding' => 'deflate',
 				'compress_function' => 'gzdeflate',
 			),
+			**/
 			// gzip
 			array(
 				'http_header' => 'gzip, compress',

@@ -33,6 +33,10 @@ abstract class MessageQueue {
 
 	/**
 	 * Connect to a given message queue
+	 *
+	 * @param NanoApp $app
+	 * @param array $settings
+	 * @return MessageQueue
 	 */
 	public static function connect(NanoApp $app, Array $settings) {
 		$debug = $app->getDebug();

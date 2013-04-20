@@ -114,6 +114,7 @@ class DatabaseMysql extends Database {
 	 * Send given query and return results handler
 	 *
 	 * @see http://www.php.net/manual/en/mysqli.real-query.php
+	 * @return DatabaseResult
 	 */
 	public function query($sql) {
 		$this->debug->time('query');
@@ -175,7 +176,7 @@ class DatabaseMysql extends Database {
 	 */
 	public function escape($value) {
 		//return $this->link->escape_string($value);
-		return mysql_escape_string($value);
+		return @mysql_escape_string($value);
 	}
 
 	/**

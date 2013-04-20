@@ -237,6 +237,8 @@ class DatabaseMongo extends Database {
 	 *
 	 * @see http://www.php.net/manual/en/mongodb.command.php
 	 * @see http://www.php.net/manual/en/mongocollection.distinct.php (PECL mongo >=1.2.11)
+	 *
+	 * @return mixed|bool result
 	 */
 	public function distinct($table, $key, Array $query = array(), $fname = 'DatabaseMongo::distinct') {
 		$this->log(__METHOD__, "/* {$fname} */ DISTINCT {$key} IN {$table} WHERE " . json_encode($query));

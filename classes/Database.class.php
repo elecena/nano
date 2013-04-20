@@ -127,6 +127,7 @@ abstract class Database {
 
 	/**
 	 * Send given query and return results handler
+	 * @return DatabaseResult
 	 */
 	abstract public function query($sql);
 
@@ -154,6 +155,7 @@ abstract class Database {
 	 * Select given fields from a table using following WHERE statements
 	 *
 	 * @see http://dev.mysql.com/doc/refman/5.0/en/select.html
+	 * @return DatabaseResult
 	 */
 	public function select($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::select') {
 		$sql = "SELECT /* {$fname} */ " . $this->resolveList($fields) . ' FROM ' . $this->resolveList($table);
