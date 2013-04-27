@@ -4,8 +4,8 @@
  * JS processor
  *
  * @see https://github.com/rgrove/jsmin-php/
- *
- * $Id$
+ * @see https://developers.google.com/closure/compiler/docs/api-tutorial1
+ * @see http://marijnhaverbeke.nl/uglifyjs
  */
 
 class StaticAssetsJs extends StaticAssetsProcessor {
@@ -26,10 +26,10 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 			$closureService = $this->app->getConfig()->get('assets.closureService', false);
 
 			if ($closureService === false) {
-				ini_set('memory_limit', '256M');
-				$content = JSMinPlus::minify($content);
+				$content = $this->compressWithJSMin($content);
 			}
 			else {
+				/* @var $http HttpClient */
 				$http = $this->app->factory('HttpClient');
 
 				$res = $http->post($closureService, array(
@@ -37,10 +37,29 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 					'js_code' => $content,
 				));
 
-				$content = $res->getContent();
+				if ($res->getResponseCode() === Response::OK) {
+					$content = $res->getContent();
+				}
+				else {
+					$this->app->getDebug()->log('Minifying failed!', Debug::ERROR);
+					$content = $this->compressWithJSMin($content);
+				}
 			}
 		}
 
 		return trim($content);
+	}
+
+	/**
+	 * Perform JS compression using JSMin
+	 *
+	 * @param $content string JS code to be compressed
+	 * @return bool|string
+	 */
+	private function compressWithJSMin($content) {
+		$this->app->getDebug()->log('Using JSMin to compress JavaScript code');
+
+		ini_set('memory_limit', '256M');
+		return JSMinPlus::minify($content);
 	}
 }
