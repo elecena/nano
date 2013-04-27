@@ -60,6 +60,8 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 		$this->app->getDebug()->log('Using JSMin to compress JavaScript code');
 
 		ini_set('memory_limit', '256M');
-		return JSMinPlus::minify($content);
+		$compressed = JSMinPlus::minify($content);
+
+		return is_string($compressed) ? $compressed : $content;
 	}
 }
