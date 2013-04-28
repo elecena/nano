@@ -229,7 +229,6 @@ abstract class Skin {
 			// additional data
 			'skinPath' => $this->staticAssets->getUrlForFile($this->skinDirectory),
 			'pageTitle' => $this->getPageTitle(),
-			'renderTime' => $this->app->getResponse()->getResponseTime(),
 		);
 	}
 

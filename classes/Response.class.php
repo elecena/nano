@@ -71,6 +71,20 @@ class Response {
 
 		$this->debug = $this->app->getDebug();
 		$this->debug->time('response');
+
+		// start output buffering
+		$acceptedEncoding = $this->getAcceptedEncoding();
+
+		if ($acceptedEncoding !== false && !headers_sent()) {
+			ini_set("zlib.output_compression", 4096);
+			$this->debug->log(__METHOD__ . " - using response compression");
+
+			// fix for proxies
+			$this->setHeader('Vary', 'Accept-Encoding');
+			ob_start();
+
+			$this->debug->log(__METHOD__ . " - output buffering started");
+		}
 	}
 
 	/**
@@ -109,7 +123,9 @@ class Response {
 	 * Set the value of given header
 	 */
 	public function setHeader($name, $value) {
-		$this->headers[$name] = $value;
+		if (!is_null($value)) {
+			$this->headers[$name] = $value;
+		}
 	}
 
 	/**
@@ -143,6 +159,7 @@ class Response {
 		$protocol = isset($this->env['SERVER_PROTOCOL']) ? $this->env['SERVER_PROTOCOL'] : 'HTTP/1.1';
 
 		header("{$protocol} {$this->responseCode}", true /* $replace */, $this->responseCode);
+		$this->debug->log(__METHOD__ . " - HTTP {$this->responseCode}");
 
 		// emit headers
 		$headers = $this->getHeaders();
@@ -166,6 +183,8 @@ class Response {
 	 */
 	public function setResponseCode($responseCode) {
 		$this->responseCode = $responseCode;
+
+		$this->debug->log(__METHOD__ . " - {$responseCode}");
 	}
 
 	/**
@@ -187,6 +206,8 @@ class Response {
 
 		// for proxies
 		$this->setHeader('Cache-Control', "max-age={$duration}");
+
+		$this->debug->log(__METHOD__ . " - {$duration} sec");
 	}
 
 	/**
@@ -200,7 +221,10 @@ class Response {
 			$this->lastModified = intval($lastModified);
 		}
 
-		$this->setHeader('Last-Modified', gmdate(self::DATE_RFC1123, $this->lastModified));
+		$date = gmdate(self::DATE_RFC1123, $this->lastModified);
+		$this->setHeader('Last-Modified', $date);
+
+		$this->debug->log(__METHOD__ . " - {$date}");
 	}
 
 	/**
@@ -214,26 +238,12 @@ class Response {
 	 * @see http://www.codinghorror.com/blog/2008/10/youre-reading-the-worlds-most-dangerous-programming-blog.html
 	 */
 	public function getAcceptedEncoding() {
-		$allowDeflate = !true; // IE fix
 		$allowCompress = true;
 
 		$acceptedEncoding = isset($this->env['HTTP_ACCEPT_ENCODING']) ? $this->env['HTTP_ACCEPT_ENCODING'] : '';
 
 		if ($acceptedEncoding === '') {
 			return false;
-		}
-
-		if ($allowDeflate) {
-			// deflate checks
-			$acceptedEncodingRev = strrev($acceptedEncoding);
-			if (0 === strpos($acceptedEncodingRev, 'etalfed ,') // ie, webkit
-				|| 0 === strpos($acceptedEncodingRev, 'etalfed,') // gecko
-				|| 0 === strpos($acceptedEncoding, 'deflate,') // opera
-				// slow parsing
-				|| preg_match(
-					'@(?:^|,)\\s*deflate\\s*(?:$|,|;\\s*q=(?:0\\.|1))@', $acceptedEncoding)) {
-				return array('deflate', 'deflate');
-			}
 		}
 
 		// gzip checks (quick)
@@ -249,13 +259,6 @@ class Response {
 				,$acceptedEncoding
 				,$m)) {
 			return array('gzip', $m[1]);
-		}
-
-		if ($allowCompress && preg_match(
-				'@(?:^|,)\\s*((?:x-)?compress)\\s*(?:$|,|;\\s*q=(?:0\\.|1))@'
-				,$acceptedEncoding
-				,$m)) {
-			return array('compress', $m[1]);
 		}
 		return false;
 	}
@@ -353,32 +356,59 @@ class Response {
 	}
 
 	/**
-	 * Return response and set HTTP headers
+	 * Handle If-Modified-Since request header
+	 *
+	 * @return bool false if page was modified since
 	 */
-	public function render() {
-		// handle If-Modified-Since to reduce bandwidth
+	private function handleIfModifiedSince() {
 		if ($this->isNotModifiedSince()) {
 			$this->debug->log(__METHOD__ . ' - sending 304 Not Modified');
 
 			$this->setResponseCode(self::NOT_MODIFIED);
 			$this->sendHeaders();
+
+			// don't emit anything to the client
+			ob_end_clean();
+
+			// tear down the app
+			$this->app->tearDown();
+			die();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Flush the content of the webpage and send it to the client
+	 */
+	public function flush() {
+		if ($this->handleIfModifiedSince()) {
+			return;
+		}
+
+		/**
+		$this->sendHeaders();
+
+		ob_end_flush();
+		ob_flush();
+		flush();
+		ob_start();
+
+		$this->debug->log(__METHOD__ . ' - done');
+
+		sleep(2);
+		**/
+	}
+
+	/**
+	 * Return response and set HTTP headers
+	 */
+	public function render() {
+		if ($this->handleIfModifiedSince()) {
 			return '';
 		}
 
-		$response = $this->getContent();
-
-		// compress the response (if supported)
-		$encoding = $this->getAcceptedEncoding();
-		$response = $this->encode($response, $encoding);
-
-		// log
-		$responseSize = round(strlen($response) / 1024, 3);
-		$contentType = isset($this->headers['Content-type']) ? $this->headers['Content-type'] : '<unknown>';
-
-		$this->debug->log(__METHOD__ . " - HTTP {$this->responseCode}");
-		$this->debug->log(__METHOD__ . " - serving {$responseSize} kB with content type '{$contentType}'");
-
 		$this->sendHeaders();
-		return $response;
+		return $this->getContent();
 	}
 }

@@ -70,65 +70,28 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($this->response->isCompressed());
 
 		// loop through following cases
+		// TODO: use data provider
 		$cases = array(
 			// none ("fake" compress method provided)
 			array(
 				'http_header' => 'foo',
 				'accepted_encoding' => false,
-				'content_encoding' => null,
 			),
-			// deflate
-			/**
-			array(
-				'http_header' => 'gzip, deflate',
-				'accepted_encoding' => array('deflate', 'deflate'),
-				'content_encoding' => 'deflate',
-				'compress_function' => 'gzdeflate',
-			),
-			**/
 			// gzip
 			array(
 				'http_header' => 'gzip, compress',
 				'accepted_encoding' => array('gzip', 'gzip'),
-				'content_encoding' => 'gzip',
-				'compress_function' => 'gzencode',
 			),
 			// gzip
 			array(
 				'http_header' => 'x-gzip',
 				'accepted_encoding' => array('gzip', 'x-gzip'),
-				'content_encoding' => 'x-gzip',
-				'compress_function' => 'gzencode',
-			),
-			// compress
-			array(
-				'http_header' => 'compress',
-				'accepted_encoding' => array('compress', 'compress'),
-				'content_encoding' => 'compress',
-				'compress_function' => 'gzcompress',
 			),
 		);
 
 		foreach($cases as $case) {
 			$this->response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => $case['http_header']));
-			$this->response->setContent($content);
-
 			$this->assertEquals($case['accepted_encoding'], $this->response->getAcceptedEncoding());
-
-			// check the compression itself
-			if (isset($case['compress_function'])) {
-				$compressed = call_user_func($case['compress_function'], $content, Response::COMPRESSION_LEVEL);
-				$this->assertEquals($compressed, $this->response->render());
-				$this->assertEquals('Accept-Encoding', $this->response->getHeader('Vary'));
-				$this->assertTrue($this->response->isCompressed());
-			}
-			else {
-				$this->assertEquals($content, $this->response->render());
-				$this->assertNull($this->response->getHeader('Vary'));
-				$this->assertFalse($this->response->isCompressed());
-			}
-
-			$this->assertEquals($case['content_encoding'], $this->response->getHeader('Content-Encoding'));
 		}
 	}
 
@@ -153,51 +116,6 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals('{"foo":"bar"}', $this->response->getContent());
 		$this->assertEquals('application/json; charset=UTF-8', $this->response->getHeader('Content-type'));
-	}
-
-	public function testCompressionThreshold() {
-		// short response
-		$content = str_repeat('foo', 100);
-
-		$response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
-		$response->setContent($content);
-
-		$this->assertEquals($content, $response->render());
-		$this->assertFalse($response->isCompressed());
-
-		// longer response
-		$content = str_repeat('foo', 2048);
-
-		$response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
-		$response->setContent($content);
-		$response->render();
-
-		$this->assertTrue($response->isCompressed());
-	}
-
-	public function testCompressionBlacklist() {
-		$contentTypes = array(
-			// these should not be compressed
-			'image/gif' => false,
-			'image/png' => false,
-			'image/jpeg' => false,
-
-			// these should be compressed
-			'text/css' => true,
-			'text/plain' => true,
-			'text/html' => true,
-		);
-
-		$content = str_repeat('foo', 2048);
-
-		foreach($contentTypes as $contentType => $isCompressed) {
-			$response = new Response($this->app, array('HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
-			$response->setContent($content);
-			$response->setContentType($contentType);
-			$response->render();
-
-			$this->assertEquals($isCompressed, $response->isCompressed());
-		}
 	}
 
 	/**
