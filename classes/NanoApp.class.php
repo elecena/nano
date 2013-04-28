@@ -87,12 +87,15 @@ class NanoApp {
 		$env = isset($_SERVER) ? $_SERVER : array();
 
 		$this->request = new Request($params, $env);
+		$this->debug->log("Request: {$this->request->getPath()} from {$this->request->getIP()}");
 
 		// response
 		$this->response = new Response($this, $env);
 
 		// requests router
 		$this->router = new Router($this);
+
+		$this->debug->log('----');
 	}
 
 	/**
