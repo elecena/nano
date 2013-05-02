@@ -2,8 +2,11 @@
 
 /**
  * Class for representing nanoPortal's application
+ *
+ * @property Cache $cache
+ * @property Database $database
+ * @property Skin $skin
  */
-
 class NanoApp {
 	// cache object
 	protected $cache;

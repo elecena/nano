@@ -98,7 +98,7 @@ class Router {
 	/**
 	 * Route given request
 	 *
-	 * Returns either raw controller's data, data wrapped in Output object or false
+	 * @return bool|mixed|Output either raw controller's data, data wrapped in Output object or false
 	 */
 	public function route(Request $request) {
 		// get and normalize path

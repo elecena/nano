@@ -4,8 +4,9 @@
  * Skin renderer
  *
  * Handles adding JS/CSS files and packages, setting page title, meta / link[rel] tags, adding global JS variables
+ *
+ * @property StaticAssets $staticAssets
  */
-
 abstract class Skin {
 
 	const SUBTITLE_SEPARATOR = ' &raquo; ';
