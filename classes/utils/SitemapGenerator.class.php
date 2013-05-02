@@ -189,6 +189,10 @@ class SitemapGenerator {
 
 	/**
 	 * Add given URL to the list
+	 *
+	 * @param string $url
+	 * @param string|int $lastmod
+	 * @param int $priority
 	 */
 	public function addUrl($url, $lastmod = false, $priority = false /* 0.5 is the default value */) {
 		$entry = array(

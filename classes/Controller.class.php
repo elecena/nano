@@ -4,6 +4,7 @@
  * Abstract class for representing nanoPortal's controllers
  *
  * @property Cache $cache
+ * @property Config $config
  * @property Database $database
  * @property Debug $debug
  * @property Events $events
