@@ -9,8 +9,6 @@
  *
  * mq::<queue_name>::messages
  * mq::<queue_name>::lastid
- *
- * $Id$
  */
 
 class MessageQueueRedis extends MessageQueue {

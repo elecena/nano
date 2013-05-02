@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for DOM class
- *
- * $Id$
  */
 
 class DOMTest extends PHPUnit_Framework_TestCase {

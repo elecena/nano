@@ -2,8 +2,6 @@
 
 /**
  * Driver for caching using files
- *
- * $Id$
  */
 
 class CacheFile extends Cache {

@@ -2,8 +2,6 @@
 
 /**
  * Nano application's test controller
- *
- * $Id$
  */
 
 class FooController extends Controller {

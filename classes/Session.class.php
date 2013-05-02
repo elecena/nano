@@ -2,8 +2,6 @@
 
 /**
  * Session handler with support for different storage engines (files, DB table, key-value DB)
- *
- * $Id$
  */
 
 class Session {

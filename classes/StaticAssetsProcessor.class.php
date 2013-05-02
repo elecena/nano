@@ -2,8 +2,6 @@
 
 /**
  * Common class for Static assets processors
- *
- * $Id$
  */
 abstract class StaticAssetsProcessor {
 

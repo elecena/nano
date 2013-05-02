@@ -2,8 +2,6 @@
 
 /**
  * Message queue access layer
- *
- * $Id$
  */
 
 abstract class MessageQueue {

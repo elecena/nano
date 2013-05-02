@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Autoloader class
- *
- * $Id$
  */
 
 class AutoloaderTest extends PHPUnit_Framework_TestCase {

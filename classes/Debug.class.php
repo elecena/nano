@@ -2,8 +2,6 @@
 
 /**
  * Debugging
- *
- * $Id$
  */
 
 class Debug {

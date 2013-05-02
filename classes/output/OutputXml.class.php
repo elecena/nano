@@ -5,8 +5,6 @@
  *
  * @see http://stackoverflow.com/questions/1397036/how-to-convert-array-to-simplexml-in-php
  * @see http://stackoverflow.com/questions/99350/php-associative-arrays-to-and-from-xml
- *
- * $Id$
  */
 
 class OutputXml extends Output {

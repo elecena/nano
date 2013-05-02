@@ -2,8 +2,6 @@
 
 /**
  * Data with HTML template renderer
- *
- * $Id$
  */
 
 class OutputTemplate extends Output {

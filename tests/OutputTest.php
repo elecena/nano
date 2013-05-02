@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Output class
- *
- * $Id$
  */
 
 class OutputTest extends PHPUnit_Framework_TestCase {

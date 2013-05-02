@@ -2,8 +2,6 @@
 
 /**
  * Wrapper for PHPUnit_TextUI_ResultPrinter class
- *
- * $Id$
  */
 
 class ResultPrinter extends PHPUnit_TextUI_ResultPrinter {

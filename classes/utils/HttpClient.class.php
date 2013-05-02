@@ -4,8 +4,6 @@
  * Wrapper for cURL based HTTP client
  *
  * @see http://php.net/manual/en/ref.curl.php
- *
- * $Id$
  */
 
 class HttpClient {

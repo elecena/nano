@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for HttpResponse class
- *
- * $Id$
  */
 
 class HttpResponseTest extends PHPUnit_Framework_TestCase {

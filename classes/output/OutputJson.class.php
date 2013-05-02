@@ -2,8 +2,6 @@
 
 /**
  * JSON renderer
- *
- * $Id$
  */
 
 class OutputJson extends Output {

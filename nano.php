@@ -2,8 +2,6 @@
 
 /**
  * nanoPortal framework's entry point
- *
- * $Id$
  */
 
 // show all errors and notices

@@ -2,8 +2,6 @@
 
 /**
  * Helper class for generating RSS feeds using XMLWriter
- *
- * $Id$
  */
 class FeedGenerator {
 

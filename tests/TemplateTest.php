@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Template class
- *
- * $Id$
  */
 
 class TemplateTest extends PHPUnit_Framework_TestCase {

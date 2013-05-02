@@ -2,8 +2,6 @@
 
 /**
  * Configuration class
- *
- * $Id$
  */
 
 class Config {

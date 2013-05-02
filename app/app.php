@@ -5,8 +5,6 @@
  *
  * index.php, api.php, static.php and command-line scripts use this file as a bootstrap.
  * You can perform extra actions here. For instance: load different config on your development environment.
- *
- * $Id$
  */
 
 require_once 'nano.php';

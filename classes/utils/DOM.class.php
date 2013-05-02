@@ -2,8 +2,6 @@
 
 /**
  * Helper class for parsing XML/HTML and performing XPath queries
- *
- * $Id$
  */
 
 class DOM {

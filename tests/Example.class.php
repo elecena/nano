@@ -2,8 +2,6 @@
 
 /**
  * Dummy class for autoloader unit testing
- *
- * $Id$
  */
 
 class Example {

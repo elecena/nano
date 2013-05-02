@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Debug class
- *
- * $Id$
  */
 
 class DebugTest extends PHPUnit_Framework_TestCase {

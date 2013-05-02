@@ -2,8 +2,6 @@
 
 /**
  * nanoPortal base class
- *
- * $Id$
  */
 
 class Nano {

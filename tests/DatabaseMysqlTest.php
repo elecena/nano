@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for DatabaseMysql class
- *
- * $Id$
  */
 
 class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {

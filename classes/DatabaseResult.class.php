@@ -4,8 +4,6 @@
  * Wrapper for database query results
  *
  * @see http://pl2.php.net/manual/en/class.iterator.php
- *
- * $Id$
  */
 
 class DatabaseResult implements Iterator, Countable {

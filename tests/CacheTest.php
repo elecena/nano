@@ -2,8 +2,6 @@
 
 /**
  * Generic class for unit tests for Cache drivers
- *
- * $Id$
  */
 
 abstract class CacheTest extends PHPUnit_Framework_TestCase {

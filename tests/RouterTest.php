@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Router class
- *
- * $Id$
  */
 
 class RouterTest extends PHPUnit_Framework_TestCase {

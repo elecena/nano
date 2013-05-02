@@ -2,8 +2,6 @@
 
 /**
  * Database access layer
- *
- * $Id$
  */
 
 abstract class Database {

@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Response class
- *
- * $Id$
  */
 
 class ResponseTest extends PHPUnit_Framework_TestCase {

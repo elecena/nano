@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Nano's Application config
- *
- * $Id$
  */
 
 include_once(dirname(__FILE__) . '/AppTest.php');

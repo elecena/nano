@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Events class
- *
- * $Id$
  */
 
 class EventsTest extends PHPUnit_Framework_TestCase {

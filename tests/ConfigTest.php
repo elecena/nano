@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Config class
- *
- * $Id$
  */
 
 class ConfigTest extends PHPUnit_Framework_TestCase {

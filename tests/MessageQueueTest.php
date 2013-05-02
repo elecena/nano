@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for MessageQueue class
- *
- * $Id$
  */
 
 class MessageQueueTest extends PHPUnit_Framework_TestCase {

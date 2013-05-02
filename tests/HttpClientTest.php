@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for HttpClient class
- *
- * $Id$
  */
 
 class HttpClientTest extends PHPUnit_Framework_TestCase {

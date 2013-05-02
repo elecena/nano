@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Cache file driver
- *
- * $Id$
  */
 
 include_once(dirname(__FILE__) . '/CacheTest.php');

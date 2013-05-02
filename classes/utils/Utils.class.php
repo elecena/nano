@@ -2,8 +2,6 @@
 
 /**
  * nanoPortal utilities class
- *
- * $Id$
  */
 
 class Utils {

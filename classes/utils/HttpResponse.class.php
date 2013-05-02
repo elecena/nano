@@ -2,8 +2,6 @@
 
 /**
  * Wrapper for HTTP request response with headers and statistics
- *
- * $Id$
  */
 
 class HttpResponse {

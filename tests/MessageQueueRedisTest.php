@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for MessageQueueRedis class
- *
- * $Id$
  */
 
 class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {

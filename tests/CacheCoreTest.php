@@ -2,8 +2,6 @@
 
 /**
  * Set of generic unit tests for Cache
- *
- * $Id$
  */
 
 include_once(dirname(__FILE__) . '/CacheTest.php');

@@ -2,8 +2,6 @@
 
 /**
  * Abstract class for output formatting
- *
- * $Id$
  */
 
 abstract class Output {

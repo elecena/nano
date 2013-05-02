@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for StaticAssets class
- *
- * $Id$
  */
 
 class StaticAssetsTest extends PHPUnit_Framework_TestCase {

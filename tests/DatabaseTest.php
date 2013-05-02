@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Database class
- *
- * $Id$
  */
 
 class DatabaseTest extends PHPUnit_Framework_TestCase {

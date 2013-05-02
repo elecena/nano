@@ -2,8 +2,6 @@
 
 /**
  * Events handling
- *
- * $Id$
  */
 
 class Events {

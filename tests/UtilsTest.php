@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Utils class
- *
- * $Id$
  */
 
 class UtilsTest extends PHPUnit_Framework_TestCase {

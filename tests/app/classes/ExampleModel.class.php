@@ -2,8 +2,6 @@
 
 /**
  * Dummy class for app testing
- *
- * $Id$
  */
 
 class ExampleModel {

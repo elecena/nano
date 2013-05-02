@@ -5,8 +5,6 @@
  *
  * @see http://qvister.se/2010/02/02/server-side-google-analytics/
  * @see http://github.com/mptre/php-ga
- *
- * $Id$
  */
 
 class GAClient {
@@ -95,7 +93,7 @@ class GAClient {
 		$this->debug->log(__METHOD__ . ": {$this->accountId}");
 	}
 
-	// raportuj ods³onê strony
+	// raportuj odsï¿½onï¿½ strony
 	public function trackPageview($url) {
 		$this->debug->log(__METHOD__ . ": {$url}");
 

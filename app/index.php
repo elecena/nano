@@ -2,8 +2,6 @@
 
 /**
  * nanoPortal application entry point for HTTP requests
- *
- * $Id$
  */
 
 include 'app.php';

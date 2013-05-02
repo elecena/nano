@@ -2,8 +2,6 @@
 
 /**
  * CSS processor
- *
- * $Id$
  */
 
 class StaticAssetsCss extends StaticAssetsProcessor {

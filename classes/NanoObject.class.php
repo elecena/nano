@@ -2,8 +2,6 @@
 
 /**
  * Abstract class for representing nanoPortal's application models and services
- *
- * $Id$
  */
 
 abstract class NanoObject {

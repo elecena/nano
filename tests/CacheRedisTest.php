@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Cache redis driver
- *
- * $Id$
  */
 
 include_once(dirname(__FILE__) . '/CacheTest.php');

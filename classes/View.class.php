@@ -2,8 +2,6 @@
 
 /**
  * View class wrapping response from the controller
- *
- * $Id$
  */
 
 class View {

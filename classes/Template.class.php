@@ -2,8 +2,6 @@
 
 /**
  * Handles HTML templates
- *
- * $Id$
  */
 
 class Template {

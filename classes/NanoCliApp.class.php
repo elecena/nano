@@ -2,8 +2,6 @@
 
 /**
  * Class for representing nanoPortal's application for command line interface
- *
- * $Id$
  */
 
 class NanoCliApp extends NanoApp {

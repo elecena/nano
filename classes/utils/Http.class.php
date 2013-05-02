@@ -2,8 +2,6 @@
 
 /**
  * Class with helper methods for HttpClient
- *
- * $Id$
  */
 
 class Http {

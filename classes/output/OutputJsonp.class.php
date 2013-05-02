@@ -2,8 +2,6 @@
 
 /**
  * JSON with callback renderer
- *
- * $Id$
  */
 
 class OutputJsonp extends Output {

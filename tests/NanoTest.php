@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Nano class
- *
- * $Id$
  */
 
 class NanoTest extends PHPUnit_Framework_TestCase {

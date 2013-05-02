@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Request class
- *
- * $Id$
  */
 
 class RequestTest extends PHPUnit_Framework_TestCase {

@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Pagination class
- *
- * $Id$
  */
 
 class PaginationTest extends PHPUnit_Framework_TestCase {

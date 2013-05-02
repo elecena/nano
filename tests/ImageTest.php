@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Image class
- *
- * $Id$
  */
 
 class ImageTest extends PHPUnit_Framework_TestCase {

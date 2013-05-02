@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for Model class
- *
- * $Id$
  */
 
 class TestModel extends Model {

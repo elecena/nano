@@ -2,8 +2,6 @@
 
 /**
  * Wrapper for HTTP request
- *
- * $Id$
  */
 
 class Request {

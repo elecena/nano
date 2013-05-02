@@ -4,8 +4,6 @@
  * Helper class for generating XML sitemaps using XMLWriter
  *
  * @see http://www.sitemaps.org/pl/protocol.html
- *
- * $Id$
  */
 
 class SitemapGenerator {

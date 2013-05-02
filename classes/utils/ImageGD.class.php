@@ -4,8 +4,6 @@
  * Helper class for handling image manipulations using GD library
  *
  * @see http://www.php.net/manual/en/book.image.php
- *
- * $Id$
  */
 
 class ImageGD extends Image {

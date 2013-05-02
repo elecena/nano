@@ -2,8 +2,6 @@
 
 /**
  * Abstract class for caching driver
- *
- * $Id$
  */
 
 abstract class Cache {

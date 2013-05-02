@@ -2,8 +2,6 @@
 
 /**
  * Driver for caching using Redis key-value persistent DB
- *
- * $Id$
  */
 
 class CacheRedis extends Cache {

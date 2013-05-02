@@ -2,8 +2,6 @@
 
 /**
  * Helper class for generating paginations
- *
- * $Id$
  */
 
 class Pagination {

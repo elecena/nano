@@ -2,8 +2,6 @@
 
 /**
  * Database access layer for mySQL
- *
- * $Id$
  */
 
 class DatabaseMysql extends Database {

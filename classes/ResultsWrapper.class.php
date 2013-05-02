@@ -2,8 +2,6 @@
 
 /**
  * Wrapper for results
- *
- * $Id$
  */
 
 class ResultsWrapper {

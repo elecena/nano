@@ -2,8 +2,6 @@
 
 /**
  * PHP classes autoloading
- *
- * $Id$
  */
 
 class Autoloader {

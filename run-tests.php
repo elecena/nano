@@ -9,8 +9,6 @@
  *
  *  php run-tests.php /home/user/myapp/tests
  *    run myapp test suite
- *
- * $Id$
  */
 
 ini_set('memory_limit', '350M');

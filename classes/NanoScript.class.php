@@ -2,8 +2,6 @@
 
 /**
  * General interface for CLI scripts
- *
- * $Id$
  */
 
 abstract class NanoScript extends NanoObject {

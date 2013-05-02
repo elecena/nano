@@ -2,8 +2,6 @@
 
 /**
  * Database access layer for MongoDB
- *
- * $Id$
  */
 
 class DatabaseMongo extends Database {

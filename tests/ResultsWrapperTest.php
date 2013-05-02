@@ -2,8 +2,6 @@
 
 /**
  * Set of unit tests for ResultsWrapper class
- *
- * $Id$
  */
 
 class ResultsWrapperTest extends PHPUnit_Framework_TestCase {

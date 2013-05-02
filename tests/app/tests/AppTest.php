@@ -2,8 +2,6 @@
 
 /**
  * Generic class for unit tests for Nano's Application class
- *
- * $Id$
  */
 
 abstract class AppTest extends PHPUnit_Framework_TestCase {

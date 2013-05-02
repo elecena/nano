@@ -5,8 +5,6 @@
  *
  * Includes sending proper caching HTTP headers, packages handling, minification of JS and CSS files
  * and embedding of images in CSS file (data-URI encoding)
- *
- * $Id$
  */
 
 class StaticAssets {

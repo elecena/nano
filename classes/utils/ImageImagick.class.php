@@ -4,8 +4,6 @@
  * Helper class for handling image manipulations using ImageMagick library
  *
  * @see http://www.php.net/manual/en/class.imagick.php
- *
- * $Id$
  */
 
 class ImageImagick extends Image {

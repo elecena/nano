@@ -2,8 +2,6 @@
 
 /**
  * Handles response (sets HTTP headers, wraps output content)
- *
- * $Id$
  */
 
 class Response {
