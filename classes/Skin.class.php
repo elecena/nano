@@ -346,8 +346,13 @@ abstract class Skin {
 		$this->template->set($this->getSkinData());
 		$this->template->set('content', $content);
 
-		// render the skin and set the app response
-		$html = $this->template->render('main');
-		$this->app->getResponse()->setContent($html);
+		// render the head of the page
+		echo $this->template->render('head');
+
+		// flush the output
+		#$this->app->getResponse()->flush();
+
+		// render the rest of the page
+		echo $this->template->render('main');
 	}
 }

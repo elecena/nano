@@ -70,6 +70,9 @@ class Response {
 		$this->debug = $this->app->getDebug();
 		$this->debug->time('response');
 
+		$this->debug->log(__METHOD__ . " - output buffering started");
+		ob_start();
+
 		// start output buffering
 		$acceptedEncoding = $this->getAcceptedEncoding();
 
@@ -79,9 +82,6 @@ class Response {
 
 			// fix for proxies
 			$this->setHeader('Vary', 'Accept-Encoding');
-			ob_start();
-
-			$this->debug->log(__METHOD__ . " - output buffering started");
 		}
 	}
 
@@ -378,13 +378,14 @@ class Response {
 
 	/**
 	 * Flush the content of the webpage and send it to the client
+	 *
+	 * @see http://stackoverflow.com/questions/4870697/php-flush-that-works-even-in-nginx
 	 */
 	public function flush() {
 		if ($this->handleIfModifiedSince()) {
 			return;
 		}
 
-		/**
 		$this->sendHeaders();
 
 		ob_end_flush();
@@ -393,9 +394,6 @@ class Response {
 		ob_start();
 
 		$this->debug->log(__METHOD__ . ' - done');
-
-		sleep(2);
-		**/
 	}
 
 	/**
