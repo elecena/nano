@@ -13,7 +13,7 @@ class GAClient {
 	const USER_AGENT = 'Mozilla/5.0 (Windows NT 5.1; rv:13.0) Gecko/20100101 Firefox/13.0';
 	const VERSION = '4.4sh';
 
-	private $app;
+	/* @var $http HttpClient */
 	private $http;
 	private $debug;
 
@@ -23,7 +23,6 @@ class GAClient {
 	private $visitorId;
 
 	function __construct(NanoApp $app) {
-		$this->app = $app;
 		$this->debug = $app->getDebug();
 
 		$this->http = $app->factory('HttpClient');
@@ -93,7 +92,12 @@ class GAClient {
 		$this->debug->log(__METHOD__ . ": {$this->accountId}");
 	}
 
-	// raportuj ods�on� strony
+	/**
+	 * Track page view
+	 *
+	 * @param $url string page URL
+	 * @return bool
+	 */
 	public function trackPageview($url) {
 		$this->debug->log(__METHOD__ . ": {$url}");
 
@@ -102,8 +106,17 @@ class GAClient {
 		));
 	}
 
-	// raportuj zdarzenie
-	// @see http://code.google.com/intl/pl/apis/analytics/docs/tracking/eventTrackerGuide.html
+	/**
+	 * Track an event
+	 *
+	 * @see http://code.google.com/intl/pl/apis/analytics/docs/tracking/eventTrackerGuide.html
+	 *
+	 * @param string $category ex. "video"
+	 * @param null|string $action ex. "play"
+	 * @param null|string $label ex. "foo bar"
+	 * @param null|string $val ex. 42
+	 * @return bool
+	 */
 	public function trackEvent($category, $action = null, $label = null, $val = null) {
 		// 5(stats*pageload*time)(2800)
 		$args = array($category);
