@@ -26,6 +26,9 @@ abstract class Model extends NanoObject {
 
 	/**
 	 * Encodes a collection of models
+	 *
+	 * @param Model[] $models
+	 * @return mixed models data
 	 */
 	public static function toArray(Array $models) {
 		$ret = array();
