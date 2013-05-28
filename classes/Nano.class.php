@@ -59,6 +59,8 @@ class Nano {
 
 	/**
 	 * Creates a CLI script from given class
+	 *
+	 * @return NanoScript
 	 */
 	static public function script($dir, $scriptClass, $configSet = 'default') {
 		// initialize framework
