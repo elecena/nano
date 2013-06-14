@@ -36,7 +36,12 @@ class Request {
 		$this->env = $env;
 
 		// detect request type
-		$method = isset($env['REQUEST_METHOD']) ? $env['REQUEST_METHOD'] : '';
+		$method = isset($env['REQUEST_METHOD']) ? $env['REQUEST_METHOD'] : false;
+
+		// CLI mode detection
+		if ($method == false && php_sapi_name() == 'cli') {
+			$method = 'CLI';
+		}
 
 		switch($method) {
 			case 'POST':

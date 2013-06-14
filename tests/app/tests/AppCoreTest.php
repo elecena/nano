@@ -44,7 +44,6 @@ class AppCoreTest extends AppTest {
 
 		$this->assertInstanceOf('NanoCliApp', $app);
 		$this->assertEquals($this->dir . '/log/script.log', $app->getDebug()->getLogFile());
-		$this->assertTrue($app->getRequest()->isCLI());
 
 		$app = Nano::cli($this->dir, 'foo');
 

@@ -12,7 +12,6 @@
  */
 
 ini_set('memory_limit', '350M');
-define('NANO_UNIT_TESTS', true);
 
 require_once 'nano.php';
 

@@ -70,8 +70,8 @@ class Response {
 		$this->debug = $this->app->getDebug();
 		$this->debug->time('response');
 
-		// don't enable output buffering when in CLI / unit tests mode
-		if ($this->app->getRequest()->isCLI() || defined('NANO_UNIT_TESTS')) {
+		// don't enable output buffering when in CLI
+		if ($this->app->getRequest()->isCLI()) {
 			return;
 		}
 
