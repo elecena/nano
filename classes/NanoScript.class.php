@@ -3,7 +3,6 @@
 /**
  * General interface for CLI scripts
  */
-
 abstract class NanoScript extends NanoObject {
 
 	const LOGFILE = 'debug';
@@ -22,4 +21,11 @@ abstract class NanoScript extends NanoObject {
 	 * Script body
 	 */
 	abstract public function run();
+
+	/**
+	 * Called when the script execution is completed
+	 */
+	public function onTearDown(NanoApp $app) {
+		// nop
+	}
 }

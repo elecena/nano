@@ -71,6 +71,9 @@ class Nano {
 
 		$script = new $scriptClass($app);
 
+		// call NanoScript::onTearDown method when the script is completed
+		$app->getEvents()->bind('NanoAppTearDown', array($script, 'onTearDown'));
+
 		return $script;
 	}
 
