@@ -90,6 +90,8 @@ class DOM {
 
 	/**
 	 * Return a set of elements matching given XPath
+	 *
+	 * @return SimpleXMLElement[]
 	 */
 	public function xpath($xpath) {
 		return $this->doc->xpath($xpath);
