@@ -7,8 +7,18 @@ abstract class NanoScript extends NanoObject {
 
 	const LOGFILE = 'debug';
 
+	private $isDebug = false;
+
 	function __construct(NanoApp $app) {
+		$this->isDebug = (bool) getenv('DEBUG');
+
 		parent::__construct($app);
+		if ($this->isInDebugMode()) {
+			$this->debug->log();
+			$this->debug->log('Running in debug mode');
+			$this->debug->log();
+		}
+
 		$this->init();
 	}
 
@@ -27,5 +37,16 @@ abstract class NanoScript extends NanoObject {
 	 */
 	public function onTearDown(NanoApp $app) {
 		// nop
+	}
+
+	/**
+	 * Returns true if script is run in debug mode
+	 *
+	 * $ DEBUG=1 php script.php
+	 *
+	 * @return bool is script run in debug mode?
+	 */
+	protected function isInDebugMode() {
+		return $this->isDebug;
 	}
 }
