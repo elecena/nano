@@ -44,6 +44,8 @@ class Nano {
 		self::$libraryDir = self::$dir . '/lib';
 
 		self::$initialized = true;
+
+		date_default_timezone_set('Europe/Berlin');
 	}
 
 	/**
