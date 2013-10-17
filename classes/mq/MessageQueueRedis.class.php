@@ -22,10 +22,6 @@ class MessageQueueRedis extends MessageQueue {
 	protected function __construct(NanoApp $app, Array $settings) {
 		parent::__construct($app, $settings);
 
-		// load php-redis library
-		Nano::addLibrary('php-redis');
-		Autoloader::add('Redis', 'Redis.php');
-
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';
 		$port = isset($settings['port']) ? $settings['port'] : 6379;
