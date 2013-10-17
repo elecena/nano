@@ -18,19 +18,8 @@ require_once 'nano.php';
 // initialize instance of framework object
 Nano::init();
 
-// scan for helper classes for unit tests
-Autoloader::scanDirectory(dirname(__FILE__) . '/classes/tests');
-
-// add PHPunit and libraries from PEAR to include_path
-Nano::addLibrary('phpunit');
-Nano::addLibrary('pear');
-Nano::addLibrary('pear/PHP');
-
-// load PHPunit
-require_once 'PHPUnit/Autoload.php';
-
 // construct global wrapper for test suites
-$suite = TestSuite::init(false /* $performCodeCoverage */);
+$suite = \Nano\Tests\TestSuite::init(false /* $performCodeCoverage */);
 
 // run-tests.php can be run with tests directory name as a parameter
 if (!empty($argv[1])) {
