@@ -4,7 +4,9 @@
  * Return test suites for core and modules
  */
 
-class TestSuite extends PHPUnit_Framework_TestSuite {
+namespace Nano\Tests;
+
+class TestSuite extends \PHPUnit_Framework_TestSuite {
 
 	private $performCodeCoverage;
 
@@ -46,7 +48,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 	 * Add test suite containing set of core tests
 	 */
 	public function addCoreTestSuite() {
-		$dir = Nano::getCoreDirectory() . '/tests';
+		$dir = \Nano::getCoreDirectory() . '/tests';
 		$suite = $this->createTestSuiteForDirectory($dir, 'nanoPortal core test suite');
 
 		$this->addTestSuite($suite);
@@ -68,7 +70,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
 	/**
 	 * Run suite and print results to console
 	 */
-	public function run(PHPUnit_Framework_TestResult $result = NULL, $filter = FALSE, array $groups = array(), array $excludeGroups = array(), $processIsolation = FALSE) {
+	public function run(\PHPUnit_Framework_TestResult $result = NULL, $filter = FALSE, array $groups = array(), array $excludeGroups = array(), $processIsolation = FALSE) {
 		// create results and printer objects
 		$results = new TestResult();
 		$printer = new ResultPrinter();

@@ -4,11 +4,9 @@
  * Wrapper for PHPUnit_Framework_TestResult class
  */
 
-class TestResult extends PHPUnit_Framework_TestResult {
+namespace Nano\Tests;
 
-	function __construct() {
-		parent::__construct();
-	}
+class TestResult extends \PHPUnit_Framework_TestResult {
 
 	/**
 	 * Returns the summarized coverage report
@@ -41,7 +39,7 @@ class TestResult extends PHPUnit_Framework_TestResult {
 				}
 			}
 
-			$file = str_replace(Nano::getCoreDirectory(), '', $file);
+			$file = str_replace(\Nano::getCoreDirectory(), '', $file);
 
 			$summary[$file] = array(
 				'linesCovered' => $linesCovered,
