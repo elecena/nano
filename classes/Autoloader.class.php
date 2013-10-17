@@ -7,13 +7,22 @@
 class Autoloader {
 
 	// stores [class name] => [path to source file] pairs
-	static private $classes;
+	static private $classes = array();
+
+	/**
+	 * autoload given namespaces
+	 * \Nano\Tests\TestResult => /path/to/nano/Tests/TestResult.class.php
+	 *
+	 * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
+	 */
+	static private $namespaces = array();
 
 	/**
 	 * Setup autoloading feature
 	 */
 	static public function init() {
-		self::$classes = array();
+		// add composer autoloader
+		require(__DIR__ . '/../vendor/autoload.php');
 
 		spl_autoload_register('Autoloader::load');
 	}
@@ -23,6 +32,13 @@ class Autoloader {
 	 */
 	static public function add($class, $src) {
 		self::$classes[$class] = $src;
+	}
+
+	/**
+	 * Register namespace autoloader
+	 */
+	static public function addNamespace($ns, $path) {
+		self::$namespaces[$ns] = $path;
 	}
 
 	/**
@@ -41,10 +57,43 @@ class Autoloader {
 
 	/**
 	 * Try loading given PHP class
+	 *
+	 * @param string $className class name
 	 */
-	static public function load($class) {
-		if (isset(self::$classes[$class])) {
-			require_once self::$classes[$class];
+	static public function load($className) {
+		// autoload classes from Nano namespace
+		if (strpos($className, '\\') !== false) {
+			// @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md#example-implementation
+			$className = ltrim($className, '\\');
+
+			// Nano\Tests\TestResult
+			$parts = explode('\\', $className);
+			$namespace = reset($parts); // // Nano
+			$class = end($parts); // TestResult
+
+			#var_dump($className); var_dump(array_slice($parts, 1, -1));
+
+			if (!isset(self::$namespaces[$namespace])) {
+				return;
+			}
+
+			$path = implode( DIRECTORY_SEPARATOR, array_slice($parts, 1, -1) );
+			$class = str_replace('_', DIRECTORY_SEPARATOR, $class);
+
+			$fullPath = sprintf(
+				"%s/%s/%s.class.php",
+				self::$namespaces[$namespace],
+				strtolower($path),
+				$class
+			);
+
+			#var_dump($fullPath);
+
+			require_once $fullPath;
+		}
+
+		if (isset(self::$classes[$className])) {
+			require_once self::$classes[$className];
 		}
 	}
 

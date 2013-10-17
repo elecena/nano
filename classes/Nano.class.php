@@ -30,12 +30,14 @@ class Nano {
 		// setup autoloader
 		Autoloader::init();
 
+		Autoloader::addNamespace('Nano', __DIR__);
+
 		// add /classes and /classes/utils directories
-		Autoloader::scanDirectory(dirname(__FILE__));
-		Autoloader::scanDirectory(dirname(__FILE__) . '/utils');
+		Autoloader::scanDirectory(__DIR__);
+		Autoloader::scanDirectory(__DIR__ . '/utils');
 
 		// set framework's directory
-		$dir = dirname(__FILE__) . '/..';
+		$dir = __DIR__ . '/..';
 
 		// setup paths
 		self::$dir = realpath($dir);
