@@ -13,7 +13,13 @@ class TestResult extends \PHPUnit_Framework_TestResult {
 	 */
 	public function getCodeCoverageSummary() {
 		$summary = array();
-		$codeCoverageSummary = $this->getCodeCoverage()->getSummary();
+		$codeCoverage = $this->getCodeCoverage();
+
+		if (!$codeCoverage instanceof \PHP_CodeCoverage) {
+			return $summary;
+		}
+
+		$codeCoverageSummary = $codeCoverage->getData();
 
 		foreach($codeCoverageSummary as $file => $report) {
 			$linesCovered = 0;

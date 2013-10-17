@@ -16,7 +16,7 @@ class TestSuite extends \PHPUnit_Framework_TestSuite {
 	static public function init($performCodeCoverage = false) {
 		$suite = new self;
 		$suite->setName('nanoPortal test suite');
-		$suite->peformCodeCoverage = $performCodeCoverage;
+		$suite->performCodeCoverage = $performCodeCoverage;
 
 		return $suite;
 	}
@@ -77,7 +77,7 @@ class TestSuite extends \PHPUnit_Framework_TestSuite {
 
 		// collect code coverage report
 		if (!empty($this->performCodeCoverage)) {
-			$results->collectCodeCoverageInformation(true);
+			$results->setCodeCoverage( new \PHP_CodeCoverage() );
 		}
 
 		// "bind" printer to the results object
