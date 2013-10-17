@@ -10,9 +10,7 @@ class CacheRedisTest extends CacheTest {
 
 	protected function getCacheInstance($settings = array()) {
 		$settings = array_merge(array(
-			#'host' => '89.248.171.138', /* s2 */
-			#'host' => '89.248.166.201', /* korn */
-			'host' => '94.23.170.244', /* mydevil */
+			'host' => '212.91.26.151', /* s0 */
 			'port' => 60380,
 		), $settings);
 
