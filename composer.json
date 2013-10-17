@@ -1,0 +1,15 @@
+{
+	"name": "macbre/nano",
+	"description": "PHP framework",
+	"minimum-stability": "stable",
+	"authors": [
+		{
+			"name": "Maciej Brencz",
+			"email": "maciej.brencz@gmail.com"
+		}
+	],
+	"license": "MIT",
+	"require": {
+		"phpunit/phpunit": "3.7.*"
+	}
+}
