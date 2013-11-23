@@ -42,6 +42,8 @@ abstract class Image {
 
 	/**
 	 * Create an instance of Image from raw image data
+	 *
+	 * @return Image an instance
 	 */
 	public static function newFromRaw($raw) {
 		if (!empty($raw)) {
