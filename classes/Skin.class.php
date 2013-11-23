@@ -291,7 +291,7 @@ abstract class Skin {
 			$elements[] = '<script>nano = ' . json_encode($this->jsVariables) . '</script>';
 		}
 
-		$this->app->getEvents()->fire('SkinRenderHead', [&$elements]);
+		$this->app->getEvents()->fire('SkinRenderHead', array(&$elements));
 
 		return rtrim($sep . implode($sep, $elements));
 	}
@@ -312,7 +312,7 @@ abstract class Skin {
 			}
 		}
 
-		$this->app->getEvents()->fire('SkinRenderCssInclude', [&$elements]);
+		$this->app->getEvents()->fire('SkinRenderCssInclude', array(&$elements));
 
 		return rtrim($sep . implode($sep, $elements));
 	}
@@ -333,7 +333,7 @@ abstract class Skin {
 			}
 		}
 
-		$this->app->getEvents()->fire('SkinRenderJsInclude', [&$elements]);
+		$this->app->getEvents()->fire('SkinRenderJsInclude', array(&$elements));
 
 		return implode($sep, $elements);
 	}
