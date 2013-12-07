@@ -20,7 +20,10 @@ class DatabaseMongo extends Database {
 			isset($settings['port']) ? $settings['port']: Mongo::DEFAULT_PORT,
 			$settings['database']
 		);
+
+
 		$this->log(__METHOD__, 'connecting with "' . $dsn . '"...');
+		$this->debug->time('connect');
 
 		// // @see http://php.net/manual/en/mongo.construct.php
 		$this->link = new Mongo($dsn, array(
@@ -29,8 +32,10 @@ class DatabaseMongo extends Database {
 		));
 
 		$this->db = $this->link->selectDB($settings['database']);
+		$time = $this->debug->timeEnd('connect');
 
-		$this->log(__METHOD__, 'connected');
+		$this->log(__METHOD__, 'connected with ' . $settings['host'], $time);
+		$this->stats->timing('time.connection', round($time * 1000) /* ms */);
 
 		// @see http://learnmongo.com/posts/mongodb-and-64-bit-php/
 		ini_set('mongo.native_long', 1);

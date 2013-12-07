@@ -128,5 +128,10 @@ abstract class Cache {
 		$debug = $app->getDebug();
 
 		$debug->log("Cache: {$this->hits} hits and {$this->misses} misses");
+
+		// send stats
+		$statsd = \Nano\Stats::getCollector($app, 'cache');
+		$statsd->count('hits', $this->getHits());
+		$statsd->count('misses', $this->getMisses());
 	}
 }
