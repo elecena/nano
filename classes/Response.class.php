@@ -34,6 +34,7 @@ class Response {
 
 	private $app;
 	private $debug;
+	private $stats;
 
 	// don't compress following content types
 	private $compressionBlacklist = array(
@@ -88,6 +89,8 @@ class Response {
 			// fix for proxies
 			$this->setHeader('Vary', 'Accept-Encoding');
 		}
+
+		$this->stats = \Nano\Stats::getCollector($app, 'response');
 	}
 
 	/**
@@ -170,6 +173,11 @@ class Response {
 		foreach($headers as $name => $value) {
 			header("{$name}: {$value}");
 		}
+
+		// stats
+		$this->stats->increment("code.{$this->responseCode}");
+		$this->stats->timing('time.total', round($this->getResponseTime() * 1000) /* ms */);
+		$this->stats->memory('memory.total');
 
 		return true;
 	}

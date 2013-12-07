@@ -107,6 +107,18 @@ class NanoApp {
 	public function tearDown() {
 		$this->debug->log();
 
+		// stats
+		// TODO: static
+		$stats = \Nano\Stats::getCollector($this, 'request');
+		$stats->increment('requests.count');
+
+		if ($this->request->isApi()) {
+			$stats->increment('type.api');
+		}
+		else if (!$this->request->isInternal() && !$this->request->isCLI()) {
+			$stats->increment('type.main');
+		}
+
 		$this->events->fire('NanoAppTearDown', array($this));
 
 		$this->debug->log('----');

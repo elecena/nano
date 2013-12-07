@@ -67,6 +67,7 @@ class DatabaseMysql extends Database {
 
 			if ($res) {
 				$this->log(__METHOD__, 'connected with ' . $hostInfo, $time);
+				$this->stats->timing('time.connection', round($time * 1000) /* ms */);
 
 				$this->connected = true;
 
