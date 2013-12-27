@@ -167,6 +167,11 @@ class StaticAssetsCss extends StaticAssetsProcessor {
 			return $matches[0];
 		}
 
+		// absolute URL - ignore
+		if (strpos($matches[1], 'http') === 0) {
+			return $matches[0];
+		}
+
 		// get full path to an image
 		$imageFile = realpath($this->currentDir . '/' . $matches[1] /* image name from CSS*/);
 
