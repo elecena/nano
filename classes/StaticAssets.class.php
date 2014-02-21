@@ -389,8 +389,6 @@ class StaticAssets {
 		// caching
 		// @see @see http://developer.yahoo.com/performance/rules.html
 		$response->setCacheDuration(30 * 86400 /* a month */);
-		$response->setLastModified('1 January 2000');
-
 		return true;
 	}
 
