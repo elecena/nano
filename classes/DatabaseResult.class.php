@@ -44,6 +44,8 @@ class DatabaseResult implements Iterator, Countable {
 
 	/**
 	 * Return data from current row
+	 *
+	 * @return mixed data
 	 */
 	public function fetchRow() {
 		return $this->database->fetchRow($this->results);
