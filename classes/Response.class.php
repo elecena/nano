@@ -160,6 +160,9 @@ class Response {
 			return false;
 		}
 
+		// @see http://stackoverflow.com/a/17368552
+		header_remove('X-Powered-By');
+
 		// emit HTTP protocol and response code
 		$protocol = isset($this->env['SERVER_PROTOCOL']) ? $this->env['SERVER_PROTOCOL'] : 'HTTP/1.1';
 
