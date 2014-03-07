@@ -185,7 +185,7 @@ class Response {
 	 * Get current response time
 	 */
 	public function getResponseTime() {
-		return round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4);
+		return round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 3);
 	}
 
 	/**
