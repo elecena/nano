@@ -69,7 +69,6 @@ class Response {
 		$this->env = $env;
 
 		$this->debug = $this->app->getDebug();
-		$this->debug->time('response');
 
 		// don't enable output buffering when in CLI
 		if ($this->app->getRequest()->isCLI()) {
@@ -186,7 +185,7 @@ class Response {
 	 * Get current response time
 	 */
 	public function getResponseTime() {
-		return $this->debug->timeEnd('response');
+		return round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4);
 	}
 
 	/**
