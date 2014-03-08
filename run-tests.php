@@ -34,6 +34,10 @@ if (!empty($argv[1])) {
 }
 
 if (!empty($testsDirectory)) {
+	// first, init the app that is going to be tested
+	// load bootstrap and config files
+	require $testsDirectory . '/../app.php';
+
 	$suite->addTestSuiteDirectory($testsDirectory, 'Application test suite');
 }
 else {
