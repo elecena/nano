@@ -27,16 +27,16 @@ abstract class NanoObject {
 	/**
 	 * Use given application
 	 */
-	function __construct(NanoApp $app) {
-		$this->app = $app;
+	function __construct() {
+		$this->app = NanoApp::app();
 
-		$this->cache = $app->getCache();
-		$this->config = $app->getConfig();
-		$this->debug = $app->getDebug();
-		$this->events = $app->getEvents();
+		$this->cache = $this->app->getCache();
+		$this->config = $this->app->getConfig();
+		$this->debug = $this->app->getDebug();
+		$this->events = $this->app->getEvents();
 
 		// use lazy-resolving
-		$this->database = static::getDatabase($app);
+		$this->database = static::getDatabase($this->app);
 	}
 	
 	/**

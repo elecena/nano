@@ -47,10 +47,29 @@ class NanoApp {
 	// objects instances used by getInstance()
 	protected $instances = array();
 
+	// current application instance
+	protected static $app;
+
+	/**
+	 * Return the current instance of NanoApp
+	 *
+	 * @return NanoApp
+	 */
+	public static function app() {
+		if (is_null(self::$app)) {
+			throw new Exception('Instance of NanoApp not registered');
+		}
+
+		return self::$app;
+	}
+
 	/**
 	 * Create application based on given config
 	 */
 	function __construct($dir, $configSet = 'default', $logFile = 'debug') {
+		// register the current application instance
+		self::$app = $this;
+
 		$this->dir = realpath($dir);
 		$this->libraryDir = $this->dir . '/lib';
 
@@ -140,6 +159,8 @@ class NanoApp {
 	 * Class constructor is provided with application's instance and with extra parameters (if provided)
 	 *
 	 * NanoApp::factory() will ALWAYS return fresh class instance
+	 *
+	 * @deprecated create instances using new operator
 	 */
 	public function factory($className, Array $params = array()) {
 		if (class_exists($className)) {
@@ -164,6 +185,8 @@ class NanoApp {
 	 * Returns instance of given class from /classes directory
 	 *
 	 * NanoApp::getInstance() follows singleton pattern
+	 *
+	 * @deprecated
 	 */
 	public function getInstance($className) {
 		if (!isset($this->instances[$className])) {
