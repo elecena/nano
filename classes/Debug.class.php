@@ -42,7 +42,12 @@ class Debug {
 		// log everything
 		$this->setLogThreshold(self::INFO);
 
-		$this->start = $_SERVER['REQUEST_TIME_FLOAT'];
+		if (isset($_SERVER['REQUEST_TIME_FLOAT'])) {
+			$this->start = $_SERVER['REQUEST_TIME_FLOAT'];
+		}
+		else {
+			$this->start = microtime(true);
+		}
 	}
 
 	/**
