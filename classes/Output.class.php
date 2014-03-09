@@ -40,6 +40,8 @@ abstract class Output {
 
 	/**
 	 * Render current data
+	 *
+	 * @return string
 	 */
 	abstract public function render();
 

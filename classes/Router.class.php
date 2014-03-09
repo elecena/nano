@@ -190,13 +190,14 @@ class Router {
 				// call the controller's method and pass provided parameters
 				$ret = call_user_func_array(array($controller, $methodName), $params);
 
-				// store info about this route
-				// TODO: store in view object
+				// store info about this route in Request object
 				$this->lastRoute = array(
 					'controller' => strtolower($controllerName),
 					'method' => $methodName,
 					'params' => $methodParams,
 				);
+
+				$request->setRoute($this->lastRoute);
 
 				if ($ret === false) {
 					// this basically means that the request can't be routed (i.e. HTTP 404)
@@ -243,6 +244,8 @@ class Router {
 
 	/**
 	 * Get info about last route
+	 *
+	 * @deprecated Use Request::getRoute method
 	 */
 	public function getLastRoute() {
 		return $this->lastRoute;

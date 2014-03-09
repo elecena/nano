@@ -1,9 +1,8 @@
 <?php
 
 /**
- * Wrapper for HTTP request
+ * Wrapper for HTTP request. To be used by Router for dispatching
  */
-
 class Request {
 
 	// constants for request type
@@ -27,6 +26,9 @@ class Request {
 
 	// cache client IP
 	private $ip = null;
+
+	// route data set when the request is dispatched
+	private $route;
 
 	/**
 	 * Setup request object
@@ -325,5 +327,19 @@ class Request {
 	 */
 	static public function isLocalIP($ip) {
 		return preg_match('#^(192\.168|172\.16|10|224|240|127|0)\.#', $ip) > 0;
+	}
+
+	/**
+	 * Set route data from router
+	 */
+	function setRoute(Array $route) {
+		$this->route = $route;
+	}
+
+	/**
+	 * Set route data from router
+	 */
+	function getRoute() {
+		return $this->route;
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+use \Nano\Stats;
+
 /**
  * Class for representing nanoPortal's application
  *
@@ -128,14 +130,22 @@ class NanoApp {
 
 		// stats
 		// TODO: static
-		$stats = \Nano\Stats::getCollector($this, 'request');
+		$stats = Stats::getCollector($this, 'request');
 		$stats->increment('requests.count');
 
+		// request type
 		if ($this->request->isApi()) {
 			$stats->increment('type.api');
 		}
 		else if (!$this->request->isInternal() && !$this->request->isCLI()) {
 			$stats->increment('type.main');
+		}
+
+		// request path
+		$route = $this->getRequest()->getRoute();
+		if (is_array($route)) {
+			$stats->increment(sprintf('controller.%s', $route['controller']));
+			$stats->increment(sprintf('method.%s.%s', $route['controller'], $route['method']));
 		}
 
 		$this->events->fire('NanoAppTearDown', array($this));
@@ -246,7 +256,7 @@ class NanoApp {
 	/**
 	 * Render the results of given request
 	 *
-	 * Returns template's output for data returned by the module
+	 * @return string template's output for data returned by the module
 	 */
 	public function renderRequest(Request $request) {
 		$resp = $this->route($request);
@@ -262,7 +272,7 @@ class NanoApp {
 	/**
 	 * Render the results of request given by the controller and method name (and optional parameters)
 	 *
-	 * Returns template's output for data returned by the module
+	 * @return string template's output for data returned by the module
 	 */
 	public function render($controllerName, $methodName = '', Array $params = array()) {
 		$request = Request::newFromControllerName($controllerName, $methodName, $params, Request::INTERNAL);
@@ -280,6 +290,8 @@ class NanoApp {
 
 	/**
 	 * Return path to nanoPortal libraries
+	 *
+	 * @deprecated
 	 */
 	public function getLibDirectory() {
 		return $this->libraryDir;
@@ -287,6 +299,8 @@ class NanoApp {
 
 	/**
 	 * Add given library to include_path
+	 *
+	 * @deprecated
 	 */
 	public function addLibrary($directory) {
 		// normalize path
@@ -312,6 +326,8 @@ class NanoApp {
 
 	/**
 	 * Return database
+	 *
+	 * @return Database
 	 */
 	public function getDatabase() {
 		// lazy connection handling
@@ -360,9 +376,11 @@ class NanoApp {
 
 	/**
 	 * Return skin
+	 *
+	 * @return Skin
 	 */
 	public function getSkin() {
-		// lazy connection handling
+		// lazy load the skin
 		if ($this->skin === false) {
 			// use the default skin
 			$skinName = $this->config->get('skin', 'default');
@@ -370,7 +388,7 @@ class NanoApp {
 			// allow to override the default choice
 			$this->events->fire('NanoAppGetSkin', array($this, &$skinName));
 
-			// create a instance of a skin
+			// create an instance of the skin
 			$this->skin = Skin::factory($this, $skinName);
 		}
 
