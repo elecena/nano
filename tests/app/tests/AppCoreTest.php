@@ -10,7 +10,7 @@ class AppCoreTest extends AppTest {
 
 	public function testCreateApp() {
 		$this->assertInstanceOf('NanoApp', $this->app);
-		$this->assertInstanceOf('Cache', $this->app->getCache());
+		$this->assertInstanceOf('Nano\Cache', $this->app->getCache());
 		$this->assertInstanceOf('Config', $this->app->getConfig());
 		$this->assertInstanceOf('Database', $this->app->getDatabase());
 		$this->assertInstanceOf('Debug', $this->app->getDebug());

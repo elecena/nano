@@ -1,5 +1,6 @@
 <?php
 
+use \Nano\Cache;
 use \Nano\Stats;
 
 /**
@@ -102,7 +103,7 @@ class NanoApp {
 			'driver' => 'file',
 		));
 
-		$this->cache = Cache::factory($this, $cacheSettings);
+		$this->cache = Cache::factory($cacheSettings);
 
 		// set request
 		$params = isset($_REQUEST) ? $_REQUEST : array();
