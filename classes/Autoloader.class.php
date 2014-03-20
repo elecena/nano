@@ -102,6 +102,8 @@ class Autoloader {
 	 *
 	 * Creates an instance of given class based on common prefix, class name and path to source files.
 	 * Additional params can be provided for class constructor.
+	 *
+	 * @deprecated use namespaces instead
 	 */
 	static public function factory($prefix, $name, $directory, Array $params = array()) {
 		$className = $prefix . ucfirst(strtolower($name));
