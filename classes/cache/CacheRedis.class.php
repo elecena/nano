@@ -4,7 +4,9 @@
  * Driver for caching using Redis key-value persistent DB
  */
 
-class CacheRedis extends Cache {
+namespace Nano\Cache;
+
+class CacheRedis extends \Nano\Cache {
 
 	// Redis connection
 	private $redis;
@@ -12,8 +14,8 @@ class CacheRedis extends Cache {
 	/**
 	 * Creates an instance of cache driver
 	 */
-	public function __construct(NanoApp $app, Array $settings) {
-		parent::__construct($app, $settings);
+	public function __construct(Array $settings) {
+		parent::__construct($settings);
 
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';
@@ -21,7 +23,7 @@ class CacheRedis extends Cache {
 		$pass = isset($settings['pass']) ? $settings['pass'] : false;
 
 		// lazy connect
-		$this->redis = new Redis($host, $port);
+		$this->redis = new \Redis($host, $port);
 		#$this->redis->debug = true;
 
 		// authenticate (if required)

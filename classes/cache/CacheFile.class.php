@@ -4,16 +4,19 @@
  * Driver for caching using files
  */
 
-class CacheFile extends Cache {
+namespace Nano\Cache;
+
+class CacheFile extends \Nano\Cache {
 
 	private $dir;
 
 	/**
 	 * Creates an instance of cache driver
 	 */
-	public function __construct(NanoApp $app, Array $settings) {
-		parent::__construct($app, $settings);
+	public function __construct(Array $settings) {
+		parent::__construct($settings);
 
+		$app = \NanoApp::app();
 		$this->dir = isset($settings['directory']) ? $settings['directory'] : ($app->getDirectory() . '/cache');
 	}
 

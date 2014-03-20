@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano;
+
 /**
  * Abstract class for caching driver
  */
@@ -23,18 +25,19 @@ abstract class Cache {
 
 	/**
 	 * Creates an instance of given cache driver
+	 *
+	 * @return Nano\Cache cache instance
 	 */
-	public static function factory(NanoApp $app, Array $settings) {
+	public static function factory(Array $settings) {
 		$driver = isset($settings['driver']) ? $settings['driver'] : null;
+		$className = sprintf('Nano\\Cache\\Cache%s', ucfirst($driver));
 
-		return Autoloader::factory('Cache', $driver, dirname(__FILE__) . '/cache', array($app, $settings));
+		return new $className($settings);
 	}
 
-	/**
-	 * Use Cache::factory
-	 */
-	public function __construct(NanoApp $app, Array $settings) {
+	protected function __construct(Array $settings) {
 		// use debugger from the application
+		$app = \NanoApp::app();
 		$this->debug = $app->getDebug();
 		$this->debug->log("Cache: using '{$settings['driver']}' driver");
 
@@ -124,13 +127,13 @@ abstract class Cache {
 	/**
 	 * Add performance report to the log
 	 */
-	public function onNanoAppTearDown(NanoApp $app) {
+	public function onNanoAppTearDown(\NanoApp $app) {
 		$debug = $app->getDebug();
 
 		$debug->log("Cache: {$this->hits} hits and {$this->misses} misses");
 
 		// send stats
-		$statsd = \Nano\Stats::getCollector($app, 'cache');
+		$statsd = Stats::getCollector($app, 'cache');
 		$statsd->count('hits', $this->getHits());
 		$statsd->count('misses', $this->getMisses());
 	}
