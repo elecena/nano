@@ -46,6 +46,6 @@ class AppConfigTest extends AppTest {
 		$this->assertEquals('redis', $config->get('cache.driver'));
 		$this->assertNull($config->get('foo.bar'));
 
-		$this->assertInstanceOf('CacheRedis', $app->getCache());
+		$this->assertInstanceOf('Nano\Cache\CacheRedis', $app->getCache());
 	}
 }

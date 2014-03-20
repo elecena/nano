@@ -15,14 +15,13 @@ abstract class CacheTest extends PHPUnit_Framework_TestCase {
 			'driver' => $driver,
 		), $settings);
 
-		return Cache::factory($app, $settings);
+		return \Nano\Cache::factory($settings);
 	}
 
 	public function testCacheFactory() {
-		$this->assertInstanceOf('CacheFile', $this->getCache('file'));
-		$this->assertInstanceOf('CacheFile', $this->getCache('FiLe'));
-		$this->assertInstanceOf('CacheRedis', $this->getCache('redis', array('host' => '127.0.0.1')));
-		$this->assertNull($this->getCache('Unknown'));
+		$this->assertInstanceOf('Nano\Cache\CacheFile', $this->getCache('file'));
+		$this->assertInstanceOf('Nano\Cache\CacheFile', $this->getCache('File'));
+		$this->assertInstanceOf('Nano\Cache\CacheRedis', $this->getCache('redis', array('host' => '127.0.0.1')));
 	}
 
 	// extend this method to run the following tests
