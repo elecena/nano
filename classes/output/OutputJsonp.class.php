@@ -1,9 +1,11 @@
 <?php
 
+namespace Nano\Output;
+use Nano\Output;
+
 /**
  * JSON with callback renderer
  */
-
 class OutputJsonp extends Output {
 
 	private $callbackFn = 'callback';

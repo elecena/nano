@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Output;
+
 /**
  * Requests router
  */
@@ -98,6 +100,7 @@ class Router {
 	/**
 	 * Route given request
 	 *
+	 * @param Request $request request to route
 	 * @return bool|mixed|Output either raw controller's data, data wrapped in Output object or false
 	 */
 	public function route(Request $request) {
@@ -121,7 +124,7 @@ class Router {
 		 */
 
 		// default controller's method used for routing
-		$methodName = $defaultMethodName = self::DEFAULT_METHOD;
+		$defaultMethodName = self::DEFAULT_METHOD;
 		$methodParams = array();
 
 		switch (count($pathParts)) {
@@ -223,6 +226,7 @@ class Router {
 						$template = $view->getTemplate();
 						$templateName = $view->getTemplateName();
 
+						/* @var Nano\Output\OutputTemplate $ret */
 						$ret = Output::factory('template', $data);
 						$ret->setTemplate($template);
 						$ret->setTemplateName($templateName);
