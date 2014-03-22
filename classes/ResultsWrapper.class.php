@@ -10,6 +10,9 @@ class ResultsWrapper {
 	// results
 	protected $results;
 
+	/**
+	 * @param array $results
+	 */
 	function __construct(Array $results = array()) {
 		$this->results = $results;
 	}

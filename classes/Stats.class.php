@@ -13,7 +13,7 @@ class Stats {
 	/**
 	 * @param \NanoApp $app application instance
 	 * @param string $namespace option namespace to be appended to the global namespace
-	 * @return \Domnikl\Statsd\Client StatsD client instance
+	 * @return Client StatsD client instance
 	 */
 	static function getCollector(\NanoApp $app, $namespace = '') {
 		$config = $app->getConfig();

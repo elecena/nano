@@ -16,6 +16,9 @@ class Events {
 	// list of events handlers
 	private $events = array();
 
+	/**
+	 * @param \NanoApp $app
+	 */
 	public function __construct(\NanoApp $app) {
 		$this->app = $app;
 	}
