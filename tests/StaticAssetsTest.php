@@ -4,8 +4,12 @@
  * Set of unit tests for StaticAssets class
  */
 
+use Nano\Response;
+use Nano\Request;
+
 class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
+	/* @var NanoApp $app */
 	private $app;
 
 	public function setUp() {
@@ -34,6 +38,9 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		));
 	}
 
+	/**
+	 * @return StaticAssets
+	 */
 	private function getStaticAssets() {
 		// initialize static assets handler
 		return $this->app->factory('StaticAssets');

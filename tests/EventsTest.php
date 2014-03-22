@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Events;
+
 /**
  * Set of unit tests for Events class
  */

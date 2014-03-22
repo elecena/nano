@@ -11,13 +11,13 @@ class AppCoreTest extends AppTest {
 	public function testCreateApp() {
 		$this->assertInstanceOf('NanoApp', $this->app);
 		$this->assertInstanceOf('Nano\Cache', $this->app->getCache());
-		$this->assertInstanceOf('Config', $this->app->getConfig());
+		$this->assertInstanceOf('Nano\Config', $this->app->getConfig());
 		$this->assertInstanceOf('Database', $this->app->getDatabase());
-		$this->assertInstanceOf('Debug', $this->app->getDebug());
-		$this->assertInstanceOf('Events', $this->app->getEvents());
-		$this->assertInstanceOf('Request', $this->app->getRequest());
-		$this->assertInstanceOf('Response', $this->app->getResponse());
-		$this->assertInstanceOf('Router', $this->app->getRouter());
+		$this->assertInstanceOf('Nano\Debug', $this->app->getDebug());
+		$this->assertInstanceOf('Nano\Events', $this->app->getEvents());
+		$this->assertInstanceOf('Nano\Request', $this->app->getRequest());
+		$this->assertInstanceOf('Nano\Response', $this->app->getResponse());
+		$this->assertInstanceOf('Nano\Router', $this->app->getRouter());
 
 		// directories
 		$this->assertEquals($this->dir, $this->app->getDirectory());

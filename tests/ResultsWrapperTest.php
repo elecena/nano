@@ -1,9 +1,10 @@
 <?php
 
+use Nano\ResultsWrapper;
+
 /**
  * Set of unit tests for ResultsWrapper class
  */
-
 class ResultsWrapperTest extends PHPUnit_Framework_TestCase {
 
 	public function testSetGet() {

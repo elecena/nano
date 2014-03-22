@@ -4,6 +4,8 @@
  * Set of unit tests for Config class
  */
 
+use Nano\Config;
+
 class ConfigTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetDirectory() {

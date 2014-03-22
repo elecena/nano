@@ -1,10 +1,11 @@
 <?php
 
-use Nano\Output;
-
 /**
  * Set of unit tests for Output class
  */
+
+use Nano\Output;
+use Nano\Template;
 
 class OutputTest extends PHPUnit_Framework_TestCase {
 
