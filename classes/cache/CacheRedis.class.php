@@ -5,8 +5,9 @@
  */
 
 namespace Nano\Cache;
+use Nano\Cache;
 
-class CacheRedis extends \Nano\Cache {
+class CacheRedis extends Cache {
 
 	// Redis connection
 	private $redis;

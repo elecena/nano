@@ -5,8 +5,9 @@
  */
 
 namespace Nano\Cache;
+use Nano\Cache;
 
-class CacheFile extends \Nano\Cache {
+class CacheFile extends Cache {
 
 	private $dir;
 
