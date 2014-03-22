@@ -26,7 +26,8 @@ abstract class Cache {
 	/**
 	 * Creates an instance of given cache driver
 	 *
-	 * @return Nano\Cache cache instance
+	 * @param array $settings
+	 * @return Cache cache instance
 	 */
 	public static function factory(Array $settings) {
 		$driver = isset($settings['driver']) ? $settings['driver'] : null;
