@@ -6,6 +6,7 @@
 
 abstract class AppTest extends PHPUnit_Framework_TestCase {
 
+	/* @var NanoApp $app */
 	protected $app;
 	protected $dir;
 	protected $ip;

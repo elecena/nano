@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Output;
+
 /**
  * Set of unit tests for Response class
  */
@@ -7,6 +9,7 @@
 class ResponseTest extends PHPUnit_Framework_TestCase {
 
 	private $app;
+	/* @var Response $response */
 	private $response;
 
 	public function setUp() {

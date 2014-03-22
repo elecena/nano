@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Output;
+
 /**
  * Set of unit tests for Output class
  */
@@ -16,14 +18,11 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 
 	public function testOutputFactory() {
 		$output = Output::factory('json');
-		$this->assertInstanceOf('OutputJson', $output);
+		$this->assertInstanceOf('Nano\Output\OutputJson', $output);
 		$this->assertNull($output->getData());
 
 		$output = Output::factory('JSON', array('foo'));
-		$this->assertInstanceOf('OutputJson', $output);
-
-		$output = Output::factory('Unknown');
-		$this->assertNull($output);
+		$this->assertInstanceOf('Nano\Output\OutputJson', $output);
 	}
 
 	public function testOutputJSON() {
@@ -53,6 +52,7 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testOutputJSONP() {
+		/* @var Nano\Output\OutputJsonp $output */
 		$output = Output::factory('jsonp', $this->data);
 		$this->assertEquals('callback({"foo":"bar","test":["123","456"]})', $output->render());
 		$this->assertEquals('application/javascript; charset=UTF-8', $output->getContentType());
@@ -70,6 +70,7 @@ class OutputTest extends PHPUnit_Framework_TestCase {
 		$template = new Template($dir);
 		$template->set(array('id' => 'foo'));
 
+		/* @var Nano\Output\OutputTemplate $output */
 		$output = Output::factory('template');
 		$output->setTemplate($template);
 		$output->setTemplateName('bar');
