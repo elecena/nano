@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Output;
+
 /**
  * Handles response (sets HTTP headers, wraps output content)
  */
@@ -35,13 +37,6 @@ class Response {
 	private $app;
 	private $debug;
 	private $stats;
-
-	// don't compress following content types
-	private $compressionBlacklist = array(
-		'image/gif',
-		'image/png',
-		'image/jpeg',
-	);
 
 	// this flag is be set when response is compressed
 	private $isCompressed = false;
@@ -94,6 +89,8 @@ class Response {
 
 	/**
 	 * Set output's content
+	 *
+	 * @param Output|string $content content to set
 	 */
 	public function setContent($content) {
 		// handle output's wrappers
@@ -245,8 +242,6 @@ class Response {
 	 * @see http://www.codinghorror.com/blog/2008/10/youre-reading-the-worlds-most-dangerous-programming-blog.html
 	 */
 	public function getAcceptedEncoding() {
-		$allowCompress = true;
-
 		$acceptedEncoding = isset($this->env['HTTP_ACCEPT_ENCODING']) ? $this->env['HTTP_ACCEPT_ENCODING'] : '';
 
 		if ($acceptedEncoding === '') {
@@ -268,71 +263,6 @@ class Response {
 			return array('gzip', $m[1]);
 		}
 		return false;
-	}
-
-	/**
-	 * Encodes and returns given response content using provided compression method
-	 *
-	 * Sets all required HTTP headers
-	 *
-	 * Based on HTTP_Encoder class from Minify project
-	 */
-	private function encode($response, $encoding = false) {
-		// initial flag value
-		$this->isCompressed = false;
-
-		// check whether zlib module is loaded
-		if ($encoding === false || !extension_loaded('zlib')) {
-			return $response;
-		}
-
-		// response is too small to make compression pay out
-		if (strlen($response) < self::COMPRESSION_LENGTH_THRESHOLD) {
-			return $response;
-		}
-
-		// don't compress certain assets
-		if (in_array($this->getHeader('Content-type'), $this->compressionBlacklist)) {
-			return $response;
-		}
-
-		// "unpack" parameter
-		$encodingMethod = $encoding[0];
-		$encodingMethodHeaderValue = $encoding[1];
-
-		switch ($encodingMethod) {
-			case 'deflate':
-				$encoded = gzdeflate($response, self::COMPRESSION_LEVEL);
-				break;
-
-			case 'gzip':
-				$encoded = gzencode($response, self::COMPRESSION_LEVEL);
-				break;
-
-			case 'compress':
-				$encoded = gzcompress($response, self::COMPRESSION_LEVEL);
-				break;
-		}
-
-		// error while compressing
-		if ($encoded === false) {
-			return $response;
-		}
-
-		// response is compressed
-		$this->isCompressed = true;
-
-		// for proxies
-		$this->setHeader('Vary', 'Accept-Encoding');
-
-		$this->setHeader('Content-Length', strlen($encoded));
-		$this->setHeader('Content-Encoding', $encodingMethodHeaderValue);
-
-		// stats
-		$ratio = round(strlen($response) / strlen($encoded), 2);
-		$this->debug->log(__METHOD__ . " - using {$encodingMethod} (x{$ratio} compression)");
-
-		return $encoded;
 	}
 
 	/**
