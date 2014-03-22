@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano;
+
 /**
  * Wrapper for HTTP request. To be used by Router for dispatching
  */

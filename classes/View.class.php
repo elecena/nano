@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano;
+
 /**
  * View class wrapping response from the controller
  */
@@ -27,7 +29,7 @@ class View {
 	// controller's data
 	protected $data = array();
 
-	public function __construct(NanoApp $app, Controller $controller) {
+	public function __construct(\NanoApp $app, \Controller $controller) {
 		$this->app = $app;
 		$this->controller = $controller;
 

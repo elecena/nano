@@ -1,5 +1,8 @@
 <?php
 
+use Nano\Debug;
+use Nano\Response;
+
 /**
  * JS processor
  *

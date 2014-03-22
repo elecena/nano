@@ -6,6 +6,10 @@
 
 include 'app.php';
 
+use Nano\Output;
+use Nano\Request;
+use Nano\Response;
+
 $request = $app->getRequest();
 $response = $app->getResponse();
 

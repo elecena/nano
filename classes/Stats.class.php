@@ -5,6 +5,9 @@
 
 namespace Nano;
 
+use \Domnikl\Statsd\Connection;
+use \Domnikl\Statsd\Client;
+
 class Stats {
 
 	/**
@@ -27,14 +30,14 @@ class Stats {
 				$namespace = $globalNS . '.' . $namespace;
 			}
 
-			$connection = new \Domnikl\Statsd\Connection\Socket($host, $port);
+			$connection = new Connection\Socket($host, $port);
 		}
 		else {
 			// disable sending any metrics
-			$connection = new \Domnikl\Statsd\Connection\Blackhole();
+			$connection = new Connection\Blackhole();
 		}
 
-		$statsd = new \Domnikl\Statsd\Client($connection, $namespace);
+		$statsd = new Client($connection, $namespace);
 
 		return $statsd;
 	}

@@ -4,6 +4,8 @@
  * Abstract class for representing nanoPortal's application model
  */
 
+use Nano\NanoObject;
+
 abstract class Model extends NanoObject {
 
 	protected $data = array();

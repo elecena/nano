@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano;
+
 /**
  * Abstract class for representing nanoPortal's application models and services
  */
@@ -28,7 +30,7 @@ abstract class NanoObject {
 	 * Use given application
 	 */
 	function __construct() {
-		$this->app = NanoApp::app();
+		$this->app = \NanoApp::app();
 
 		$this->cache = $this->app->getCache();
 		$this->config = $this->app->getConfig();
@@ -42,7 +44,7 @@ abstract class NanoObject {
 	/**
 	 * Allow models and services to use different database
 	 */
-	static protected function getDatabase(NanoApp $app) {
+	static protected function getDatabase(\NanoApp $app) {
 		return $app->getDatabase();
 	}
 }

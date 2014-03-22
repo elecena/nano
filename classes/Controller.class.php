@@ -1,5 +1,13 @@
 <?php
 
+use Nano\Cache;
+use Nano\Config;
+use Nano\Debug;
+use Nano\Events;
+use Nano\Request;
+use Nano\Router;
+use Nano\View;
+
 /**
  * Abstract class for representing nanoPortal's controllers
  *
@@ -60,6 +68,10 @@ abstract class Controller {
 
 	/**
 	 * Create and setup instance of given controller for given application
+	 *
+	 * @param NanoApp $app
+	 * @param $controllerName
+	 * @return Controller
 	 */
 	public static function factory(NanoApp $app, $controllerName) {
 		$className = ucfirst(strtolower($controllerName)) . 'Controller';

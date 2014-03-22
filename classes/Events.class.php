@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano;
+
 /**
  * Events handling
  */
@@ -14,7 +16,7 @@ class Events {
 	// list of events handlers
 	private $events = array();
 
-	public function __construct(NanoApp $app) {
+	public function __construct(\NanoApp $app) {
 		$this->app = $app;
 	}
 

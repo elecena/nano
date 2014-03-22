@@ -1,9 +1,10 @@
 <?php
 
+namespace Nano;
+
 /**
  * Wrapper for results
  */
-
 class ResultsWrapper {
 
 	// results
@@ -16,7 +17,8 @@ class ResultsWrapper {
 	/**
 	 * Set given entry in results array
 	 *
-	 * Key should be lowercase
+	 * @param string $key should be lowercase
+	 * @param mixed $value the value to set
 	 */
 	public function set($key, $value) {
 		$this->results[$key] = $value;
@@ -26,6 +28,10 @@ class ResultsWrapper {
 	 * Get given results entry
 	 *
 	 * To get 'data' entry use $res->getData()
+	 *
+	 * @param $name
+	 * @param $parameters
+	 * @return null
 	 */
 	public function __call($name, $parameters) {
 		$res = null;
