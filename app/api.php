@@ -47,6 +47,7 @@ if ($data !== false) {
 	$output = Output::factory($format, $data);
 
 	if (!empty($callback)) {
+		/* @var Output\OutputJsonp $output */
 		$output->setCallback($callback);
 	}
 

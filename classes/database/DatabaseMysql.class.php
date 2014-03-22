@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Debug;
+
 /**
  * Database access layer for mySQL
  */

@@ -1,13 +1,13 @@
 <?php
-/**
- * Integration layer for domnikl/statsd library
- */
 
 namespace Nano;
 
 use \Domnikl\Statsd\Connection;
 use \Domnikl\Statsd\Client;
 
+/**
+ * Integration layer for domnikl/statsd library
+ */
 class Stats {
 
 	/**
@@ -23,6 +23,7 @@ class Stats {
 		if ($statsdEnabled) {
 			// get global config
 			$host = $config->get('stats.host', 'localhost');
+			/* @var int $port */
 			$port = $config->get('stats.port', 8125);
 			$globalNS = $config->get('stats.namespace', '');
 

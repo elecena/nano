@@ -113,6 +113,8 @@ class StaticAssets {
 
 	/**
 	 * Get path to CDN host
+	 *
+	 * @return string|false CDN path or false if not defined
 	 */
 	public function getCDNPath() {
 		return $this->cdnPath;

@@ -101,6 +101,10 @@ abstract class Database {
 
 	/**
 	 * Debug logging helper
+	 *
+	 * @param $method
+	 * @param $msg
+	 * @param string|bool $time
 	 */
 	protected function log($method, $msg, $time = false) {
 		$msg =  "{$method} [{$this->name}] - {$msg}";
