@@ -1,9 +1,11 @@
 <?php
 
+namespace Nano\Output;
+use Nano\Output;
+
 /**
  * JSON renderer
  */
-
 class OutputJson extends Output {
 
 	/**

@@ -1,9 +1,10 @@
 <?php
 
+namespace Nano;
+
 /**
  * Abstract class for output formatting
  */
-
 abstract class Output {
 
 	// data to be processed
@@ -11,9 +12,16 @@ abstract class Output {
 
 	/**
 	 * Creates an instance of given cache driver
+	 *
+	 * @param string $driver output driver
+	 * @param null $data data for the output
+	 * @return Output output instance
 	 */
 	public static function factory($driver, $data = null) {
-		$instance = Autoloader::factory('Output', $driver, dirname(__FILE__) . '/output');
+		$className = sprintf('Nano\\Output\\Output%s', ucfirst($driver));
+
+		/* @var Output $instance */
+		$instance = new $className();
 
 		if (!is_null($instance)) {
 			if (!is_null($data)) {

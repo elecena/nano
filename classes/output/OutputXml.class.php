@@ -1,18 +1,20 @@
 <?php
 
+namespace Nano\Output;
+use Nano\Output;
+
 /**
  * XML renderer
  *
  * @see http://stackoverflow.com/questions/1397036/how-to-convert-array-to-simplexml-in-php
  * @see http://stackoverflow.com/questions/99350/php-associative-arrays-to-and-from-xml
  */
-
 class OutputXml extends Output {
 
 	/**
 	 * Converts given array into XML and adds nodes into given element
 	 */
-	private function arrayToXml(Array &$data, SimpleXMLElement $node) {
+	private function arrayToXml(Array &$data, \SimpleXMLElement $node) {
 		foreach($data as $key => $val) {
 			$key = strtolower($key);
 
@@ -35,13 +37,13 @@ class OutputXml extends Output {
 	 * Render current data
 	 */
 	public function render() {
-		$this->xml = new SimpleXMLElement('<root />');
+		$xml = new \SimpleXMLElement('<root />');
 
 		// recursively add data to XML
-		$this->arrayToXml($this->data, $this->xml);
+		$this->arrayToXml($this->data, $xml);
 
 		// render XML
-		return trim($this->xml->asXML());
+		return trim($xml->asXML());
 	}
 
 	/**

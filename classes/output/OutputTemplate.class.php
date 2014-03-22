@@ -1,18 +1,21 @@
 <?php
 
+namespace Nano\Output;
+use Nano\Output;
+
 /**
  * Data with HTML template renderer
  */
-
 class OutputTemplate extends Output {
 
+	/* @var \Template $template */
 	private $template;
 	private $templateName;
 
 	/**
 	 * Set template object to be rendered
 	 */
-	public function setTemplate(Template $template) {
+	public function setTemplate(\Template $template) {
 		$this->template = $template;
 	}
 
