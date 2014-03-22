@@ -1,6 +1,7 @@
 <?php
 
 use \Nano\Cache;
+use \Nano\Output;
 use \Nano\Stats;
 
 /**
@@ -57,6 +58,7 @@ class NanoApp {
 	 * Return the current instance of NanoApp
 	 *
 	 * @return NanoApp
+	 * @throws Exception
 	 */
 	public static function app() {
 		if (is_null(self::$app)) {
@@ -257,6 +259,7 @@ class NanoApp {
 	/**
 	 * Render the results of given request
 	 *
+	 * @param Request $request
 	 * @return string template's output for data returned by the module
 	 */
 	public function renderRequest(Request $request) {
@@ -273,6 +276,9 @@ class NanoApp {
 	/**
 	 * Render the results of request given by the controller and method name (and optional parameters)
 	 *
+	 * @param string $controllerName
+	 * @param string $methodName
+	 * @param array $params
 	 * @return string template's output for data returned by the module
 	 */
 	public function render($controllerName, $methodName = '', Array $params = array()) {
