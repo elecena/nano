@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano;
+
 /**
  * Handles HTML templates
  */

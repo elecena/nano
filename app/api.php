@@ -6,6 +6,10 @@
 
 include 'app.php';
 
+use Nano\Output;
+use Nano\Request;
+use Nano\Response;
+
 $request = $app->getRequest();
 $response = $app->getResponse();
 
@@ -43,6 +47,7 @@ if ($data !== false) {
 	$output = Output::factory($format, $data);
 
 	if (!empty($callback)) {
+		/* @var Output\OutputJsonp $output */
 		$output->setCallback($callback);
 	}
 

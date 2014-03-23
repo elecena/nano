@@ -1,5 +1,7 @@
 <?php
 
+use Nano\ResultsWrapper;
+
 /**
  * Message queue access layer for Redis
  *
@@ -10,7 +12,6 @@
  * mq::<queue_name>::messages
  * mq::<queue_name>::lastid
  */
-
 class MessageQueueRedis extends MessageQueue {
 
 	// connection with server

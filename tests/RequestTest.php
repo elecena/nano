@@ -4,6 +4,8 @@
  * Set of unit tests for Request class
  */
 
+use Nano\Request;
+
 class RequestTest extends PHPUnit_Framework_TestCase {
 
 	public function testGETParams() {

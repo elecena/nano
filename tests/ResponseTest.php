@@ -1,13 +1,16 @@
 <?php
 
-use Nano\Output;
-
 /**
  * Set of unit tests for Response class
  */
 
+use Nano\Output;
+use Nano\Response;
+use Nano\Request;
+
 class ResponseTest extends PHPUnit_Framework_TestCase {
 
+	/* @var NanoApp $response */
 	private $app;
 	/* @var Response $response */
 	private $response;
@@ -61,9 +64,6 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGzipSupported() {
-		// content to be compressed
-		$content = str_repeat('foo', 1024 * 64);
-
 		$this->assertFalse($this->response->getAcceptedEncoding());
 		$this->assertFalse($this->response->isCompressed());
 
@@ -140,6 +140,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$app->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 		$app->expects($this->any())->method('getDebug')->will($this->returnValue($this->app->getDebug()));
 
+		/* @var NanoApp $app */
 		$response = new Response($app);
 
 		if (!is_null($lastModified)) {

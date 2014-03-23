@@ -1,6 +1,8 @@
 <?php
 
+namespace Nano;
 use Nano\Output;
+use Nano\Stats;
 
 /**
  * Handles response (sets HTTP headers, wraps output content)
@@ -59,7 +61,7 @@ class Response {
 	/**
 	 * Set the timestamp of the response start
 	 */
-	public function __construct(NanoApp $app, $env = array()) {
+	public function __construct(\NanoApp $app, $env = array()) {
 		$this->app = $app;
 		$this->env = $env;
 
@@ -84,7 +86,7 @@ class Response {
 			$this->setHeader('Vary', 'Accept-Encoding');
 		}
 
-		$this->stats = \Nano\Stats::getCollector($app, 'response');
+		$this->stats = Stats::getCollector($app, 'response');
 	}
 
 	/**

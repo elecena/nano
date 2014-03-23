@@ -1,9 +1,10 @@
 <?php
 
+namespace Nano;
+
 /**
  * Configuration class
  */
-
 class Config {
 
 	// directory to load config files from

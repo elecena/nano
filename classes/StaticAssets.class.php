@@ -7,6 +7,10 @@
  * and embedding of images in CSS file (data-URI encoding)
  */
 
+use Nano\Response;
+use Nano\Request;
+use Nano\Router;
+
 class StaticAssets {
 
 	const PACKAGE_URL_PREFIX = '/package/';
@@ -109,6 +113,8 @@ class StaticAssets {
 
 	/**
 	 * Get path to CDN host
+	 *
+	 * @return string|false CDN path or false if not defined
 	 */
 	public function getCDNPath() {
 		return $this->cdnPath;

@@ -4,6 +4,8 @@
  * Database access layer
  */
 
+use Nano\Debug;
+
 abstract class Database {
 
 	// debug
@@ -86,7 +88,7 @@ abstract class Database {
 			}
 		}
 		else {
-			$debug->log(__METHOD__ . ' - no driver specified', DEBUG::ERROR);
+			$debug->log(__METHOD__ . ' - no driver specified', Debug::ERROR);
 		}
 
 		// cache it
@@ -99,6 +101,10 @@ abstract class Database {
 
 	/**
 	 * Debug logging helper
+	 *
+	 * @param $method
+	 * @param $msg
+	 * @param string|bool $time
 	 */
 	protected function log($method, $msg, $time = false) {
 		$msg =  "{$method} [{$this->name}] - {$msg}";

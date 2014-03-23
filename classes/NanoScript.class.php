@@ -1,5 +1,7 @@
 <?php
 
+use Nano\NanoObject;
+
 /**
  * General interface for CLI scripts
  */
@@ -9,6 +11,9 @@ abstract class NanoScript extends NanoObject {
 
 	private $isDebug = false;
 
+	/**
+	 * @param NanoApp $app
+	 */
 	function __construct(NanoApp $app) {
 		$this->isDebug = (bool) getenv('DEBUG');
 

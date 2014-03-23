@@ -1,7 +1,13 @@
 <?php
 
 use \Nano\Cache;
+use \Nano\Config;
+use \Nano\Debug;
+use \Nano\Events;
 use \Nano\Output;
+use \Nano\Response;
+use \Nano\Request;
+use \Nano\Router;
 use \Nano\Stats;
 
 /**

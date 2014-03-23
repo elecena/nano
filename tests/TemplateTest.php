@@ -4,6 +4,8 @@
  * Set of unit tests for Template class
  */
 
+use Nano\Template;
+
 class TemplateTest extends PHPUnit_Framework_TestCase {
 
 	private $dir;

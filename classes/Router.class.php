@@ -1,10 +1,12 @@
 <?php
 
-use Nano\Output;
-
 /**
  * Requests router
  */
+
+namespace Nano;
+use Nano\Output;
+use Nano\View;
 
 class Router {
 
@@ -24,7 +26,10 @@ class Router {
 	// URL to application's home page (i.e. /)
 	private $homeUrl;
 
-	function __construct(NanoApp $app) {
+	/**
+	 * @param \NanoApp $app
+	 */
+	function __construct(\NanoApp $app) {
 		$this->app = $app;
 		$this->debug = $this->app->getDebug();
 
@@ -155,7 +160,7 @@ class Router {
 		// call selected controller and method (with parameters)
 		$controller = $this->app->getController($controllerName);
 
-		if ($controller instanceof Controller) {
+		if ($controller instanceof \Controller) {
 			// use indexAPI method to route API requests
 			$defaultAPImethod = self::DEFAULT_METHOD . 'API';
 
@@ -226,7 +231,7 @@ class Router {
 						$template = $view->getTemplate();
 						$templateName = $view->getTemplateName();
 
-						/* @var Nano\Output\OutputTemplate $ret */
+						/* @var Output\OutputTemplate $ret */
 						$ret = Output::factory('template', $data);
 						$ret->setTemplate($template);
 						$ret->setTemplateName($templateName);

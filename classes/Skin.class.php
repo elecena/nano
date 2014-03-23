@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Template;
+
 /**
  * Skin renderer
  *

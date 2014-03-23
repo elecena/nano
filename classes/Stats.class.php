@@ -1,16 +1,19 @@
 <?php
-/**
- * Integration layer for domnikl/statsd library
- */
 
 namespace Nano;
 
+use \Domnikl\Statsd\Connection;
+use \Domnikl\Statsd\Client;
+
+/**
+ * Integration layer for domnikl/statsd library
+ */
 class Stats {
 
 	/**
 	 * @param \NanoApp $app application instance
 	 * @param string $namespace option namespace to be appended to the global namespace
-	 * @return \Domnikl\Statsd\Client StatsD client instance
+	 * @return Client StatsD client instance
 	 */
 	static function getCollector(\NanoApp $app, $namespace = '') {
 		$config = $app->getConfig();
@@ -20,6 +23,7 @@ class Stats {
 		if ($statsdEnabled) {
 			// get global config
 			$host = $config->get('stats.host', 'localhost');
+			/* @var int $port */
 			$port = $config->get('stats.port', 8125);
 			$globalNS = $config->get('stats.namespace', '');
 
@@ -27,14 +31,14 @@ class Stats {
 				$namespace = $globalNS . '.' . $namespace;
 			}
 
-			$connection = new \Domnikl\Statsd\Connection\Socket($host, $port);
+			$connection = new Connection\Socket($host, $port);
 		}
 		else {
 			// disable sending any metrics
-			$connection = new \Domnikl\Statsd\Connection\Blackhole();
+			$connection = new Connection\Blackhole();
 		}
 
-		$statsd = new \Domnikl\Statsd\Client($connection, $namespace);
+		$statsd = new Client($connection, $namespace);
 
 		return $statsd;
 	}

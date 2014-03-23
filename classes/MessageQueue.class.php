@@ -4,6 +4,8 @@
  * Message queue access layer
  */
 
+use Nano\Debug;
+
 abstract class MessageQueue {
 
 	// key parts separator
@@ -60,7 +62,7 @@ abstract class MessageQueue {
 			}
 		}
 		else {
-			$debug->log(__METHOD__ . ' - no driver specified', DEBUG::ERROR);
+			$debug->log(__METHOD__ . ' - no driver specified', Debug::ERROR);
 		}
 
 		return $instance;

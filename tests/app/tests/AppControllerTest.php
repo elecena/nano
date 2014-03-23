@@ -4,6 +4,8 @@
  * Set of unit tests for Nano's Application controller
  */
 
+use Nano\View;
+
 include_once(dirname(__FILE__) . '/AppTest.php');
 
 class AppControllerTest extends AppTest {

@@ -1,9 +1,10 @@
 <?php
 
+namespace Nano;
+
 /**
  * Debugging
  */
-
 class Debug {
 
 	// log level constants

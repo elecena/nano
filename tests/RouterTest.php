@@ -4,6 +4,8 @@
  * Set of unit tests for Router class
  */
 
+use Nano\Router;
+
 class RouterTest extends PHPUnit_Framework_TestCase {
 
 	private $app;
