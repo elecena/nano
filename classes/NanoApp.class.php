@@ -140,14 +140,15 @@ class NanoApp {
 		// stats
 		// TODO: static
 		$stats = Stats::getCollector($this, 'request');
-		$stats->increment('requests.count');
 
 		// request type
 		if ($this->request->isApi()) {
 			$stats->increment('type.api');
+			$stats->increment('requests.count');
 		}
 		else if (!$this->request->isInternal() && !$this->request->isCLI()) {
 			$stats->increment('type.main');
+			$stats->increment('requests.count');
 		}
 
 		// request path

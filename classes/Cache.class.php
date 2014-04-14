@@ -130,6 +130,12 @@ abstract class Cache {
 	 */
 	public function onNanoAppTearDown(\NanoApp $app) {
 		$debug = $app->getDebug();
+		$request = $app->getRequest();
+
+		// don't report stats for command line script
+		if ($request->isCLI()) {
+			return;
+		}
 
 		$debug->log("Cache: {$this->hits} hits and {$this->misses} misses");
 

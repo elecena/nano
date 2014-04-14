@@ -479,6 +479,13 @@ abstract class Database {
 	 */
 	public function onNanoAppTearDown(NanoApp $app) {
 		$debug = $app->getDebug();
+		$request = $app->getRequest();
+
+		// don't report stats for command line script
+		if ($request->isCLI()) {
+			return;
+		}
+
 		$perf = $this->getPerformanceData();
 
 		$debug->log("Database [{$this->name}]: {$perf['queries']} queries in {$perf['time']} s");
