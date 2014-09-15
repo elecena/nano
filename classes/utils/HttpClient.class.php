@@ -115,7 +115,7 @@ class HttpClient {
 	 * Set request headers
 	 */
 	public function setRequestHeader($header, $value) {
-		$this->reqHeaders[$header] = $value;
+		$this->reqHeaders[] = "$header: $value";
 
 		$this->log("setting '{$header}' request header to '{$value}'");
 	}
@@ -221,9 +221,6 @@ class HttpClient {
 
 		curl_setopt($this->handle, CURLOPT_URL, $url);
 
-		// set request headers
-		curl_setopt($this->handle, CURLOPT_HEADER, $this->reqHeaders);
-
 		// set cookies
 		// @see http://stackoverflow.com/questions/6453347/php-curl-and-setcookie-problem
 		if (!empty($this->cookies)) {
@@ -234,6 +231,9 @@ class HttpClient {
 
 			curl_setopt($this->handle, CURLOPT_COOKIE, implode('; ', $cookies));
 		}
+
+		// set request headers
+		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->reqHeaders);
 
 		// cleanup
 		$this->reqHeaders = array();
@@ -273,7 +273,7 @@ class HttpClient {
 			// return an error
 			$response = false;
 
-			$this->log('request failed: ' . curl_error($this->handle));
+			$this->log('request failed: #' . curl_errno($this->handle) . ' - ' . curl_error($this->handle));
 		}
 
 		return $response;
