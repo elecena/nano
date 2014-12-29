@@ -7,6 +7,8 @@ use \Domnikl\Statsd\Client;
 
 /**
  * Integration layer for domnikl/statsd library
+ *
+ * @see https://github.com/domnikl/statsd-php
  */
 class Stats {
 
@@ -31,7 +33,7 @@ class Stats {
 				$namespace = $globalNS . '.' . $namespace;
 			}
 
-			$connection = new Connection\Socket($host, $port);
+			$connection = new Connection\UdpSocket($host, $port);
 		}
 		else {
 			// disable sending any metrics
