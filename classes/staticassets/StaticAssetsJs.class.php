@@ -34,18 +34,19 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 			else {
 				/* @var $http HttpClient */
 				$http = $this->app->factory('HttpClient');
+				$http->setTimeout(5);
 
 				$res = $http->post($closureService, array(
 					'utf8' => 'on',
 					'js_code' => $content,
 				));
 
-				if ($res->getResponseCode() === Response::OK) {
+				if ( ($res instanceof HttpResponse) && ($res->getResponseCode() === Response::OK) ) {
 					$content = $res->getContent();
 				}
 				else {
 					$this->app->getDebug()->log('Minifying failed!', Debug::ERROR);
-					$content = $this->compressWithJSMin($content);
+					$content = '/* JSMin fallback! */' . $this->compressWithJSMin($content);
 				}
 			}
 		}
