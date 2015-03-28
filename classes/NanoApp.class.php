@@ -97,7 +97,8 @@ class NanoApp {
 		// debug
 		$this->debug = new Debug($this->dir . '/log', $logFile);
 
-		if ($this->config->get('debug.enabled', false)) {
+		// log when enabled in config or when running in CLI mode
+		if ($this->config->get('debug.enabled', false) || $this instanceof NanoCliApp) {
 			$this->debug->enableLog();
 			$this->debug->clearLogFile();
 
