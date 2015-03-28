@@ -64,6 +64,9 @@ class Nano {
 	/**
 	 * Creates a CLI script from given class
 	 *
+	 * @param string $dir
+	 * @param $scriptClass
+	 * @param string string $configSet
 	 * @return NanoScript
 	 */
 	static public function script($dir, $scriptClass, $configSet = 'default') {
@@ -73,6 +76,7 @@ class Nano {
 		// create new application
 		$app = new NanoCliApp($dir, $configSet, $scriptClass::LOGFILE);
 
+		/* @var NanoScript $script */
 		$script = new $scriptClass($app);
 
 		// call NanoScript::onTearDown method when the script is completed

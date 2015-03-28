@@ -115,6 +115,8 @@ class DatabaseMysql extends Database {
 	 * Send given query and return results handler
 	 *
 	 * @see http://www.php.net/manual/en/mysqli.real-query.php
+	 *
+	 * @param string $sql
 	 * @return DatabaseResult
 	 */
 	public function query($sql) {
