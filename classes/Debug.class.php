@@ -38,7 +38,6 @@ class Debug {
 	public function __construct($dir, $logFile = 'debug') {
 		$this->dir = $dir;
 		$this->setLogFile($logFile);
-		$this->enableLog();
 
 		// log everything
 		$this->setLogThreshold(self::INFO);
@@ -93,7 +92,10 @@ class Debug {
 		$file = $this->getLogFile();
 
 		if (file_exists($file)) {
-			@unlink($file);
+			// truncate the file
+			// @see http://php.net/manual/pl/function.ftruncate.php#104455
+			$fp = fopen($file, 'w');
+			fclose($fp);
 		}
 	}
 
@@ -143,7 +145,7 @@ class Debug {
 		$msgLine = "{$prefix}{$msg}\n";
 
 		// log to file
-		return @file_put_contents($file, $msgLine, FILE_APPEND | LOCK_EX) !== false;
+		return file_put_contents($file, $msgLine, FILE_APPEND) !== false;
 	}
 
 	/**
