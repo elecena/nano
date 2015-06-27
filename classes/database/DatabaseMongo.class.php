@@ -8,6 +8,9 @@ class DatabaseMongo extends Database {
 
 	private $db;
 
+	/* @var MongoClient $link */
+	protected $link;
+
 	/**
 	 * Connect to a database
 	 */
@@ -26,7 +29,9 @@ class DatabaseMongo extends Database {
 		$this->debug->time('connect');
 
 		// // @see http://php.net/manual/en/mongo.construct.php
-		$this->link = new Mongo($dsn, array(
+		$class = class_exists('MongoClient') ? 'MongoClient' : 'Mongo';
+
+		$this->link = new $class($dsn, array(
 			'username' => $settings['user'],
 			'password' => $settings['pass'],
 		));
