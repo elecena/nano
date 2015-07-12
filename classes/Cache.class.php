@@ -51,6 +51,27 @@ abstract class Cache {
 	}
 
 	/**
+	 * Get the data from a given cache key.
+	 *
+	 * On cache miss generate new data using provided callback
+	 *
+	 * @param string|array $key
+	 * @param callable $callback
+	 * @param $ttl
+	 * @return mixed
+	 */
+	public function cache($key, callable $callback, $ttl) {
+		$data = $this->get($key, null);
+
+		// regenerate data on cache miss
+		if (is_null($data)) {
+			$this->set($key, $data = $callback(), $ttl);
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Gets key value
 	 */
 	abstract public function get($key, $default = null);
@@ -96,6 +117,9 @@ abstract class Cache {
 
 	/**
 	 * Get key used for storing in the cache
+	 *
+	 * @param string|array $key
+	 * @return string
 	 */
 	protected function getStorageKey($key) {
 		// merge key passed as an array
