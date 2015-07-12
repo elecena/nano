@@ -6,6 +6,15 @@
 
 use Nano\Debug;
 
+/**
+ * Generic exception
+ */
+abstract class DatabaseException extends Exception {}
+class DatabaseConnectionException extends DatabaseException {}
+
+/**
+ * Class Database
+ */
 abstract class Database {
 
 	// debug
@@ -53,6 +62,7 @@ abstract class Database {
 	 * @param NanoApp $app application instance
 	 * @param mixed $config config array or database config entry name to use to connect
 	 * @return Database instance of database model
+	 * @throws DatabaseException
 	 */
 	public static function connect(NanoApp $app, $config = 'default') {
 		// try to reuse already created connection (when getting database by name)
@@ -82,8 +92,8 @@ abstract class Database {
 					$name = is_string($config) ? $config : $driver;
 					$instance = new $className($app, $settings, $name);
 				}
-				catch(Exception $e) {
-					die($e->getMessage());
+				catch(DatabaseException $e) {
+					throw $e;
 				}
 			}
 		}

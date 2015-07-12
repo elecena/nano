@@ -5,7 +5,6 @@ use Nano\Debug;
 /**
  * Database access layer for mySQL
  */
-
 class DatabaseMysql extends Database {
 
 	// "MySQL server has gone away" error ID
@@ -16,6 +15,11 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Connect to a database
+	 *
+	 * @param NanoApp $app
+	 * @param array $settings
+	 * @param $name
+	 * @throws DatabaseException
 	 */
 	protected function __construct(NanoApp $app, Array $settings, $name) {
 		parent::__construct($app, $settings, $name);
@@ -30,6 +34,9 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * (Re)connect using settings passed to the constructor
+	 *
+	 * @param bool $reconnect
+	 * @throws DatabaseException
 	 */
 	protected function doConnect($reconnect = true) {
 		// reuse connection settings
@@ -84,7 +91,7 @@ class DatabaseMysql extends Database {
 
 				$this->debug->log(__METHOD__ . " - connecting with '{$hostInfo}' failed (#{$errorNo}: {$errorMsg})", Debug::ERROR);
 
-				throw new Exception($errorMsg);
+				throw new DatabaseConnectionException( "[{$this->name}] {$errorMsg}", $errorNo);
 			}
 		}
 	}
@@ -277,6 +284,8 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Get number of rows in given results set
+	 * @param mysqli_result $results
+	 * @return int
 	 */
 	public function numRows($results) {
 		return $results->num_rows;
@@ -284,6 +293,8 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Change the position of results cursor
+	 * @param mysqli_result $results
+	 * @param int $rowId
 	 */
 	public function seekRow($results, $rowId) {
 		$results->data_seek($rowId);
@@ -291,6 +302,9 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Get data for current row
+	 *
+	 * @param mysqli_result $results
+	 * @return mixed|false
 	 */
 	public function fetchRow($results) {
 		$row = $results->fetch_assoc();
@@ -300,6 +314,8 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Free the memory
+	 *
+	 * @param mysqli_result $results
 	 */
 	public function freeResults($results) {
 		$results->free_result();
