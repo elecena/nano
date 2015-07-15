@@ -27,6 +27,7 @@ class Response {
 	const FORBIDDEN = 403;
 	const NOT_FOUND = 404;
 	// Server Error 5xx
+	const INTERNAL_SERVER_ERROR = 500;
 	const NOT_IMPLEMENTED = 501;
 	const SERVICE_UNAVAILABLE = 503;
 
