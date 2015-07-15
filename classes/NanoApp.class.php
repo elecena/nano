@@ -297,6 +297,42 @@ class NanoApp {
 	}
 
 	/**
+	 * Call given function and handle any exception thrown
+	 *
+	 * Will render HTTP 500 page with error details
+	 *
+	 * @param callable $fn function to call
+	 * @param callable|bool $handler custom exception handling function to call
+	 * @return mixed|Exception value return by function called or exception that was thrown
+	 */
+	public function handleException(callable $fn, $handler = false) {
+		try {
+			return $fn();
+		}
+		catch(\Exception $e) {
+			$response = $this->getResponse();
+			$response->setResponseCode(Response::INTERNAL_SERVER_ERROR);
+			$response->setContentType('text/plain');
+			$response->setHeader('X-Error', get_class($e));
+			$response->setCacheDuration(0);
+
+			if (is_callable($handler)) {
+				$handler($e);
+			}
+			else {
+				$error = sprintf('%s: %s', get_class($e), $e->getMessage());
+
+				if (ini_get('display_errors')) {
+					$error .= "\n\n" . $e->getTraceAsString();
+				}
+
+				$response->setContent($error);
+			}
+			return $e;
+		}
+	}
+
+	/**
 	 * Return path to application
 	 */
 	public function getDirectory() {
