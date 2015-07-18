@@ -49,6 +49,10 @@ abstract class Skin {
 
 	/**
 	 * Return an instance of a given skin
+	 *
+	 * @param NanoApp $app
+	 * @param string $skinName
+	 * @return null|self
 	 */
 	public static function factory(NanoApp $app, $skinName) {
 		$skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
@@ -58,6 +62,9 @@ abstract class Skin {
 
 	/**
 	 * Use Skin::factory
+	 *
+	 * @param NanoApp $app
+	 * @param string $skinName
 	 */
 	function __construct(NanoApp $app, $skinName) {
 		$this->app = $app;
@@ -68,7 +75,7 @@ abstract class Skin {
 		$this->skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
 
 		// setup objects
-		$this->staticAssets = $this->app->factory('StaticAssets');
+		$this->staticAssets = new StaticAssets($app);
 		$this->template = new Template($this->skinDirectory . '/templates');
 	}
 
@@ -136,12 +143,16 @@ abstract class Skin {
 
 	/**
 	 * Add <link> tag entry
+	 *
+	 * @param string $rel "rel" attribute value
+	 * @param string $value "value" attribute value
+	 * @param array $attrs optional additional attributes to set
 	 */
-	function addLink($rel, $value) {
-		$this->link[] = array(
+	function addLink($rel, $value, Array $attrs = array()) {
+		$this->link[] = array_merge(array(
 			'rel' => $rel,
 			'value' => $value
-		);
+		), $attrs);
 	}
 
 	/**
