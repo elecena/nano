@@ -63,6 +63,12 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(gmdate(Response::DATE_RFC1123), $this->response->getHeader('Last-Modified'));
 	}
 
+	public function testSetETag() {
+		$eTag = '123456';
+		$this->response->setETag($eTag);
+		$this->assertEquals($eTag, $this->response->getHeader('ETag'));
+	}
+
 	public function testGzipSupported() {
 		$this->assertFalse($this->response->getAcceptedEncoding());
 		$this->assertFalse($this->response->isCompressed());
@@ -117,16 +123,12 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @dataProvider ifModifiedSinceDataProvider
+	 * Return a mock of the app request with given HTTP headers
+	 *
+	 * @param array $headers
+	 * @return PHPUnit_Framework_MockObject_MockObject
 	 */
-	public function testIfModifiedSince($lastModified, $headerValue, $expected) {
-		if (!is_null($headerValue)) {
-			$headers = array('HTTP_IF_MODIFIED_SINCE' => $headerValue);
-		}
-		else {
-			$headers = array();
-		}
-
+	private function mockAppWithRequestWithHeaders(Array $headers) {
 		$request = new Request(array(), $headers);
 
 		// mock NanoApp
@@ -140,7 +142,26 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$app->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 		$app->expects($this->any())->method('getDebug')->will($this->returnValue($this->app->getDebug()));
 
+		return $app;
+	}
+
+	/**
+	 * @dataProvider ifModifiedSinceLastModifiedDataProvider
+	 *
+	 * @param string|null $lastModified
+	 * @param string|null $headerValue
+	 * @param bool $expected
+	 */
+	public function testIfModifiedSinceLastModified($lastModified, $headerValue, $expected) {
+		if (!is_null($headerValue)) {
+			$headers = array('HTTP_IF_MODIFIED_SINCE' => $headerValue);
+		}
+		else {
+			$headers = array();
+		}
+
 		/* @var NanoApp $app */
+		$app = $this->mockAppWithRequestWithHeaders($headers);
 		$response = new Response($app);
 
 		if (!is_null($lastModified)) {
@@ -150,7 +171,10 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $response->isNotModifiedSince());
 	}
 
-	public function ifModifiedSinceDataProvider() {
+	/**
+	 * @return array
+	 */
+	public function ifModifiedSinceLastModifiedDataProvider() {
 		return array(
 			array(null, null, false),
 			array('Wed, 19 Dec 2012 14:42:24 GMT', null, false),
@@ -164,6 +188,43 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 			// ok
 			array('Wed, 19 Dec 2012 14:42:24 GMT', 'Wed, 19 Dec 2012 14:42:24 GMT', true),
 			array('Wed, 19 Dec 2012 14:42:24 GMT', 'Wed, 19 Dec 2012 15:42:24 GMT', true),
+		);
+	}
+
+	/**
+	 * @dataProvider ifModifiedSinceETagDataProvider
+	 */
+	public function testIfModifiedSinceETag($eTag, $headerValue, $expected) {
+		if (!is_null($headerValue)) {
+			$headers = array('HTTP_IF_NONE_MATCH' => $headerValue);
+		}
+		else {
+			$headers = array();
+		}
+
+		/* @var NanoApp $app */
+		$app = $this->mockAppWithRequestWithHeaders($headers);
+		$response = new Response($app);
+
+		if (!is_null($eTag)) {
+			$response->setETag($eTag);
+		}
+
+		$this->assertEquals($expected, $response->ifNoneMatch());
+	}
+
+	/**
+	 * @return array
+	 */
+	public function ifModifiedSinceETagDataProvider() {
+		return array(
+			array(null, null, false),
+			array('foo', null, false),
+			array(null, 'foo', false),
+			array('foo', 'bar', false),
+
+			array('bar', 'bar', true),
+			array('foo', 'foo', true),
 		);
 	}
 }

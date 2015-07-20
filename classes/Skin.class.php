@@ -374,4 +374,11 @@ abstract class Skin {
 		// render the rest of the page
 		echo $this->template->render('main');
 	}
+
+	/**
+	 * @return StaticAssets
+	 */
+	function getStaticAssets() {
+		return $this->staticAssets;
+	}
 }

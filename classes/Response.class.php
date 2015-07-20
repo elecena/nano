@@ -56,6 +56,9 @@ class Response {
 	// timestamp of Last-Modified header
 	private $lastModified = false;
 
+	// ETag header
+	private $eTag = false;
+
 	// $_SERVER global
 	private $env;
 
@@ -235,6 +238,18 @@ class Response {
 	}
 
 	/**
+	 * Set ETag value
+	 *
+	 * @param string $eTag
+	 */
+	public function setETag($eTag) {
+		$this->eTag = $eTag;
+		$this->setHeader('ETag', $eTag);
+
+		$this->debug->log(__METHOD__ . " - {$eTag}");
+	}
+
+	/**
 	 * Return whether HTTP client supports GZIP response compression
 	 *
 	 * Based on HTTP_Encoder class from Minify project
@@ -296,12 +311,24 @@ class Response {
 	}
 
 	/**
+	 * Return true if the resource was NOT modified (using ETag + If-None-Match headers)
+	 *
+	 * @see http://stackoverflow.com/questions/998791/if-modified-since-vs-if-none-match
+	 * @return bool
+	 */
+	public function ifNoneMatch() {
+		$ifNoneMatch = $this->app->getRequest()->getHeader('If-None-Match');
+
+		return is_string($this->eTag) && ($this->eTag === $ifNoneMatch);
+	}
+
+	/**
 	 * Handle If-Modified-Since request header
 	 *
 	 * @return bool false if page was modified since
 	 */
 	private function handleIfModifiedSince() {
-		if ($this->isNotModifiedSince()) {
+		if ($this->isNotModifiedSince() || $this->ifNoneMatch()) {
 			$this->debug->log(__METHOD__ . ' - sending 304 Not Modified');
 
 			$this->setResponseCode(self::NOT_MODIFIED);
