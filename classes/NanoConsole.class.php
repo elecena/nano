@@ -67,7 +67,8 @@ BANNER;
 			eval($line);
 		}
 		catch(Exception $e) {
-			echo $e;
+			echo "Caught exception " . get_class( $e ) .
+				": {$e->getMessage()}\n" . $e->getTraceAsString() . "\n";
 		}
 		$ret = ob_get_clean();
 
