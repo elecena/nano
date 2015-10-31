@@ -1,12 +1,18 @@
 <?php
 
-/**
- * Driver for caching using Redis key-value persistent DB
- */
-
 namespace Nano\Cache;
 use Nano\Cache;
 
+use Predis\Client;
+
+
+/**
+ * Driver for caching using Redis key-value persistent DB
+ *
+ * Requires predis library to be installed
+ *
+ * @see https://packagist.org/packages/predis/predis
+ */
 class CacheRedis extends Cache {
 
 	// Redis connection
@@ -14,6 +20,8 @@ class CacheRedis extends Cache {
 
 	/**
 	 * Creates an instance of cache driver
+	 *
+	 * @param array $settings
 	 */
 	public function __construct(Array $settings) {
 		parent::__construct($settings);
@@ -21,16 +29,13 @@ class CacheRedis extends Cache {
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';
 		$port = isset($settings['port']) ? $settings['port'] : 6379;
-		$pass = isset($settings['pass']) ? $settings['pass'] : false;
 
 		// lazy connect
-		$this->redis = new \Redis($host, $port);
-		#$this->redis->debug = true;
-
-		// authenticate (if required)
-		if ($pass !== false) {
-			$this->redis->auth($pass);
-		}
+		$this->redis = new Client([
+			'scheme' => 'tcp',
+			'host'   => $host,
+			'port'   => $port,
+		]);
 
 		$this->debug->log(__CLASS__ . ": using {$host}:{$port}");
 	}
@@ -90,7 +95,7 @@ class CacheRedis extends Cache {
 	 */
 	public function delete($key) {
 		$key = $this->getStorageKey($key);
-		$resp = $this->redis->delete($key);
+		$this->redis->del($key);
 
 		// Return value - Integer reply: The number of keys that were removed.
 		return true;
