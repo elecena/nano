@@ -77,7 +77,7 @@ class Response {
 		}
 
 		$this->debug->log(__METHOD__ . " - output buffering started");
-		ob_start();
+		if (!defined('NANO_TEST')) ob_start();
 
 		// start output buffering
 		$acceptedEncoding = $this->getAcceptedEncoding();
