@@ -1,5 +1,7 @@
 <?php
 
+use Nano\MessageQueue;
+
 /**
  * Set of unit tests for MessageQueue class
  */
@@ -19,8 +21,6 @@ class MessageQueueTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testMessageQueueFactory() {
-		$this->assertInstanceOf('MessageQueueRedis', $this->getMessageQueue('redis'));
-		$this->assertNull($this->getMessageQueue('Unknown'));
-		$this->assertNull($this->getMessageQueue(false));
+		$this->assertInstanceOf('Nano\Mq\MessageQueueRedis', $this->getMessageQueue('redis'));
 	}
 }
