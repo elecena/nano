@@ -1,9 +1,10 @@
 <?php
 
+use Nano\MessageQueue;
+
 /**
  * Set of unit tests for MessageQueueRedis class
  */
-
 class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 
 	private $settings;
@@ -35,7 +36,7 @@ class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 	public function testConnect() {
 		$mq = $this->getMessageQueue();
 
-		$this->assertInstanceOf('MessageQueueRedis', $mq);
+		$this->assertInstanceOf('Nano\Mq\MessageQueueRedis', $mq);
 	}
 
 	public function testQueuePopPushLength() {

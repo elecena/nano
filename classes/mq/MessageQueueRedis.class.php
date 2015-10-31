@@ -1,6 +1,11 @@
 <?php
 
+namespace Nano\Mq;
+
 use Nano\ResultsWrapper;
+use Nano\MessageQueue;
+use NanoApp;
+
 use Predis\Client;
 
 /**

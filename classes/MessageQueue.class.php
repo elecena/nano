@@ -1,11 +1,12 @@
 <?php
 
+namespace Nano;
+
+use NanoApp;
+
 /**
  * Message queue access layer
  */
-
-use Nano\Debug;
-
 abstract class MessageQueue {
 
 	// key parts separator
@@ -39,33 +40,8 @@ abstract class MessageQueue {
 	 * @return MessageQueue
 	 */
 	public static function connect(NanoApp $app, Array $settings) {
-		$debug = $app->getDebug();
-
-		$driver = isset($settings['driver']) ? $settings['driver'] : null;
-		$instance = null;
-
-		if (!empty($driver)) {
-			$className = 'MessageQueue' . ucfirst(strtolower($driver));
-
-			$src = dirname(__FILE__) . '/mq/' . $className . '.class.php';
-
-			if (file_exists($src)) {
-				require_once $src;
-
-				try {
-					$instance = new $className($app, $settings);
-				}
-				catch(Exception $e) {
-					// TODO: handle exception
-					//var_dump($e->getMessage());
-				}
-			}
-		}
-		else {
-			$debug->log(__METHOD__ . ' - no driver specified', Debug::ERROR);
-		}
-
-		return $instance;
+		$className = sprintf('Nano\\Mq\\MessageQueue%s', ucfirst($settings['driver']));
+		return new $className($app, $settings);
 	}
 
 	/**
