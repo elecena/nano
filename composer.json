@@ -10,8 +10,8 @@
 	],
 	"license": "MIT",
 	"require": {
-		"domnikl/statsd": "*",
-		"phpunit/phpunit": "3.7.*",
+		"domnikl/statsd": "~2.0",
+		"phpunit/phpunit": "5.0.*",
 		"predis/predis": "1.0.3"
 	}
 }
