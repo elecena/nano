@@ -1,6 +1,7 @@
 <?php
 
 use Nano\ResultsWrapper;
+use Predis\Client;
 
 /**
  * Message queue access layer for Redis
@@ -19,6 +20,9 @@ class MessageQueueRedis extends MessageQueue {
 
 	/**
 	 * Connect to Redis
+	 *
+	 * @param NanoApp $app
+	 * @param array $settings
 	 */
 	protected function __construct(NanoApp $app, Array $settings) {
 		parent::__construct($app, $settings);
@@ -26,20 +30,20 @@ class MessageQueueRedis extends MessageQueue {
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';
 		$port = isset($settings['port']) ? $settings['port'] : 6379;
-		$pass = isset($settings['pass']) ? $settings['pass'] : false;
 
 		// lazy connect
-		$this->redis = new Redis($host, $port);
-		#$this->redis->debug = true;
-
-		// authenticate (if required)
-		if ($pass !== false) {
-			$this->redis->auth($pass);
-		}
+		$this->redis = new Client([
+			'scheme' => 'tcp',
+			'host'   => $host,
+			'port'   => $port,
+		]);
 	}
 
 	/**
 	 * Add (right push) given message to the end of current queue and return added message
+	 *
+	 * @param $message array
+	 * @return ResultsWrapper
 	 */
 	public function push($message) {
 		// prepare message to be added to the queue
@@ -53,7 +57,7 @@ class MessageQueueRedis extends MessageQueue {
 		// encode message
 		$rawMsg = json_encode($msg);
 
-		$this->redis->push($this->getQueueKey(), $rawMsg); // RPUSH
+		$this->redis->rpush($this->getQueueKey(), $rawMsg); // RPUSH
 
 		// return wrapped message
 		return new ResultsWrapper($msg);
@@ -63,7 +67,7 @@ class MessageQueueRedis extends MessageQueue {
 	 * Get and remove (left pop) message from the beginning of current queue
 	 */
 	public function pop() {
-		$rawMsg = $this->redis->pop($this->getQueueKey(), false); // LPOP
+		$rawMsg = $this->redis->lpop($this->getQueueKey()); // LPOP
 
 		if (!is_null($rawMsg)) {
 			// decode the message
@@ -90,8 +94,10 @@ class MessageQueueRedis extends MessageQueue {
 	 * Cleans current queue (i.e. remove all messages)
 	 */
 	public function clean() {
-		$this->redis->delete($this->getQueueKey());
-		$this->redis->delete($this->getLastIdKey());
+		$this->redis->del(array(
+			$this->getQueueKey(),
+			$this->getLastIdKey()
+		));
 	}
 
 	/**
