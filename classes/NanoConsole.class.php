@@ -3,7 +3,6 @@
  * Nano console handler
  *
  * TODO: handle catchable fatals @see http://stackoverflow.com/questions/2468487/how-can-i-catch-a-catchable-fatal-error-on-php-type-hinting
- * TODO: tab completion @see http://php.net/manual/en/function.readline-completion-function.php
  */
 class NanoConsole {
 
@@ -13,12 +12,18 @@ class NanoConsole {
 	function __construct() {
 		$this->prompt = '> ';
 
-		# set up readline
+		// detect readline support
 		$this->useReadline = function_exists("readline");
 		$this->readLineHistoryFileName = sprintf('%s/.nano_history', getenv('HOME'));
 
-		if ($this->useReadline && file_exists($this->readLineHistoryFileName)) {
-			readline_read_history($this->readLineHistoryFileName);
+		if ($this->useReadline) {
+			// set up commands history
+			if (file_exists($this->readLineHistoryFileName)) {
+				readline_read_history($this->readLineHistoryFileName);
+			}
+
+			// set up autocompletion
+			readline_completion_function( [ $this, 'completion_callback' ] );
 		}
 	}
 
@@ -95,5 +100,21 @@ BANNER;
 			fclose( $fp );
 			return $resp;
 		}
+	}
+
+	/**
+	 * Readline completion
+	 *
+	 * @param string $input
+	 * @param int $index
+	 * @return mixed suggestions
+	 */
+	public function completion_callback( $input, $index ) {
+		$suggestions = [];
+
+		// list all methods for $app variable
+		$suggestions += get_class_methods('NanoApp');
+
+		return $suggestions;
 	}
 }
