@@ -1,9 +1,10 @@
 <?php
 
+use Nano\Cache;
+
 /**
  * Generic class for unit tests for Cache drivers
  */
-
 abstract class CacheTest extends PHPUnit_Framework_TestCase {
 
 	protected function getCache($driver, Array $settings = array()) {
@@ -15,7 +16,7 @@ abstract class CacheTest extends PHPUnit_Framework_TestCase {
 			'driver' => $driver,
 		), $settings);
 
-		return \Nano\Cache::factory($settings);
+		return Cache::factory($settings);
 	}
 
 	public function testCacheFactory() {
@@ -24,10 +25,13 @@ abstract class CacheTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('Nano\Cache\CacheRedis', $this->getCache('redis', array('host' => '127.0.0.1')));
 	}
 
-	// extend this method to run the following tests
-	protected function getCacheInstance($settings = array()) {
-		return false;
-	}
+	/**
+	 * extend this method to run the following tests
+	 *
+	 * @param array $settings
+	 * @return Cache
+	 */
+	abstract protected function getCacheInstance($settings = array());
 
 	public function testCacheGetSet() {
 		$cache = $this->getCacheInstance();

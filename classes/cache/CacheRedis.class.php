@@ -81,17 +81,22 @@ class CacheRedis extends Cache {
 
 	/**
 	 * Checks if given key exists
+	 *
+	 * @param $key mixed|string
+	 * @return bool
 	 */
 	public function exists($key) {
 		$key = $this->getStorageKey($key);
 		$resp = $this->redis->exists($key);
 
-		// @see http://redis.io/commands/exists
-		return $resp === 1;
+		return $resp === true;
 	}
 
 	/**
 	 * Deletes given key
+	 *
+	 * @param $key mixed|string
+	 * @return bool
 	 */
 	public function delete($key) {
 		$key = $this->getStorageKey($key);
@@ -103,20 +108,28 @@ class CacheRedis extends Cache {
 
 	/**
 	 * Increase given key's value and returns updated value
+	 *
+	 * @param $key mixed|string
+	 * @param int $by
+	 * @return int new value
 	 */
 	public function incr($key, $by = 1) {
 		$key = $this->getStorageKey($key);
-		$resp = $this->redis->incr($key, $by);
+		$resp = $this->redis->incrby($key, $by);
 
 		return $resp;
 	}
 
 	/**
 	 * Decrease given key's value and returns updated value
+	 *
+	 * @param $key mixed|string
+	 * @param int $by
+	 * @return int new value
 	 */
 	public function decr($key, $by = 1) {
 		$key = $this->getStorageKey($key);
-		$resp = $this->redis->decr($key, $by);
+		$resp = $this->redis->decrby($key, $by);
 
 		return $resp;
 	}
