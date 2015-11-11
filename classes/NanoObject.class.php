@@ -2,6 +2,8 @@
 
 namespace Nano;
 
+use Nano\Logger\NanoLogger;
+
 /**
  * Abstract class for representing nanoPortal's application models and services
  */
@@ -16,6 +18,8 @@ abstract class NanoObject {
 
 	// debug
 	protected $debug;
+
+	protected $logger;
 
 	// DB connection
 	protected $database;
@@ -35,6 +39,7 @@ abstract class NanoObject {
 		$this->cache = $this->app->getCache();
 		$this->config = $this->app->getConfig();
 		$this->debug = $this->app->getDebug();
+		$this->logger = NanoLogger::getLogger('nano.' . get_class($this));
 		$this->events = $this->app->getEvents();
 
 		// use lazy-resolving

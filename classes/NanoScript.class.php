@@ -24,7 +24,19 @@ abstract class NanoScript extends NanoObject {
 			$this->debug->log();
 		}
 
-		$this->init();
+		$this->logger->pushProcessor(function($record) {
+			$record['extra']['script'] = get_class($this);
+			return $record;
+		});
+
+		$this->logger->info('Starting the script');
+
+		try {
+			$this->init();
+		}
+		catch(Exception $e) {
+			$this->logger->error($e);
+		}
 	}
 
 	/**
@@ -39,9 +51,13 @@ abstract class NanoScript extends NanoObject {
 
 	/**
 	 * Called when the script execution is completed
+	 *
+	 * @param NanoApp $app
 	 */
 	public function onTearDown(NanoApp $app) {
-		// nop
+		$this->logger->info('Script completed', [
+			'time' => $app->getResponse()->getResponseTime() * 1000, // [ms]
+		]);
 	}
 
 	/**
