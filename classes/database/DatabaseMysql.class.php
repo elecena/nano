@@ -7,6 +7,9 @@ use Nano\Debug;
  */
 class DatabaseMysql extends Database {
 
+	// @see http://php.net/manual/en/mysqlinfo.concepts.buffering.php
+	const RESULT_MODE = MYSQLI_STORE_RESULT;
+
 	// "MySQL server has gone away" error ID
 	const ERR_SERVER_HAS_GONE_AWAY = 2006;
 
@@ -75,6 +78,15 @@ class DatabaseMysql extends Database {
 			$hostInfo = $settings['host'] . (isset($settings['port']) ? ":{$settings['port']}" : '');
 
 			if ($res) {
+				// add more information to Monolog logs
+				$this->logger->pushProcessor(function($record) use ($hostInfo) {
+					$record['extra']['database'] = [
+						'host' => $hostInfo,
+						'name' => $this->name,
+					];
+					return $record;
+				});
+
 				$this->log(__METHOD__, 'connected with ' . $hostInfo, $time);
 				$this->stats->timing('time.connection', round($time * 1000) /* ms */);
 
@@ -129,13 +141,13 @@ class DatabaseMysql extends Database {
 	public function query($sql) {
 		$this->debug->time('query');
 
-		$res = $this->link->query($sql, MYSQLI_USE_RESULT);
+		$res = $this->link->query($sql, self::RESULT_MODE);
 
 		// reconnect and retry the query
 		if ($this->link->errno == self::ERR_SERVER_HAS_GONE_AWAY) {
 			$this->doConnect(true /* $reconnect*/ );
 
-			$res = $this->link->query($sql, MYSQLI_USE_RESULT);
+			$res = $this->link->query($sql, self::RESULT_MODE);
 		}
 
 		$time = $this->debug->timeEnd('query');
@@ -147,13 +159,36 @@ class DatabaseMysql extends Database {
 		// log query
 		$this->log(__METHOD__, $sql, $time);
 
+		// extract the method name
+		preg_match('#\/\*([^*]+)\*\/#', $sql, $matches);
+
+		if ($matches) {
+			$method = trim($matches[1]);
+		}
+		else {
+			$method = __METHOD__;
+		}
+
 		// check for errors
 		if (empty($res)) {
+			$this->logger->error($sql, [
+				'errno' => $this->link->errno,
+				'err' => $this->link->error,
+				'method' => $method,
+				'time' => $time * 1000 // [ms]
+			]);
+
 			$this->log(__METHOD__, "error #{$this->link->errno} - {$this->link->error}");
 
 			// TODO: raise an excpetion
-
 			return false;
+		}
+		else {
+			$this->logger->info($sql, [
+				'method' => $method,
+				'rows' => $res instanceof mysqli_result ? $res->num_rows : false,
+				'time' => $time * 1000 // [ms]
+			]);
 		}
 
 		// wrap results into iterator

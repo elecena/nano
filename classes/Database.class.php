@@ -5,6 +5,7 @@
  */
 
 use Nano\Debug;
+use Nano\Logger\NanoLogger;
 
 /**
  * Generic exception
@@ -19,6 +20,8 @@ abstract class Database {
 
 	// debug
 	protected $debug;
+
+	protected $logger;
 
 	// connection resource
 	protected $link;
@@ -49,6 +52,8 @@ abstract class Database {
 		$this->debug = $app->getDebug();
 		$this->setName($name);
 
+		$this->logger = NanoLogger::getLogger('nano.database.' . $name);
+
 		// add performance report
 		$events = $app->getEvents();
 		$events->bind('NanoAppTearDown', array($this, 'onNanoAppTearDown'));
@@ -77,6 +82,7 @@ abstract class Database {
 		$instance = null;
 
 		$debug = $app->getDebug();
+		$logger = NanoLogger::getLogger('nano.database');
 
 		if (!is_null($driver)) {
 			$className = 'Database' . ucfirst(strtolower($driver));
@@ -93,6 +99,11 @@ abstract class Database {
 					$instance = new $className($app, $settings, $name);
 				}
 				catch(DatabaseException $e) {
+					$logger->error($e->getMessage(), [
+						'class' => get_class($e),
+						'code' => $e->getCode(),
+						'driver' => $className
+					]);
 					throw $e;
 				}
 			}
@@ -480,7 +491,7 @@ abstract class Database {
 	public function getPerformanceData() {
 		return array(
 			'queries' => $this->queries,
-			'time' => round($this->queriesTime, 4),
+			'time' => round($this->queriesTime * 1000), // [ms]
 		);
 	}
 
@@ -498,10 +509,11 @@ abstract class Database {
 
 		$perf = $this->getPerformanceData();
 
-		$debug->log("Database [{$this->name}]: {$perf['queries']} queries in {$perf['time']} s");
+		$debug->log("Database [{$this->name}]: {$perf['queries']} queries in {$perf['time']} ms");
+		$this->logger->info('Performance data', $perf);
 
 		// send stats
 		$this->stats->count('queries.count', $perf['queries']);
-		$this->stats->timing('time.total', round($perf['time'] * 1000) /* ms */);
+		$this->stats->timing('time.total', $perf['time'] /* ms */);
 	}
 }
