@@ -4,6 +4,7 @@ use \Nano\Cache;
 use \Nano\Config;
 use \Nano\Debug;
 use \Nano\Events;
+use \Nano\Logger\NanoLogger;
 use \Nano\Output;
 use \Nano\Response;
 use \Nano\Request;
@@ -139,6 +140,12 @@ class NanoApp {
 		$this->debug->log();
 
 		// stats
+		// TODO: move to a Monolog processor
+		$responseDetails = [
+			'time' => $this->getResponse()->getResponseTime() * 1000, // [ms]
+			'response_code' => $this->getResponse()->getResponseCode()
+		];
+
 		// TODO: static
 		$stats = Stats::getCollector($this, 'request');
 
@@ -146,10 +153,14 @@ class NanoApp {
 		if ($this->request->isApi()) {
 			$stats->increment('type.api');
 			$stats->increment('requests.count');
+
+			$responseDetails['type'] = 'api';
 		}
 		else if (!$this->request->isInternal() && !$this->request->isCLI()) {
 			$stats->increment('type.main');
 			$stats->increment('requests.count');
+
+			$responseDetails['type'] = 'main';
 		}
 
 		// request path
@@ -157,6 +168,13 @@ class NanoApp {
 		if (is_array($route)) {
 			$stats->increment(sprintf('controller.%s', $route['controller']));
 			$stats->increment(sprintf('method.%s.%s', $route['controller'], $route['method']));
+
+			$responseDetails['controller'] = $route['controller'];
+			$responseDetails['method'] = $route['method'];
+
+			// log request details
+			$logger = NanoLogger::getLogger('nano.request.completed');
+			$logger->info('Request completed', $responseDetails);
 		}
 
 		$this->events->fire('NanoAppTearDown', array($this));
@@ -315,6 +333,13 @@ class NanoApp {
 			$response->setContentType('text/plain');
 			$response->setHeader('X-Error', get_class($e));
 			$response->setCacheDuration(0);
+
+			// log the exception
+			$logger = NanoLogger::getLogger('nano.app.exception');
+			$logger->error($e->getMessage(), [
+				'class' => get_class($e),
+				'code' => $e->getCode(),
+			]);
 
 			if (is_callable($handler)) {
 				$handler($e);
