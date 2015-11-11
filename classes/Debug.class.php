@@ -108,6 +108,11 @@ class Debug {
 
 	/**
 	 * Log given message to log file
+	 *
+	 * @deprecated use NanoLogger instead
+	 * @param string $msg
+	 * @param int $level
+	 * @return bool
 	 */
 	public function log($msg = '', $level = 5) {
 		// check if logging is enabled
