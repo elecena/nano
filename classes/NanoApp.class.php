@@ -337,8 +337,7 @@ class NanoApp {
 			// log the exception
 			$logger = NanoLogger::getLogger('nano.app.exception');
 			$logger->error($e->getMessage(), [
-				'class' => get_class($e),
-				'code' => $e->getCode(),
+				'exception' => $e
 			]);
 
 			if (is_callable($handler)) {

@@ -171,9 +171,10 @@ class DatabaseMysql extends Database {
 
 		// check for errors
 		if (empty($res)) {
+			$e = new \Exception($this->link->error, $this->link->errno);
+
 			$this->logger->error($sql, [
-				'errno' => $this->link->errno,
-				'err' => $this->link->error,
+				'exception' => $e,
 				'method' => $method,
 				'time' => $time * 1000 // [ms]
 			]);

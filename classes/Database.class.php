@@ -100,8 +100,7 @@ abstract class Database {
 				}
 				catch(DatabaseException $e) {
 					$logger->error($e->getMessage(), [
-						'class' => get_class($e),
-						'code' => $e->getCode(),
+						'exception' => $e,
 						'driver' => $className
 					]);
 					throw $e;
