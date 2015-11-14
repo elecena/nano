@@ -4,7 +4,10 @@ namespace Nano\Logger;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+
+// processors
 use Monolog\Processor\WebProcessor;
+use Nano\Logger\Processors\RequestIdProcessor;
 
 /**
  * Nano's wrapper for Monolog
@@ -32,8 +35,9 @@ class NanoLogger {
 		// add handlers
 		$logger->setHandlers(self::$handlers);
 
-		// modify extra fields
+		// add extra fields
 		$logger->pushProcessor(new WebProcessor());
+		$logger->pushProcessor(new RequestIdProcessor());
 
 		return $logger;
 	}
