@@ -7,6 +7,7 @@ use Monolog\Handler\StreamHandler;
 
 // processors
 use Monolog\Processor\WebProcessor;
+use Nano\Logger\Processors\ExceptionProcessor;
 use Nano\Logger\Processors\RequestIdProcessor;
 
 /**
@@ -37,6 +38,7 @@ class NanoLogger {
 
 		// add extra fields
 		$logger->pushProcessor(new WebProcessor());
+		$logger->pushProcessor(new ExceptionProcessor());
 		$logger->pushProcessor(new RequestIdProcessor());
 
 		return $logger;
