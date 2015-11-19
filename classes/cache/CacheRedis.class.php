@@ -40,15 +40,7 @@ class CacheRedis extends Cache {
 			'timeout'=> $timeout,
 		]);
 
-		// TODO: introduce Nano\Benchmark::getTime and pass the code as a closure
-		$then = microtime(true);
-			$this->redis->connect();
-		$now = microtime(true) - $then;
-
 		$this->debug->log(__CLASS__ . ": using {$host}:{$port}");
-		$this->logger->info("Connected to tcp://{$host}:{$port}", [
-			'time' => $now * 1000
-		]);
 	}
 
 	/**
