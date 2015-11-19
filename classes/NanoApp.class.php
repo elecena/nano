@@ -20,7 +20,7 @@ use \Nano\Stats;
  */
 class NanoApp {
 	// cache object
-	protected $cache;
+	protected $cache = false;
 
 	// config
 	protected $config;
@@ -107,13 +107,6 @@ class NanoApp {
 			$this->debug->log('Nano v' . Nano::VERSION . ' started at ' . date('Y-m-d H:i:s'));
 			$this->debug->log('----');
 		}
-
-		// setup cache (using default driver if none provided)
-		$cacheSettings = $this->config->get('cache', array(
-			'driver' => 'file',
-		));
-
-		$this->cache = Cache::factory($cacheSettings);
 
 		// set request
 		$params = isset($_REQUEST) ? $_REQUEST : array();
@@ -387,8 +380,19 @@ class NanoApp {
 
 	/**
 	 * Return cache
+	 *
+	 * @return Cache
 	 */
 	public function getCache() {
+		if ($this->cache === false) {
+			// setup cache (using default driver if none provided)
+			$cacheSettings = $this->config->get('cache', [
+				'driver' => 'file',
+			]);
+
+			$this->cache = Cache::factory($cacheSettings);
+		}
+
 		return $this->cache;
 	}
 

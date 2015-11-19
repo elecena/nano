@@ -21,6 +21,7 @@ class CacheRedis extends Cache {
 	/**
 	 * Creates an instance of cache driver
 	 *
+	 * @see https://github.com/nrk/predis/wiki/Quick-tour#supported-connection-parameters
 	 * @param array $settings
 	 */
 	public function __construct(Array $settings) {
@@ -29,12 +30,14 @@ class CacheRedis extends Cache {
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';
 		$port = isset($settings['port']) ? $settings['port'] : 6379;
+		$timeout = isset($settings['timeout']) ? $settings['timeout'] : 5; // Predis default is 5 sec
 
 		// lazy connect
 		$this->redis = new Client([
 			'scheme' => 'tcp',
 			'host'   => $host,
 			'port'   => $port,
+			'timeout'=> $timeout,
 		]);
 
 		$this->debug->log(__CLASS__ . ": using {$host}:{$port}");

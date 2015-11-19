@@ -2,10 +2,11 @@
 
 namespace Nano;
 
+use Nano\Logger\NanoLogger;
+
 /**
  * Abstract class for caching driver
  */
-
 abstract class Cache {
 
 	// key parts separator
@@ -13,6 +14,7 @@ abstract class Cache {
 
 	// debug
 	protected $debug;
+	protected $logger;
 
 	// prefix for key names
 	protected $prefix;
@@ -28,23 +30,40 @@ abstract class Cache {
 	 *
 	 * @param array $settings
 	 * @return Cache cache instance
+	 * @throws \Exception
 	 */
 	public static function factory(Array $settings) {
 		$driver = isset($settings['driver']) ? $settings['driver'] : null;
 		$className = sprintf('Nano\\Cache\\Cache%s', ucfirst($driver));
 
-		return new $className($settings);
+		try {
+			return new $className($settings);
+		}
+		catch (\Exception $e) {
+			NanoLogger::getLogger('nano.cache')->error($e->getMessage(), [
+				'exception' => $e
+			]);
+			throw $e;
+		}
 	}
 
+	/**
+	 * @param array $settings
+	 * @throws \Exception
+	 */
 	protected function __construct(Array $settings) {
 		// use debugger from the application
 		$app = \NanoApp::app();
+		$driver = $settings['driver'];
+
 		$this->debug = $app->getDebug();
-		$this->debug->log("Cache: using '{$settings['driver']}' driver");
+
+		$this->logger = NanoLogger::getLogger("nano.cache.{$driver}");
+		$this->logger->info('Init');
 
 		// add performance report
 		$events = $app->getEvents();
-		$events->bind('NanoAppTearDown', array($this, 'onNanoAppTearDown'));
+		$events->bind('NanoAppTearDown', [$this, 'onNanoAppTearDown']);
 
 		// set prefix
 		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
@@ -162,6 +181,10 @@ abstract class Cache {
 		}
 
 		$debug->log("Cache: {$this->hits} hits and {$this->misses} misses");
+		$this->logger->info('Performance data', [
+			'hits' => $this->getHits(),
+			'misses' => $this->getMisses()
+		]);
 
 		// send stats
 		$statsd = Stats::getCollector($app, 'cache');
