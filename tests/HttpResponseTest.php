@@ -1,13 +1,14 @@
 <?php
 
-/**
- * Set of unit tests for HttpResponse class
- */
+use Nano\Http\Response;
 
+/**
+ * Set of unit tests for Nano\Http\Response class
+ */
 class HttpResponseTest extends PHPUnit_Framework_TestCase {
 
 	public function testHttpResponse() {
-		$resp = new HttpResponse();
+		$resp = new Response();
 
 		$resp->setContent('foo');
 		$this->assertEquals('foo', $resp->getContent());

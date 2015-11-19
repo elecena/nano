@@ -15,8 +15,11 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 
 	/**
 	 * Process given JS files
+	 *
+	 * @param array $files
+	 * @return string
 	 */
-	protected function process(Array $files) {
+	protected function process(array $files) {
 		$content = '';
 
 		foreach($files as $file) {
@@ -32,16 +35,15 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 				$content = $this->compressWithJSMin($content);
 			}
 			else {
-				/* @var $http HttpClient */
-				$http = $this->app->factory('HttpClient');
+				$http = new HttpClient();
 				$http->setTimeout(5);
 
-				$res = $http->post($closureService, array(
+				$res = $http->post($closureService, [
 					'utf8' => 'on',
 					'js_code' => $content,
-				));
+				]);
 
-				if ( ($res instanceof HttpResponse) && ($res->getResponseCode() === Response::OK) ) {
+				if ( ($res instanceof Nano\Http\Response) && ($res->getResponseCode() === Response::OK) ) {
 					$content = $res->getContent();
 				}
 				else {

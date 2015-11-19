@@ -1,5 +1,9 @@
 <?php
 
+use Nano\Logger\NanoLogger;
+use Nano\Http\Response;
+use Nano\Http\ResponseException;
+
 /**
  * Wrapper for cURL based HTTP client
  *
@@ -9,9 +13,9 @@
 class HttpClient {
 
 	// HTTP request types
-	const GET = 1;
-	const POST = 2;
-	const HEAD = 3;
+	const GET = 'GET';
+	const POST = 'POST';
+	const HEAD = 'HEAD';
 
 	// User-Agent
 	private $userAgent;
@@ -23,85 +27,106 @@ class HttpClient {
 	private $version;
 
 	// response headers
-	private $respHeaders = array();
+	private $respHeaders = [];
 
 	// request headers
-	private $reqHeaders = array();
+	private $reqHeaders = [];
 
 	// timeout
 	private $timeout = 15;
 
-	// for optional debug logging
-	private $app;
-	private $debug;
+	private $logger;
 
 	// request cookies set manually
-	private $cookies = array();
+	private $cookies = [];
 
 	/**
 	 * Setup HTTP client
 	 */
-	function __construct($app = null) {
-		// use NanoApp if provided
-		if ($app instanceof NanoApp) {
-			$this->app = $app;
-			$this->debug = $app->getDebug();
-		}
-
-		// info o cURLu
+	function __construct() {
+		// cURL info
 		$info = curl_version();
 		$this->version = $info['version'];
 
 		// set up cURL library
 		$this->handle = curl_init();
 
+		$this->logger = self::getLogger();
+
 		// set user agent
 		$this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}");
 
-		curl_setopt_array($this->handle, array(
+		curl_setopt_array($this->handle, [
 			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_HEADER => false,
-			CURLOPT_HEADERFUNCTION => array($this, 'parseResponseHeader'),
+			/**
+			 * @see http://it.toolbox.com/wiki/index.php/Use_curl_from_PHP_-_processing_response_headers
+			 */
+			CURLOPT_HEADERFUNCTION => function ($ch, $raw) {
+				// parse response's line
+				$parts = explode(': ', trim($raw), 2);
+
+				if (count($parts) == 2) {
+					$this->respHeaders[$parts[0]] = $parts[1];
+				}
+
+				return strlen($raw);
+			},
 			CURLOPT_MAXREDIRS => 2,
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_TIMEOUT => $this->timeout,
-		));
+		]);
 	}
 
-	private function log($msg = '') {
-		if (!is_null($this->debug)) {
-			$this->debug->log(__CLASS__ . ': ' . $msg);
+	/**
+	 * Get logger instance
+	 *
+	 * @return \Monolog\Logger
+	 */
+	protected static function getLogger() {
+		static $logger;
+
+		if (!$logger) {
+			$logger = NanoLogger::getLogger('nano.http');
 		}
+
+		return $logger;
 	}
 
 	/**
 	 * Close a session,free all resources and store cookies in jar file
 	 */
 	public function close() {
+		$this->logger->debug(__METHOD__);
 		curl_close($this->handle);
 	}
 
 	/**
 	 * Set proxy to be used for HTTP requests
+	 **
+	 * @param string $proxy
+	 * @param int $type
 	 */
 	public function setProxy($proxy, $type = CURLPROXY_HTTP) {
 		curl_setopt($this->handle, CURLOPT_PROXY, $proxy);
 		curl_setopt($this->handle, CURLOPT_PROXYTYPE, $type);
 
-		$this->log("using proxy {$proxy}");
+		$this->logger->debug(__METHOD__, ['proxy' => $proxy, 'type' => $type]);
 	}
 
 	/**
 	 * Set user agent identification used by HTTP client
+	 *
+	 * @param string $userAgent
 	 */
 	public function setUserAgent($userAgent) {
 		$this->userAgent = $userAgent;
 
 		curl_setopt($this->handle, CURLOPT_USERAGENT, $this->userAgent);
 
-		$this->log("using '{$this->userAgent}' as user agent");
+		$this->logger->debug(__METHOD__, ['agent' => $this->userAgent]);
 	}
 
 	/**
@@ -113,15 +138,20 @@ class HttpClient {
 
 	/**
 	 * Set request headers
+	 **
+	 * @param string $header
+	 * @param string $value
 	 */
 	public function setRequestHeader($header, $value) {
 		$this->reqHeaders[] = "$header: $value";
 
-		$this->log("setting '{$header}' request header to '{$value}'");
+		$this->logger->debug(__METHOD__, ['header' => $header, 'value' =>$value]);
 	}
 
 	/**
 	 * Set timeout for a single request
+	 *
+	 * @param int $timeout
 	 */
 	public function setTimeout($timeout) {
 		$this->timeout = $timeout;
@@ -131,33 +161,42 @@ class HttpClient {
 
 	/**
 	 * Use given cookie jar file
+	 *
+	 * @param string $jarFile
 	 */
 	public function useCookieJar($jarFile) {
-		curl_setopt_array($this->handle, array(
+		$this->logger->debug(__METHOD__, ['jar' => $jarFile]);
+
+		curl_setopt_array($this->handle, [
 			CURLOPT_COOKIEFILE => $jarFile,
 			CURLOPT_COOKIEJAR => $jarFile,
-		));
+		]);
 	}
 
 	/**
 	 * Manually sets request cookie
+	 *
+	 * @param string $name
+	 * @param string $value
 	 */
 	public function setCookie($name, $value) {
 		$this->cookies[$name] = $value;
 
-		$this->log("setting '{$name}' cookie to '{$value}'");
+		$this->logger->debug(__METHOD__, ['name' => $name, 'value' => $value]);
 	}
 
 	/**
 	 * Send GET HTTP request for a given URL
+	 *
+	 * @param $url
+	 * @param array $query
+	 * @return Response
 	 */
-	public function get($url, Array $query = array()) {
+	public function get($url, Array $query = []) {
 		// add request params
 		if (!empty($query) && is_array($query)) {
 			$url .= '?' . http_build_query($query);
 		}
-
-		$this->log("GET {$url}");
 
 		return $this->sendRequest(self::GET, $url);
 	}
@@ -167,6 +206,7 @@ class HttpClient {
 	 *
 	 * @param string $url
 	 * @param mixed|false $fields URL parameters
+	 * @return Response
 	 */
 	public function post($url, $fields = false) {
 		// add request POST fields
@@ -177,34 +217,39 @@ class HttpClient {
 			curl_setopt($this->handle, CURLOPT_POSTFIELDS, $fields);
 		}
 
-		$this->log("POST {$url}");
-
 		return $this->sendRequest(self::POST, $url);
 	}
 
 	/**
 	 * Send HEAD HTTP request for a given URL
+	 *
+	 * @param $url
+	 * @param array $query
+	 * @return Response
 	 */
-	public function head($url, Array $query = array()) {
+	public function head($url, array $query = []) {
 		// add request params
 		if (!empty($query)) {
 			$url .= '?' . http_build_query($query);
 		}
-
-		$this->log("HEAD {$url}");
 
 		return $this->sendRequest(self::HEAD, $url);
 	}
 
 	/**
 	 * Send HTTP request
+	 *
+	 * @param string $method
+	 * @param string $url
+	 * @return Response
+	 * @throws Exception
 	 */
-	private function sendRequest($type, $url) {
+	private function sendRequest($method, $url) {
 		// send requested type of HTTP request
 		curl_setopt($this->handle, CURLOPT_POST, false);
 		curl_setopt($this->handle, CURLOPT_NOBODY, false);
 
-		switch ($type) {
+		switch ($method) {
 			case self::POST:
 				curl_setopt($this->handle, CURLOPT_POST, true);
 				break;
@@ -224,7 +269,7 @@ class HttpClient {
 		// set cookies
 		// @see http://stackoverflow.com/questions/6453347/php-curl-and-setcookie-problem
 		if (!empty($this->cookies)) {
-			$cookies = array();
+			$cookies = [];
 			foreach( $this->cookies as $key => $value ) {
 				$cookies[] = "{$key}={$value}";
 			}
@@ -236,8 +281,10 @@ class HttpClient {
 		curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->reqHeaders);
 
 		// cleanup
-		$this->reqHeaders = array();
-		$this->respHeaders = array();
+		$this->reqHeaders = [];
+		$this->respHeaders = [];
+
+		$this->logger->info(__METHOD__ . ': sending a request', ['method' => 'GET', 'url' => $url]);
 
 		// send request and grab response
 		ob_start();
@@ -250,7 +297,7 @@ class HttpClient {
 			$info = curl_getinfo($this->handle); //var_dump($info);
 
 			// return HTTP response object
-			$response = new HttpResponse();
+			$response = new Response();
 
 			// set response code
 			$response->setResponseCode($info['http_code']);
@@ -264,34 +311,32 @@ class HttpClient {
 			// set response location (useful for redirects)
 			$response->setLocation($info['url']);
 
-			// debug log
-			$size = round($info['size_download'] / 1024, 2);
-			$transfer = round($info['speed_download'] / 1024, 2);
-			$this->log("HTTP {$info['http_code']} ({$size} kB fetched in {$info['total_time']} s with {$transfer} kB/s)");
+			$this->logger->info(__METHOD__ . ': request completed', [
+				'method' => $method,
+				'url' => $url,
+				'response_code' => (int) $info['http_code'],
+				'response_headers' => $this->respHeaders,
+				'stats' => [
+					'total_time' => $info['total_time'] * 1000, // [ms]
+					'speed_download' => (int) $info['speed_download'],
+					'size_download' => (int) $info['size_download'],
+				]
+			]);
 		}
 		else {
 			// return an error
 			$response = false;
 
-			$this->log('request failed: #' . curl_errno($this->handle) . ' - ' . curl_error($this->handle));
+			# TODO: throw an exception
+			$e = new ResponseException(curl_error($this->handle), curl_errno($this->handle));
+
+			$this->logger->error(__METHOD__. ': ' . $e->getMessage(), [
+				'exception' => $e,
+				'method' => $method,
+				'url' => $url
+			]);
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Parse response's header
-	 *
-	 * @see http://it.toolbox.com/wiki/index.php/Use_curl_from_PHP_-_processing_response_headers
-	 */
-	function parseResponseHeader($ch, $raw) {
-		// parse response's line
-		$parts = explode(': ', trim($raw), 2);
-
-		if (count($parts) == 2) {
-			$this->respHeaders[$parts[0]] = $parts[1];
-		}
-
-		return strlen($raw);
 	}
 }

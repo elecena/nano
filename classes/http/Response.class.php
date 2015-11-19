@@ -1,10 +1,11 @@
 <?php
 
+namespace Nano\Http;
+
 /**
  * Wrapper for HTTP request response with headers and statistics
  */
-
-class HttpResponse {
+class Response {
 
 	// response from HTTP server
 	private $content;

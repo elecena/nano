@@ -1,4 +1,9 @@
 <?php
+
+use Nano\Logger\NanoLogger;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 /**
  * Nano console handler
  *
@@ -25,6 +30,9 @@ class NanoConsole {
 			// set up autocompletion
 			readline_completion_function( [ $this, 'completion_callback' ] );
 		}
+
+		// send all Monolog messages to stderr
+		NanoLogger::pushHandler(new StreamHandler(STDERR, Logger::DEBUG));
 	}
 
 	/**
