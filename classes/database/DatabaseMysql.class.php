@@ -87,6 +87,10 @@ class DatabaseMysql extends Database {
 					return $record;
 				});
 
+				$this->logger->info('Connected', [
+					'time' => $time * 1000 // [ms]
+				]);
+
 				$this->log(__METHOD__, 'connected with ' . $hostInfo, $time);
 				$this->stats->timing('time.connection', round($time * 1000) /* ms */);
 
