@@ -192,7 +192,7 @@ class DatabaseMysql extends Database {
 		else {
 			$this->logger->info("SQL {$sql}", [
 				'method' => $method,
-				'rows' => $res instanceof mysqli_result ? ($res->num_rows ?: $this->link->affected_rows) : -1,
+				'rows' => $res instanceof mysqli_result ? $res->num_rows : ( $this->link->affected_rows ?: 0 ),
 				'time' => $time * 1000 // [ms]
 			]);
 		}
