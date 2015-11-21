@@ -3,7 +3,7 @@
 namespace Nano\Logger;
 
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 
 // processors
 use Monolog\Processor\WebProcessor;
@@ -62,7 +62,7 @@ class NanoLogger {
 	 */
 	static function pushStreamHandler($dir, $stream, $level=Logger::DEBUG) {
 		$stream = sprintf('%s/logs/%s.log', $dir, $stream);
-		$handler = new StreamHandler($stream, $level);
+		$handler = new RotatingFileHandler($stream, 0 /* $maxFiles */, $level);
 
 		self::pushHandler($handler);
 	}
