@@ -98,7 +98,8 @@ class DatabaseMysql extends Database {
 
 				// set UTF8 as connection encoding
 				if (!empty($settings['utf'])) {
-					$this->query('SET NAMES "utf8"');
+					// @see http://php.net/manual/en/mysqli.set-charset.php
+					$this->link->set_charset("utf8");
 				}
 			}
 			else {
