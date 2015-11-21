@@ -165,10 +165,7 @@ class Debug {
 	 */
 	public function timeEnd($timer) {
 		if (isset($this->timers[$timer])) {
-			$time = microtime(true /* get_as_float */) - $this->timers[$timer];
-			#unset($this->timers[$timer]);
-
-			return round($time, 3);
+			return microtime(true /* get_as_float */) - $this->timers[$timer];
 		}
 		else {
 			return null;
