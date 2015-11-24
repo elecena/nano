@@ -12,13 +12,13 @@ class RequestIdProcessor {
 	/**
 	 * Get per-request unique ID
 	 *
-	 * Example: nano-5647673c1975c3.41794614
+	 * Example: 5654ba177058c8.07373029
 	 *
 	 * @return string
 	 */
-	public function getRequestId() {
+	public static function getRequestId() {
 		if (self::$requestId === null) {
-			self::$requestId = uniqid('nano-', true);
+			self::$requestId = uniqid('', true);
 		}
 
 		return self::$requestId;

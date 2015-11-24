@@ -3,6 +3,7 @@
 namespace Nano;
 use Nano\Output;
 use Nano\Stats;
+use Nano\Logger\Processors\RequestIdProcessor;
 
 /**
  * Handles response (sets HTTP headers, wraps output content)
@@ -154,8 +155,9 @@ class Response {
 	 * (Try to) emit HTTP headers to the browser. Returns false in case headers were already sent.
 	 */
 	private function sendHeaders() {
-		// set X-Response-Time header
-		$this->setHeader('X-Response-Time', $this->getResponseTime());
+		// set some debug headers
+		$this->setHeader('X-Response-Time', $this->getResponseTime()); # [sec]
+		$this->setHeader('X-Request-Id', RequestIdProcessor::getRequestId());
 
 		// don't emit, if already emitted :)
 		if (headers_sent()) {
