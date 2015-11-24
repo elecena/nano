@@ -68,7 +68,11 @@ class DatabaseMysql extends Database {
 		if (!empty($params)) {
 			// set connect timeout
 			if (isset($settings['connect_timeout'])) {
-				$this->link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $settings['connect_timeout']);
+				$res = $this->link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $settings['connect_timeout']);
+
+				if ($res === false) {
+					throw new DatabaseConnectionException("[{$this->name}] Setting timeout to {$settings['connect_timeout']} sec failed");
+				}
 			}
 
 			$this->debug->time('connect');
