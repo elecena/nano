@@ -38,9 +38,8 @@ class CacheRedis extends Cache {
 			'host'   => $host,
 			'port'   => $port,
 			'timeout'=> $timeout,
+			'persistent' => !empty($settings['persistent']),
 		]);
-
-		$this->debug->log(__CLASS__ . ": using {$host}:{$port}");
 	}
 
 	/**
