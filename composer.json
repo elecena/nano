@@ -1,18 +1,27 @@
 {
-	"name": "macbre/nano",
-	"description": "PHP framework",
-	"minimum-stability": "stable",
-	"authors": [
-		{
-			"name": "Maciej Brencz",
-			"email": "maciej.brencz@gmail.com"
-		}
-	],
-	"license": "MIT",
-	"require": {
-		"domnikl/statsd": "~2.0",
-		"phpunit/phpunit": "5.0.*",
-		"predis/predis": "1.0.3",
-		"monolog/monolog": "^1.17"
-	}
+  "name": "macbre/nano",
+  "description": "PHP framework",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "Maciej Brencz",
+      "email": "maciej.brencz@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "require": {
+    "domnikl/statsd": "~2.0",
+    "phpunit/phpunit": "5.0.*",
+    "predis/predis": "1.0.3",
+    "monolog/monolog": "^1.17"
+  },
+  "require-dev": {
+    "jakub-onderka/php-parallel-lint": "0.9"
+  },
+  "scripts": {
+    "test": [
+      "parallel-lint . --exclude vendor",
+      "phpunit"
+    ]
+  }
 }
