@@ -54,18 +54,10 @@ abstract class Image {
 	 *
 	 * @param string $raw
 	 * @return Image
+	 * @throws RuntimeException
 	 */
 	public static function newFromRaw($raw) {
-		if (!empty($raw)) {
-			try {
-				return self::getInstance($raw);
-			}
-			catch(Exception $e) {
-				return false;
-			}
-		}
-
-		return false;
+		return self::getInstance($raw);
 	}
 
 	/**

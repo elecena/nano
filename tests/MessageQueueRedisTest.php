@@ -4,22 +4,27 @@ use Nano\MessageQueue;
 
 /**
  * Set of unit tests for MessageQueueRedis class
+ *
+ * A locally running redis server is required
  */
 class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
 
 	private $settings;
 
 	public function __construct() {
-		$this->settings = array(
+		$this->settings = [
 			'driver' => 'redis',
-			'host' => '212.91.26.151', /* s0 */
-			'port' => 60380,
+			'host' => '127.0.0.1',
+			'port' => 6379,
 			//'pass' => 'foobared',
 			'prefix' => 'test',
 			'queue' => 'foo',
-		);
+		];
 	}
 
+	/**
+	 * @return MessageQueue
+	 */
 	private function getMessageQueue() {
 		// use test application's directory
 		$dir = realpath(dirname(__FILE__) . '/app');
