@@ -23,14 +23,15 @@ class NanoLogger {
 	static private $handlers = [];
 
 	/**
-	 * Return new instance of the Logger channne
+	 * Return new instance of the Logger channel
 	 *
 	 * All logger will use the handlers registered via \Nano\Logger\NanoLogger::pushHandler method
 	 *
 	 * @param string $name channel name
+	 * @param array $extraFields fields to be added to every message sent from this logger
 	 * @return \Monolog\Logger
 	 */
-	static function getLogger($name) {
+	static function getLogger($name, Array $extraFields = []) {
 		$logger = new Logger($name);
 
 		// add handlers
@@ -40,6 +41,14 @@ class NanoLogger {
 		$logger->pushProcessor(new WebProcessor());
 		$logger->pushProcessor(new ExceptionProcessor());
 		$logger->pushProcessor(new RequestIdProcessor());
+
+		// add per-logger extra fields
+		if (!empty($extraFields)) {
+			$logger->pushProcessor(function(array $record) use ($extraFields) {
+				$record['extra'] = array_merge($record['extra'], $extraFields);
+				return $record;
+			});
+		}
 
 		return $logger;
 	}
