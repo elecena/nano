@@ -191,6 +191,7 @@ class HttpClient {
 	 * @param $url
 	 * @param array $query
 	 * @return Response
+	 * @throws Nano\Http\ResponseException
 	 */
 	public function get($url, Array $query = []) {
 		// add request params
@@ -207,6 +208,7 @@ class HttpClient {
 	 * @param string $url
 	 * @param mixed|false $fields URL parameters
 	 * @return Response
+	 * @throws Nano\Http\ResponseException
 	 */
 	public function post($url, $fields = false) {
 		// add request POST fields
@@ -226,6 +228,7 @@ class HttpClient {
 	 * @param $url
 	 * @param array $query
 	 * @return Response
+	 * @throws Nano\Http\ResponseException
 	 */
 	public function head($url, array $query = []) {
 		// add request params
@@ -242,7 +245,7 @@ class HttpClient {
 	 * @param string $method
 	 * @param string $url
 	 * @return Response
-	 * @throws Exception
+	 * @throws Nano\Http\ResponseException
 	 */
 	private function sendRequest($method, $url) {
 		// send requested type of HTTP request
@@ -324,10 +327,6 @@ class HttpClient {
 			]);
 		}
 		else {
-			// return an error
-			$response = false;
-
-			# TODO: throw an exception
 			$e = new ResponseException(curl_error($this->handle), curl_errno($this->handle));
 
 			$this->logger->error(__METHOD__. ': ' . $e->getMessage(), [
@@ -335,6 +334,8 @@ class HttpClient {
 				'method' => $method,
 				'url' => $url
 			]);
+
+			throw $e;
 		}
 
 		return $response;
