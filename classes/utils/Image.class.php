@@ -19,11 +19,17 @@ abstract class Image {
 
 	/**
 	 * Create an instance of Image for given raw image data
+	 *
+	 * @param string $raw
 	 */
 	abstract function __construct($raw);
 
 	/**
 	 * Create an instance of Image from given URL (file will be fetched via HTTP)
+	 *
+	 * @param string $url
+	 * @return Image
+	 * @throws Nano\Http\ResponseException
 	 */
 	public static function newFromUrl($url) {
 		$raw = Http::get($url);
@@ -33,6 +39,9 @@ abstract class Image {
 
 	/**
 	 * Create an instance of Image from given file
+	 *
+	 * @param string $file
+	 * @return Image
 	 */
 	public static function newFromFile($file) {
 		$raw = file_get_contents($file);
@@ -43,7 +52,8 @@ abstract class Image {
 	/**
 	 * Create an instance of Image from raw image data
 	 *
-	 * @return Image an instance
+	 * @param string $raw
+	 * @return Image
 	 */
 	public static function newFromRaw($raw) {
 		if (!empty($raw)) {
@@ -62,6 +72,10 @@ abstract class Image {
 	 * Returns an instance of proper image driver
 	 *
 	 * Auto-detects which library to use: Imagick or GD
+	 *
+	 * @param string $raw
+	 * @return Image
+	 * @throws RuntimeException
 	 */
 	private static function getInstance($raw) {
 		// Image Magick
@@ -73,7 +87,7 @@ abstract class Image {
 			$driverName = 'ImageGD';
 		}
 		else {
-			return false;
+			throw new RuntimeException('No image driver available');
 		}
 
 		return new $driverName($raw);
@@ -119,6 +133,9 @@ abstract class Image {
 		return $this->type;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getMimeType() {
 		// Note from PHP manual: this function does not require the GD image library.
 		return image_type_to_mime_type($this->type);

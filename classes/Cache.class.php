@@ -59,7 +59,6 @@ abstract class Cache {
 		$this->debug = $app->getDebug();
 
 		$this->logger = NanoLogger::getLogger("nano.cache.{$driver}");
-		$this->logger->info('Init');
 
 		// add performance report
 		$events = $app->getEvents();

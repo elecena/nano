@@ -6,6 +6,9 @@
 
 class ImageTest extends PHPUnit_Framework_TestCase {
 
+	/* @var string $file */
+	private $file;
+
 	const DEBUG = false;
 
 	public function setUp() {

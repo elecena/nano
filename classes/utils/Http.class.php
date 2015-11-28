@@ -10,7 +10,8 @@ class Http {
 	 *
 	 * @param string $url
 	 * @param array $query
-	 * @return \Nano\Http\Response
+	 * @return Nano\Http\Response
+	 * @throws Nano\Http\ResponseException
 	 */
 	static public function get($url, $query = []) {
 		$client = new HttpClient();
@@ -25,7 +26,8 @@ class Http {
 	 *
 	 * @param string $url
 	 * @param array $fields
-	 * @return \Nano\Http\Response
+	 * @return Nano\Http\Response
+	 * @throws Nano\Http\ResponseException
 	 */
 	static public function post($url, $fields = []) {
 		$client = new HttpClient();
@@ -40,7 +42,8 @@ class Http {
 	 *
 	 * @param string $url
 	 * @param array $query
-	 * @return \Nano\Http\Response
+	 * @return Nano\Http\Response
+	 * @throws Nano\Http\ResponseException
 	 */
 	static public function head($url, $query = []) {
 		$client = new HttpClient();
