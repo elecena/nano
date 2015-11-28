@@ -14,12 +14,12 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$this->assertRegExp('#libcurl/#', $client->getUserAgent());
 	}
 
+	/**
+	 * @expectedException Nano\Http\ResponseException
+	 */
 	public function testInvalidRequest() {
 		$client = new HttpClient();
-
-		$resp = $client->get('foo://bar');
-
-		$this->assertFalse($resp);
+		$client->get('foo://bar');
 	}
 
 	public function testCookiesJar() {
@@ -31,7 +31,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$client->setTimeout(0);
 		$client->useCookieJar($jarFile);
 
-		$resp = $client->get('http://www.google.com/search', array('q' => 'nano'));
+		$client->get('http://www.google.com/search', ['q' => 'nano']);
 
 		// close HTTP session
 		$client->close();

@@ -1,18 +1,23 @@
 <?php
 
-/**
- * Set of unit tests for Cache redis driver
- */
-
 include_once(dirname(__FILE__) . '/CacheTest.php');
 
+/**
+ * Set of unit tests for Cache redis driver
+ *
+ * A locally running redis server is required
+ */
 class CacheRedisTest extends CacheTest {
 
+	/**
+	 * @param array $settings
+	 * @return \Nano\Cache
+	 */
 	protected function getCacheInstance($settings = array()) {
-		$settings = array_merge(array(
-			'host' => '212.91.26.151', /* s0 */
-			'port' => 60380,
-		), $settings);
+		$settings = array_merge([
+			'host' => '127.0.0.1',
+			'port' => 6379,
+		], $settings);
 
 		return $this->getCache('redis', $settings);
 	}

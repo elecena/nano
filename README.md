@@ -1,7 +1,21 @@
-== Configuration ==
+nano
+====
 
-=== Apache ===
+## Requirements
 
+### PHP modules
+
+* php5-curl
+* php5-imagick
+* php5-json
+* php5-mysqlnd
+* php5-readline
+
+## Configuration
+
+## Apache
+
+```
 RewriteEngine On
 
 # static assets
@@ -14,10 +28,11 @@ RewriteRule \.(json|xml)$ api.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d 
 RewriteRule (.*) index.php [L]
+```
 
+## Nginx
 
-=== Nginx ===
-
+```
 <nginx>
 	<location path="/">
 		<!-- static assets -->
@@ -34,3 +49,4 @@ RewriteRule (.*) index.php [L]
 		</if>
 	</location>
 </nginx>
+```
