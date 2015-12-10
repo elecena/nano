@@ -130,6 +130,19 @@ abstract class Skin {
 	}
 
 	/**
+	 * Add <meta> tag entry
+	 *
+	 * @param string $policy
+	 * @see https://support.google.com/webmasters/answer/93710?hl=pl
+	 */
+	function setRobotsPolicy($policy) {
+		$this->meta[] = [
+			'name' => 'robots',
+			'content' => $policy
+		];
+	}
+
+	/**
 	 * Add <meta> OpenGraph entry
 	 *
 	 * @see http://ogp.me/
