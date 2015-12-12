@@ -1,0 +1,22 @@
+{
+    "name": "macbre/monolog-utils",
+    "description": "Addiitonal formatters and processors for Monolog",
+    "keywords": ["log", "logging"],
+    "homepage": "http://github.com/macbre/monolog-utils",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maciej Brencz",
+            "email": "maciej.brencz@gmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^1.17"
+    },
+    "autoload": {
+        "psr-4": {
+            "Macbre\\Logger\\": "src/Macbre/"
+        }
+    }
+}

@@ -13,7 +13,8 @@
     "domnikl/statsd": "~2.0",
     "phpunit/phpunit": "5.0.*",
     "predis/predis": "1.0.3",
-    "monolog/monolog": "^1.17"
+    "monolog/monolog": "^1.17",
+    "macbre/monolog-utils": "^1.0"
   },
   "require-dev": {
     "jakub-onderka/php-parallel-lint": "0.9"

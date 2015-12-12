@@ -7,8 +7,8 @@ use Monolog\Handler\RotatingFileHandler;
 
 // processors
 use Monolog\Processor\WebProcessor;
-use Nano\Logger\Processors\ExceptionProcessor;
-use Nano\Logger\Processors\RequestIdProcessor;
+use Macbre\Logger\Processors\ExceptionProcessor;
+use Macbre\Logger\Processors\RequestIdProcessor;
 
 /**
  * Nano's wrapper for Monolog

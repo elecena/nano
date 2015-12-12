@@ -3,7 +3,7 @@
 namespace Nano;
 use Nano\Output;
 use Nano\Stats;
-use Nano\Logger\Processors\RequestIdProcessor;
+use Macbre\Logger\Processors\RequestIdProcessor;
 
 /**
  * Handles response (sets HTTP headers, wraps output content)

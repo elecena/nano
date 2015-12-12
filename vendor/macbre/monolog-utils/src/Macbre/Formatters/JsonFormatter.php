@@ -1,6 +1,6 @@
 <?php
 
-namespace Nano\Logger\Formatters;
+namespace Macbre\Logger\Formatters;
 
 /**
  * Custom Nano JSON formatter
@@ -20,8 +20,8 @@ class JsonFormatter extends \Monolog\Formatter\JsonFormatter {
 		$entry = [
 			'@timestamp' => self::now(),
 			'@message' => $record['message'],
-			'@context' => $record['context'],
-			'@fields' => $record['extra'],
+			'@context' => (object) $record['context'],
+			'@fields' => (object) $record['extra'],
 			'severity' => strtolower($record['level_name']),
 			'program' => $record['channel'],
 			'@source_host' => gethostname(),

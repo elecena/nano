@@ -1,9 +1,15 @@
 <?php
 
-namespace Nano\Logger\Processors;
+namespace Macbre\Logger\Processors;
 
 /**
  * Formats the 'exception' field passed in $context when logging errors
+ *
+ * Example:
+ *
+ * $logger->error('Exception raised when doing foo and bar', [
+ *   'exception' => $e
+ * ]);
  */
 class ExceptionProcessor {
 	/**

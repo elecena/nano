@@ -1,6 +1,6 @@
 <?php
 
-namespace Nano\Logger\Processors;
+namespace Macbre\Logger\Processors;
 
 /**
  * Injects a unique per-request ID into extra fields of Monolog-generated log entry
