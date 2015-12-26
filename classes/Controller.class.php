@@ -4,6 +4,7 @@ use Nano\Cache;
 use Nano\Config;
 use Nano\Debug;
 use Nano\Events;
+use Nano\Logger\NanoLogger;
 use Nano\Request;
 use Nano\Router;
 use Nano\View;
@@ -45,15 +46,22 @@ abstract class Controller {
 	// controller's data
 	protected $data;
 
+	protected $logger;
+
 	/**
 	 * Setup the controller usin ggiven application
+	 *
+	 * @param NanoApp $app
+	 * @param $name
 	 */
 	protected function __construct(NanoApp $app, $name) {
 		$this->name = $name;
-		$this->data = array();
+		$this->data = [];
 
 		// set reference to the application
 		$this->app = $app;
+
+		$this->logger = NanoLogger::getLogger('nano.app.controller.' . $name);
 
 		$this->request = $app->getRequest();
 		$this->response = $app->getResponse();
