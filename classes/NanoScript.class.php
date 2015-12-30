@@ -25,7 +25,7 @@ abstract class NanoScript extends NanoObject {
 		}
 
 		$this->logger->pushProcessor(function($record) {
-			$record['extra']['script'] = get_class($this);
+			$record['extra']['script_class'] = get_class($this);
 			return $record;
 		});
 

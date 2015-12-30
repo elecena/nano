@@ -42,6 +42,17 @@ class NanoLogger {
 		$logger->pushProcessor(new ExceptionProcessor());
 		$logger->pushProcessor(new RequestIdProcessor());
 
+		// CLI commands
+		// TODO: move to macbre/monolog-utils as CLIProcessor
+		if (!isset($_SERVER['REQUEST_URI'])) {
+			$scriptName = rtrim(getcwd(), '/') . '/' . ltrim($_SERVER['PHP_SELF'], '/');
+
+			$logger->pushProcessor(function(array $record) use ($scriptName) {
+				$record['extra']['script'] = $scriptName;
+				return $record;
+			});
+		}
+
 		// add per-logger extra fields
 		if (!empty($extraFields)) {
 			$logger->pushProcessor(function(array $record) use ($extraFields) {
