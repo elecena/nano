@@ -3,13 +3,9 @@ nano
 
 ## Requirements
 
-### PHP modules
-
-* php5-curl
-* php5-imagick
-* php5-json
-* php5-mysqlnd
-* php5-readline
+```
+sudo apt-get install php5-curl php5-imagick php5-json php5-mysqlnd php5-readline
+```
 
 ## Configuration
 
