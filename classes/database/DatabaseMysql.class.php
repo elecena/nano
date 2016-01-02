@@ -112,7 +112,7 @@ class DatabaseMysql extends Database {
 
 				$this->debug->log(__METHOD__ . " - connecting with '{$hostInfo}' failed (#{$errorNo}: {$errorMsg})", Debug::ERROR);
 
-				throw new DatabaseConnectionException( "[{$this->name}] {$errorMsg}", $errorNo);
+				throw new DatabaseConnectionException( "[{$this->name}] {$errorMsg} ({$hostInfo})", $errorNo);
 			}
 		}
 	}
