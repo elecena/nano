@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:annotation>
-    <xs:documentation source="https://phpunit.de/manual/5.0/en/appendixes.configuration.html">
-      This Schema file defines the rules by which the XML configuration file of PHPUnit 5.0 may be structured.
+    <xs:documentation source="https://phpunit.de/manual/5.3/en/appendixes.configuration.html">
+      This Schema file defines the rules by which the XML configuration file of PHPUnit 5.3 may be structured.
     </xs:documentation>
     <xs:appinfo source="http://www.phpunit.de/manual/current/en/appendixes.configuration.html"/>
   </xs:annotation>
@@ -117,6 +117,7 @@
           <xs:enumeration value="coverage-text"/>
           <xs:enumeration value="coverage-clover"/>
           <xs:enumeration value="coverage-crap4j"/>
+          <xs:enumeration value="coverage-xml"/>
           <xs:enumeration value="json"/>
           <xs:enumeration value="plain"/>
           <xs:enumeration value="tap"/>
@@ -196,20 +197,23 @@
     <xs:attribute name="convertNoticesToExceptions" type="xs:boolean" default="true"/>
     <xs:attribute name="convertWarningsToExceptions" type="xs:boolean" default="true"/>
     <xs:attribute name="forceCoversAnnotation" type="xs:boolean" default="false"/>
-    <xs:attribute name="mapTestClassNameToCoveredClassName" type="xs:boolean" default="false"/>
     <xs:attribute name="printerClass" type="xs:string" default="PHPUnit_TextUI_ResultPrinter"/>
     <xs:attribute name="printerFile" type="xs:anyURI"/>
     <xs:attribute name="processIsolation" type="xs:boolean" default="false"/>
     <xs:attribute name="stopOnError" type="xs:boolean" default="false"/>
     <xs:attribute name="stopOnFailure" type="xs:boolean" default="false"/>
+    <xs:attribute name="stopOnWarning" type="xs:boolean" default="false"/>
     <xs:attribute name="stopOnIncomplete" type="xs:boolean" default="false"/>
     <xs:attribute name="stopOnRisky" type="xs:boolean" default="false"/>
     <xs:attribute name="stopOnSkipped" type="xs:boolean" default="false"/>
+    <xs:attribute name="failOnRisky" type="xs:boolean" default="false"/>
+    <xs:attribute name="failOnWarning" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutChangesToGlobalState" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutOutputDuringTests" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutResourceUsageDuringSmallTests" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutTestsThatDoNotTestAnything" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutTodoAnnotatedTests" type="xs:boolean" default="false"/>
+    <xs:attribute name="beStrictAboutCoversAnnotation" type="xs:boolean" default="false"/>
     <xs:attribute name="checkForUnintentionallyCoveredCode" type="xs:boolean" default="false"/>
     <xs:attribute name="enforceTimeLimit" type="xs:boolean" default="false"/>
     <xs:attribute name="timeoutForSmallTests" type="xs:integer" default="1"/>

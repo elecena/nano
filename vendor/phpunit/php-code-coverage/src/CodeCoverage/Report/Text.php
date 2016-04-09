@@ -40,8 +40,9 @@ class PHP_CodeCoverage_Report_Text
     }
 
     /**
-     * @param  PHP_CodeCoverage $coverage
-     * @param  bool             $showColors
+     * @param PHP_CodeCoverage $coverage
+     * @param bool             $showColors
+     *
      * @return string
      */
     public function process(PHP_CodeCoverage $coverage, $showColors = false)
@@ -223,9 +224,9 @@ class PHP_CodeCoverage_Report_Text
         return $this->colors['red'];
     }
 
-    protected function printCoverageCounts($numberOfCoveredElements, $totalNumberOfElements, $presicion)
+    protected function printCoverageCounts($numberOfCoveredElements, $totalNumberOfElements, $precision)
     {
-        $format = '%' . $presicion . 's';
+        $format = '%' . $precision . 's';
 
         return PHP_CodeCoverage_Util::percent(
             $numberOfCoveredElements,

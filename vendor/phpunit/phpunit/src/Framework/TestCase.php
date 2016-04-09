@@ -13,6 +13,7 @@ use SebastianBergmann\GlobalState\Restorer;
 use SebastianBergmann\GlobalState\Blacklist;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Exporter\Exporter;
+use SebastianBergmann\ObjectEnumerator\Enumerator;
 use Prophecy\Exception\Prediction\PredictionException;
 use Prophecy\Prophet;
 use DeepCopy\DeepCopy;
@@ -154,7 +155,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     /**
      * The code of the expected Exception.
      *
-     * @var int
+     * @var int|string
      */
     private $expectedExceptionCode;
 
@@ -454,35 +455,111 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
-     * @param mixed  $exceptionName
-     * @param string $exceptionMessage
-     * @param int    $exceptionCode
+     * @param mixed      $exception
+     * @param string     $message
+     * @param int|string $code
      *
-     * @since  Method available since Release 3.2.0
+     * @throws PHPUnit_Framework_Exception
+     *
+     * @since      Method available since Release 3.2.0
+     * @deprecated Method deprecated since Release 5.2.0
      */
-    public function setExpectedException($exceptionName, $exceptionMessage = '', $exceptionCode = null)
+    public function setExpectedException($exception, $message = '', $code = null)
     {
-        $this->expectedException        = $exceptionName;
-        $this->expectedExceptionMessage = $exceptionMessage;
-        $this->expectedExceptionCode    = $exceptionCode;
+        $this->expectedException = $exception;
+
+        if ($message !== null && $message !== '') {
+            $this->expectExceptionMessage($message);
+        }
+
+        if ($code !== null) {
+            $this->expectExceptionCode($code);
+        }
     }
 
     /**
-     * @param mixed  $exceptionName
-     * @param string $exceptionMessageRegExp
-     * @param int    $exceptionCode
+     * @param mixed  $exception
+     * @param string $messageRegExp
+     * @param int    $code
      *
-     * @since Method available since Release 4.3.0
+     * @throws PHPUnit_Framework_Exception
+     *
+     * @since  Method available since Release 4.3.0
      */
-    public function setExpectedExceptionRegExp($exceptionName, $exceptionMessageRegExp = '', $exceptionCode = null)
+    public function setExpectedExceptionRegExp($exception, $messageRegExp = '', $code = null)
     {
-        $this->expectedException              = $exceptionName;
-        $this->expectedExceptionMessageRegExp = $exceptionMessageRegExp;
-        $this->expectedExceptionCode          = $exceptionCode;
+        if (!is_string($messageRegExp)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'string');
+        }
+
+        $this->expectedException              = $exception;
+        $this->expectedExceptionMessageRegExp = $messageRegExp;
+
+        if ($code !== null) {
+            $this->expectExceptionCode($code);
+        }
     }
 
     /**
-     * @since  Method available since Release 3.4.0
+     * @param mixed $exception
+     *
+     * @since  Method available since Release 5.2.0
+     */
+    public function expectException($exception)
+    {
+        $this->expectedException = $exception;
+    }
+
+    /**
+     * @param int|string $code
+     *
+     * @throws PHPUnit_Framework_Exception
+     *
+     * @since  Method available since Release 5.2.0
+     */
+    public function expectExceptionCode($code)
+    {
+        if (!is_int($code) && !is_string($code)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'integer or string');
+        }
+
+        $this->expectedExceptionCode = $code;
+    }
+
+    /**
+     * @param string $message
+     *
+     * @throws PHPUnit_Framework_Exception
+     *
+     * @since  Method available since Release 5.2.0
+     */
+    public function expectExceptionMessage($message)
+    {
+        if (!is_string($message)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
+        }
+
+        $this->expectedExceptionMessage = $message;
+    }
+
+    /**
+     * @param string $messageRegExp
+     *
+     * @throws PHPUnit_Framework_Exception
+     *
+     * @since  Method available since Release 5.2.0
+     */
+    public function expectExceptionMessageRegExp($messageRegExp)
+    {
+        if (!is_string($messageRegExp)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
+        }
+
+        $this->expectedExceptionMessageRegExp = $messageRegExp;
+    }
+
+    /**
+     * @since Method available since Release 3.4.0
      */
     protected function setExpectedExceptionFromAnnotation()
     {
@@ -493,18 +570,16 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             );
 
             if ($expectedException !== false) {
-                $this->setExpectedException(
-                    $expectedException['class'],
-                    $expectedException['message'],
-                    $expectedException['code']
-                );
+                $this->expectException($expectedException['class']);
 
-                if (!empty($expectedException['message_regex'])) {
-                    $this->setExpectedExceptionRegExp(
-                        $expectedException['class'],
-                        $expectedException['message_regex'],
-                        $expectedException['code']
-                    );
+                if ($expectedException['code'] !== null) {
+                    $this->expectExceptionCode($expectedException['code']);
+                }
+
+                if ($expectedException['message'] !== '') {
+                    $this->expectExceptionMessage($expectedException['message']);
+                } elseif ($expectedException['message_regex'] !== '') {
+                    $this->expectExceptionMessageRegExp($expectedException['message_regex']);
                 }
             }
         } catch (ReflectionException $e) {
@@ -613,7 +688,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $result = $this->createResult();
         }
 
-        if (!$this instanceof PHPUnit_Framework_Warning) {
+        if (!$this instanceof PHPUnit_Framework_WarningTestCase) {
             $this->setTestResultObject($result);
             $this->setUseErrorHandlerFromAnnotation();
         }
@@ -623,7 +698,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $result->convertErrorsToExceptions($this->useErrorHandler);
         }
 
-        if (!$this instanceof PHPUnit_Framework_Warning && !$this->handleDependencies()) {
+        if (!$this instanceof PHPUnit_Framework_WarningTestCase && !$this->handleDependencies()) {
             return;
         }
 
@@ -777,6 +852,9 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $this->statusMessage = $e->getMessage();
         } catch (PHPUnit_Framework_SkippedTest $e) {
             $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED;
+            $this->statusMessage = $e->getMessage();
+        } catch (PHPUnit_Framework_Warning $e) {
+            $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_WARNING;
             $this->statusMessage = $e->getMessage();
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE;
@@ -1006,7 +1084,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 $this->prophet->checkPredictions();
             } catch (Throwable $t) {
                 /* Intentionally left empty */
-            } catch (Exception $e) {
+            } catch (Exception $t) {
                 /* Intentionally left empty */
             }
 
@@ -1018,8 +1096,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 }
             }
 
-            if (isset($e)) {
-                throw $e;
+            if (isset($t)) {
+                throw $t;
             }
         }
     }
@@ -1780,13 +1858,15 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
-     * @param Exception $exception
+     * @param Throwable|Exception $exception
      *
      * @return PHPUnit_Framework_MockObject_Stub_Exception
      *
      * @since  Method available since Release 3.1.0
+     *
+     * @todo   Add type declaration when support for PHP 5 is dropped
      */
-    public static function throwException(Exception $exception)
+    public static function throwException($exception)
     {
         return new PHPUnit_Framework_MockObject_Stub_Exception($exception);
     }
@@ -2254,20 +2334,20 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
      */
     private function shouldInvocationMockerBeReset(PHPUnit_Framework_MockObject_MockObject $mock)
     {
-        if ($this->testResult === $mock) {
-            return false;
-        }
+        $enumerator = new Enumerator;
 
-        if (is_array($this->testResult)) {
-            foreach ($this->testResult as $testResult) {
-                if ($testResult === $mock) {
-                    return false;
-                }
+        foreach ($enumerator->enumerate($this->dependencyInput) as $object) {
+            if ($mock === $object) {
+                return false;
             }
         }
 
-        foreach ($this->dependencyInput as $dependencyInput) {
-            if ($dependencyInput === $mock) {
+        if (!is_array($this->testResult) && !is_object($this->testResult)) {
+            return true;
+        }
+
+        foreach ($enumerator->enumerate($this->testResult) as $object) {
+            if ($mock === $object) {
                 return false;
             }
         }

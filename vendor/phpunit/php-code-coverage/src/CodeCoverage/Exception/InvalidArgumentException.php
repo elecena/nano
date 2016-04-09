@@ -14,14 +14,15 @@
 class PHP_CodeCoverage_InvalidArgumentException extends InvalidArgumentException implements PHP_CodeCoverage_Exception
 {
     /**
-     * @param  int                                       $argument
-     * @param  string                                    $type
-     * @param  mixed                                     $value
+     * @param int    $argument
+     * @param string $type
+     * @param mixed  $value
+     *
      * @return PHP_CodeCoverage_InvalidArgumentException
      */
     public static function create($argument, $type, $value = null)
     {
-        $stack = debug_backtrace(false);
+        $stack = debug_backtrace(0);
 
         return new self(
             sprintf(

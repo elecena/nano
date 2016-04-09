@@ -8,8 +8,6 @@
  * file that was distributed with this source code.
  */
 
-use SebastianBergmann\Environment\Runtime;
-
 /**
  * Default utility for PHP sub-processes.
  *
@@ -29,15 +27,8 @@ class PHPUnit_Util_PHP_Default extends PHPUnit_Util_PHP
      */
     public function runJob($job, array $settings = [])
     {
-        $runtime = new Runtime;
-        $runtime = $runtime->getBinary() . $this->settingsToParameters($settings);
-
-        if ('phpdbg' === PHP_SAPI) {
-            $runtime .= ' -qrr ' . escapeshellarg(__DIR__ . '/eval-stdin.php');
-        }
-
         $process = proc_open(
-            $runtime,
+            $this->getCommand($settings),
             [
                 0 => ['pipe', 'r'],
                 1 => ['pipe', 'w'],
