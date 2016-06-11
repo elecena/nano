@@ -12,17 +12,17 @@
 namespace Predis\Command;
 
 /**
- * @link http://redis.io/commands/expireat
+ * @link http://redis.io/commands/bitfield
  *
  * @author Daniele Alessandri <suppakilla@gmail.com>
  */
-class KeyExpireAt extends Command
+class StringBitField extends Command
 {
     /**
      * {@inheritdoc}
      */
     public function getId()
     {
-        return 'EXPIREAT';
+        return 'BITFIELD';
     }
 }

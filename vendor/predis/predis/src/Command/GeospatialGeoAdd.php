@@ -12,18 +12,18 @@
 namespace Predis\Command;
 
 /**
- * @link http://redis.io/commands/pfadd
+ * @link http://redis.io/commands/geoadd
  *
  * @author Daniele Alessandri <suppakilla@gmail.com>
  */
-class HyperLogLogAdd extends Command
+class GeospatialGeoAdd extends Command
 {
     /**
      * {@inheritdoc}
      */
     public function getId()
     {
-        return 'PFADD';
+        return 'GEOADD';
     }
 
     /**
@@ -31,6 +31,12 @@ class HyperLogLogAdd extends Command
      */
     protected function filterArguments(array $arguments)
     {
-        return self::normalizeVariadic($arguments);
+        if (count($arguments) === 2 && is_array($arguments[1])) {
+            foreach (array_pop($arguments) as $item) {
+                $arguments = array_merge($arguments, $item);
+            }
+        }
+
+        return $arguments;
     }
 }
