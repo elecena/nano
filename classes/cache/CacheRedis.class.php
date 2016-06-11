@@ -69,11 +69,9 @@ class CacheRedis extends Cache {
 	 */
 	public function set($key, $value, $ttl = null) {
 		$key = $this->getStorageKey($key);
-		$this->redis->set($key, $this->serialize($value));
 
-		if (!is_null($ttl)) {
-			$this->redis->expire($key, $ttl);
-		}
+		# @see http://redis.io/commands/set (EX's ttl supported since v2.6.12)
+		$this->redis->set($key, $this->serialize($value), 'EX', $ttl);
 
 		#$this->debug->log(__METHOD__ . ": {$key}");
 
@@ -91,7 +89,7 @@ class CacheRedis extends Cache {
 		$key = $this->getStorageKey($key);
 		$resp = $this->redis->exists($key);
 
-		return $resp === true;
+		return $resp === 1;
 	}
 
 	/**
