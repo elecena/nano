@@ -14,6 +14,7 @@ namespace Predis\Connection;
 use Predis\Command\CommandInterface;
 use Predis\NotSupportedException;
 use Predis\Response\Error as ErrorResponse;
+use Predis\Response\ErrorInterface as ErrorResponseInterface;
 use Predis\Response\Status as StatusResponse;
 
 /**
@@ -36,7 +37,7 @@ use Predis\Response\Status as StatusResponse;
  *  - host: hostname or IP address of the server.
  *  - port: TCP port of the server.
  *  - path: path of a UNIX domain socket when scheme is 'unix'.
- *  - timeout: timeout to perform the connection.
+ *  - timeout: timeout to perform the connection (default is 5 seconds).
  *  - read_write_timeout: timeout of read / write operations.
  *
  * @link http://github.com/nrk/phpiredis
@@ -93,7 +94,15 @@ class PhpiredisSocketConnection extends AbstractConnection
      */
     protected function assertParameters(ParametersInterface $parameters)
     {
-        parent::assertParameters($parameters);
+        switch ($parameters->scheme) {
+            case 'tcp':
+            case 'redis':
+            case 'unix':
+                break;
+
+            default:
+                throw new \InvalidArgumentException("Invalid scheme: '$parameters->scheme'.");
+        }
 
         if (isset($parameters->persistent)) {
             throw new NotSupportedException(
@@ -282,7 +291,7 @@ class PhpiredisSocketConnection extends AbstractConnection
         $null = null;
         $selectable = array($socket);
 
-        $timeout = (float) $parameters->timeout;
+        $timeout = (isset($parameters->timeout) ? (float) $parameters->timeout : 5.0);
         $timeoutSecs = floor($timeout);
         $timeoutUSecs = ($timeout - $timeoutSecs) * 1000000;
 
@@ -308,7 +317,11 @@ class PhpiredisSocketConnection extends AbstractConnection
     {
         if (parent::connect() && $this->initCommands) {
             foreach ($this->initCommands as $command) {
-                $this->executeCommand($command);
+                $response = $this->executeCommand($command);
+
+                if ($response instanceof ErrorResponseInterface) {
+                    $this->onConnectionError("`{$command->getId()}` failed: $response", 0);
+                }
             }
         }
     }

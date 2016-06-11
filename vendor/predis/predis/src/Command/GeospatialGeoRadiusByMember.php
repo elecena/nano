@@ -12,17 +12,17 @@
 namespace Predis\Command;
 
 /**
- * @link http://redis.io/commands/expireat
+ * @link http://redis.io/commands/georadiusbymember
  *
  * @author Daniele Alessandri <suppakilla@gmail.com>
  */
-class KeyExpireAt extends Command
+class GeospatialGeoRadiusByMember extends GeospatialGeoRadius
 {
     /**
      * {@inheritdoc}
      */
     public function getId()
     {
-        return 'EXPIREAT';
+        return 'GEORADIUSBYMEMBER';
     }
 }
