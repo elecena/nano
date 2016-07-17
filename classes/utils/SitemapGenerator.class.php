@@ -15,7 +15,7 @@ class SitemapGenerator {
 	// @see http://www.sitemaps.org/protocol.html#index
 	const URLS_PER_FILE = 15000;
 
-	const USE_GZIP = false;
+	const USE_GZIP = true; // see issue #11
 
 	private $app;
 	private $debug;
@@ -32,14 +32,17 @@ class SitemapGenerator {
 	private $currentSitemap = '';
 
 	// list of sitemaps to be stored in sitemapindex file
-	private $sitemaps = array();
+	private $sitemaps = [];
 
-	function __construct(NanoApp $app) {
-		$this->app = $app;
+	/**
+	 * @throws Exception
+	 */
+	function __construct() {
+		$this->app = NanoApp::app();
 
-		$this->debug = $app->getDebug();
-		$this->dir = $app->getDirectory();
-		$this->router = $app->getRouter();
+		$this->debug = $this->app->getDebug();
+		$this->dir = $this->app->getDirectory();
+		$this->router = $this->app->getRouter();
 	}
 
 	/**
@@ -47,6 +50,9 @@ class SitemapGenerator {
 	 *
 	 * @see http://php.net/XMLWriter
 	 * @see http://stackoverflow.com/a/143350
+	 *
+	 * @param string $rootElement
+	 * @return XMLWriter
 	 */
 	private function initXML($rootElement) {
 		$xml = new XMLWriter();
@@ -65,6 +71,11 @@ class SitemapGenerator {
 
 	/**
 	 * Helper method storing XML file
+	 *
+	 * @param XMLWriter $xml
+	 * @param string $fileName
+	 * @param bool $gzip
+	 * @return int
 	 */
 	private function saveXML(XMLWriter $xml, $fileName, $gzip = true) {
 		$fileName = basename($fileName) . ($gzip ? '.gz' : '');
@@ -86,6 +97,10 @@ class SitemapGenerator {
 
 	/**
 	 * Store sitemap's links in a given file
+	 *
+	 * @param string $fileName
+	 * @param bool $gzip
+	 * @return bool|int
 	 */
 	private function saveSitemap($fileName, $gzip = true) {
 		// nothing to store
@@ -123,13 +138,17 @@ class SitemapGenerator {
 		$this->sitemaps[] = $fileName . ($gzip ? '.gz' : '');
 
 		// reset the list of items
-		$this->urls = array();
+		$this->urls = [];
 
 		return $this->saveXML($xml, $fileName, $gzip);
 	}
 
 	/**
 	 * Store sitemap index file
+	 *
+	 * @param string $fileName
+	 * @param bool $gzip
+	 * @return int
 	 */
 	private function saveIndex($fileName, $gzip = true) {
 		// generate XML
@@ -168,6 +187,8 @@ class SitemapGenerator {
 
 	/**
 	 * Start new sitemap under given name
+	 *
+	 * @param string $name
 	 */
 	public function startSitemap($name) {
 		// store previously added urls
@@ -191,13 +212,13 @@ class SitemapGenerator {
 	 * Add given URL to the list
 	 *
 	 * @param string $url
-	 * @param string|int $lastmod
-	 * @param int $priority
+	 * @param bool|string|int $lastmod
+	 * @param bool|int $priority
 	 */
 	public function addUrl($url, $lastmod = false, $priority = false /* 0.5 is the default value */) {
-		$entry = array(
+		$entry = [
 			'url' => $url
-		);
+		];
 
 		$this->debug->log(__METHOD__ . ": {$url}");
 
@@ -241,13 +262,16 @@ class SitemapGenerator {
 
 	/**
 	 * Notify given search engine about updated sitemap
+	 *
+	 * @param string $host
+	 * @return bool
 	 */
 	public function ping($host) {
-		$http = $this->app->factory('HttpClient');
+		$http = new HttpClient();
 
-		$res = $http->get($host . '/ping', array(
+		$res = $http->get($host . '/ping', [
 			'sitemap' => $this->router->formatFullUrl() . self::SITEMAP_FILE
-		));
+		]);
 
 		return $res->getResponseCode() === 200;
 	}
