@@ -132,7 +132,7 @@ class SitemapGenerator {
 			$xml->endElement();
 		}
 
-		$this->debug->log(__METHOD__ . ": {$this->countUrls()} items to be stored as {$fileName}");
+		$this->debug->log(__METHOD__ . ": " . count($this->urls) . " items to be stored as {$fileName}");
 
 		// add an entry to sitemaps index
 		$this->sitemaps[] = $fileName . ($gzip ? '.gz' : '');
