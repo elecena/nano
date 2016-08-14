@@ -12,13 +12,20 @@
  */
 class DatabaseMongo extends Database {
 
+	/* @var MongoDB\Database */
 	private $db;
 
-	/* @var MongoClient $link */
+	/* @var MongoDB\Client */
 	protected $link;
+
+	const DEFAULT_PORT = 27017;
 
 	/**
 	 * Connect to a database
+	 *
+	 * @param NanoApp $app
+	 * @param array $settings
+	 * @param string $name
 	 */
 	protected function __construct(NanoApp $app, Array $settings, $name) {
 		parent::__construct($app, $settings, $name);
@@ -26,30 +33,24 @@ class DatabaseMongo extends Database {
 		// mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db
 		$dsn = sprintf('mongodb://%s:%d/%s',
 			$settings['host'],
-			isset($settings['port']) ? $settings['port']: Mongo::DEFAULT_PORT,
+			isset($settings['port']) ? $settings['port']: self::DEFAULT_PORT,
 			$settings['database']
 		);
-
 
 		$this->log(__METHOD__, 'connecting with "' . $dsn . '"...');
 		$this->debug->time('connect');
 
-		// // @see http://php.net/manual/en/mongo.construct.php
-		$class = class_exists('MongoClient') ? 'MongoClient' : 'Mongo';
-
-		$this->link = new $class($dsn, array(
+		// @see http://php.net/manual/en/mongodb.tutorial.library.php
+		$this->link = new MongoDB\Client($dsn, [
 			'username' => $settings['user'],
 			'password' => $settings['pass'],
-		));
+		]);
 
-		$this->db = $this->link->selectDB($settings['database']);
+		$this->db = $this->link->selectDatabase($settings['database']);
 		$time = $this->debug->timeEnd('connect');
 
 		$this->log(__METHOD__, 'connected with ' . $settings['host'], $time);
 		$this->stats->timing('time.connection', round($time * 1000) /* ms */);
-
-		// @see http://learnmongo.com/posts/mongodb-and-64-bit-php/
-		ini_set('mongo.native_long', 1);
 	}
 
 	/**
@@ -72,15 +73,7 @@ class DatabaseMongo extends Database {
 	 * Close the current connection
 	 */
 	public function close() {
-		if ($this->isConnected()) {
-			$this->link->close();
-			$this->connected = false;
-
-			return true;
-		}
-		else {
-			return false;
-		}
+		# NOP
 	}
 
 	/**
@@ -120,41 +113,37 @@ class DatabaseMongo extends Database {
 	 *
 	 * @see http://php.net/manual/en/mongocollection.find.php
 	 */
-	public function select($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::select') {
+	public function select($table, $fields, $where = [], Array $options = [], $fname = 'Database::select') {
 		$this->log(__METHOD__, "/* {$fname} */ {$table}: SELECT WHERE " . json_encode($where));
 
-		if ($fields === '*') {
-			$fields = array();
-		}
-
-		// The array is in the format array('fieldname' => true, 'fieldname2' => true)
-		if (!empty($fields)) {
-			$fields = array_combine(array_values($fields), array_fill(0, count($fields), true));
-		}
-
 		$this->time();
-		$cursor = $this->db->selectCollection($table)->find($where, $fields);
-		$this->timeEnd();
 
-		// @see http://php.net/manual/en/class.mongocursor.php
+		$opts = [];
+
 		if (isset($options['order'])) {
-			$cursor->sort($options['order']);
+			$opts['sort'] = $options['order'];
 		}
 
 		if (isset($options['limit'])) {
-			$cursor->limit(intval($options['limit']));
+			$opts['limit'] = intval($options['limit']);
 		}
 
-		//return $cursor;
+		$cursor = $this->db->selectCollection($table)->find($where, $options);
+
+		# cast results to array
+		$cursor->setTypeMap(['root' => 'array', 'document' => 'array', 'array' => 'array']);
+
+		$this->timeEnd();
 
 		// wrap results into iterator
-		return new DatabaseResult($this, $cursor);
+		$resultsIterator = new \ArrayIterator($cursor->toArray());
+		return new DatabaseResult($this, $resultsIterator);
 	}
 
 	/**
 	 * Select given fields from a table using following WHERE statements (return single row)
 	 */
-	public function selectRow($table, $fields, $where = array(), Array $options = array(), $fname = 'Database::selectRow') {
+	public function selectRow($table, $fields, $where = [], Array $options = [], $fname = 'Database::selectRow') {
 		$options['limit'] = 1;
 		$res = $this->select($table, $fields, $where, $options, $fname);
 
@@ -172,8 +161,8 @@ class DatabaseMongo extends Database {
 	/**
 	 * Select given fields from a table using following WHERE statements (return single field)
 	 */
-	public function selectField($table, $field, $where = array(), Array $options = array(), $fname = 'Database::selectField') {
-		$row = $this->selectRow($table, array($field), $where, $options, $fname);
+	public function selectField($table, $field, $where = [], Array $options = [], $fname = 'Database::selectField') {
+		$row = $this->selectRow($table, [$field], $where, $options, $fname);
 
 		return !empty($row) && isset($row[$field]) ? $row[$field] : false;
 	}
@@ -181,22 +170,22 @@ class DatabaseMongo extends Database {
 	/**
 	 * Remove rows from a table using following WHERE statements
 	 */
-	public function delete($table, $where = array(), Array $options = array(), $fname = 'Database::delete') {
+	public function delete($table, $where = [], Array $options = [], $fname = 'Database::delete') {
 		$this->log(__METHOD__, "/* {$fname} */ {$table}: REMOVE WHERE " . json_encode($where));
 
 		// @see http://php.net/manual/en/mongocollection.remove.php
 		$this->time();
-		$this->db->selectCollection($table)->remove($where, $options);
+		$this->db->selectCollection($table)->deleteOne($where, $options);
 		$this->timeEnd();
 	}
 
 	/**
 	 * Remove single row from a table using following WHERE statements
 	 */
-	public function deleteRow($table, $where = array(), $fname = 'Database::deleteRow') {
-		return $this->delete($table, $where, array(
+	public function deleteRow($table, $where = [], $fname = 'Database::deleteRow') {
+		$this->delete($table, $where, [
 			'justOne' => true // LIMIT 1
-		), $fname);
+		], $fname);
 	}
 
 	/**
@@ -204,25 +193,32 @@ class DatabaseMongo extends Database {
 	 *
 	 * @see http://dev.mysql.com/doc/refman/5.5/en/update.html
 	 */
-	public function update($table, Array $values, $where = array(), Array $options = array(), $fname = 'Database::update') {
+	public function update($table, Array $values, $where = [], Array $options = [], $fname = 'Database::update') {
 		$this->log(__METHOD__, "/* {$fname} */ {$table}: UPDATE " . json_encode($values) . ' WHERE ' . json_encode($where));
 
-		// LIMIT 1
-		$options['multiple'] = !empty($options['multiple']);
+		$options = [
+			'upsert' => true,
+		];
 
 		$this->time();
-		$this->db->selectCollection($table)->update($where, $values, $options);
+		try {
+			$this->db->selectCollection($table)->updateOne($where, $values, $options);
+		}
+		catch (\MongoDB\Exception\InvalidArgumentException $ex) {
+			# handle First key in $update argument is not an update operator
+			$this->db->selectCollection($table)->replaceOne($where, $values, $options);
+		}
 		$this->timeEnd();
 	}
 
 	/**
 	 * Insert a single row into a table using following values
 	 */
-	public function insert($table, Array $row, Array $options = array(), $fname = 'Database::insert') {
+	public function insert($table, Array $row, Array $options = [], $fname = 'Database::insert') {
 		$this->log(__METHOD__, "/* {$fname} */ {$table}: INSERT " . json_encode($row));
 
 		$this->time();
-		$this->db->selectCollection($table)->insert($row);
+		$this->db->selectCollection($table)->insertOne($row);
 		$this->timeEnd();
 
 		return $row['_id'];
@@ -231,7 +227,7 @@ class DatabaseMongo extends Database {
 	/**
 	 * Insert multiple rows into a table using following values
 	 */
-	public function insertRows($table, Array $rows, Array $options = array(), $fname = 'Database::insertRows') {
+	public function insertRows($table, Array $rows, Array $options = [], $fname = 'Database::insertRows') {
 		foreach($rows as $row) {
 			$this->insert($table, $row, $options, $fname);
 		}
@@ -240,7 +236,7 @@ class DatabaseMongo extends Database {
 	/**
 	 * Returns number of items in a given collection
 	 */
-	public function count($table, Array $query = array(), $fname = 'DatabaseMongo::count') {
+	public function count($table, Array $query = [], $fname = 'DatabaseMongo::count') {
 		$this->log(__METHOD__, "/* {$fname} */ COUNT {$table} WHERE " . json_encode($query));
 
 		return $this->db->selectCollection($table)->count($query);
@@ -254,10 +250,10 @@ class DatabaseMongo extends Database {
 	 *
 	 * @return mixed|bool result
 	 */
-	public function distinct($table, $key, Array $query = array(), $fname = 'DatabaseMongo::distinct') {
+	public function distinct($table, $key, Array $query = [], $fname = 'DatabaseMongo::distinct') {
 		$this->log(__METHOD__, "/* {$fname} */ DISTINCT {$key} IN {$table} WHERE " . json_encode($query));
 
-		$res = $this->db->command(array('distinct' => $table, 'key' => $key, 'query' => $query));
+		$res = $this->db->command(['distinct' => $table, 'key' => $key, 'query' => $query]);
 
 		return !empty($res['ok']) ? $res['values'] : false;
 	}
@@ -268,19 +264,19 @@ class DatabaseMongo extends Database {
 	 * @see http://docs.mongodb.org/manual/applications/map-reduce/
 	 * @see http://stackoverflow.com/questions/3002841/mongo-map-reduce-first-time
 	 */
-	public function mapReduce($table, $map, $reduce, Array $query = array(), $fname = 'DatabaseMongo::mapReduce') {
+	public function mapReduce($table, $map, $reduce, Array $query = [], $fname = 'DatabaseMongo::mapReduce') {
 		$mapFunc = new MongoCode($map);
 		$reduceFunc = new MongoCode($reduce);
 
 		$this->log(__METHOD__, "/* {$fname} */ MAP REDUCE ON {$table} WHERE " . json_encode($query));
 
-		$res = $this->db->command(array(
+		$res = $this->db->command([
 			'mapreduce' => $table,
 			'map' => $mapFunc,
 			'reduce' => $reduceFunc,
-			'out' => array('inline' => 1),
+			'out' => ['inline' => 1],
 			'query' => $query,
-		));
+		]);
 
 		if (!empty($res['ok'])) {
 			$this->log(__METHOD__, "took {$res['timeMillis']} ms");
@@ -304,6 +300,9 @@ class DatabaseMongo extends Database {
 
 	/**
 	 * Get number of rows in given results set
+	 *
+	 * @param \ArrayIterator $results
+	 * @return int
 	 */
 	public function numRows($results) {
 		return $results->count();
@@ -311,20 +310,26 @@ class DatabaseMongo extends Database {
 
 	/**
 	 * Change the position of results cursor
+	 *
+	 * @param \ArrayIterator $results
+	 * @param int $rowId
 	 */
 	public function seekRow($results, $rowId) {
 		if ($rowId === 0) {
-			$results->reset();
+			$results->rewind();
 		}
 	}
 
 	/**
 	 * Get data for current row
+	 *
+	 * @param \ArrayIterator $results
+	 * @return array|false
 	 */
 	public function fetchRow($results) {
 		try {
-			$results->next();
 			$row = $results->current();
+			$results->next();
 		}
 		catch (Exception $ex) {
 			$row = null;
@@ -337,6 +342,8 @@ class DatabaseMongo extends Database {
 
 	/**
 	 * Free the memory
+	 *
+	 * @param \ArrayIterator $results
 	 */
 	public function freeResults($results) {}
 
@@ -344,13 +351,23 @@ class DatabaseMongo extends Database {
 	 * Get information about current connection
 	 */
 	public function getInfo() {
-		return $this->isConnected() ? 'MongoDB' : '';
+		return 'MongoDB';
 	}
 
 	/**
 	 * Return true if currently connected to the database
 	 */
 	public function isConnected() {
-		return $this->link->connected;
+		return isset($this->link);
+	}
+
+	/**
+	 * Returns an instance on MongoDB timestamp (in msec)
+	 *
+	 * @param int|bool $date false for now
+	 * @return \MongoDB\BSON\UTCDateTime
+	 */
+	static public function getDate($date = false) {
+		return new \MongoDB\BSON\UTCDateTime( $date ?: time() * 1000 );
 	}
 }
