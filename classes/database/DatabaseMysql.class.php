@@ -228,10 +228,12 @@ class DatabaseMysql extends Database {
 
 	/**
 	 * Properly encode given string
+	 *
+	 * @param string $value
+	 * @return string
 	 */
 	public function escape($value) {
-		//return $this->link->escape_string($value);
-		return @mysql_escape_string($value);
+		return $this->link->real_escape_string($value);
 	}
 
 	/**
