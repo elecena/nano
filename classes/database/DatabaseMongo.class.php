@@ -2,8 +2,14 @@
 
 /**
  * Database access layer for MongoDB
+ *
+ * @see http://php.net/manual/en/mongodb.installation.pecl.php
+ *
+ * sudo apt-get install php-pear php5-dev pkg-config
+ * sudo pecl install mongodb
+ *
+ * @see http://php.net/manual/en/mongodb.tutorial.library.php
  */
-
 class DatabaseMongo extends Database {
 
 	private $db;
