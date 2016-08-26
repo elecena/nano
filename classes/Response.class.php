@@ -216,10 +216,12 @@ class Response {
 
 	/**
 	 * Set cache duration time
+	 *
+	 * @param int $duration
 	 */
 	public function setCacheDuration($duration) {
 		$duration = intval($duration);
-		$this->setHeader('Cache-Control', "max-age={$duration}");
+		$this->setHeader('Cache-Control', "public, max-age={$duration}");
 
 		$this->debug->log(__METHOD__ . " - {$duration} sec");
 	}

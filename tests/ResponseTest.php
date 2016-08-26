@@ -47,7 +47,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 	public function testSetCacheDuration() {
 		$this->response->setCacheDuration(7 * 86400 /* 7 days */);
 
-		$this->assertEquals('max-age=604800', $this->response->getHeader('Cache-Control'));
+		$this->assertEquals('public, max-age=604800', $this->response->getHeader('Cache-Control'));
 	}
 
 	public function testSetLastModified() {
