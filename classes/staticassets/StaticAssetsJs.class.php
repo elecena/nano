@@ -13,6 +13,8 @@ use Nano\Response;
 
 class StaticAssetsJs extends StaticAssetsProcessor {
 
+	const HTTP_TIMEOUT = 3;
+
 	/**
 	 * Process given JS files
 	 *
@@ -36,17 +38,22 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 			}
 			else {
 				$http = new HttpClient();
-				$http->setTimeout(5);
+				$http->setTimeout(static::HTTP_TIMEOUT);
 
-				$res = $http->post($closureService, [
-					'utf8' => 'on',
-					'js_code' => $content,
-				]);
+				try {
+					$res = $http->post($closureService, [
+						'utf8' => 'on',
+						'js_code' => $content,
+					]);
 
-				if ( ($res instanceof Nano\Http\Response) && ($res->getResponseCode() === Response::OK) ) {
-					$content = $res->getContent();
+					if ($res->getResponseCode() === Response::OK) {
+						$content = $res->getContent();
+					}
+					else {
+						throw new \Nano\Http\ResponseException('Response code was not HTTP 200', $res->getResponseCode());
+					}
 				}
-				else {
+				catch (\Nano\Http\ResponseException $ex) {
 					$this->app->getDebug()->log('Minifying failed!', Debug::ERROR);
 					$content = '/* JSMin fallback! */' . $this->compressWithJSMin($content);
 				}
@@ -65,7 +72,6 @@ class StaticAssetsJs extends StaticAssetsProcessor {
 	private function compressWithJSMin($content) {
 		$this->app->getDebug()->log('Using JSMin to compress JavaScript code');
 
-		ini_set('memory_limit', '256M');
 		$compressed = JSMinPlus::minify($content);
 
 		return is_string($compressed) ? $compressed : $content;
