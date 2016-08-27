@@ -136,11 +136,12 @@ class ResponseTest extends PHPUnit_Framework_TestCase {
 		// mockRequest, mockDatabase, mockDebug, ...
 		$app = $this->getMockBuilder('NanoApp')
 			->disableOriginalConstructor()
-			->setMethods(array('getRequest', 'getDebug'))
+			->setMethods(array('getRequest', 'getDebug', 'getConfig'))
 			->getMock();
 
 		$app->expects($this->any())->method('getRequest')->will($this->returnValue($request));
 		$app->expects($this->any())->method('getDebug')->will($this->returnValue($this->app->getDebug()));
+		$app->expects($this->any())->method('getConfig')->will($this->returnValue($this->app->getConfig()));
 
 		return $app;
 	}

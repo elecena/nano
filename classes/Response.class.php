@@ -39,6 +39,7 @@ class Response {
 	const COMPRESSION_LENGTH_THRESHOLD = 1024;
 
 	private $app;
+	private $config;
 	private $debug;
 	private $stats;
 
@@ -70,10 +71,17 @@ class Response {
 		$this->app = $app;
 		$this->env = $env;
 
+		$this->config = $this->app->getConfig();
 		$this->debug = $this->app->getDebug();
+		$this->stats = Stats::getCollector($app, 'response');
 
 		// don't enable output buffering when in CLI
 		if ($this->app->getRequest()->isCLI()) {
+			return;
+		}
+
+		// gzip on PHP level is disabled
+		if ($this->config->get('gzip.disabled') === true) {
 			return;
 		}
 
@@ -90,8 +98,6 @@ class Response {
 			// fix for proxies
 			$this->setHeader('Vary', 'Accept-Encoding');
 		}
-
-		$this->stats = Stats::getCollector($app, 'response');
 	}
 
 	/**
