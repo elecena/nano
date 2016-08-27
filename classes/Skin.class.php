@@ -312,6 +312,8 @@ abstract class Skin {
 			$elements[] = $node;
 		}
 
+		$this->app->getEvents()->fire('SkinBeforeJSVariables', [$this]);
+
 		// render global JS variables (wrapped in nano object)
 		if (!empty($this->jsVariables)) {
 			$elements[] = '<script>nano = ' . json_encode($this->jsVariables) . '</script>';
