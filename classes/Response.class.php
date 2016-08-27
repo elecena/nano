@@ -158,6 +158,7 @@ class Response {
 		// set some debug headers
 		$this->setHeader('X-Response-Time', $this->getResponseTime()); # [sec]
 		$this->setHeader('X-Request-Id', RequestIdProcessor::getRequestId());
+		$this->setHeader('X-Served-By', gethostname());
 
 		// don't emit, if already emitted :)
 		if (headers_sent()) {
