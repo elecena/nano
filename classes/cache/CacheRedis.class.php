@@ -30,6 +30,7 @@ class CacheRedis extends Cache {
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';
 		$port = isset($settings['port']) ? $settings['port'] : 6379;
+		$password = isset($settings['password']) ? $settings['password'] : false;
 		$timeout = isset($settings['timeout']) ? $settings['timeout'] : 5; // Predis default is 5 sec
 
 		// lazy connect
@@ -37,6 +38,7 @@ class CacheRedis extends Cache {
 			'scheme' => 'tcp',
 			'host'   => $host,
 			'port'   => $port,
+			'password' => $password,
 			'timeout'=> $timeout,
 			'persistent' => !empty($settings['persistent']),
 		]);
