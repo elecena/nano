@@ -82,8 +82,10 @@ class NanoLogger {
 	 */
 	static function pushStreamHandler($dir, $stream, $level=Logger::DEBUG) {
 		$stream = sprintf('%s/logs/%s.log', $dir, $stream);
-		$handler = new RotatingFileHandler($stream, 0 /* $maxFiles */, $level);
 
-		self::pushHandler($handler);
+		if (is_writable(dirname($stream))) {
+			$handler = new RotatingFileHandler($stream, 0 /* $maxFiles */, $level);
+			self::pushHandler($handler);
+		}
 	}
 }
