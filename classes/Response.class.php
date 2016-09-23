@@ -80,13 +80,13 @@ class Response {
 			return;
 		}
 
+		$this->debug->log(__METHOD__ . " - output buffering started");
+		if (!defined('NANO_TEST')) ob_start();
+
 		// gzip on PHP level is disabled
 		if ($this->config->get('gzip.disabled') === true) {
 			return;
 		}
-
-		$this->debug->log(__METHOD__ . " - output buffering started");
-		if (!defined('NANO_TEST')) ob_start();
 
 		// start output buffering
 		$acceptedEncoding = $this->getAcceptedEncoding();
