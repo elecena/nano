@@ -167,8 +167,8 @@ class Response {
 		$this->setHeader('X-Served-By', gethostname());
 
 		// don't emit, if already emitted :)
-		if (headers_sent()) {
-			$this->debug->log(__METHOD__ . " - headers already emitted");
+		if (headers_sent($file, $line)) {
+			$this->debug->log(__METHOD__ . " - headers already emitted at $file:$line");
 			return false;
 		}
 
