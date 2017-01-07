@@ -168,7 +168,7 @@ class StaticAssetsCss extends StaticAssetsProcessor {
 		}
 
 		// absolute URL - ignore
-		if (strpos($matches[1], 'http') === 0) {
+		if (strpos($matches[1], 'http') === 0 || strpos($matches[1], '//') === 0) {
 			return $matches[0];
 		}
 
