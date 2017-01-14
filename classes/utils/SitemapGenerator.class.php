@@ -41,7 +41,7 @@ class SitemapGenerator {
 		$this->app = NanoApp::app();
 
 		$this->debug = $this->app->getDebug();
-		$this->dir = $this->app->getDirectory();
+		$this->dir = $this->app->getDirectory() . '/public';
 		$this->router = $this->app->getRouter();
 	}
 
