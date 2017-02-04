@@ -310,7 +310,15 @@ class DatabaseMysql extends Database {
 
 		$values = implode(',', $values);
 
-		$sql = "INSERT INTO /* {$fname} */ {$table} (`{$fields}`) VALUES {$values}";
+		// parse options
+		$suffix = '';
+
+		if (!empty($options['ON DUPLICATE KEY UPDATE'])) {
+			list($column, $value) = $options['ON DUPLICATE KEY UPDATE'];
+			$suffix .= sprintf(' ON DUPLICATE KEY UPDATE %s = "%s"', $column, $this->escape($value));
+		}
+
+		$sql = "INSERT INTO /* {$fname} */ {$table} (`{$fields}`) VALUES {$values}{$suffix}";
 
 		return $this->query($sql);
 	}

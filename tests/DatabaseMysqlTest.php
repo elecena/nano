@@ -23,6 +23,9 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		return addcslashes($value, "'\"\0");
 	}
 
+	/**
+	 * @return DatabaseMysql
+	 */
 	private function getDatabaseMock() {
 
 		// set up DatabaseMysql class, so that mockup will work
@@ -183,6 +186,10 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 
 		$database->insertRows('pages', array(array('bar' => 1, 'foo' => 123), array('bar' => 2, 'foo' => 456)));
 		$this->assertQueryEquals('INSERT INTO /* Database::insertRows */ pages (`bar`,`foo`) VALUES ("1","123"),("2","456")');
+
+		// @see https://dev.mysql.com/doc/refman/5.7/en/insert-on-duplicate.html
+		$database->insert('pages', array('foo' => 'bar', 'test' => 123), ['ON DUPLICATE KEY UPDATE' => ['test', '123']]);
+		$this->assertQueryEquals('INSERT INTO /* Database::insert */ pages (`foo`,`test`) VALUES ("bar","123") ON DUPLICATE KEY UPDATE test = "123"');
 	}
 
 	// requires server running on localhost:3306
