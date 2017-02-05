@@ -35,7 +35,7 @@ class MessageQueueRedis extends MessageQueue {
 		// read settings
 		$host = isset($settings['host']) ? $settings['host'] : 'localhost';
 		$port = isset($settings['port']) ? $settings['port'] : 6379;
-		$password = isset($settings['password']) ? $settings['password'] : false;
+		$password = isset($settings['password']) ? $settings['password'] : null;
 		$timeout = isset($settings['timeout']) ? $settings['timeout'] : 5; // Predis default is 5 sec
 
 		// lazy connect
