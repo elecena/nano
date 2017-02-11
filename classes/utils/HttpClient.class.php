@@ -287,7 +287,7 @@ class HttpClient {
 		$this->reqHeaders = [];
 		$this->respHeaders = [];
 
-		$this->logger->info(__METHOD__ . ': sending a request', ['method' => 'GET', 'url' => $url]);
+		$this->logger->info(__METHOD__ . ': sending a request', ['method' => $method, 'url' => $url]);
 
 		// send request and grab response
 		ob_start();
