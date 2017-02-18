@@ -253,7 +253,7 @@ class DatabaseMongo extends Database {
 	public function distinct($table, $key, Array $query = [], $fname = 'DatabaseMongo::distinct') {
 		$this->log(__METHOD__, "/* {$fname} */ DISTINCT {$key} IN {$table} WHERE " . json_encode($query));
 
-		$res = $this->db->command(['distinct' => $table, 'key' => $key, 'query' => $query]);
+		$res = $this->db->command(['distinct' => $table, 'key' => $key, 'query' => $query])->toArray();
 
 		return !empty($res['ok']) ? $res['values'] : false;
 	}
@@ -276,7 +276,7 @@ class DatabaseMongo extends Database {
 			'reduce' => $reduceFunc,
 			'out' => ['inline' => 1],
 			'query' => $query,
-		]);
+		])->toArray();
 
 		if (!empty($res['ok'])) {
 			$this->log(__METHOD__, "took {$res['timeMillis']} ms");
