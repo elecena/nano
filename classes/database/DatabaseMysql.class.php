@@ -145,9 +145,10 @@ class DatabaseMysql extends Database {
 	 * @see http://www.php.net/manual/en/mysqli.real-query.php
 	 *
 	 * @param string $sql
+	 * @param string|bool $fname
 	 * @return DatabaseResult
 	 */
-	public function query($sql) {
+	public function query($sql, $fname = false) {
 		$this->debug->time('query');
 
 		$res = $this->link->query($sql, self::RESULT_MODE);
@@ -168,15 +169,7 @@ class DatabaseMysql extends Database {
 		// log query
 		$this->log(__METHOD__, $sql, $time);
 
-		// extract the method name
-		preg_match('#\/\*([^*]+)\*\/#', $sql, $matches);
-
-		if ($matches) {
-			$method = trim($matches[1]);
-		}
-		else {
-			$method = __METHOD__;
-		}
+		$method = $fname ?: __METHOD__;
 
 		// check for errors
 		if (empty($res)) {
@@ -209,14 +202,14 @@ class DatabaseMysql extends Database {
 	 * Start a transaction
 	 */
 	public function begin($fname = 'Database::begin') {
-		return $this->query("BEGIN /* {$fname} */");
+		return $this->query("BEGIN /* {$fname} */", $fname);
 	}
 
 	/**
 	 * Commit the current transaction
 	 */
 	public function commit($fname = 'Database::commit') {
-		return $this->query("COMMIT /* {$fname} */");
+		return $this->query("COMMIT /* {$fname} */", $fname);
 	}
 
 	/**
@@ -254,7 +247,7 @@ class DatabaseMysql extends Database {
 			$sql .= ' ' . $optionsSql;
 		}
 
-		return $this->query($sql);
+		return $this->query($sql, $fname);
 	}
 
 	/**
@@ -282,7 +275,7 @@ class DatabaseMysql extends Database {
 			$sql .= ' ' . $optionsSql;
 		}
 
-		return $this->query($sql);
+		return $this->query($sql, $fname);
 	}
 
 	/**
@@ -320,7 +313,7 @@ class DatabaseMysql extends Database {
 
 		$sql = "INSERT INTO /* {$fname} */ {$table} (`{$fields}`) VALUES {$values}{$suffix}";
 
-		return $this->query($sql);
+		return $this->query($sql, $fname);
 	}
 
 	/**

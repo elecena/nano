@@ -158,7 +158,7 @@ abstract class Database {
 	 * Send given query and return results handler
 	 * @return DatabaseResult
 	 */
-	abstract public function query($sql);
+	abstract public function query($sql, $fname = false);
 
 	/**
 	 * Start a transaction
@@ -207,7 +207,7 @@ abstract class Database {
 			$sql .= ' ' . $optionsSql;
 		}
 
-		return $this->query($sql);
+		return $this->query($sql, $fname);
 	}
 
 	/**
