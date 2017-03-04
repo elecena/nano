@@ -179,7 +179,7 @@ class SitemapGenerator {
 			return;
 		}
 
-		$fileName = sprintf('sitemap-%02d%s.xml', count($this->sitemaps) + 1, ($this->currentSitemap !== '' ? ('-' . $this->currentSitemap) : ''));
+		$fileName = sprintf('sitemap-%03d%s.xml', count($this->sitemaps) + 1, ($this->currentSitemap !== '' ? ('-' . $this->currentSitemap) : ''));
 
 		// store file
 		$this->saveSitemap($fileName, self::USE_GZIP);
