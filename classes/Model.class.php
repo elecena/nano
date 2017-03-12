@@ -1,14 +1,13 @@
 <?php
 
+use Nano\NanoObject;
+
 /**
  * Abstract class for representing nanoPortal's application model
  */
-
-use Nano\NanoObject;
-
 abstract class Model extends NanoObject {
 
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * When serializing model keep data only
@@ -33,19 +32,22 @@ abstract class Model extends NanoObject {
 	 * @return mixed models data
 	 */
 	public static function toArray(Array $models) {
-		$ret = array();
-
-		foreach($models as $model) {
-			$ret[] = $model->getData();
-		}
-
-		return $ret;
+		return array_map(
+			function(Model $model) {
+				return $model->getData();
+			},
+			$models
+		);
 	}
 
 	/**
 	 * Get given data entry
 	 *
 	 * Example: $model->getName() returns $model->data['name']
+	 *
+	 * @param string $name
+	 * @param array $parameters
+	 * @return null
 	 */
 	public function __call($name, $parameters) {
 		$res = null;
