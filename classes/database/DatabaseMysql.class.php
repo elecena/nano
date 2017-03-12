@@ -171,11 +171,14 @@ class DatabaseMysql extends Database {
 
 		$method = $fname ?: __METHOD__;
 
+		// report shorter SQL to fit syslog JSON-formatted messages length limit
+		$shortSql = strlen($sql) > 4096 ? substr($sql, 0, 4096) . ' [...]' : $sql;
+
 		// check for errors
 		if (empty($res)) {
 			$e = new \Exception($this->link->error, $this->link->errno);
 
-			$this->logger->error($sql, [
+			$this->logger->error($shortSql, [
 				'exception' => $e,
 				'method' => $method,
 				'time' => $time * 1000 // [ms]
@@ -187,7 +190,7 @@ class DatabaseMysql extends Database {
 			return false;
 		}
 		else {
-			$this->logger->info("SQL {$sql}", [
+			$this->logger->info("SQL {$shortSql}", [
 				'method' => $method,
 				'rows' => $res instanceof mysqli_result ? $res->num_rows : ( $this->link->affected_rows ?: 0 ),
 				'time' => $time * 1000 // [ms]
