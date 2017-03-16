@@ -47,6 +47,8 @@ class MessageQueueRedis extends MessageQueue {
 			'timeout'=> $timeout,
 			'persistent' => !empty($settings['persistent']),
 		]);
+
+		$this->debug->log(sprintf('%s: using Redis %s:%d', __CLASS__, $host, $port));
 	}
 
 	/**

@@ -46,8 +46,12 @@ abstract class MessageQueue {
 
 	/**
 	 * Use given queue
+	 *
+	 * @param string $queueName
 	 */
 	public function useQueue($queueName) {
+		$this->debug->log(sprintf('%s: using queue "%s"', __CLASS__, $queueName));
+
 		$this->queueName = $queueName;
 	}
 
