@@ -46,6 +46,10 @@ class CacheRedis extends Cache {
 
 	/**
 	 * Gets key value
+	 *
+	 * @param string|array $key
+	 * @param null $default
+	 * @return mixed
 	 */
 	public function get($key, $default = null) {
 		$key = $this->getStorageKey($key);
@@ -68,12 +72,23 @@ class CacheRedis extends Cache {
 
 	/**
 	 * Sets key value
+	 *
+	 * @param string|array $key
+	 * @param mixed $value
+	 * @param int $ttl
+	 * @return bool
 	 */
 	public function set($key, $value, $ttl = null) {
 		$key = $this->getStorageKey($key);
 
-		# @see http://redis.io/commands/set (EX's ttl supported since v2.6.12)
-		$this->redis->set($key, $this->serialize($value), 'EX', $ttl);
+		if (is_int($ttl)) {
+			# @see http://redis.io/commands/set (EX's ttl supported since v2.6.12)
+			$this->redis->set($key, $this->serialize($value), 'EX', $ttl);
+		}
+		else {
+			# cache infinitly
+			$this->redis->set($key, $this->serialize($value));
+		}
 
 		#$this->debug->log(__METHOD__ . ": {$key}");
 
