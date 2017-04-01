@@ -10,7 +10,7 @@ use Nano\Logger\NanoLogger;
 /**
  * Generic exception
  */
-abstract class DatabaseException extends Exception {}
+class DatabaseException extends Exception {}
 class DatabaseConnectionException extends DatabaseException {}
 
 /**

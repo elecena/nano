@@ -176,7 +176,7 @@ class DatabaseMysql extends Database {
 
 		// check for errors
 		if (empty($res)) {
-			$e = new \Exception($this->link->error, $this->link->errno);
+			$e = new DatabaseException($this->link->error, $this->link->errno);
 
 			$this->logger->error($shortSql, [
 				'exception' => $e,
