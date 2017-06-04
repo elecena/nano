@@ -61,15 +61,20 @@ class MessageQueueRedis extends MessageQueue {
 		// prepare message to be added to the queue
 		$id = intval($this->redis->incr($this->getLastIdKey()));
 
-		$msg = array(
+		$msg = [
 			'id' => $id,
 			'data' => $message,
-		);
+		];
 
 		// encode message
 		$rawMsg = json_encode($msg);
 
 		$this->redis->rpush($this->getQueueKey(), $rawMsg); // RPUSH
+
+		// log the push()
+		$this->logger->info(__METHOD__, [
+			'queue' => $this->queueName
+		]);
 
 		// return wrapped message
 		return new ResultsWrapper($msg);
@@ -84,6 +89,11 @@ class MessageQueueRedis extends MessageQueue {
 		if (!is_null($rawMsg)) {
 			// decode the message
 			$msg = json_decode($rawMsg, true /* as array */);
+
+			// log the pop()
+			$this->logger->info(__METHOD__, [
+				'queue' => $this->queueName
+			]);
 
 			// return wrapped message
 			return new ResultsWrapper($msg);
@@ -106,10 +116,10 @@ class MessageQueueRedis extends MessageQueue {
 	 * Cleans current queue (i.e. remove all messages)
 	 */
 	public function clean() {
-		$this->redis->del(array(
+		$this->redis->del([
 			$this->getQueueKey(),
 			$this->getLastIdKey()
-		));
+		]);
 	}
 
 	/**

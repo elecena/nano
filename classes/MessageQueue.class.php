@@ -2,6 +2,7 @@
 
 namespace Nano;
 
+use Nano\Logger\NanoLogger;
 use NanoApp;
 
 /**
@@ -12,8 +13,11 @@ abstract class MessageQueue {
 	// key parts separator
 	const SEPARATOR = '::';
 
-	// debug
+	/* @var $debug \Nano\Debug */
 	protected $debug;
+
+	/* @var $debug \Monolog\Logger */
+	protected $logger;
 
 	// queue name
 	protected $queueName;
@@ -23,10 +27,14 @@ abstract class MessageQueue {
 
 	/**
 	 * Force constructors to be protected - use MessageQueue::connect
+	 *
+	 * @param NanoApp $app
+	 * @param array $settings
 	 */
 	protected function __construct(NanoApp $app, Array $settings) {
 		// use debugger from the application
 		$this->debug = $app->getDebug();
+		$this->logger = NanoLogger::getLogger(__CLASS__);
 
 		// set prefix
 		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
