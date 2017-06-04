@@ -65,13 +65,18 @@ abstract class MessageQueue {
 
 	/**
 	 * Add (right push) given message to the end of current queue and return added message
+	 *
+	 * @param $message
+	 * @param string $fname
 	 */
-	abstract public function push($message);
+	abstract public function push($message, $fname = __METHOD__);
 
 	/**
 	 * Get and remove (left pop) message from the beginning of current queue
+	 *
+	 * @param string $fname
 	 */
-	abstract public function pop();
+	abstract public function pop($fname = __METHOD__);
 
 	/**
 	 * Get number of items stored in current queue

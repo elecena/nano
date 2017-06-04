@@ -55,9 +55,10 @@ class MessageQueueRedis extends MessageQueue {
 	 * Add (right push) given message to the end of current queue and return added message
 	 *
 	 * @param $message array
+	 * @param $fname string
 	 * @return ResultsWrapper
 	 */
-	public function push($message) {
+	public function push($message, $fname = __METHOD__) {
 		// prepare message to be added to the queue
 		$id = intval($this->redis->incr($this->getLastIdKey()));
 
@@ -72,7 +73,7 @@ class MessageQueueRedis extends MessageQueue {
 		$this->redis->rpush($this->getQueueKey(), $rawMsg); // RPUSH
 
 		// log the push()
-		$this->logger->info(__METHOD__, [
+		$this->logger->info($fname, [
 			'queue' => $this->queueName
 		]);
 
@@ -82,8 +83,11 @@ class MessageQueueRedis extends MessageQueue {
 
 	/**
 	 * Get and remove (left pop) message from the beginning of current queue
+	 *
+	 * @param string $fname
+	 * @return bool|ResultsWrapper
 	 */
-	public function pop() {
+	public function pop($fname = __METHOD__) {
 		$rawMsg = $this->redis->lpop($this->getQueueKey()); // LPOP
 
 		if (!is_null($rawMsg)) {
@@ -91,7 +95,7 @@ class MessageQueueRedis extends MessageQueue {
 			$msg = json_decode($rawMsg, true /* as array */);
 
 			// log the pop()
-			$this->logger->info(__METHOD__, [
+			$this->logger->info($fname, [
 				'queue' => $this->queueName
 			]);
 
