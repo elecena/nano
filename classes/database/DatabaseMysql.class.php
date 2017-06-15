@@ -320,6 +320,33 @@ class DatabaseMysql extends Database {
 	}
 
 	/**
+	 * REPLACE works exactly like INSERT, except that if an old row in the table has the same value as a new row
+	 * for a PRIMARY KEY or a UNIQUE index, the old row is deleted before the new row is inserted.
+	 *
+	 * REPLACE is a MySQL extension to the SQL standard.
+	 *
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/replace.html
+	 *
+	 * @param $table
+	 * @param $row
+	 * @param array $options
+	 * @param string $fname
+	 * @return DatabaseResult
+	 */
+	public function replace($table, array $row, array $options = [], $fname = 'Database::replace') {
+		$fields = '`'. implode('`,`', array_keys($row)) . '`';
+
+		$data = array_values($row);
+		$data = array_map([$this, 'escape'], $data);
+		$values = '("' . implode('","', $data) . '")';
+
+		// REPLACE INTO test (id, value, timestamp) VALUES (1, 'Old', '2014-08-20 18:47:00');
+		$sql = "REPLACE INTO /* {$fname} */ {$table} ({$fields}) VALUES {$values}";
+
+		return $this->query($sql, $fname);
+	}
+
+	/**
 	 * Get primary key value for recently inserted row
 	 */
 	public function getInsertId() {

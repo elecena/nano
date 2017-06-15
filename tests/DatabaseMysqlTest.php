@@ -192,6 +192,16 @@ class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
 		$this->assertQueryEquals('INSERT INTO /* Database::insert */ pages (`foo`,`test`) VALUES ("bar","123") ON DUPLICATE KEY UPDATE test = "123"');
 	}
 
+	public function testReplace() {
+		$database = $this->getDatabaseMock();
+
+		$database->replace('pages', ['foo' => 'bar']);
+		$this->assertQueryEquals('REPLACE INTO /* Database::replace */ pages (`foo`) VALUES ("bar")');
+
+		$database->replace('pages',['bar' => 1, 'foo' => 123]);
+		$this->assertQueryEquals('REPLACE INTO /* Database::replace */ pages (`bar`,`foo`) VALUES ("1","123")');
+	}
+
 	// requires server running on localhost:3306
 	public function testMySqlDatabase() {
 		return;
