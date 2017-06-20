@@ -3,8 +3,9 @@
 namespace Domnikl\Test\Statsd;
 
 use Domnikl\Statsd\Client as Client;
+use PHPUnit\Framework\TestCase;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     /**
      * @var Client
@@ -135,7 +136,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->endTiming($key);
 
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.bar:1[0-9]\|ms$/', $this->connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.bar:1[0-9](.[0-9]+)?\|ms$/', $this->connection->getLastMessage());
     }
 
     public function testEndTimingReturnsTiming()
@@ -161,7 +162,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client->endTiming('foo.baz');
 
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.baz:1[0-9]\|ms\|@0.3$/', $this->connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.baz:1[0-9](.[0-9]+)?\|ms\|@0.3$/', $this->connection->getLastMessage());
     }
 
     public function testTimeClosure()

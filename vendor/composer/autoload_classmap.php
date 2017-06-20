@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ConfigurationGenerator' => $vendorDir . '/phpunit/phpunit/src/Util/ConfigurationGenerator.php',
     'ExampleClass' => $vendorDir . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/class.php',
     'ExampleTrait' => $vendorDir . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/trait.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
@@ -186,6 +185,7 @@ return array(
     'PHPUnit_TextUI_TestRunner' => $vendorDir . '/phpunit/phpunit/src/TextUI/TestRunner.php',
     'PHPUnit_Util_Blacklist' => $vendorDir . '/phpunit/phpunit/src/Util/Blacklist.php',
     'PHPUnit_Util_Configuration' => $vendorDir . '/phpunit/phpunit/src/Util/Configuration.php',
+    'PHPUnit_Util_ConfigurationGenerator' => $vendorDir . '/phpunit/phpunit/src/Util/ConfigurationGenerator.php',
     'PHPUnit_Util_ErrorHandler' => $vendorDir . '/phpunit/phpunit/src/Util/ErrorHandler.php',
     'PHPUnit_Util_Fileloader' => $vendorDir . '/phpunit/phpunit/src/Util/Fileloader.php',
     'PHPUnit_Util_Filesystem' => $vendorDir . '/phpunit/phpunit/src/Util/Filesystem.php',
@@ -378,6 +378,7 @@ return array(
     'PHP_Token_NEW' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_NS_C' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_NS_SEPARATOR' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
+    'PHP_Token_NULLSAFE_OBJECT_OPERATOR' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_NUM_STRING' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_OBJECT_CAST' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_OBJECT_OPERATOR' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
@@ -415,6 +416,7 @@ return array(
     'PHP_Token_STRING' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_STRING_CAST' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_STRING_VARNAME' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
+    'PHP_Token_SUPER' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_SWITCH' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_Stream' => $vendorDir . '/phpunit/php-token-stream/src/Token/Stream.php',
     'PHP_Token_Stream_CachingFactory' => $vendorDir . '/phpunit/php-token-stream/src/Token/Stream/CachingFactory.php',
@@ -429,6 +431,7 @@ return array(
     'PHP_Token_UNSET' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_UNSET_CAST' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_USE' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
+    'PHP_Token_USE_FUNCTION' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_VAR' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_VARIABLE' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_WHERE' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
@@ -488,10 +491,4 @@ return array(
     'SebastianBergmann\\ResourceOperations\\ResourceOperations' => $vendorDir . '/sebastian/resource-operations/src/ResourceOperations.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
-    'crodas\\InfluxPHP\\BaseHTTP' => $vendorDir . '/crodas/influx-php/lib/InfluxPHP/BaseHTTP.php',
-    'crodas\\InfluxPHP\\Client' => $vendorDir . '/crodas/influx-php/lib/InfluxPHP/Client.php',
-    'crodas\\InfluxPHP\\DB' => $vendorDir . '/crodas/influx-php/lib/InfluxPHP/DB.php',
-    'crodas\\InfluxPHP\\MultipleResultSeriesObject' => $vendorDir . '/crodas/influx-php/lib/InfluxPHP/MultipleResultSeriesObject.php',
-    'crodas\\InfluxPHP\\ResultSeriesObject' => $vendorDir . '/crodas/influx-php/lib/InfluxPHP/ResultSeriesObject.php',
-    'crodas\\InfluxPHP\\ResultsetBuilder' => $vendorDir . '/crodas/influx-php/lib/InfluxPHP/ResultsetBuilder.php',
 );
