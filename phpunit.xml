@@ -8,6 +8,12 @@
         </testsuite>
     </testsuites>
 
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">classes/</directory>
+        </whitelist>
+    </filter>
+
     <php>
         <const name="NANO_TEST" value="bar"/>
         <ini name="date.timezone" value="UTC"/>

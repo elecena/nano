@@ -24,6 +24,9 @@
     "test": [
       "parallel-lint . --exclude vendor",
       "phpunit"
+    ],
+    "coverage": [
+      "phpunit --coverage-html=.coverage"
     ]
   }
 }
