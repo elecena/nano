@@ -19,14 +19,14 @@ class Client
      *
      * @var array
      */
-    private $timings = array();
+    private $timings = [];
 
     /**
      * holds all memory profiles like timings
      *
      * @var array
      */
-    private $memoryProfiles = array();
+    private $memoryProfiles = [];
 
     /**
      * global key namespace
@@ -40,7 +40,7 @@ class Client
      *
      * @var array
      */
-    private $batch = array();
+    private $batch = [];
 
     /**
      * batch mode?
@@ -59,9 +59,9 @@ class Client
      *
      * @param Connection $connection
      * @param string $namespace global key namespace
-     * @param bool $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
+     * @param float $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
      */
-    public function __construct(Connection $connection, $namespace = '', $sampleRateAllMetrics = 1)
+    public function __construct(Connection $connection, $namespace = '', $sampleRateAllMetrics = 1.0)
     {
         $this->connection = $connection;
         $this->namespace = (string) $namespace;
@@ -110,7 +110,7 @@ class Client
      */
     public function timing($key, $value, $sampleRate = 1)
     {
-        $this->send($key, (int) $value, 'ms', $sampleRate);
+        $this->send($key, $value, 'ms', $sampleRate);
     }
 
     /**
@@ -183,11 +183,11 @@ class Client
      */
     public function memory($key, $memory = null, $sampleRate = 1)
     {
-        if (null === $memory) {
+        if ($memory === null) {
             $memory = memory_get_peak_usage();
         }
 
-        $this->count($key, (int) $memory, $sampleRate);
+        $this->count($key, $memory, $sampleRate);
     }
 
     /**
@@ -203,10 +203,11 @@ class Client
     public function time($key, \Closure $_block, $sampleRate = 1)
     {
         $this->startTiming($key);
-        $return = $_block();
-        $this->endTiming($key, $sampleRate);
-
-        return $return;
+        try {
+            return $_block();
+        } finally {
+            $this->endTiming($key, $sampleRate);
+        }
     }
 
     /**
@@ -241,16 +242,15 @@ class Client
      */
     private function send($key, $value, $type, $sampleRate)
     {
-        if (strlen($this->namespace) != 0) {
-            $key = sprintf('%s.%s', $this->namespace, $key);
-        }
-
-        $message = sprintf("%s:%s|%s", $key, $value, $type);
-        $sample = mt_rand() / mt_getrandmax();
-
-        if ($sample > $sampleRate) {
+        if (mt_rand() / mt_getrandmax() > $sampleRate) {
             return;
         }
+
+        if (strlen($this->namespace) !== 0) {
+            $key = $this->namespace . '.' . $key;
+        }
+
+        $message = $key . ':' . $value . '|' . $type;
 
         // overwrite sampleRate if all metrics should be sampled
         if ($this->sampleRateAllMetrics < 1) {
@@ -258,7 +258,7 @@ class Client
         }
 
         if ($sampleRate < 1) {
-            $sampledData = sprintf('%s|@%s', $message, $sampleRate);
+            $sampledData = $message . '|@' . $sampleRate;
         } else {
             $sampledData = $message;
         }
@@ -324,6 +324,6 @@ class Client
     public function cancelBatch()
     {
         $this->isBatch = false;
-        $this->batch = array();
+        $this->batch = [];
     }
 }
