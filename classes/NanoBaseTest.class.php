@@ -7,7 +7,7 @@ namespace Nano;
  */
 class NanoBaseTest extends \PHPUnit_Framework_TestCase {
 
-	/* @var $app /NanoApp */
+	/* @var $app \NanoApp */
 	protected $app;
 
 	public function setUp() {
