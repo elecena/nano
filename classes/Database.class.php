@@ -485,6 +485,50 @@ abstract class Database {
 	}
 
 	/**
+	 * Returns iterator with all values from a given table that match $where condition.
+	 *
+	 * This saves the memory by only keeping a small ammount of DB data in RAM.
+	 *
+	 * @param string $table
+	 * @param string $column
+	 * @param array $where
+	 * @param string $fname
+	 * @param int $batch
+	 * @return int[]
+	 */
+	public function iterateTable($table, $column, array $where = [], $fname = __METHOD__, $batch = 500) {
+		$start = 0;
+
+		while(true) {
+			$column_where = [
+				sprintf('%s > "%s"', $column, $this->escape($start))
+			];
+
+			$ids = $this->selectFields(
+				$table,
+				$column,
+				array_merge($column_where, $where),
+				[
+					'order' => $column,
+					'limit' => intval($batch)
+				],
+				$fname
+			);
+
+			if (is_array($ids)) {
+				// update for the next batch
+				$start = end($ids);
+
+				yield $ids;
+			}
+			else {
+				// no more results
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Return performance data
 	 */
 	public function getPerformanceData() {
