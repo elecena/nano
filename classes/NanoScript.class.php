@@ -10,11 +10,16 @@ abstract class NanoScript extends NanoObject {
 	const LOGFILE = 'debug';
 
 	private $isDebug = false;
+	private $arguments = [];
 
 	/**
 	 * @param NanoApp $app
 	 */
 	function __construct(NanoApp $app) {
+		// pass command line arguments
+		global $argv;
+		$this->arguments = $argv;
+
 		$this->isDebug = (bool) getenv('DEBUG');
 
 		parent::__construct($app);
@@ -71,5 +76,16 @@ abstract class NanoScript extends NanoObject {
 	 */
 	protected function isInDebugMode() {
 		return $this->isDebug;
+	}
+
+	/**
+	 * Was given option passed in command line as "--option"?
+	 *
+	 * @param string $opt
+	 * @return bool
+	 */
+	protected function hasOption($opt) {
+		$opt = sprintf('--%s', $opt);
+		return in_array($opt, $this->arguments);
 	}
 }
