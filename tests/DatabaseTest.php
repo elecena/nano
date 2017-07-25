@@ -23,7 +23,7 @@ class DatabaseTest extends \Nano\NanoBaseTest {
 	 */
 	private function getDatabaseMySql() {
 		// mock escape() method as it requires active mysqli connection (that we do not want in unit tests)
-		$mock = $this->getMock(DatabaseMysql::class, ['escape'], [], '', false /* $callOriginalConstructor */);
+		$mock = $this->createPartialMock(DatabaseMysql::class, ['escape']);
 		$mock->method('escape')->willReturnCallback(function($arg) {
 			return strtr($arg, [
 				"'" => "\\'",
