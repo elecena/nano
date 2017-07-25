@@ -98,6 +98,13 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
             ),
         ),
+        'J' => 
+        array (
+            'JShrink' => 
+            array (
+                0 => __DIR__ . '/..' . '/tedivm/jshrink/src',
+            ),
+        ),
     );
 
     public static $classMap = array (
