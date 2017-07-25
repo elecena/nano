@@ -561,6 +561,7 @@ return array(
     'StaticAssetsCss' => $baseDir . '/classes/staticassets/StaticAssetsCss.class.php',
     'StaticAssetsJs' => $baseDir . '/classes/staticassets/StaticAssetsJs.class.php',
     'StaticAssetsProcessor' => $baseDir . '/classes/StaticAssetsProcessor.class.php',
+    'TestModel' => $baseDir . '/tests/app/classes/TestModel.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'Utils' => $baseDir . '/classes/utils/Utils.class.php',
 );

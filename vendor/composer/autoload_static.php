@@ -656,6 +656,7 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
         'StaticAssetsCss' => __DIR__ . '/../..' . '/classes/staticassets/StaticAssetsCss.class.php',
         'StaticAssetsJs' => __DIR__ . '/../..' . '/classes/staticassets/StaticAssetsJs.class.php',
         'StaticAssetsProcessor' => __DIR__ . '/../..' . '/classes/StaticAssetsProcessor.class.php',
+        'TestModel' => __DIR__ . '/../..' . '/tests/app/classes/TestModel.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'Utils' => __DIR__ . '/../..' . '/classes/utils/Utils.class.php',
     );

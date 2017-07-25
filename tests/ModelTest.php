@@ -3,18 +3,6 @@
 /**
  * Set of unit tests for Model class
  */
-
-class TestModel extends Model {
-
-	public function __construct(NanoApp $app) {
-		parent::__construct($app);
-
-		$this->data = array(
-			'foo' => 'bar',
-		);
-	}
-}
-
 class ModelTest extends \Nano\NanoBaseTest {
 
 	public function setUp() {
