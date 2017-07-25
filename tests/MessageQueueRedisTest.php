@@ -16,7 +16,7 @@ class MessageQueueRedisTest extends \Nano\NanoBaseTest {
 			'driver' => 'redis',
 			'host' => '127.0.0.1',
 			'port' => 6379,
-			//'pass' => 'foobared',
+			'password' => getenv('REDIS_PASSWORD'),
 			'prefix' => 'test',
 			'queue' => 'foo',
 		];

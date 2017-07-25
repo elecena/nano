@@ -16,6 +16,7 @@
 
     <php>
         <const name="NANO_TEST" value="bar"/>
+        <env name="REDIS_PASSWORD" value="qwerty" />
         <ini name="date.timezone" value="UTC"/>
         <ini name="memory_limit" value="350M" />
     </php>

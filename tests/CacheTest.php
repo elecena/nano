@@ -14,6 +14,7 @@ abstract class CacheTest extends \Nano\NanoBaseTest {
 
 		$settings = array_merge(array(
 			'driver' => $driver,
+			'password' => getenv('REDIS_PASSWORD')
 		), $settings);
 
 		return Cache::factory($settings);
