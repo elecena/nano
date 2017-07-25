@@ -17,5 +17,4 @@ if (!array_key_exists('REQUEST_TIME_FLOAT', $_SERVER)) {
 	$_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
-// load autoloader class
-require_once dirname(__FILE__) . '/classes/Nano.class.php';
+require_once __DIR__ . '/vendor/autoload.php';

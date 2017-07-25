@@ -85,9 +85,6 @@ class NanoApp {
 		$this->dir = realpath($dir);
 		$this->libraryDir = $this->dir . '/lib';
 
-		// register classes from /classes directory
-		Autoloader::scanDirectory($this->dir. '/classes');
-
 		// events handler
 		$this->events = new Events($this);
 
