@@ -4,7 +4,7 @@
  * Set of unit tests for Utils class
  */
 
-class UtilsTest extends PHPUnit_Framework_TestCase {
+class UtilsTest extends \Nano\NanoBaseTest {
 
 	public function testGetTempFile() {
 		$content = 'foobar';

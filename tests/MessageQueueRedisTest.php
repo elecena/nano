@@ -7,7 +7,7 @@ use Nano\MessageQueue;
  *
  * A locally running redis server is required
  */
-class MessageQueueRedisTest extends PHPUnit_Framework_TestCase {
+class MessageQueueRedisTest extends \Nano\NanoBaseTest {
 
 	private $settings;
 

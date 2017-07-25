@@ -4,7 +4,7 @@
  * Set of unit tests for Database class
  */
 
-class DatabaseTest extends PHPUnit_Framework_TestCase {
+class DatabaseTest extends \Nano\NanoBaseTest {
 
 	/**
 	 * @return NanoApp

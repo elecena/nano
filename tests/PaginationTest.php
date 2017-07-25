@@ -4,9 +4,7 @@
  * Set of unit tests for Pagination class
  */
 
-class PaginationTest extends PHPUnit_Framework_TestCase {
-
-	private $app;
+class PaginationTest extends \Nano\NanoBaseTest {
 
 	public function setUp() {
 		// use test application's directory

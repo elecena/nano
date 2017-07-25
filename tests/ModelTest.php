@@ -15,9 +15,7 @@ class TestModel extends Model {
 	}
 }
 
-class ModelTest extends PHPUnit_Framework_TestCase {
-
-	private $app;
+class ModelTest extends \Nano\NanoBaseTest {
 
 	public function setUp() {
 		$dir = realpath(dirname(__FILE__) . '/app');

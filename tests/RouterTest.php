@@ -6,9 +6,7 @@
 
 use Nano\Router;
 
-class RouterTest extends PHPUnit_Framework_TestCase {
-
-	private $app;
+class RouterTest extends \Nano\NanoBaseTest {
 
 	private function getRouter() {
 		// use test application's directory

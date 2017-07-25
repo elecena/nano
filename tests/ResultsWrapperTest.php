@@ -5,7 +5,7 @@ use Nano\ResultsWrapper;
 /**
  * Set of unit tests for ResultsWrapper class
  */
-class ResultsWrapperTest extends PHPUnit_Framework_TestCase {
+class ResultsWrapperTest extends \Nano\NanoBaseTest {
 
 	public function testSetGet() {
 		$data = array(

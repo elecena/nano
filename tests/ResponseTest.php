@@ -8,10 +8,8 @@ use Nano\Output;
 use Nano\Response;
 use Nano\Request;
 
-class ResponseTest extends PHPUnit_Framework_TestCase {
+class ResponseTest extends \Nano\NanoBaseTest {
 
-	/* @var NanoApp $response */
-	private $app;
 	/* @var Response $response */
 	private $response;
 

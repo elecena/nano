@@ -6,7 +6,7 @@
 
 use Nano\Template;
 
-class TemplateTest extends PHPUnit_Framework_TestCase {
+class TemplateTest extends \Nano\NanoBaseTest {
 
 	private $dir;
 

@@ -6,7 +6,7 @@
 
 use Nano\Config;
 
-class ConfigTest extends PHPUnit_Framework_TestCase {
+class ConfigTest extends \Nano\NanoBaseTest {
 
 	public function testGetDirectory() {
 		$dir = dirname(__FILE__);

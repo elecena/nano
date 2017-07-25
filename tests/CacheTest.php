@@ -5,7 +5,7 @@ use Nano\Cache;
 /**
  * Generic class for unit tests for Cache drivers
  */
-abstract class CacheTest extends PHPUnit_Framework_TestCase {
+abstract class CacheTest extends \Nano\NanoBaseTest {
 
 	protected function getCache($driver, Array $settings = array()) {
 		// use test application's directory

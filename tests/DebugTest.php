@@ -5,7 +5,7 @@ use Nano\Debug;
 /**
  * Set of unit tests for Debug class
  */
-class DebugTest extends PHPUnit_Framework_TestCase {
+class DebugTest extends \Nano\NanoBaseTest {
 
 	private $logDir;
 

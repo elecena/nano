@@ -4,7 +4,7 @@
  * Set of unit tests for Image class
  */
 
-class ImageTest extends PHPUnit_Framework_TestCase {
+class ImageTest extends \Nano\NanoBaseTest {
 
 	/* @var string $file */
 	private $file;

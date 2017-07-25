@@ -6,7 +6,7 @@
 
 use Nano\Request;
 
-class RequestTest extends PHPUnit_Framework_TestCase {
+class RequestTest extends \Nano\NanoBaseTest {
 
 	public function testGETParams() {
 		// emulate GET request

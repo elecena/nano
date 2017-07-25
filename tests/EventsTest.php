@@ -6,9 +6,7 @@ use Nano\Events;
  * Set of unit tests for Events class
  */
 
-class EventsTest extends PHPUnit_Framework_TestCase {
-
-	private $app;
+class EventsTest extends \Nano\NanoBaseTest {
 
 	public function setUp() {
 		// use test application's directory

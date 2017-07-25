@@ -4,7 +4,7 @@
  * Set of unit tests for DatabaseMysql class
  */
 
-class DatabaseMysqlTest extends PHPUnit_Framework_TestCase {
+class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 
 	private $lastQuery;
 

@@ -4,7 +4,7 @@
  * Set of unit tests for DOM class
  */
 
-class DOMTest extends PHPUnit_Framework_TestCase {
+class DOMTest extends \Nano\NanoBaseTest {
 
 	private $html;
 	private $xml;

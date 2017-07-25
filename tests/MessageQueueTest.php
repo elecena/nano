@@ -6,7 +6,7 @@ use Nano\MessageQueue;
  * Set of unit tests for MessageQueue class
  */
 
-class MessageQueueTest extends PHPUnit_Framework_TestCase {
+class MessageQueueTest extends \Nano\NanoBaseTest {
 
 	private function getMessageQueue($driver, $settings = array()) {
 		// use test application's directory

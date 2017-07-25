@@ -4,7 +4,7 @@
  * Set of unit tests for HttpClient class
  */
 
-class HttpClientTest extends PHPUnit_Framework_TestCase {
+class HttpClientTest extends \Nano\NanoBaseTest {
 
 	public function testUserAgent() {
 		$client = new HttpClient();

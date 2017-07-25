@@ -4,7 +4,7 @@
  * Set of unit tests for Http class
  */
 
-class HttpTest extends PHPUnit_Framework_TestCase {
+class HttpTest extends \Nano\NanoBaseTest {
 
 	public function testGet() { return;
 		// make request to example.org (redirects to http://www.iana.org/domains/example/)

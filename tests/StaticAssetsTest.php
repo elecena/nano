@@ -6,10 +6,7 @@ use Nano\Request;
 /**
  * Set of unit tests for StaticAssets class
  */
-class StaticAssetsTest extends PHPUnit_Framework_TestCase {
-
-	/* @var NanoApp $app */
-	private $app;
+class StaticAssetsTest extends \Nano\NanoBaseTest {
 
 	public function setUp() {
 		// use test application's directory

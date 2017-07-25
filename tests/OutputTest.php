@@ -7,7 +7,7 @@
 use Nano\Output;
 use Nano\Template;
 
-class OutputTest extends PHPUnit_Framework_TestCase {
+class OutputTest extends \Nano\NanoBaseTest {
 
 	private $data = array(
 		'foo' => 'bar',

@@ -4,7 +4,7 @@
  * Set of unit tests for Nano class
  */
 
-class NanoTest extends PHPUnit_Framework_TestCase {
+class NanoTest extends \Nano\NanoBaseTest {
 
 	public function testDirectories() {
 		$dir = realpath(dirname(__FILE__) . '/..');
