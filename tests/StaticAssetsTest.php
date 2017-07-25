@@ -8,10 +8,16 @@ use Nano\Request;
  */
 class StaticAssetsTest extends \Nano\NanoBaseTest {
 
+	private $cb = 0;
+
 	public function setUp() {
 		// use test application's directory
 		$dir = realpath(dirname(__FILE__) . '/app');
 		$this->app = Nano::app($dir);
+
+		// set a randnm cb value
+		$this->cb = rand();
+		$this->app->getConfig()->set('assets.cb', $this->cb);
 
 		// register a package
 		$this->app->getConfig()->set('assets.packages', array(
@@ -38,8 +44,12 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 	 * @return StaticAssets
 	 */
 	private function getStaticAssets() {
-		// initialize static assets handler
-		return $this->app->factory('StaticAssets');
+		return new StaticAssets($this->app);
+	}
+
+	public function testGetCacheBuster() {
+		$static = $this->getStaticAssets();
+		$this->assertEquals($this->cb, $static->getCacheBuster());
 	}
 
 	public function testGetProcessor() {
@@ -183,13 +193,6 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 			$this->assertEquals($expected, $static->serve($request));
 			$this->assertEquals($expected ? Response::OK : Response::NOT_FOUND, $response->getResponseCode());
 		}
-	}
-
-	public function testGetCacheBuster() {
-		$static = $this->getStaticAssets();
-		$cb = $this->app->getConfig()->get('assets.cb');
-
-		$this->assertEquals($cb, $static->getCacheBuster());
 	}
 
 	public function testGetLocalPath() {
@@ -354,10 +357,17 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 		$processor = $static->getProcessor('js');
 
 		// min.js file should not be touched
-		#$this->assertContains(file_get_contents($dir . '/head.load.min.js'), $processor->processFiles(array($dir . '/head.load.min.js')));
+		$this->assertContains(file_get_contents($dir . '/head.load.min.js'), $processor->processFiles(array($dir . '/head.load.min.js')));
 
 		// minify simple script
 		$this->assertContains('jQuery.fn.foo=function(', $processor->processFiles(array($dir . '/jquery.foo.js')));
+
+		// do not modify in debug mode
+		$static = $this->getStaticAssets();
+		$static->setDebugMode(true);
+		$processor = $static->getProcessor('js');
+
+		$this->assertContains('jQuery.fn.foo = function(bar) {', $processor->processFiles(array($dir . '/jquery.foo.js')));
 	}
 
 	public function testGetPackageName() {

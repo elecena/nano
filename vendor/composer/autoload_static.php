@@ -98,6 +98,13 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
             ),
         ),
+        'J' => 
+        array (
+            'JShrink' => 
+            array (
+                0 => __DIR__ . '/..' . '/tedivm/jshrink/src',
+            ),
+        ),
     );
 
     public static $classMap = array (
@@ -121,12 +128,6 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
         'Image' => __DIR__ . '/../..' . '/classes/utils/Image.class.php',
         'ImageGD' => __DIR__ . '/../..' . '/classes/utils/ImageGD.class.php',
         'ImageImagick' => __DIR__ . '/../..' . '/classes/utils/ImageImagick.class.php',
-        'JSCompilerContext' => __DIR__ . '/../..' . '/classes/utils/JSMinPlus.class.php',
-        'JSMinPlus' => __DIR__ . '/../..' . '/classes/utils/JSMinPlus.class.php',
-        'JSNode' => __DIR__ . '/../..' . '/classes/utils/JSMinPlus.class.php',
-        'JSParser' => __DIR__ . '/../..' . '/classes/utils/JSMinPlus.class.php',
-        'JSToken' => __DIR__ . '/../..' . '/classes/utils/JSMinPlus.class.php',
-        'JSTokenizer' => __DIR__ . '/../..' . '/classes/utils/JSMinPlus.class.php',
         'JakubOnderka\\PhpParallelLint\\ArrayIterator' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Settings.php',
         'JakubOnderka\\PhpParallelLint\\Blame' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Error.php',
         'JakubOnderka\\PhpParallelLint\\ConsoleWriter' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/src/Output.php',
