@@ -14,6 +14,7 @@ return array(
     'DatabaseMysql' => $baseDir . '/classes/database/DatabaseMysql.class.php',
     'DatabaseResult' => $baseDir . '/classes/DatabaseResult.class.php',
     'ExampleClass' => $vendorDir . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/class.php',
+    'ExampleModel' => $baseDir . '/tests/app/classes/ExampleModel.class.php',
     'ExampleTrait' => $vendorDir . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/trait.php',
     'FeedGenerator' => $baseDir . '/classes/utils/FeedGenerator.class.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',

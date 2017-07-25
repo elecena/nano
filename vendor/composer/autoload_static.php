@@ -101,6 +101,7 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
         'DatabaseMysql' => __DIR__ . '/../..' . '/classes/database/DatabaseMysql.class.php',
         'DatabaseResult' => __DIR__ . '/../..' . '/classes/DatabaseResult.class.php',
         'ExampleClass' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/class.php',
+        'ExampleModel' => __DIR__ . '/../..' . '/tests/app/classes/ExampleModel.class.php',
         'ExampleTrait' => __DIR__ . '/..' . '/jakub-onderka/php-parallel-lint/tests/skip-on-5.3/trait.php',
         'FeedGenerator' => __DIR__ . '/../..' . '/classes/utils/FeedGenerator.class.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
