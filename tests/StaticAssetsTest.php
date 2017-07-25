@@ -1,12 +1,11 @@
 <?php
 
-/**
- * Set of unit tests for StaticAssets class
- */
-
 use Nano\Response;
 use Nano\Request;
 
+/**
+ * Set of unit tests for StaticAssets class
+ */
 class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 
 	/* @var NanoApp $app */
@@ -53,6 +52,16 @@ class StaticAssetsTest extends PHPUnit_Framework_TestCase {
 		// processors
 		$this->assertInstanceOf('StaticAssetsCss', $static->getProcessor('css'));
 		$this->assertInstanceOf('StaticAssetsJs', $static->getProcessor('js'));
+	}
+
+	public function testGetProcessorFails() {
+		$static = $this->getStaticAssets();
+
+		// the following will throw an exception
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('StaticAssetsProcessor StaticAssetsFoobar not found');
+
+		$static->getProcessor('foobar');
 	}
 
 	public function testServeTypeCheck() {

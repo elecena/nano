@@ -24,20 +24,6 @@ class Nano {
 			return;
 		}
 
-		// load autoloader class
-		/**
-		require_once 'Autoloader.class.php';
-
-		// setup autoloader
-		Autoloader::init();
-
-		Autoloader::addNamespace('Nano', __DIR__);
-
-		// add /classes and /classes/utils directories
-		Autoloader::scanDirectory(__DIR__);
-		Autoloader::scanDirectory(__DIR__ . '/utils');
-		/**/
-
 		// set framework's directory
 		$dir = __DIR__ . '/..';
 

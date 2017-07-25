@@ -52,12 +52,17 @@ abstract class Skin {
 	 *
 	 * @param NanoApp $app
 	 * @param string $skinName
-	 * @return null|self
+	 * @return self
+	 * @throws Exception
 	 */
 	public static function factory(NanoApp $app, $skinName) {
-		$skinDirectory = $app->getDirectory() . '/skins/' . strtolower($skinName);
+		$className = sprintf('Skin%s', ucfirst($skinName));
 
-		return Autoloader::factory('Skin', $skinName, $skinDirectory, array($app, $skinName));
+		if (!class_exists($className)) {
+			throw new \Exception("Skin {$className} not found");
+		}
+
+		return new $className($app, $skinName);
 	}
 
 	/**

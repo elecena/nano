@@ -95,13 +95,19 @@ class StaticAssets {
 
 	/**
 	 * Creates an instance of given static assets processor
+	 *
+	 * @param string $assetType
+	 * @return StaticAssetsProcessor
+	 * @throws Exception
 	 */
 	public function getProcessor($assetType) {
-		// use the default one
-		$driver = $assetType;
+		$className = sprintf('StaticAssets%s', ucfirst($assetType));
 
-		$instance = Autoloader::factory('StaticAssets', $driver, dirname(__FILE__) . '/staticassets', array($this->app, $this, $assetType));
-		return $instance;
+		if (!class_exists($className)) {
+			throw new \Exception("StaticAssetsProcessor {$className} not found");
+		}
+
+		return new $className($this->app, $this, $assetType);
 	}
 
 	/**

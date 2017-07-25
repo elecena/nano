@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Autoloader' => $baseDir . '/classes/Autoloader.class.php',
     'Controller' => $baseDir . '/classes/Controller.class.php',
     'DOM' => $baseDir . '/classes/utils/DOM.class.php',
     'Database' => $baseDir . '/classes/Database.class.php',
