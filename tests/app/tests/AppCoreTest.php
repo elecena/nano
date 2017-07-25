@@ -1,11 +1,10 @@
 <?php
 
+namespace Nano\AppTests;
+
 /**
  * Set of unit tests for Nano's Application core
  */
-
-include_once(dirname(__FILE__) . '/AppTest.php');
-
 class AppCoreTest extends AppTest {
 
 	public function testCreateApp() {
@@ -40,12 +39,12 @@ class AppCoreTest extends AppTest {
 	}
 
 	public function testCliApp() {
-		$app = Nano::cli($this->dir);
+		$app = \Nano::cli($this->dir);
 
 		$this->assertInstanceOf('NanoCliApp', $app);
 		$this->assertEquals($this->dir . '/log/script.log', $app->getDebug()->getLogFile());
 
-		$app = Nano::cli($this->dir, 'foo');
+		$app = \Nano::cli($this->dir, 'foo');
 
 		$this->assertEquals($this->dir . '/log/foo.log', $app->getDebug()->getLogFile());
 	}

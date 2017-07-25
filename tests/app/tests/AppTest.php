@@ -1,12 +1,14 @@
 <?php
 
+namespace Nano\AppTests;
+use Nano\NanoBaseTest;
+
 /**
  * Generic class for unit tests for Nano's Application class
  */
+abstract class AppTest extends NanoBaseTest {
 
-abstract class AppTest extends PHPUnit_Framework_TestCase {
-
-	/* @var NanoApp $app */
+	/* @var \NanoApp $app */
 	protected $app;
 	protected $dir;
 	protected $ip;
@@ -27,6 +29,6 @@ abstract class AppTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->dir = realpath(dirname(__FILE__) . '/..');
-		$this->app = Nano::app($this->dir);
+		$this->app = \Nano::app($this->dir);
 	}
 }

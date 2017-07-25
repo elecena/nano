@@ -11,6 +11,7 @@ return array(
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Predis\\' => array($vendorDir . '/predis/predis/src'),
+    'Nano\\AppTests\\' => array($baseDir . '/tests/app/tests'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Macbre\\Logger\\' => array($vendorDir . '/macbre/monolog-utils/src/Macbre'),
     'Domnikl\\Statsd\\' => array($vendorDir . '/domnikl/statsd/lib'),

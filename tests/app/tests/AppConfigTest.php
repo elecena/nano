@@ -1,11 +1,10 @@
 <?php
 
+namespace Nano\AppTests;
+
 /**
  * Set of unit tests for Nano's Application config
  */
-
-include_once(dirname(__FILE__) . '/AppTest.php');
-
 class AppConfigTest extends AppTest {
 
 	public function testAppConfig() {
@@ -40,7 +39,7 @@ class AppConfigTest extends AppTest {
 	}
 
 	public function testAlternativeAppConfig() {
-		$app = Nano::app($this->dir, 'devel');
+		$app = \Nano::app($this->dir, 'devel');
 		$config = $app->getConfig();
 
 		$this->assertEquals('redis', $config->get('cache.driver'));

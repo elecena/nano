@@ -1,13 +1,12 @@
 <?php
 
-/**
- * Set of unit tests for Nano's Application controller
- */
+namespace Nano\AppTests;
 
 use Nano\View;
 
-include_once(dirname(__FILE__) . '/AppTest.php');
-
+/**
+ * Set of unit tests for Nano's Application controller
+ */
 class AppControllerTest extends AppTest {
 	public function testControllers() {
 		$obj = $this->app->getController('Foo');
@@ -18,7 +17,7 @@ class AppControllerTest extends AppTest {
 
 		// test creation of not existing controller
 		$this->assertNull($this->app->getController('NotExistingController'));
-		$this->assertNull(Controller::factory($this->app, 'NotExistingController'));
+		$this->assertNull(\Controller::factory($this->app, 'NotExistingController'));
 
 		// normalize controllers names
 		$this->assertInstanceOf('FooController', $this->app->getController('foo'));

@@ -24,6 +24,10 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
             'Psr\\Log\\' => 8,
             'Predis\\' => 7,
         ),
+        'N' => 
+        array (
+            'Nano\\AppTests\\' => 14,
+        ),
         'M' => 
         array (
             'Monolog\\' => 8,
@@ -59,6 +63,10 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
         'Predis\\' => 
         array (
             0 => __DIR__ . '/..' . '/predis/predis/src',
+        ),
+        'Nano\\AppTests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests/app/tests',
         ),
         'Monolog\\' => 
         array (

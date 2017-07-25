@@ -20,7 +20,10 @@
     "phpunit/phpunit": "^5.7"
   },
   "autoload": {
-    "classmap": ["classes/", "classes/utils/", "tests/app/classes/"]
+    "classmap": ["classes/", "classes/utils/", "tests/app/classes/"],
+    "psr-4": {
+      "Nano\\AppTests\\": "tests/app/tests"
+    }
   },
   "scripts": {
     "test": [

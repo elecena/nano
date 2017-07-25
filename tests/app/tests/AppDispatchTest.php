@@ -1,13 +1,11 @@
 <?php
 
+namespace Nano\AppTests;
+use Nano\Request;
+
 /**
  * Set of unit tests for Nano's Application dispatcher
  */
-
-use Nano\Request;
-
-include_once(dirname(__FILE__) . '/AppTest.php');
-
 class AppDispatchTest extends AppTest {
 
 	public function testDispatchRequest() {
