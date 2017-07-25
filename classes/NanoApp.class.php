@@ -52,12 +52,6 @@ class NanoApp {
 	// application's working directory
 	protected $dir = '';
 
-	// apllications' libraries directory
-	protected $libraryDir = '';
-
-	// objects instances used by getInstance()
-	protected $instances = array();
-
 	// current application instance
 	protected static $app;
 
@@ -211,21 +205,6 @@ class NanoApp {
 	}
 
 	/**
-	 * Returns instance of given class from /classes directory
-	 *
-	 * NanoApp::getInstance() follows singleton pattern
-	 *
-	 * @deprecated
-	 */
-	public function getInstance($className) {
-		if (!isset($this->instances[$className])) {
-			$this->instances[$className] = $this->factory($className);
-		}
-
-		return $this->instances[$className];
-	}
-
-	/**
 	 * Return fresh instance of a given controller
 	 */
 	public function getController($controllerName) {
@@ -351,28 +330,6 @@ class NanoApp {
 	 */
 	public function getDirectory() {
 		return $this->dir;
-	}
-
-	/**
-	 * Return path to nanoPortal libraries
-	 *
-	 * @deprecated
-	 */
-	public function getLibDirectory() {
-		return $this->libraryDir;
-	}
-
-	/**
-	 * Add given library to include_path
-	 *
-	 * @deprecated
-	 */
-	public function addLibrary($directory) {
-		// normalize path
-		$fullPath = $this->getLibDirectory() . '/' . $directory;
-
-		// update include_path
-		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
 	}
 
 	/**

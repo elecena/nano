@@ -20,13 +20,6 @@ class AppCoreTest extends AppTest {
 
 		// directories
 		$this->assertEquals($this->dir, $this->app->getDirectory());
-		$this->assertEquals($this->dir . '/lib', $this->app->getLibDirectory());
-
-		// test application's library
-		$libName = 'gapi';
-
-		$this->app->addLibrary($libName);
-		$this->assertContains($libName, get_include_path());
 	}
 
 	public function testIsInAppDirectory() {
@@ -77,21 +70,5 @@ class AppCoreTest extends AppTest {
 
 		// test creation of not existing class
 		$this->assertNull($this->app->factory('NotExistingClass'));
-	}
-
-	public function testAppGetInstance() {
-		$obj = $this->app->getInstance('ExampleModel');
-		$this->assertInstanceOf('ExampleModel', $obj);
-		$this->assertInstanceOf('NanoApp', $obj->app);
-
-		$this->assertNull($obj->bar);
-
-		$obj->bar = 123;
-		$this->assertEquals(123, $obj->bar);
-
-		// this call should return reference to $obj (including $obj->bar)
-		$obj2 = $this->app->getInstance('ExampleModel');
-		$this->assertInstanceOf('ExampleModel', $obj2);
-		$this->assertEquals(123, $obj2->bar);
 	}
 }
