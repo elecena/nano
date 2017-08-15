@@ -68,6 +68,8 @@ return array(
     'Nano\\Config' => $baseDir . '/classes/Config.class.php',
     'Nano\\Debug' => $baseDir . '/classes/Debug.class.php',
     'Nano\\Events' => $baseDir . '/classes/Events.class.php',
+    'Nano\\Healtcheck\\HealthcheckBase' => $baseDir . '/classes/healtcheck/HealtcheckBase.php',
+    'Nano\\Healtcheck\\HealthcheckException' => $baseDir . '/classes/healtcheck/HealtcheckException.php',
     'Nano\\Http\\Response' => $baseDir . '/classes/http/Response.class.php',
     'Nano\\Http\\ResponseException' => $baseDir . '/classes/http/ResponseException.class.php',
     'Nano\\Logger\\NanoLogger' => $baseDir . '/classes/logger/NanoLogger.class.php',

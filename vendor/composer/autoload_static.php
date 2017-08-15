@@ -170,6 +170,8 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
         'Nano\\Config' => __DIR__ . '/../..' . '/classes/Config.class.php',
         'Nano\\Debug' => __DIR__ . '/../..' . '/classes/Debug.class.php',
         'Nano\\Events' => __DIR__ . '/../..' . '/classes/Events.class.php',
+        'Nano\\Healtcheck\\HealthcheckBase' => __DIR__ . '/../..' . '/classes/healtcheck/HealtcheckBase.php',
+        'Nano\\Healtcheck\\HealthcheckException' => __DIR__ . '/../..' . '/classes/healtcheck/HealtcheckException.php',
         'Nano\\Http\\Response' => __DIR__ . '/../..' . '/classes/http/Response.class.php',
         'Nano\\Http\\ResponseException' => __DIR__ . '/../..' . '/classes/http/ResponseException.class.php',
         'Nano\\Logger\\NanoLogger' => __DIR__ . '/../..' . '/classes/logger/NanoLogger.class.php',
