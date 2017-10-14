@@ -158,7 +158,11 @@ abstract class Database {
 
 	/**
 	 * Send given query and return results handler
+	 *
+	 * @param string $sql
+	 * @param string|bool $fname
 	 * @return DatabaseResult
+	 * @throws DatabaseException
 	 */
 	abstract public function query($sql, $fname = false);
 

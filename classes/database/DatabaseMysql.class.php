@@ -146,7 +146,8 @@ class DatabaseMysql extends Database {
 	 *
 	 * @param string $sql
 	 * @param string|bool $fname
-	 * @return DatabaseResult|false
+	 * @throws  DatabaseException
+	 * @return DatabaseResult
 	 */
 	public function query($sql, $fname = false) {
 		$this->debug->time('query');
@@ -186,8 +187,7 @@ class DatabaseMysql extends Database {
 
 			$this->log(__METHOD__, "error #{$this->link->errno} - {$this->link->error}");
 
-			// TODO: raise an excpetion
-			return false;
+			throw $e;
 		}
 		else {
 			$this->logger->info("SQL {$shortSql}", [
