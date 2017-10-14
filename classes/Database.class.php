@@ -29,6 +29,8 @@ abstract class Database {
 	// indicates that connection was successfully established
 	protected $connected = false;
 
+	protected $lastQuery = false;
+
 	// number of queries
 	protected $queries = 0;
 
@@ -179,6 +181,20 @@ abstract class Database {
 	 * Properly encode given string
 	 */
 	abstract public function escape($value);
+
+	/**
+	 * @param string $query
+	 */
+	protected function setLastQuery($query) {
+		$this->lastQuery = $query;
+	}
+
+	/**
+	 * @return string|false
+	 */
+	public function getLastQuery() {
+		return $this->lastQuery;
+	}
 
 	/**
 	 * Select given fields from a table using following WHERE statements

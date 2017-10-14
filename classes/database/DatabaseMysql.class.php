@@ -146,7 +146,7 @@ class DatabaseMysql extends Database {
 	 *
 	 * @param string $sql
 	 * @param string|bool $fname
-	 * @return DatabaseResult
+	 * @return DatabaseResult|false
 	 */
 	public function query($sql, $fname = false) {
 		$this->debug->time('query');
@@ -196,6 +196,8 @@ class DatabaseMysql extends Database {
 				'time' => $time * 1000 // [ms]
 			]);
 		}
+
+		$this->setLastQuery($sql);
 
 		// wrap results into iterator
 		return new DatabaseResult($this, $res);
