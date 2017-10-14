@@ -8,7 +8,10 @@ use NanoApp;
  */
 class NanoDatabaseMock extends \DatabaseMysql {
 
-	private $onQueryCallback, $result;
+	private $onQueryCallback;
+	/* @var array $result */
+	private $result;
+	private $currentRow = 0;
 
 	/**
 	 * @param NanoApp $app
@@ -48,15 +51,59 @@ class NanoDatabaseMock extends \DatabaseMysql {
 	 *
 	 * @param string $sql
 	 * @param string|bool $fname
-	 * @return mixed
+	 * @return \DatabaseResult
 	 */
 	public function query($sql, $fname = false) {
 		if (is_callable($this->onQueryCallback)) {
 			call_user_func($this->onQueryCallback, func_get_args());
 		}
 
+		# var_dump(__METHOD__, $sql);
+
 		$this->lastQuery = $sql;
 
-		return $this->result;
+		return new \DatabaseResult($this, $this->result);
 	}
+
+	/**
+	 * @param \mysqli_result $results
+	 * @return int
+	 */
+	public function numRows($results) {
+		return count($this->result);
+	}
+
+	/**
+	 * Change the position of results cursor
+	 * @param \mysqli_result $results
+	 * @param int $rowId
+	 */
+	public function seekRow($results, $rowId) {
+		$this->currentRow = $rowId;
+	}
+
+	/**
+	 * Get data for current row
+	 *
+	 * @param \mysqli_result $results
+	 * @return mixed|false
+	 */
+	public function fetchRow($results) {
+		$row = !empty($this->result[$this->currentRow]) ? $this->result[$this->currentRow] : null;
+
+		// move to the next row
+		$this->currentRow++;
+
+		return !is_null($row) ? $row : false;
+	}
+
+	/**
+	 * Free the memory
+	 *
+	 * @param \mysqli_result $results
+	 */
+	public function freeResults($results) {
+		// noop
+	}
+
 }
