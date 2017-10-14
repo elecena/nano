@@ -179,6 +179,7 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
         'Nano\\MessageQueue' => __DIR__ . '/../..' . '/classes/MessageQueue.class.php',
         'Nano\\Mq\\MessageQueueRedis' => __DIR__ . '/../..' . '/classes/mq/MessageQueueRedis.class.php',
         'Nano\\NanoBaseTest' => __DIR__ . '/../..' . '/classes/NanoBaseTest.class.php',
+        'Nano\\NanoDatabaseMock' => __DIR__ . '/../..' . '/classes/NanoDatabaseMock.class.php',
         'Nano\\NanoObject' => __DIR__ . '/../..' . '/classes/NanoObject.class.php',
         'Nano\\Output' => __DIR__ . '/../..' . '/classes/Output.class.php',
         'Nano\\Output\\OutputJson' => __DIR__ . '/../..' . '/classes/output/OutputJson.class.php',

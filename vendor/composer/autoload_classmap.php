@@ -77,6 +77,7 @@ return array(
     'Nano\\MessageQueue' => $baseDir . '/classes/MessageQueue.class.php',
     'Nano\\Mq\\MessageQueueRedis' => $baseDir . '/classes/mq/MessageQueueRedis.class.php',
     'Nano\\NanoBaseTest' => $baseDir . '/classes/NanoBaseTest.class.php',
+    'Nano\\NanoDatabaseMock' => $baseDir . '/classes/NanoDatabaseMock.class.php',
     'Nano\\NanoObject' => $baseDir . '/classes/NanoObject.class.php',
     'Nano\\Output' => $baseDir . '/classes/Output.class.php',
     'Nano\\Output\\OutputJson' => $baseDir . '/classes/output/OutputJson.class.php',

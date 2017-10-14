@@ -26,7 +26,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	/**
 	 * @return DatabaseMysql
 	 */
-	private function getDatabaseMock() {
+	private function getMysqlDatabaseMock() {
 
 		// set up DatabaseMysql class, so that mockup will work
 		if (!class_exists('DatabaseMysql')) {
@@ -59,7 +59,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testMySqlDatabaseMock() {
-		$database = $this->getDatabaseMock();
+		$database = $this->getMysqlDatabaseMock();
 
 		// check mock
 		$this->assertInstanceOf('DatabaseMysql', $database);
@@ -76,7 +76,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testQuery() {
-		$database = $this->getDatabaseMock();
+		$database = $this->getMysqlDatabaseMock();
 
 		// test queries
 		$database->query('SET foo = 1');
@@ -90,7 +90,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testSelect() {
-		$database = $this->getDatabaseMock();
+		$database = $this->getMysqlDatabaseMock();
 
 		$database->select('pages', '*');
 		$this->assertQueryEquals('SELECT /* Database::select */ * FROM pages');
@@ -132,7 +132,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testDelete() {
-		$database = $this->getDatabaseMock();
+		$database = $this->getMysqlDatabaseMock();
 
 		$database->delete('pages');
 		$this->assertQueryEquals('DELETE /* Database::delete */ FROM pages');
@@ -151,7 +151,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testUpdate() {
-		$database = $this->getDatabaseMock();
+		$database = $this->getMysqlDatabaseMock();
 
 		$database->update('pages', array('foo' => 'bar'), array('id' => 1));
 		$this->assertQueryEquals('UPDATE /* Database::update */ pages SET foo="bar" WHERE id="1"');
@@ -170,7 +170,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testInsert() {
-		$database = $this->getDatabaseMock();
+		$database = $this->getMysqlDatabaseMock();
 
 		$database->insert('pages', array('foo' => 'bar'));
 		$this->assertQueryEquals('INSERT INTO /* Database::insert */ pages (`foo`) VALUES ("bar")');
@@ -193,7 +193,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testReplace() {
-		$database = $this->getDatabaseMock();
+		$database = $this->getMysqlDatabaseMock();
 
 		$database->replace('pages', ['foo' => 'bar']);
 		$this->assertQueryEquals('REPLACE INTO /* Database::replace */ pages (`foo`) VALUES ("bar")');
