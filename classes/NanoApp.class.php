@@ -70,6 +70,15 @@ class NanoApp {
 	}
 
 	/**
+	 * Override NanoApp instance, to be used by tests only!
+	 *
+	 * @param NanoApp $instance
+	 */
+	public static function setAppInstance(self $instance) {
+		self::$app = $instance;
+	}
+
+	/**
 	 * Create application based on given config
 	 */
 	function __construct($dir, $configSet = 'default', $logFile = 'debug') {
