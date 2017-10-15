@@ -28,10 +28,17 @@ class NanoDatabaseMock extends \DatabaseMysql {
 	}
 
 	/**
-	 * @param \DatabaseResult|mixed $result
+	 * @param array $result
 	 */
-	public function setResult($result) {
+	public function setResult(array $result) {
 		$this->result = $result;
+	}
+
+	/**
+	 * @param array $row
+	 */
+	public function setResultRow(array $row) {
+		$this->setResult([$row]);
 	}
 
 	/**
