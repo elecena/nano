@@ -62,7 +62,7 @@ class NanoDatabaseMock extends \DatabaseMysql {
 	 */
 	public function query($sql, $fname = false) {
 		if (is_callable($this->onQueryCallback)) {
-			call_user_func($this->onQueryCallback, func_get_args());
+			call_user_func_array($this->onQueryCallback, func_get_args());
 		}
 
 		# var_dump(__METHOD__, $sql);
