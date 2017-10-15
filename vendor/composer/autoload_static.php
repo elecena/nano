@@ -122,7 +122,6 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
-        'GAClient' => __DIR__ . '/../..' . '/classes/utils/GAClient.class.php',
         'Http' => __DIR__ . '/../..' . '/classes/utils/Http.class.php',
         'HttpClient' => __DIR__ . '/../..' . '/classes/utils/HttpClient.class.php',
         'Image' => __DIR__ . '/../..' . '/classes/utils/Image.class.php',

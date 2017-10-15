@@ -6,9 +6,6 @@
 
 class Utils {
 
-	// @see http://snook.ca/archives/php/url-shortener#c63363
-	const CHARS = 'Ts87HNB2US1dxhgMWCpAKmRXO0rnG4lDZkcFLqutzEYbfv6JQo3Pea5iw9VyjI';
-
 	/**
 	 * Creates temporary file and returns its name
 	 *
@@ -18,10 +15,4 @@ class Utils {
 		return tempnam(false /* use system default */, 'nano');
 	}
 
-	/**
-	 * Creates PID file
-	 */
-	static public function createPidFile($pidFile) {
-		file_put_contents($pidFile, getmypid() . "\n");
-	}
 }

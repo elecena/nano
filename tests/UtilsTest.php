@@ -19,15 +19,4 @@ class UtilsTest extends \Nano\NanoBaseTest {
 		$this->assertFalse(file_exists($tmp));
 	}
 
-	public function testCreatePidFile() {
-		$pidFile = Utils::getTempFile();
-		$pid = getmypid();
-
-		Utils::createPidFile($pidFile);
-
-		$this->assertEquals("{$pid}\n", file_get_contents($pidFile));
-
-		unlink($pidFile);
-		$this->assertFalse(file_exists($pidFile));
-	}
 }

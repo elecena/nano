@@ -20,7 +20,6 @@ return array(
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/src/Facade.php',
     'File_Iterator_Factory' => $vendorDir . '/phpunit/php-file-iterator/src/Factory.php',
-    'GAClient' => $baseDir . '/classes/utils/GAClient.class.php',
     'Http' => $baseDir . '/classes/utils/Http.class.php',
     'HttpClient' => $baseDir . '/classes/utils/HttpClient.class.php',
     'Image' => $baseDir . '/classes/utils/Image.class.php',
