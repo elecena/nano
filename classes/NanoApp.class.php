@@ -80,13 +80,16 @@ class NanoApp {
 
 	/**
 	 * Create application based on given config
+	 *
+	 * @param string $dir
+	 * @param string $configSet
+	 * @param string $logFile
 	 */
 	function __construct($dir, $configSet = 'default', $logFile = 'debug') {
 		// register the current application instance
 		self::$app = $this;
 
 		$this->dir = realpath($dir);
-		$this->libraryDir = $this->dir . '/lib';
 
 		// events handler
 		$this->events = new Events($this);
@@ -109,8 +112,8 @@ class NanoApp {
 		}
 
 		// set request
-		$params = isset($_REQUEST) ? $_REQUEST : array();
-		$env = isset($_SERVER) ? $_SERVER : array();
+		$params = isset($_REQUEST) ? $_REQUEST : [];
+		$env = isset($_SERVER) ? $_SERVER : [];
 
 		$this->request = new Request($params, $env);
 		if (!$this->request->isCLI()) {
@@ -170,7 +173,7 @@ class NanoApp {
 			$logger->info('Request completed', $responseDetails);
 		}
 
-		$this->events->fire('NanoAppTearDown', array($this));
+		$this->events->fire('NanoAppTearDown', [$this]);
 
 		$this->debug->log('----');
 		$this->debug->log('Script is completed');
@@ -178,6 +181,9 @@ class NanoApp {
 
 	/**
 	 * Checks whether given file / directory is inside application's directory (security stuff!)
+	 *
+	 * @param string $resource
+	 * @return bool
 	 */
 	public function isInAppDirectory($resource) {
 		$resource = realpath($resource);
@@ -193,8 +199,12 @@ class NanoApp {
 	 * NanoApp::factory() will ALWAYS return fresh class instance
 	 *
 	 * @deprecated create instances using new operator
+	 *
+	 * @param string $className
+	 * @param array $params
+	 * @return null|object
 	 */
-	public function factory($className, Array $params = array()) {
+	public function factory($className, Array $params = []) {
 		if (class_exists($className)) {
 			// add NanoApp instance as the first constructor parameter
 			array_unshift($params, $this);
@@ -215,6 +225,9 @@ class NanoApp {
 
 	/**
 	 * Return fresh instance of a given controller
+	 *
+	 * @param string $controllerName
+	 * @return Controller
 	 */
 	public function getController($controllerName) {
 		return Controller::factory($this, $controllerName);
@@ -222,6 +235,9 @@ class NanoApp {
 
 	/**
 	 * Internally route the request and return raw data (array) or an Output object wrapping the response
+	 *
+	 * @param Request $request
+	 * @return bool|mixed|Output
 	 */
 	protected function route(Request $request) {
 		// route given request
@@ -235,6 +251,9 @@ class NanoApp {
 	 * Dispatch given request
 	 *
 	 * Returns raw data returned by the module
+	 *
+	 * @param Request $request
+	 * @return bool|mixed|Output
 	 */
 	public function dispatchRequest(Request $request) {
 		// route given request
@@ -252,8 +271,13 @@ class NanoApp {
 	 * Dispatch request given by the controller and method name (and optional parameters)
 	 *
 	 * Returns raw data returned by the module
+	 *
+	 * @param string $controllerName
+	 * @param string $methodName
+	 * @param array $params
+	 * @return bool|mixed|Output
 	 */
-	public function dispatch($controllerName, $methodName = '', Array $params = array()) {
+	public function dispatch($controllerName, $methodName = '', Array $params = []) {
 		$request = Request::newFromControllerName($controllerName, $methodName, $params, Request::INTERNAL);
 
 		// route given request
@@ -285,7 +309,7 @@ class NanoApp {
 	 * @param array $params
 	 * @return string template's output for data returned by the module
 	 */
-	public function render($controllerName, $methodName = '', Array $params = array()) {
+	public function render($controllerName, $methodName = '', Array $params = []) {
 		$request = Request::newFromControllerName($controllerName, $methodName, $params, Request::INTERNAL);
 
 		// render given request
@@ -428,7 +452,7 @@ class NanoApp {
 			$skinName = $this->config->get('skin', 'default');
 
 			// allow to override the default choice
-			$this->events->fire('NanoAppGetSkin', array($this, &$skinName));
+			$this->events->fire('NanoAppGetSkin', [$this, &$skinName]);
 
 			// create an instance of the skin
 			$this->skin = Skin::factory($this, $skinName);
