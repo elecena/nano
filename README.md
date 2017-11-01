@@ -7,15 +7,6 @@ nano
 sudo apt-get install php5-curl php5-imagick php5-json php5-mysqlnd php5-readline
 ```
 
-### [MongoDB](http://php.net/manual/en/mongodb.installation.pecl.php)
-
-> optional
-
-```
-sudo apt-get install php-pear php5-dev
-sudo pecl install mongodb
-```
-
 ## Configuration
 
 ## Apache
