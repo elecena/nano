@@ -4,10 +4,20 @@ nano
 ## Requirements
 
 ```
-sudo apt-get install php5-curl php5-imagick php5-json php5-mysqlnd php5-readline
+sudo apt-get install php5-curl php5-imagick php5-json php5-mysqlnd php5-readline libapache2-mod-php5
 ```
 
 ## Configuration
+
+* Add the following entry to `/etc/hosts`:
+
+```
+127.0.0.1       elecena.local
+```
+
+* Copy `../app/apache/000-elecena.conf` to `/etc/apache2/sites-available`.
+* `sudo a2enmod rewrite && sudo a2enmod php5 && sudo a2ensite 000-elecena.conf`
+* `sudo service apache2 reload`
 
 ## Apache
 
