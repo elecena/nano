@@ -17,7 +17,19 @@ sudo apt-get install php5-curl php5-imagick php5-json php5-mysqlnd php5-readline
 
 * Copy `../app/apache/000-elecena.conf` to `/etc/apache2/sites-available`.
 * `sudo a2enmod rewrite && sudo a2enmod php5 && sudo a2ensite 000-elecena.conf`
-* `sudo service apache2 reload`
+* `sudo service apache2 restart`
+
+### rsyslog
+
+* Uncomment the following in `/etc/rsyslog.conf`:
+
+```
+# provides UDP syslog reception
+$ModLoad imudp
+$UDPServerRun 514
+```
+
+* `sudo service rsyslog restart`
 
 ## Apache
 
