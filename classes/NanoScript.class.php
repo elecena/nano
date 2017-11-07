@@ -22,7 +22,8 @@ abstract class NanoScript extends NanoObject {
 
 		$this->isDebug = (bool) getenv('DEBUG');
 
-		parent::__construct($app);
+		parent::__construct();
+
 		if ($this->isInDebugMode()) {
 			$this->debug->log();
 			$this->debug->log('Running in debug mode');
