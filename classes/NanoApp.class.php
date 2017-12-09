@@ -434,6 +434,14 @@ class NanoApp {
 	}
 
 	/**
+	 * Set a request for this NanoApp, used by tests
+	 * @param Request $request
+	 */
+	public function setRequest(Request $request) {
+		$this->request = $request;
+	}
+
+	/**
 	 * Return router
 	 */
 	public function getRouter() {
