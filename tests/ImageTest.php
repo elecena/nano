@@ -54,7 +54,7 @@ class ImageTest extends \Nano\NanoBaseTest {
 		$this->assertTrue($img->scale(300, 410));
 
 		$this->assertEquals(300, $img->getWidth());
-		$this->assertEquals(210, $img->getHeight());
+		$this->assertEquals(211, $img->getHeight());
 
 		if (self::DEBUG) $img->save('img-scaled-bounding.jpg', 'jpeg');
 	}
