@@ -27,7 +27,7 @@
     "jakub-onderka/php-parallel-lint": "0.9"
   },
   "autoload": {
-    "classmap": ["classes/", "classes/utils/", "tests/app/classes/"],
+    "classmap": ["classes/", "classes/utils/", "tests/app/classes/", "tests/CacheTest.php"],
     "psr-4": {
       "Nano\\AppTests\\": "tests/app/tests"
     }

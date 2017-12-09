@@ -1,7 +1,5 @@
 <?php
 
-include_once(dirname(__FILE__) . '/CacheTest.php');
-
 /**
  * Set of generic unit tests for Cache
  */

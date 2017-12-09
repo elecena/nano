@@ -1,7 +1,5 @@
 <?php
 
-include_once(dirname(__FILE__) . '/CacheTest.php');
-
 /**
  * Set of unit tests for Cache redis driver
  *

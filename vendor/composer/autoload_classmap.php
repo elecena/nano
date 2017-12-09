@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'CacheTest' => $baseDir . '/tests/CacheTest.php',
     'Controller' => $baseDir . '/classes/Controller.class.php',
     'DOM' => $baseDir . '/classes/utils/DOM.class.php',
     'Database' => $baseDir . '/classes/Database.class.php',

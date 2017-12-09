@@ -104,6 +104,7 @@ class ComposerStaticInitac6a6dfe947137a835416038236d155c
     );
 
     public static $classMap = array (
+        'CacheTest' => __DIR__ . '/../..' . '/tests/CacheTest.php',
         'Controller' => __DIR__ . '/../..' . '/classes/Controller.class.php',
         'DOM' => __DIR__ . '/../..' . '/classes/utils/DOM.class.php',
         'Database' => __DIR__ . '/../..' . '/classes/Database.class.php',
