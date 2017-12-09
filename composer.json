@@ -20,14 +20,14 @@
     "predis/predis": "^1.1",
     "monolog/monolog": "^1.18",
     "macbre/monolog-utils": "^1.0",
-    "tedivm/jshrink": "^1.2"
+    "tedivm/jshrink": "^1.2",
+    "phpunit/phpunit": "6.5.0"
   },
   "require-dev": {
-    "jakub-onderka/php-parallel-lint": "0.9",
-    "phpunit/phpunit": "^5.7"
+    "jakub-onderka/php-parallel-lint": "0.9"
   },
   "autoload": {
-    "classmap": ["classes/", "classes/utils/", "tests/app/classes/"],
+    "classmap": ["classes/", "classes/utils/", "tests/app/classes/", "tests/CacheTest.php"],
     "psr-4": {
       "Nano\\AppTests\\": "tests/app/tests"
     }

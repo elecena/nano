@@ -6,7 +6,9 @@
 
 class HttpTest extends \Nano\NanoBaseTest {
 
-	public function testGet() { return;
+	public function testGet() {
+		$this->markTestSkipped('Refactor to mock HTTP traffic');
+
 		// make request to example.org (redirects to http://www.iana.org/domains/example/)
 		$resp = Http::get('http://example.org');
 
@@ -17,7 +19,9 @@ class HttpTest extends \Nano\NanoBaseTest {
 		$this->assertContains('Example Domains', (string) $resp);
 	}
 
-	public function testPost() { return;
+	public function testPost() {
+		$this->markTestSkipped('Refactor to mock HTTP traffic');
+
 		// POST request (ends with HTTP 400)
 		$resp = Http::post('http://google.com/images/foo', array('foo' => 'bar')); //var_dump($resp);
 
@@ -26,7 +30,9 @@ class HttpTest extends \Nano\NanoBaseTest {
 		$this->assertContains('Not Found', $resp->getContent());
 	}
 
-	public function testHead() { return;
+	public function testHead() {
+		$this->markTestSkipped('Refactor to mock HTTP traffic');
+
 		// HEAD request for not existing image
 		$resp = Http::head('http://www.google.pl/images/srpr/nav_logo.png', array('foo' => 'bar')); //var_dump($resp);
 

@@ -12,6 +12,8 @@ class MessageQueueRedisTest extends \Nano\NanoBaseTest {
 	private $settings;
 
 	public function __construct() {
+		parent::__construct();
+
 		$this->settings = [
 			'driver' => 'redis',
 			'host' => '127.0.0.1',

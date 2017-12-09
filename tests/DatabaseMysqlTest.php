@@ -204,7 +204,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest {
 
 	// requires server running on localhost:3306
 	public function testMySqlDatabase() {
-		return;
+		$this->markTestSkipped('Requires server running on localhost:3306');
 
 		$app = Nano::app(dirname(__FILE__) . '/app');
 		$database = Database::connect($app, array('driver' => 'mysql', 'host' => 'localhost', 'user' => 'root', 'pass' => '', 'database' => 'test'));

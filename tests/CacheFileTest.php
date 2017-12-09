@@ -4,8 +4,6 @@
  * Set of unit tests for Cache file driver
  */
 
-include_once(dirname(__FILE__) . '/CacheTest.php');
-
 class CacheFileTest extends CacheTest {
 
 	protected function getCacheInstance($settings = array()) {

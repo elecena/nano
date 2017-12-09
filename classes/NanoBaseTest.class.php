@@ -2,10 +2,12 @@
 
 namespace Nano;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Base class for PHPUnit-based unit tests
  */
-class NanoBaseTest extends \PHPUnit_Framework_TestCase {
+class NanoBaseTest extends TestCase {
 
 	/* @var $app \NanoApp */
 	protected $app;

@@ -2,6 +2,7 @@
 
 namespace Nano\AppTests;
 use Nano\NanoBaseTest;
+use Nano\Request;
 
 /**
  * Generic class for unit tests for Nano's Application class
@@ -18,11 +19,11 @@ abstract class AppTest extends NanoBaseTest {
 		$this->ip = '66.249.66.248';
 
 		// fake request's data
-		$_REQUEST = array(
+		$params = array(
 			'q' => 'lm317',
 		);
 
-		$_SERVER = array(
+		$env = array(
 			'REQUEST_METHOD' => 'POST',
 			'REQUEST_URI' => '/foo/test/?q=word',
 			'HTTP_CLIENT_IP' => $this->ip,
@@ -30,5 +31,8 @@ abstract class AppTest extends NanoBaseTest {
 
 		$this->dir = realpath(dirname(__FILE__) . '/..');
 		$this->app = \Nano::app($this->dir);
+
+		$request = new Request($params, $env);
+		$this->app->setRequest($request);
 	}
 }
