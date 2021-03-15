@@ -19,7 +19,7 @@
     "domnikl/statsd": "~2.3",
     "predis/predis": "^1.1",
     "monolog/monolog": "1.23",
-    "macbre/monolog-utils": "^1.0",
+    "macbre/monolog-utils": "^2.1",
     "tedivm/jshrink": "^1.2",
     "phpunit/phpunit": "6.5.14"
   },
