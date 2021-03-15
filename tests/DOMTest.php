@@ -9,7 +9,7 @@ class DOMTest extends \Nano\NanoBaseTest {
 	private $html;
 	private $xml;
 
-	public function setUp() {
+	public function setUp(): void {
 		$this->xml = <<<XML
 <root>
 	<foo bar="test">

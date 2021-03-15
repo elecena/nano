@@ -11,7 +11,7 @@ class NanoDatabaseMockTest extends NanoBaseTest {
 	/* @var NanoDatabaseMock $mock */
 	private $mock;
 
-	function setUp() {
+	function setUp(): void {
 		parent::setUp();
 		$this->mock = new NanoDatabaseMock($this->app);
 	}

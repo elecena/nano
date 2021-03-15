@@ -6,7 +6,7 @@
 
 class PaginationTest extends \Nano\NanoBaseTest {
 
-	public function setUp() {
+	public function setUp(): void {
 		// use test application's directory
 		$dir = realpath(dirname(__FILE__) . '/app');
 		$this->app = Nano::app($dir);

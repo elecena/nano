@@ -14,7 +14,7 @@ abstract class AppTest extends NanoBaseTest {
 	protected $dir;
 	protected $ip;
 
-	public function setUp() {
+	public function setUp(): void {
 		// client's IP
 		$this->ip = '66.249.66.248';
 
