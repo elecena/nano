@@ -14,7 +14,7 @@ jobs:
         # set up with a password "qwerty"
         image: redis:4-alpine
         ports: ['6379:6379']
-        options: --entrypoint redis-server --requirepass qwerty
+        options: --entrypoint "redis-server --requirepass qwerty"
 
     strategy:
       matrix:
