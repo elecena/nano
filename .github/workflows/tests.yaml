@@ -39,4 +39,4 @@ jobs:
         composer install --no-interaction
 
     - name: Test the code
-      run: ./vendor/bin/phpunit --verbose
+      run: composer run test
