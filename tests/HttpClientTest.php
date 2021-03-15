@@ -10,8 +10,8 @@ class HttpClientTest extends \Nano\NanoBaseTest {
 		$client = new HttpClient();
 
 		// check user agent
-		$this->assertRegExp('#NanoPortal/' . Nano::VERSION . '#', $client->getUserAgent());
-		$this->assertRegExp('#libcurl/#', $client->getUserAgent());
+		$this->assertMatchesRegularExpression('#NanoPortal/' . Nano::VERSION . '#', $client->getUserAgent());
+		$this->assertMatchesRegularExpression('#libcurl/#', $client->getUserAgent());
 	}
 
 	/**
