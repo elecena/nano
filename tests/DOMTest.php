@@ -33,8 +33,8 @@ HTML;
 		$dom = DOM::newFromXml($this->xml, true /* $stictMode */);
 
 		$this->assertInstanceOf('DOM', $dom);
-		$this->assertContains('<root>', (string) $dom);
-		$this->assertContains('data-foo', (string) $dom);
+		$this->assertStringContainsString('<root>', (string) $dom);
+		$this->assertStringContainsString('data-foo', (string) $dom);
 		$this->assertEquals('utf-8', $dom->getCharset());
 
 		// XPath
@@ -57,7 +57,7 @@ HTML;
 		$dom = DOM::newFromXml($this->xml);
 
 		$this->assertInstanceOf('DOM', $dom);
-		$this->assertContains('<root>', (string) $dom);
+		$this->assertStringContainsString('<root>', (string) $dom);
 		$this->assertEquals('123', $dom->getNodeContent('//foo/bar'));
 		$this->assertEquals('1', $dom->getNodeAttr('//foo/bar', 'data-foo'));
 	}
@@ -86,21 +86,21 @@ HTML;
 		$dom = DOM::newFromHtml($this->html);
 
 		$this->assertInstanceOf('DOM', $dom);
-		$this->assertContains("<p>foo</p>\n<ol start=\"4\">", (string) $dom);
-		$this->assertContains('</li><li>', (string) $dom);
+		$this->assertStringContainsString("<p>foo</p>\n<ol start=\"4\">", (string) $dom);
+		$this->assertStringContainsString('</li><li>', (string) $dom);
 		$this->assertNull($dom->getCharset());
 
 		// XPath
 		$this->assertEquals(3, count($dom->xpath('//ol/li')));
-		$this->assertContains('123', $dom->getNodeContent('//ol/li'));
+		$this->assertStringContainsString('123', $dom->getNodeContent('//ol/li'));
 		$this->assertEquals('4', $dom->getNodeAttr('//ol', 'start'));
 
-		$this->assertEquals("123\n\t456\n\t789\n", $dom->getNodeTextContent('//ol'));
+		$this->assertEquals("\n\t123\n\t456\n\t789\n", $dom->getNodeTextContent('//ol'));
 		$this->assertEquals("789\n", $dom->getNodeTextContent('//ol/li[3]'));
 
 		$nodes = $dom->xpath('//ol/li');
-		$this->assertContains('123', (string) $nodes[0]);
-		$this->assertContains('456', (string) $nodes[1]);
+		$this->assertStringContainsString('123', (string) $nodes[0]);
+		$this->assertStringContainsString('456', (string) $nodes[1]);
 
 		// remove node
 		$this->assertEquals(3, count($dom->xpath('//ol/li')));
@@ -123,29 +123,29 @@ HTML;
 		$isoContent = "\xb1\xea";
 
 		$dom = DOM::newFromHtml($this->getHtml($utfContent, 'text/html; charset=utf-8'));
-		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertStringContainsString('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('utf-8', $dom->getCharset());
 
 		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; charset=iso-8859-2'));
-		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertStringContainsString('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 
 		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; charset=iso-8859-2'), 'iso-8859-2' /* forced charset */);
-		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertStringContainsString('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 
 		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; charset=utf-8'), 'iso-8859-2' /* forced charset */);
-		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertStringContainsString('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 
 		// some sites emit incorrect content type meta entry
 		// <meta http-equiv="content-type" content="text/html; iso-8859-2" />
 		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html; iso-8859-2'));
-		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertStringContainsString('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 
 		$dom = DOM::newFromHtml($this->getHtml($isoContent, 'text/html;iso-8859-2'));
-		$this->assertContains('ąę', $dom->getNodeContent('//p'));
+		$this->assertStringContainsString('ąę', $dom->getNodeContent('//p'));
 		$this->assertEquals('iso-8859-2', $dom->getCharset());
 	}
 }

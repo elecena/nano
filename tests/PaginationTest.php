@@ -61,9 +61,9 @@ class PaginationTest extends \Nano\NanoBaseTest {
 		$pager = $this->getPager();
 		$pager->setCurrentPage(1);
 
-		$this->assertContains('/foo/bar?q=foo&p=1', $pager->getUrlForPage(1));
-		$this->assertContains('/foo/bar?q=foo&p=1', $pager->getUrlForFirstPage());
-		$this->assertContains('/foo/bar?q=foo&p=5', $pager->getUrlForLastPage());
+		$this->assertStringContainsString('/foo/bar?q=foo&p=1', $pager->getUrlForPage(1));
+		$this->assertStringContainsString('/foo/bar?q=foo&p=1', $pager->getUrlForFirstPage());
+		$this->assertStringContainsString('/foo/bar?q=foo&p=5', $pager->getUrlForLastPage());
 	}
 
 	public function testGetItems() {
