@@ -66,16 +66,16 @@
         },
         {
             "name": "domnikl/statsd",
-            "version": "2.6.0",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/domnikl/statsd-php.git",
-                "reference": "ca9daa049fd9f353c0551384612bb4f17615b14a"
+                "reference": "0118ac4b576b86d87a072100e4ed921c6204d831"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/domnikl/statsd-php/zipball/ca9daa049fd9f353c0551384612bb4f17615b14a",
-                "reference": "ca9daa049fd9f353c0551384612bb4f17615b14a",
+                "url": "https://api.github.com/repos/domnikl/statsd-php/zipball/0118ac4b576b86d87a072100e4ed921c6204d831",
+                "reference": "0118ac4b576b86d87a072100e4ed921c6204d831",
                 "shasum": ""
             },
             "require": {
@@ -109,7 +109,12 @@
                 "statsd",
                 "udp"
             ],
-            "time": "2017-07-30T17:40:00+00:00"
+            "support": {
+                "issues": "https://github.com/domnikl/statsd-php/issues",
+                "source": "https://github.com/domnikl/statsd-php/tree/master"
+            },
+            "abandoned": "slickdeals/statsd",
+            "time": "2018-12-14T19:39:29+00:00"
         },
         {
             "name": "macbre/monolog-utils",
