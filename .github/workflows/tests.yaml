@@ -32,6 +32,10 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
 
+    - name: Print some details about PHP
+      run: |
+        php -i  | grep -A25 -i "gd support"
+
     - name: Compose setup
       run: |
         composer validate
