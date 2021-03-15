@@ -21,7 +21,7 @@
     "monolog/monolog": "1.23",
     "macbre/monolog-utils": "^2.1",
     "tedivm/jshrink": "^1.2",
-    "phpunit/phpunit": "6.5.14"
+    "phpunit/phpunit": "7.x"
   },
   "require-dev": {
     "jakub-onderka/php-parallel-lint": "0.9"
