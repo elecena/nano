@@ -11,10 +11,10 @@ jobs:
     services:
       redis:
         # https://hub.docker.com/_/redis/
-        # open without a password to anyone.
+        # set up with a password "qwerty"
         image: redis:4-alpine
         ports: ['6379:6379']
-        options: --entrypoint redis-server
+        options: --entrypoint redis-server --requirepass qwerty
 
     strategy:
       matrix:
