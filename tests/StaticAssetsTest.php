@@ -312,7 +312,7 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 			$file = Utils::getTempFile();
 
 			file_put_contents($file, $in);
-			$this->assertContains($out, $processor->processFiles(array($file)));
+			$this->assertStringContainsString($out, $processor->processFiles(array($file)));
 
 			// clean up
 			unlink($file);
@@ -325,7 +325,7 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 		$processor = $static->getProcessor('css');
 
 		// encode existing image
-		$this->assertContains('data:image/png;base64,', $processor->encodeImage($dir . '/rss.png'));
+		$this->assertStringContainsString('data:image/png;base64,', $processor->encodeImage($dir . '/rss.png'));
 
 		// error handling
 		$this->assertFalse($processor->encodeImage($dir . '/not-existing.png'));
@@ -334,10 +334,10 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 
 		// blank.gif embedding
 		$this->assertEquals('data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==', $processor->encodeImage($dir . '/blank.gif'));
-		$this->assertContains('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->processFiles(array($dir . '/blank.css')));
+		$this->assertStringContainsString('.foo{background-image:url(data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH5BAEAAAEALAAAAAABAAEAQAICTAEAOw==)}', $processor->processFiles(array($dir . '/blank.css')));
 
 		// big files should not be encoded
-		$this->assertContains('php-logo.jpg', $processor->processFiles(array($dir . '/php-logo.css')));
+		$this->assertStringContainsString('php-logo.jpg', $processor->processFiles(array($dir . '/php-logo.css')));
 	}
 
 	public function testCssInclude() {
@@ -347,8 +347,8 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 
 		// include reset.css file
 		$out = $processor->processFiles(array($dir . '/blank.css'));
-		$this->assertNotContains('@import', $out);
-		$this->assertContains('html,body,h1,h2,h3,h4,h5,h6', $out);
+		$this->assertFalse(strpos($out, '@import'));
+		$this->assertStringContainsString('html,body,h1,h2,h3,h4,h5,h6', $out);
 	}
 
 	public function testJsMinify() {
@@ -357,17 +357,17 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 		$processor = $static->getProcessor('js');
 
 		// min.js file should not be touched
-		$this->assertContains(file_get_contents($dir . '/head.load.min.js'), $processor->processFiles(array($dir . '/head.load.min.js')));
+		$this->assertStringContainsString(file_get_contents($dir . '/head.load.min.js'), $processor->processFiles(array($dir . '/head.load.min.js')));
 
 		// minify simple script
-		$this->assertContains('jQuery.fn.foo=function(', $processor->processFiles(array($dir . '/jquery.foo.js')));
+		$this->assertStringContainsString('jQuery.fn.foo=function(', $processor->processFiles(array($dir . '/jquery.foo.js')));
 
 		// do not modify in debug mode
 		$static = $this->getStaticAssets();
 		$static->setDebugMode(true);
 		$processor = $static->getProcessor('js');
 
-		$this->assertContains('jQuery.fn.foo = function(bar) {', $processor->processFiles(array($dir . '/jquery.foo.js')));
+		$this->assertStringContainsString('jQuery.fn.foo = function(bar) {', $processor->processFiles(array($dir . '/jquery.foo.js')));
 	}
 
 	public function testGetPackageName() {
@@ -393,7 +393,7 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 		$response = $this->app->getResponse();
 
 		$this->assertTrue($static->serve($request));
-		$this->assertContains('"head"', $response->getContent());
-		$this->assertContains('jQuery.fn.foo=function(bar){return this.attr(bar)}', $response->getContent());
+		$this->assertStringContainsString('"head"', $response->getContent());
+		$this->assertStringContainsString('jQuery.fn.foo=function(bar){return this.attr(bar)}', $response->getContent());
 	}
 }
