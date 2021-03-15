@@ -8,24 +8,25 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
-    services:
-      redis:
-        # https://hub.docker.com/_/redis/
-        # set up with a password "qwerty"
-        image: redis:4-alpine
-        ports: ['6379:6379']
-        options: --entrypoint "redis-server --requirepass qwerty"
 
     strategy:
       matrix:
         php-versions:
         - '7.2'
         - '7.4'
-        - '8.0' 
+        - '8.0'
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    # https://hub.docker.com/_/redis/
+    - name: Start the Redis container
+      env:
+        REDIS_PASSWORD: qwerty
+      run: |
+        docker run -d -p 6379:6379 redis:4-alpine redis-server --requirepass $REDIS_PASSWORD --port 6379
+
     - name: Install PHP
       uses: shivammathur/setup-php@v2
       with:
