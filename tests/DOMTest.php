@@ -95,7 +95,7 @@ HTML;
 		$this->assertStringContainsString('123', $dom->getNodeContent('//ol/li'));
 		$this->assertEquals('4', $dom->getNodeAttr('//ol', 'start'));
 
-		$this->assertEquals("\n\t123\n\t456\n\t789\n", $dom->getNodeTextContent('//ol'));
+		$this->assertEquals("123\n\t456\n\t789", trim($dom->getNodeTextContent('//ol')));
 		$this->assertEquals("789\n", $dom->getNodeTextContent('//ol/li[3]'));
 
 		$nodes = $dom->xpath('//ol/li');
