@@ -32,18 +32,18 @@ class TemplateTest extends \Nano\NanoBaseTest {
 	public function testTemplateRender() {
 		$template = $this->getTemplate();
 		$template->set('title', '');
-		$this->assertInternalType('string', $template->render('test'));
+		$this->assertTrue(is_string($template->render('test')));
 	}
 
 	public function testTemplateSet() {
 		$template = $this->getTemplate();
 		$template->set('title', 'The Page');
-		$this->assertContains('<h1>The Page</h1>', $template->render('test'));
+		$this->assertStringContainsString('<h1>The Page</h1>', $template->render('test'));
 
 		$template->set('items', array('foo', 'bar'));
-		$this->assertContains('<ul>', $template->render('test'));
-		$this->assertContains('<li>foo</li>', $template->render('test'));
-		$this->assertContains('<li>bar</li>', $template->render('test'));
+		$this->assertStringContainsString('<ul>', $template->render('test'));
+		$this->assertStringContainsString('<li>foo</li>', $template->render('test'));
+		$this->assertStringContainsString('<li>bar</li>', $template->render('test'));
 	}
 
 	public function testTemplateMultipleSet() {
@@ -53,14 +53,14 @@ class TemplateTest extends \Nano\NanoBaseTest {
 			'items' => array('foo', 'bar'),
 		));
 
-		$this->assertContains('<h1>The Page</h1>', $template->render('test'));
-		$this->assertContains('<ul>', $template->render('test'));
-		$this->assertContains('<li>foo</li>', $template->render('test'));
-		$this->assertContains('<li>bar</li>', $template->render('test'));
+		$this->assertStringContainsString('<h1>The Page</h1>', $template->render('test'));
+		$this->assertStringContainsString('<ul>', $template->render('test'));
+		$this->assertStringContainsString('<li>foo</li>', $template->render('test'));
+		$this->assertStringContainsString('<li>bar</li>', $template->render('test'));
 
 		// change previously set variable
 		$template->set(array('title' => 'Foo&bar'));
-		$this->assertContains('<h1>Foo&amp;bar</h1>', $template->render('test'));
-		$this->assertContains('<li>foo</li>', $template->render('test'));
+		$this->assertStringContainsString('<h1>Foo&amp;bar</h1>', $template->render('test'));
+		$this->assertStringContainsString('<li>foo</li>', $template->render('test'));
 	}
 }
