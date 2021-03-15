@@ -23,9 +23,6 @@
     "tedivm/jshrink": "^1.2",
     "phpunit/phpunit": "9.x"
   },
-  "require-dev": {
-    "jakub-onderka/php-parallel-lint": "0.9"
-  },
   "autoload": {
     "classmap": ["classes/", "classes/utils/", "tests/app/classes/", "tests/CacheTest.php"],
     "psr-4": {
@@ -34,7 +31,6 @@
   },
   "scripts": {
     "test": [
-      "parallel-lint . --exclude vendor",
       "phpunit"
     ],
     "coverage": [
