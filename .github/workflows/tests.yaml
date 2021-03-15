@@ -1,0 +1,42 @@
+name: phpunit
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-versions:
+        - '7.2'
+        # - '7.4'
+        #- '8.0'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # https://hub.docker.com/_/redis/
+    - name: Start the Redis container
+      env:
+        REDIS_PASSWORD: qwerty
+      run: |
+        docker run -d -p 6379:6379 redis:4-alpine redis-server --requirepass $REDIS_PASSWORD --port 6379
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+
+    - name: Compose setup
+      run: |
+        composer validate
+        composer check-platform-reqs
+        composer dump-autoload
+        composer install --no-interaction
+
+    - name: Test the code
+      run: ./vendor/bin/phpunit --verbose
