@@ -12,7 +12,6 @@ class ImageGD extends Image {
 	 * Create an instance of Image for given raw image data
 	 */
 	function __construct($raw) {
-		error_reporting(E_ALL); ini_set('display_errors', '1'); // FIXME - temporary debugging code
 		$this->img = imagecreatefromstring($raw);
 
 		if (!is_resource($this->img)) {
