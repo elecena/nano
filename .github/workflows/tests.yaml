@@ -36,6 +36,19 @@ jobs:
       run: |
         php -i  | grep -A25 -i "gd support"
 
+    - name: Get composer cache directory
+      id: composer-cache-directory
+      run: |
+        composer config cache-dir
+        echo "::set-output name=dir::$(composer config cache-dir)"
+    - name: composer cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.composer-cache-directory.outputs.dir }}
+        key: php-${{ matrix.php-versions }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          php-${{ matrix.php-versions }}-composer
+
     - name: Compose setup
       run: |
         composer validate
