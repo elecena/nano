@@ -74,7 +74,8 @@ class DOM {
 		$html = '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' . $html;
 
 		// parse using DOMDocument (suppress HTML warnings)
-		$doc = @DOMDocument::loadHTML($html);
+		$doc = new DOMDocument();
+		@$doc->loadHTML($html);
 
 		if (!empty($doc)) {
 			$xml = simplexml_import_dom($doc);

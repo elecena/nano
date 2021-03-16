@@ -14,7 +14,7 @@ class DatabaseResultTest extends NanoBaseTest {
 	/* @var DatabaseResult $results */
 	private $results;
 
-	function setUp() {
+	function setUp(): void {
 		parent::setUp();
 		$this->dbMock = new NanoDatabaseMock($this->app);
 

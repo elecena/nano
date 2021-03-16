@@ -72,11 +72,11 @@ abstract class Image {
 	private static function getInstance($raw) {
 		// Image Magick
 		if (class_exists('Imagick')) {
-			$driverName = 'ImageImagick';
+			$driverName = ImageImagick::class;
 		}
 		// fallback to GD
 		else if (function_exists('gd_info')){
-			$driverName = 'ImageGD';
+			$driverName = ImageGD::class;
 		}
 		else {
 			throw new RuntimeException('No image driver available');

@@ -12,7 +12,7 @@ class NanoBaseTest extends TestCase {
 	/* @var $app \NanoApp */
 	protected $app;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		// use the current working directory where "./composer.phar test" is run
 		$dir = getcwd();
 		$this->app = \Nano::app($dir);

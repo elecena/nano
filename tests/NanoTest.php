@@ -18,6 +18,6 @@ class NanoTest extends \Nano\NanoBaseTest {
 
 		Nano::addLibrary($libName);
 
-		$this->assertContains($libName, get_include_path());
+		$this->assertStringContainsString($libName, get_include_path());
 	}
 }

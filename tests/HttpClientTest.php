@@ -10,14 +10,12 @@ class HttpClientTest extends \Nano\NanoBaseTest {
 		$client = new HttpClient();
 
 		// check user agent
-		$this->assertRegExp('#NanoPortal/' . Nano::VERSION . '#', $client->getUserAgent());
-		$this->assertRegExp('#libcurl/#', $client->getUserAgent());
+		$this->assertMatchesRegularExpression('#NanoPortal/' . Nano::VERSION . '#', $client->getUserAgent());
+		$this->assertMatchesRegularExpression('#libcurl/#', $client->getUserAgent());
 	}
 
-	/**
-	 * @expectedException Nano\Http\ResponseException
-	 */
 	public function testInvalidRequest() {
+		$this->expectException(\Nano\Http\ResponseException::class);
 		$client = new HttpClient();
 		$client->get('foo://bar');
 	}
@@ -38,10 +36,10 @@ class HttpClientTest extends \Nano\NanoBaseTest {
 
 		// check cookies
 		$this->assertFileExists($jarFile);
-		$this->assertContains('Cookie File', file_get_contents($jarFile));
+		$this->assertStringContainsString('Cookie File', file_get_contents($jarFile));
 
 		// remove jar file
 		unlink($jarFile);
-		$this->assertFileNotExists($jarFile);
+		$this->assertFileDoesNotExist($jarFile);
 	}
 }

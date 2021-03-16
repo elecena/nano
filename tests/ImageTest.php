@@ -11,7 +11,7 @@ class ImageTest extends \Nano\NanoBaseTest {
 
 	const DEBUG = false;
 
-	public function setUp() {
+	public function setUp(): void {
 		// 578x406
 		$this->file = dirname(__FILE__) . '/app/statics/php-logo.jpg';
 	}

@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- @see https://phpunit.de/manual/3.7/en/appendixes.configuration.html -->
-
-<phpunit bootstrap="vendor/autoload.php" colors="true" verbose="true">
-    <testsuites>
-        <testsuite name="nano Test Suite">
-            <directory>tests/</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">classes/</directory>
-        </whitelist>
-    </filter>
-
-    <php>
-        <const name="NANO_TEST" value="bar"/>
-        <env name="REDIS_PASSWORD" value="qwerty" />
-        <ini name="date.timezone" value="UTC"/>
-        <ini name="memory_limit" value="350M" />
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" colors="true" verbose="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">classes/</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="nano Test Suite">
+      <directory>tests/</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <const name="NANO_TEST" value="bar"/>
+    <env name="REDIS_PASSWORD" value="qwerty"/>
+    <ini name="date.timezone" value="UTC"/>
+    <ini name="memory_limit" value="350M"/>
+  </php>
 </phpunit>
