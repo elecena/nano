@@ -32,6 +32,7 @@ class DatabaseMysql extends Database {
 		// store connection settings
 		$this->settings = $settings;
 
+		// TOOD: implement lazy connection on the first query
 		$this->doConnect();
 	}
 
