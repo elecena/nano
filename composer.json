@@ -35,5 +35,8 @@
     "coverage": [
       "phpunit --coverage-html=.coverage"
     ]
+  },
+  "require-dev": {
+    "nunomaduro/larastan": "^0.7.1"
   }
 }
