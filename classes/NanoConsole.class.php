@@ -10,8 +10,20 @@ use Monolog\Handler\StreamHandler;
  * TODO: handle catchable fatals @see http://stackoverflow.com/questions/2468487/how-can-i-catch-a-catchable-fatal-error-on-php-type-hinting
  */
 class NanoConsole {
+    /**
+     * @var string
+     */
+    private $prompt;
+    /**
+     * @var bool
+     */
+    private $useReadline;
+    /**
+     * @var string
+     */
+    private $readLineHistoryFileName;
 
-	/**
+    /**
 	 * Detect the environment
 	 */
 	function __construct() {
@@ -39,7 +51,6 @@ class NanoConsole {
 	 * @return string
 	 */
 	public function banner() {
-		/* @var NanoApp $app */
 		global $app;
 
 		$banner = <<<BANNER
@@ -69,7 +80,6 @@ BANNER;
 	 * @return string the result
 	 */
 	protected function execute( $line ) {
-		/* @var NanoApp $app */
 		global $app;
 
 		# add trailing semicolon

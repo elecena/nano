@@ -7,6 +7,7 @@
 use Nano\Output;
 use Nano\Response;
 use Nano\Request;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ResponseTest extends \Nano\NanoBaseTest {
 
@@ -124,9 +125,9 @@ class ResponseTest extends \Nano\NanoBaseTest {
 	 * Return a mock of the app request with given HTTP headers
 	 *
 	 * @param array $headers
-	 * @return PHPUnit_Framework_MockObject_MockObject
+	 * @return MockObject
 	 */
-	private function mockAppWithRequestWithHeaders(Array $headers) {
+	private function mockAppWithRequestWithHeaders(Array $headers): MockObject {
 		$request = new Request(array(), $headers);
 
 		// mock NanoApp
