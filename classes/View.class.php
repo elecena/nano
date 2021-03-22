@@ -6,82 +6,95 @@ namespace Nano;
  * View class wrapping response from the controller
  */
 
-class View {
+class View
+{
 
-	// application
-	private $app;
+    // application
+    private $app;
 
-	// controller called
-	private $controller;
+    // controller called
+    private $controller;
 
-	// method called
-	private $method;
+    // method called
+    private $method;
 
-	// template
-	private $template;
+    // template
+    private $template;
 
-	// template name
-	private $templateName;
+    // template name
+    private $templateName;
 
-	// output's format
-	protected $format;
+    // output's format
+    protected $format;
 
-	// controller's data
-	protected $data = array();
+    // controller's data
+    protected $data = array();
 
-	public function __construct(\NanoApp $app, \Controller $controller) {
-		$this->app = $app;
-		$this->controller = $controller;
+    public function __construct(\NanoApp $app, \Controller $controller)
+    {
+        $this->app = $app;
+        $this->controller = $controller;
 
-		$this->template = new Template($this->controller->getDirectory() . '/templates');
-		$this->template->set('app', $app);
-	}
+        $this->template = new Template($this->controller->getDirectory() . '/templates');
+        $this->template->set('app', $app);
+    }
 
-	public function setTemplateName($templateName) {
-		$this->templateName = $templateName;
-	}
+    public function setTemplateName($templateName)
+    {
+        $this->templateName = $templateName;
+    }
 
-	public function getTemplateName() {
-		return $this->templateName;
-	}
+    public function getTemplateName()
+    {
+        return $this->templateName;
+    }
 
-	public function getTemplate() {
-		return $this->template;
-	}
+    public function getTemplate()
+    {
+        return $this->template;
+    }
 
-	public function getController() {
-		return $this->controller;
-	}
+    public function getController()
+    {
+        return $this->controller;
+    }
 
-	public function getControllerName() {
-		return $this->controller->getName();
-	}
+    public function getControllerName()
+    {
+        return $this->controller->getName();
+    }
 
-	public function setMethod($method) {
-		$this->method = $method;
-	}
+    public function setMethod($method)
+    {
+        $this->method = $method;
+    }
 
-	public function getMethod() {
-		return $this->method;
-	}
+    public function getMethod()
+    {
+        return $this->method;
+    }
 
-	public function setFormat($format) {
-		$this->format = $format;
-	}
+    public function setFormat($format)
+    {
+        $this->format = $format;
+    }
 
-	public function getFormat() {
-		return $this->format;
-	}
+    public function getFormat()
+    {
+        return $this->format;
+    }
 
-	public function setData(Array $data) {
-		$this->data = $data;
-	}
+    public function setData(array $data)
+    {
+        $this->data = $data;
+    }
 
-	public function getData() {
-		return $this->data;
-	}
+    public function getData()
+    {
+        return $this->data;
+    }
 
-	public function render() {
-
-	}
+    public function render()
+    {
+    }
 }

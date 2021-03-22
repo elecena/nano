@@ -4,114 +4,121 @@
  * nanoPortal base class
  */
 
-class Nano {
+class Nano
+{
+    const VERSION = '0.01';
 
-	const VERSION = '0.01';
+    // core directory
+    private static $dir = '';
 
-	// core directory
-	static private $dir = '';
+    // core libraries directory
+    private static $libraryDir = '';
 
-	// core libraries directory
-	static private $libraryDir = '';
+    private static $initialized = false;
 
-	static private $initialized = false;
+    /**
+     * Initialize framework (initialize classes autoloader, set directories)
+     */
+    public static function init()
+    {
+        if (self::$initialized) {
+            return;
+        }
 
-	/**
-	 * Initialize framework (initialize classes autoloader, set directories)
-	 */
-	static public function init() {
-		if (self::$initialized) {
-			return;
-		}
+        // set framework's directory
+        $dir = __DIR__ . '/..';
 
-		// set framework's directory
-		$dir = __DIR__ . '/..';
+        // setup paths
+        self::$dir = realpath($dir);
+        self::$libraryDir = self::$dir . '/lib';
 
-		// setup paths
-		self::$dir = realpath($dir);
-		self::$libraryDir = self::$dir . '/lib';
+        self::$initialized = true;
 
-		self::$initialized = true;
+        date_default_timezone_set('Europe/Berlin');
+    }
 
-		date_default_timezone_set('Europe/Berlin');
-	}
+    /**
+     * Creates new instance of Nano application based on given configuration
+     */
+    public static function app($dir, $configSet = 'default')
+    {
+        // initialize framework
+        Nano::init();
 
-	/**
-	 * Creates new instance of Nano application based on given configuration
-	 */
-	static public function app($dir, $configSet = 'default') {
-		// initialize framework
-		Nano::init();
+        // create new application
+        $app = new NanoApp($dir, $configSet);
 
-		// create new application
-		$app = new NanoApp($dir, $configSet);
+        return $app;
+    }
 
-		return $app;
-	}
+    /**
+     * Creates a CLI script from given class
+     *
+     * @param string $dir
+     * @param $scriptClass
+     * @param string string $configSet
+     * @return NanoScript
+     */
+    public static function script($dir, $scriptClass, $configSet = 'default')
+    {
+        // initialize framework
+        Nano::init();
 
-	/**
-	 * Creates a CLI script from given class
-	 *
-	 * @param string $dir
-	 * @param $scriptClass
-	 * @param string string $configSet
-	 * @return NanoScript
-	 */
-	static public function script($dir, $scriptClass, $configSet = 'default') {
-		// initialize framework
-		Nano::init();
+        // create new application
+        $app = new NanoCliApp($dir, $configSet, $scriptClass::LOGFILE);
 
-		// create new application
-		$app = new NanoCliApp($dir, $configSet, $scriptClass::LOGFILE);
+        /* @var NanoScript $script */
+        $script = new $scriptClass($app);
 
-		/* @var NanoScript $script */
-		$script = new $scriptClass($app);
+        // call NanoScript::onTearDown method when the script is completed
+        $app->getEvents()->bind('NanoAppTearDown', array($script, 'onTearDown'));
 
-		// call NanoScript::onTearDown method when the script is completed
-		$app->getEvents()->bind('NanoAppTearDown', array($script, 'onTearDown'));
+        return $script;
+    }
 
-		return $script;
-	}
+    /**
+     * Creates new instance of Nano application for command line
+     *
+     * @deprecated use Nano::script
+     */
+    public static function cli($dir, $logFile = 'script', $configSet = 'default')
+    {
+        // initialize framework
+        Nano::init();
 
-	/**
-	 * Creates new instance of Nano application for command line
-	 *
-	 * @deprecated use Nano::script
-	 */
-	static public function cli($dir, $logFile = 'script', $configSet = 'default') {
-		// initialize framework
-		Nano::init();
+        // create new application
+        $app = new NanoCliApp($dir, $configSet, $logFile);
 
-		// create new application
-		$app = new NanoCliApp($dir, $configSet, $logFile);
+        return $app;
+    }
 
-		return $app;
-	}
+    /**
+     * Return path to nanoPortal core
+     */
+    public static function getCoreDirectory()
+    {
+        return self::$dir;
+    }
 
-	/**
-	 * Return path to nanoPortal core
-	 */
-	static public function getCoreDirectory() {
-		return self::$dir;
-	}
+    /**
+     * Return path to nanoPortal libraries
+     */
+    public static function getLibDirectory()
+    {
+        return self::$libraryDir;
+    }
 
-	/**
-	 * Return path to nanoPortal libraries
-	 */
-	static public function getLibDirectory() {
-		return self::$libraryDir;
-	}
+    /**
+     * Add given library to include_path
+     */
+    public static function addLibrary($directory)
+    {
+        // normalize path
+        $fullPath = self::getLibDirectory() . '/' . $directory;
 
-	/**
-	 * Add given library to include_path
-	 */
-	static public function addLibrary($directory) {
-		// normalize path
-		$fullPath = self::getLibDirectory() . '/' . $directory;
-
-		// update include_path
-		set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
-	}
+        // update include_path
+        set_include_path(get_include_path() . PATH_SEPARATOR . $fullPath);
+    }
 }
 
 Nano::init();

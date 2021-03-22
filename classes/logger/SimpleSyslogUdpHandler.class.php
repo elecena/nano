@@ -9,15 +9,16 @@ use Monolog\Handler\SyslogUdpHandler;
  *
  * @see https://github.com/Seldaek/monolog/pull/943
  */
-class SimpleSyslogUdpHandler extends SyslogUdpHandler {
+class SimpleSyslogUdpHandler extends SyslogUdpHandler
+{
 
-	/**
-	 * Make common syslog header (see rfc5424)
-	 */
-	protected function makeCommonSyslogHeader($severity)
-	{
-		$priority = $severity + $this->facility;
+    /**
+     * Make common syslog header (see rfc5424)
+     */
+    protected function makeCommonSyslogHeader($severity)
+    {
+        $priority = $severity + $this->facility;
 
-		return "<$priority>1 ";
-	}
+        return "<$priority>1 ";
+    }
 }
