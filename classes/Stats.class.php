@@ -2,8 +2,7 @@
 
 namespace Nano;
 
-use \Domnikl\Statsd\Connection;
-use \Domnikl\Statsd\Client;
+use Exception;
 
 /**
  * Integration layer for domnikl/statsd library
@@ -13,35 +12,10 @@ use \Domnikl\Statsd\Client;
 class Stats {
 
 	/**
-	 * @param \NanoApp $app application instance
-	 * @param string $namespace option namespace to be appended to the global namespace
-	 * @return Client StatsD client instance
-	 */
-	static function getCollector(\NanoApp $app, $namespace = '') {
-		$config = $app->getConfig();
-
-		$statsdEnabled = $config->get('stats', false) !== false;
-
-		if ($statsdEnabled) {
-			// get global config
-			$host = $config->get('stats.host', 'localhost');
-			/* @var int $port */
-			$port = $config->get('stats.port', 8125);
-			$globalNS = $config->get('stats.namespace', '');
-
-			if ($globalNS != '') {
-				$namespace = $globalNS . '.' . $namespace;
-			}
-
-			$connection = new Connection\UdpSocket($host, $port);
-		}
-		else {
-			// disable sending any metrics
-			$connection = new Connection\Blackhole();
-		}
-
-		$statsd = new Client($connection, $namespace);
-
-		return $statsd;
+	 * @deprecated Stats will be removed
+     * @throws Exception
+     */
+	static function getCollector() {
+        throw new Exception(__METHOD__. ' is deprecated');
 	}
 }
