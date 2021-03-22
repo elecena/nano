@@ -34,6 +34,9 @@
     ],
     "coverage": [
       "phpunit --coverage-html=.coverage"
+    ],
+    "lint": [
+      "phpstan analyse app/ classes/ tests/"
     ]
   },
   "require-dev": {
