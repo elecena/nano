@@ -41,7 +41,6 @@ class Response {
 	private $app;
 	private $config;
 	private $debug;
-	private $stats;
 
 	// this flag is be set when response is compressed
 	private $isCompressed = false;
@@ -73,7 +72,6 @@ class Response {
 
 		$this->config = $this->app->getConfig();
 		$this->debug = $this->app->getDebug();
-		$this->stats = Stats::getCollector($app, 'response');
 
 		// don't enable output buffering when in CLI
 		if ($this->app->getRequest()->isCLI()) {
@@ -187,11 +185,6 @@ class Response {
 		foreach($headers as $name => $value) {
 			header("{$name}: {$value}");
 		}
-
-		// stats
-		$this->stats->increment("code.{$this->responseCode}");
-		$this->stats->timing('time.total', round($this->getResponseTime() * 1000) /* ms */);
-		$this->stats->memory('memory.total');
 
 		return true;
 	}

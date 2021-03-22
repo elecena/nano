@@ -184,10 +184,5 @@ abstract class Cache {
 			'hits' => $this->getHits(),
 			'misses' => $this->getMisses()
 		]);
-
-		// send stats
-		$statsd = Stats::getCollector($app, 'cache');
-		$statsd->count('hits', $this->getHits());
-		$statsd->count('misses', $this->getMisses());
 	}
 }
