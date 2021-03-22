@@ -9,7 +9,6 @@ use \Nano\Output;
 use \Nano\Response;
 use \Nano\Request;
 use \Nano\Router;
-use \Nano\Stats;
 
 /**
  * Class for representing nanoPortal's application
@@ -142,19 +141,16 @@ class NanoApp {
 			'response_code' => $this->getResponse()->getResponseCode()
 		];
 
-		// TODO: static
-		$stats = Stats::getCollector($this, 'request');
-
 		// request type
 		if ($this->request->isApi()) {
-			$stats->increment('type.api');
-			$stats->increment('requests.count');
+//			$stats->increment('type.api');
+//			$stats->increment('requests.count');
 
 			$responseDetails['type'] = 'api';
 		}
 		else if (!$this->request->isInternal() && !$this->request->isCLI()) {
-			$stats->increment('type.main');
-			$stats->increment('requests.count');
+//			$stats->increment('type.main');
+//			$stats->increment('requests.count');
 
 			$responseDetails['type'] = 'main';
 		}
@@ -162,8 +158,8 @@ class NanoApp {
 		// request path
 		$route = $this->getRequest()->getRoute();
 		if (is_array($route)) {
-			$stats->increment(sprintf('controller.%s', $route['controller']));
-			$stats->increment(sprintf('method.%s.%s', $route['controller'], $route['method']));
+//			$stats->increment(sprintf('controller.%s', $route['controller']));
+//			$stats->increment(sprintf('method.%s.%s', $route['controller'], $route['method']));
 
 			$responseDetails['controller'] = $route['controller'];
 			$responseDetails['method'] = $route['method'];

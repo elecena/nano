@@ -40,9 +40,6 @@ abstract class Database {
 	// connection's name (either config entry name or DB driver's name)
 	protected $name;
 
-	// stats collector
-	protected $stats;
-
 	// already created connections
 	static private $connectionsPoll = array();
 
@@ -59,8 +56,6 @@ abstract class Database {
 		// add performance report
 		$events = $app->getEvents();
 		$events->bind('NanoAppTearDown', array($this, 'onNanoAppTearDown'));
-
-		$this->stats = \Nano\Stats::getCollector($app, "database.{$name}");
 	}
 
 	/**
@@ -574,9 +569,5 @@ abstract class Database {
 
 		$debug->log("Database [{$this->name}]: {$perf['queries']} queries in {$perf['time']} ms");
 		$this->logger->info('Performance data', $perf);
-
-		// send stats
-		$this->stats->count('queries.count', $perf['queries']);
-		$this->stats->timing('time.total', $perf['time'] /* ms */);
 	}
 }

@@ -16,7 +16,6 @@
     "ext-mbstring": "*",
     "ext-gd": "*",
     "ext-xml": "*",
-    "domnikl/statsd": "~3.0",
     "predis/predis": "^1.1",
     "monolog/monolog": "2.2.0",
     "macbre/monolog-utils": "^2.1",

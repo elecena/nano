@@ -96,8 +96,6 @@ class DatabaseMysql extends Database {
 				]);
 
 				$this->log(__METHOD__, 'connected with ' . $hostInfo, $time);
-				$this->stats->timing('time.connection', round($time * 1000) /* ms */);
-
 				$this->connected = true;
 
 				// set UTF8 as connection encoding
