@@ -21,39 +21,38 @@ $path = $request->getPath();
 $format = $request->getExtension();
 
 if (!is_null($format)) {
-	// remove extension part from request path
-	$path = reset(explode('.', $path, 2));
-	$request->setPath($path);
-}
-else {
-	// default format if not specified
-	$format = 'json';
+    // remove extension part from request path
+    $path = reset(explode('.', $path, 2));
+    $request->setPath($path);
+} else {
+    // default format if not specified
+    $format = 'json';
 }
 
 // support JSONP format
 if ($format == 'json') {
-	$callback = trim($request->get('callback', ''));
+    $callback = trim($request->get('callback', ''));
 
-	if ($callback != '') {
-		$format = 'jsonp';
-	}
+    if ($callback != '') {
+        $format = 'jsonp';
+    }
 }
 
 // dispatch the request
 $data = $app->dispatchRequest($request);
 
 if ($data !== false) {
-	// format the response
-	$output = Output::factory($format, $data);
+    // format the response
+    $output = Output::factory($format, $data);
 
-	if (!empty($callback)) {
-		/* @var Output\OutputJsonp $output */
-		$output->setCallback($callback);
-	}
+    if (!empty($callback)) {
+        /* @var Output\OutputJsonp $output */
+        $output->setCallback($callback);
+    }
 
-	// generate the response
-	$response->setResponseCode(Response::OK);
-	$response->setContent($output);
+    // generate the response
+    $response->setResponseCode(Response::OK);
+    $response->setContent($output);
 }
 
 echo $response->render();

@@ -2,16 +2,16 @@
 
 // debug
 $config['debug'] = array(
-	'enabled' => true
+    'enabled' => true
 );
 
 $config['assets.packages'] = array(
-	'app' => array(
-		'js' => '/statics/head.js',
-	),
-	'styles' => array(
-		'css' => array(
-			'/statics/reset.css',
-		),
-	),
+    'app' => array(
+        'js' => '/statics/head.js',
+    ),
+    'styles' => array(
+        'css' => array(
+            '/statics/reset.css',
+        ),
+    ),
 );
