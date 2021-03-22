@@ -2,6 +2,7 @@
 
 namespace Nano\Logger;
 
+use DateTimeInterface;
 use Monolog\Handler\SyslogUdpHandler;
 
 /**
@@ -13,8 +14,12 @@ class SimpleSyslogUdpHandler extends SyslogUdpHandler {
 
 	/**
 	 * Make common syslog header (see rfc5424)
-	 */
-	protected function makeCommonSyslogHeader($severity)
+	 *
+     * @param int $severity
+     * @param DateTimeInterface $datetime
+     * @return string
+     */
+	protected function makeCommonSyslogHeader(int $severity, DateTimeInterface $datetime): string
 	{
 		$priority = $severity + $this->facility;
 
