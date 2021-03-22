@@ -1,8 +1,6 @@
 <?php
 
 namespace Nano;
-use Nano\Output;
-use Nano\Stats;
 use Macbre\Logger\Processors\RequestIdProcessor;
 
 /**

@@ -40,9 +40,6 @@ abstract class Database {
 	// connection's name (either config entry name or DB driver's name)
 	protected $name;
 
-	// stats collector
-	protected $stats;
-
 	// already created connections
 	static private $connectionsPoll = array();
 

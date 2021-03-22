@@ -9,7 +9,6 @@ use \Nano\Output;
 use \Nano\Response;
 use \Nano\Request;
 use \Nano\Router;
-use \Nano\Stats;
 
 /**
  * Class for representing nanoPortal's application
