@@ -3,6 +3,7 @@
 namespace Nano;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Base class for PHPUnit-based unit tests
@@ -25,7 +26,7 @@ class NanoBaseTest extends TestCase {
 	 * @param callable|null $onQuery optional callback
 	 * @return NanoDatabaseMock
 	 */
-	protected function getDatabaseMock(array $result = [], callable $onQuery = null) {
+	protected function getDatabaseMock(array $result = [], callable $onQuery = null): NanoDatabaseMock {
 		$mock = new NanoDatabaseMock($this->app);
 
 		$mock->setOnQueryCallback($onQuery);
@@ -38,9 +39,9 @@ class NanoBaseTest extends TestCase {
 	 * Creates a mock of NanoApp with a given method mocked
 	 * @param string $method
 	 * @param mixed $value
-	 * @return \PHPUnit_Framework_MockObject_MockObject
+	 * @return MockObject
 	 */
-	protected function getNanoAppMock($method, $value) {
+	protected function getNanoAppMock(string $method, $value): MockObject {
 		$mock = $this->createMock(\NanoApp::class);
 		$mock->method($method)->willReturn($value);
 
@@ -49,9 +50,9 @@ class NanoBaseTest extends TestCase {
 
 	/**
 	 * @param NanoObject $obj
-	 * @param \PHPUnit_Framework_MockObject_MockObject $mock
+	 * @param MockObject $mock
 	 */
-	protected function setNanoAppMock(NanoObject $obj, \PHPUnit_Framework_MockObject_MockObject $mock) {
+	protected function setNanoAppMock(NanoObject $obj, MockObject $mock) {
 		// make sphinx property a public one
 		$reflection = new \ReflectionClass($obj);
 		$reflection_property = $reflection->getProperty('app');

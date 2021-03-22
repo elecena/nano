@@ -7,7 +7,7 @@
  * You can perform extra actions here. For instance: load different config on your development environment.
  */
 
-require_once 'nano.php';
+require_once __DIR__ . '../vendor/autoload.php';
 
 // initialize instance of framework object
 Nano::init();
