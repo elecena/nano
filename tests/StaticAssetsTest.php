@@ -384,8 +384,6 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 	}
 
 	public function testServePackages() {
-		$this->markTestSkipped('Memory consuming test');
-
 		$static = $this->getStaticAssets();
 		$prefix = StaticAssets::PACKAGE_URL_PREFIX;
 
@@ -394,6 +392,6 @@ class StaticAssetsTest extends \Nano\NanoBaseTest {
 
 		$this->assertTrue($static->serve($request));
 		$this->assertStringContainsString('"head"', $response->getContent());
-		$this->assertStringContainsString('jQuery.fn.foo=function(bar){return this.attr(bar)}', $response->getContent());
+		$this->assertStringContainsString('jQuery.fn.foo=function(bar){return this.attr(bar);}', $response->getContent());
 	}
 }
