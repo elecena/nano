@@ -2,6 +2,9 @@
 
 use Nano\NanoBaseTest;
 
+/**
+ * Requires MySQL server running on 0.0.0.0:3306
+ */
 class DatabaseMysqlTest extends NanoBaseTest
 {
     /**
@@ -12,7 +15,7 @@ class DatabaseMysqlTest extends NanoBaseTest
     protected function setUp(): void
     {
         parent::setUp();
-        $this->database = Database::connect($this->app, ['driver' => 'mysql', 'host' => 'localhost', 'user' => 'root', 'pass' => '', 'database' => 'test']);
+        $this->database = Database::connect($this->app, ['driver' => 'mysql', 'host' => '0.0.0.0', 'user' => 'root', 'pass' => '']);
     }
 
     public function testLazyConnect()
@@ -29,43 +32,25 @@ class DatabaseMysqlTest extends NanoBaseTest
         $this->assertTrue($this->database->isConnected(), 'We should be connected now');
     }
 
-    // requires server running on localhost:3306
     public function testMySqlDatabase()
     {
+        // test performance data
+        $performanceData = $this->database->getPerformanceData();
+        $this->assertEquals(0, $performanceData['queries']);
+
         try {
             $this->database->query('SELECT 1');
         } catch (DatabaseException $e) {
             $this->markTestSkipped('Requires server running on localhost:3306 - ' . $e->getMessage());
         }
 
-        // test performance data
-        $performanceData = $this->database->getPerformanceData();
-        $this->assertEquals(0, $performanceData['queries']);
-        $this->assertEquals(0, $performanceData['time']);
-
-        $res = $this->database->select('test', '*');
-        foreach ($res as $i => $row) {
-            #var_dump($row);
-        }
-        $res->free();
-
-        $res = $this->database->select('test', '*');
-        while ($row = $res->fetchRow()) {
-            #var_dump($row);
-        }
-        $res->free();
-
-        $row = $this->database->selectRow('test', '*', ['id' => 2]);
-        #var_dump($row);
-
-        $row = $this->database->selectField('test', 'count(*)');
-        #var_dump($row);
-
-        $res = $this->database->query('SELECT VERSION()');
-        #var_dump($res->fetchField());
+        // DUAL is purely for the convenience of people who require that all SELECT statements
+        // should have FROM and possibly other clauses. MySQL may ignore the clauses.
+        // MySQL does not require FROM DUAL if no tables are referenced.
+        $this->assertEquals('1', $this->database->selectField('dual', '1'));
+        $this->assertEquals(1, $this->database->select('dual', '1')->count());
 
         $performanceData = $this->database->getPerformanceData();
-        $this->assertEquals(5, $performanceData['queries']);
-        $this->assertTrue($performanceData['time'] > 0);
+        $this->assertEquals(3, $performanceData['queries']);
     }
 }
