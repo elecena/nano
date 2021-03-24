@@ -33,18 +33,14 @@ class DatabaseMysql extends Database
 
         // store connection settings
         $this->settings = $settings;
-
-        // TOOD: implement lazy connection on the first query
-        $this->doConnect();
     }
 
     /**
      * (Re)connect using settings passed to the constructor
      *
-     * @param bool $reconnect
      * @throws DatabaseException
      */
-    protected function doConnect($reconnect = true)
+    protected function doConnect()
     {
         // reuse connection settings
         $settings = $this->settings;
@@ -158,7 +154,7 @@ class DatabaseMysql extends Database
 
         // reconnect and retry the query
         if ($this->link->errno == self::ERR_SERVER_HAS_GONE_AWAY) {
-            $this->doConnect(true /* $reconnect*/);
+            $this->doConnect();
 
             $res = $this->link->query($sql, self::RESULT_MODE);
         }
