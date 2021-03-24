@@ -4,6 +4,22 @@ use Nano\NanoBaseTest;
 
 class DatabaseMysqlTest extends NanoBaseTest
 {
+    /**
+     * @throws DatabaseException
+     */
+    public function testLazyConnect()
+    {
+        $database = Database::connect($this->app, ['driver' => 'mysql', 'host' => 'localhost', 'user' => 'root', 'pass' => '', 'database' => 'test']);
+        $this->assertInstanceOf(DatabaseMysql::class, $database);
+
+        $this->assertFalse($database->isConnected(), 'We should not be connected yet');
+
+        /**
+        $database->query('SELECT 1 FROM dual');
+        $this->assertTrue($database->isConnected(), 'We should be connected now');
+         **/
+    }
+
     // requires server running on localhost:3306
     public function testMySqlDatabase()
     {
