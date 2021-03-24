@@ -12,7 +12,7 @@ class DatabaseMysqlTest extends NanoBaseTest
     protected function setUp(): void
     {
         parent::setUp();
-        $this->database = Database::connect($this->app, ['driver' => 'mysql', 'host' => 'localhost', 'user' => 'root', 'pass' => '', 'database' => 'test']);
+        $this->database = Database::connect($this->app, ['driver' => 'mysql', 'host' => '0.0.0.0', 'user' => 'root', 'pass' => '', 'database' => 'test']);
     }
 
     public function testLazyConnect()
