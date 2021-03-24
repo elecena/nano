@@ -36,10 +36,15 @@
       "phpunit --coverage-html=.coverage"
     ],
     "lint": [
+      "php-cs-fixer fix --config=.php_cs --dry-run --verbose",
       "phpstan analyse app/ classes/ tests/"
+    ],
+    "format": [
+      "php-cs-fixer fix --config=.php_cs"
     ]
   },
   "require-dev": {
-    "nunomaduro/larastan": "^0.7.1"
+    "phpstan/phpstan": "^0.12.82",
+    "friendsofphp/php-cs-fixer": "^2.18"
   }
 }
