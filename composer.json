@@ -36,6 +36,7 @@
       "phpunit --coverage-html=.coverage"
     ],
     "lint": [
+      "php-cs-fixer fix --config=.php_cs",
       "phpstan analyse app/ classes/ tests/"
     ]
   },
