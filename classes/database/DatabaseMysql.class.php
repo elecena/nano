@@ -146,11 +146,11 @@ class DatabaseMysql extends Database
      * @see http://www.php.net/manual/en/mysqli.real-query.php
      *
      * @param string $sql
-     * @param string|bool $fname
-     * @throws  DatabaseException
+     * @param string|null $fname
      * @return DatabaseResult
+     * @throws DatabaseException
      */
-    public function query($sql, $fname = false)
+    public function query(string $sql, ?string $fname = null): DatabaseResult
     {
         $this->debug->time('query');
 

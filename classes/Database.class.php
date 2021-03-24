@@ -162,11 +162,11 @@ abstract class Database
      * Send given query and return results handler
      *
      * @param string $sql
-     * @param string|bool $fname
+     * @param string|null $fname
      * @return DatabaseResult
      * @throws DatabaseException
      */
-    abstract public function query($sql, $fname = false);
+    abstract public function query(string $sql, ?string $fname = null): DatabaseResult;
 
     /**
      * Start a transaction
