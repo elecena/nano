@@ -3,16 +3,18 @@
 /**
  * An example model
  */
-class TestModel extends Model {
+class TestModel extends Model
+{
 
-	/**
-	 * @param NanoApp $app
-	 */
-	public function __construct(NanoApp $app) {
-		parent::__construct($app);
+    /**
+     * @param NanoApp $app
+     */
+    public function __construct(NanoApp $app)
+    {
+        parent::__construct($app);
 
-		$this->data = array(
-			'foo' => 'bar',
-		);
-	}
+        $this->data = [
+            'foo' => 'bar',
+        ];
+    }
 }

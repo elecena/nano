@@ -3,13 +3,15 @@
 /**
  * Set of generic unit tests for Cache
  */
-abstract class CacheCoreTest extends CacheTest {
+abstract class CacheCoreTest extends CacheTest
+{
+    protected function getCacheInstance($settings = [])
+    {
+        return false;
+    }
 
-	protected function getCacheInstance($settings = array()) {
-		return false;
-	}
-
-	public function testCacheFactory() {
-		parent::testCacheFactory();
-	}
+    public function testCacheFactory()
+    {
+        parent::testCacheFactory();
+    }
 }
