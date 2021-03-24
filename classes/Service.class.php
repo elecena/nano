@@ -6,4 +6,6 @@
 
 use Nano\NanoObject;
 
-abstract class Service extends NanoObject {}
+abstract class Service extends NanoObject
+{
+}

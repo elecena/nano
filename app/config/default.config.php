@@ -1,17 +1,17 @@
 <?php
 
 // debug
-$config['debug'] = array(
-	'enabled' => true
-);
+$config['debug'] = [
+    'enabled' => true
+];
 
-$config['assets.packages'] = array(
-	'app' => array(
-		'js' => '/statics/head.js',
-	),
-	'styles' => array(
-		'css' => array(
-			'/statics/reset.css',
-		),
-	),
-);
+$config['assets.packages'] = [
+    'app' => [
+        'js' => '/statics/head.js',
+    ],
+    'styles' => [
+        'css' => [
+            '/statics/reset.css',
+        ],
+    ],
+];
