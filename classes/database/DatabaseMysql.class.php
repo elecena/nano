@@ -23,7 +23,6 @@ class DatabaseMysql extends Database
      * @param NanoApp $app
      * @param array $settings
      * @param $name
-     * @throws DatabaseException
      */
     protected function __construct(NanoApp $app, array $settings, $name)
     {
@@ -148,6 +147,11 @@ class DatabaseMysql extends Database
      */
     public function query(string $sql, ?string $fname = null): DatabaseResult
     {
+        // perform lazy connect
+        if (!$this->isConnected()) {
+            $this->doConnect();
+        }
+
         $this->debug->time('query');
 
         $res = $this->link->query($sql, self::RESULT_MODE);
@@ -232,6 +236,11 @@ class DatabaseMysql extends Database
      */
     public function escape($value)
     {
+        // perform lazy connect
+        if (!$this->isConnected()) {
+            $this->doConnect();
+        }
+
         return $this->link->real_escape_string($value);
     }
 
