@@ -32,7 +32,7 @@ class DatabaseMocked extends DatabaseMysql
 }
 
 
-class DatabaseMysqlTest extends NanoBaseTest
+class DatabaseMockedMysqlTest extends NanoBaseTest
 {
     private $databaseMock;
 
@@ -119,7 +119,7 @@ class DatabaseMysqlTest extends NanoBaseTest
         $this->assertQueryEquals('SELECT /* Database::select */ id FROM pages LIMIT 5 OFFSET 10');
 
         $database->select('pages', 'id', [], ['limit' => 5, 'offset' => 10], __METHOD__);
-        $this->assertQueryEquals('SELECT /* DatabaseMysqlTest::testSelect */ id FROM pages LIMIT 5 OFFSET 10');
+        $this->assertQueryEquals('SELECT /* DatabaseMockedMysqlTest::testSelect */ id FROM pages LIMIT 5 OFFSET 10');
 
         // joins
         $database->select('pages', 'id', [], ['joins' => ['foo' => ['LEFT JOIN', 'foo=bar']]]);
@@ -166,7 +166,7 @@ class DatabaseMysqlTest extends NanoBaseTest
         $this->assertQueryEquals('UPDATE /* Database::update */ pages SET foo="bar",id="3" WHERE id="1" LIMIT 1');
 
         $database->update('pages', ['foo' => 'bar'], ['id' => 1], [], __METHOD__);
-        $this->assertQueryEquals('UPDATE /* DatabaseMysqlTest::testUpdate */ pages SET foo="bar" WHERE id="1"');
+        $this->assertQueryEquals('UPDATE /* DatabaseMockedMysqlTest::testUpdate */ pages SET foo="bar" WHERE id="1"');
 
         $database->update(['pages', 'users'], ['pages.author=users.id'], ['users.id' => 1]);
         $this->assertQueryEquals('UPDATE /* Database::update */ pages,users SET pages.author=users.id WHERE users.id="1"');
@@ -183,7 +183,7 @@ class DatabaseMysqlTest extends NanoBaseTest
         $this->assertQueryEquals('INSERT INTO /* Database::insert */ pages (`foo`,`test`) VALUES ("bar","123")');
 
         $database->insert('pages', ['foo' => 'b"b', 'test' => 123], [], __METHOD__);
-        $this->assertQueryEquals('INSERT INTO /* DatabaseMysqlTest::testInsert */ pages (`foo`,`test`) VALUES ("b\\"b","123")');
+        $this->assertQueryEquals('INSERT INTO /* DatabaseMockedMysqlTest::testInsert */ pages (`foo`,`test`) VALUES ("b\\"b","123")');
 
         $database->insertRows('pages', [['id' => 1], ['id' => 2]]);
         $this->assertQueryEquals('INSERT INTO /* Database::insertRows */ pages (`id`) VALUES ("1"),("2")');
