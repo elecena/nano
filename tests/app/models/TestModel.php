@@ -1,17 +1,17 @@
 <?php
 
+namespace Tests\App\Models;
+
+use Model;
+
 /**
  * An example model
  */
 class TestModel extends Model
 {
-
-    /**
-     * @param NanoApp $app
-     */
-    public function __construct(NanoApp $app)
+    public function __construct()
     {
-        parent::__construct($app);
+        parent::__construct();
 
         $this->data = [
             'foo' => 'bar',
