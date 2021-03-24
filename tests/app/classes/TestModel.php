@@ -1,6 +1,6 @@
 <?php
 
-namespace Nano\Tests;
+namespace Nano\TestApp;
 
 /**
  * An example model
