@@ -9,17 +9,20 @@ use Nano\NanoBaseTest;
  */
 class ModelTest extends NanoBaseTest
 {
+    /**
+     * @var TestModel
+     */
+    private $model;
+
     public function setUp(): void
     {
-        $dir = __DIR__ . '/app';
-        $this->app = Nano::app($dir);
+        parent::setUp();
+        $this->model = new TestModel();
     }
 
     public function testGetMagic()
     {
-        $model = new TestModel();
-
-        $this->assertEquals($model->getData(), ['foo' => 'bar']);
-        $this->assertEquals($model->getFoo(), 'bar');
+        $this->assertEquals(['foo' => 'bar'], $this->model->getData());
+        $this->assertEquals('bar', $this->model->getFoo());
     }
 }

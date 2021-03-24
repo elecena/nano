@@ -1,11 +1,9 @@
 <?php
 
-namespace Tests\App\Models;
-
-use Model;
-
 /**
  * An example model
+ *
+ * @method array getFoo
  */
 class TestModel extends Model
 {
