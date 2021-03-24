@@ -63,10 +63,10 @@ class NanoDatabaseMock extends \DatabaseMysql
      * Return mocked result and call a callback with a provided SQL query
      *
      * @param string $sql
-     * @param string|bool $fname
+     * @param string|null $fname
      * @return \DatabaseResult
      */
-    public function query($sql, $fname = false)
+    public function query(string $sql, ?string $fname = null): \DatabaseResult
     {
         if (is_callable($this->onQueryCallback)) {
             call_user_func_array($this->onQueryCallback, func_get_args());

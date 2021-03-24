@@ -23,7 +23,6 @@ class DatabaseMysql extends Database
      * @param NanoApp $app
      * @param array $settings
      * @param $name
-     * @throws DatabaseException
      */
     protected function __construct(NanoApp $app, array $settings, $name)
     {
@@ -33,17 +32,14 @@ class DatabaseMysql extends Database
 
         // store connection settings
         $this->settings = $settings;
-
-        $this->doConnect();
     }
 
     /**
      * (Re)connect using settings passed to the constructor
      *
-     * @param bool $reconnect
      * @throws DatabaseException
      */
-    protected function doConnect($reconnect = true)
+    protected function doConnect()
     {
         // reuse connection settings
         $settings = $this->settings;
@@ -145,19 +141,24 @@ class DatabaseMysql extends Database
      * @see http://www.php.net/manual/en/mysqli.real-query.php
      *
      * @param string $sql
-     * @param string|bool $fname
-     * @throws  DatabaseException
+     * @param string|null $fname
      * @return DatabaseResult
+     * @throws DatabaseException
      */
-    public function query($sql, $fname = false)
+    public function query(string $sql, ?string $fname = null): DatabaseResult
     {
+        // perform lazy connect
+        if (!$this->isConnected()) {
+            $this->doConnect();
+        }
+
         $this->debug->time('query');
 
         $res = $this->link->query($sql, self::RESULT_MODE);
 
         // reconnect and retry the query
         if ($this->link->errno == self::ERR_SERVER_HAS_GONE_AWAY) {
-            $this->doConnect(true /* $reconnect*/);
+            $this->doConnect();
 
             $res = $this->link->query($sql, self::RESULT_MODE);
         }
@@ -235,6 +236,11 @@ class DatabaseMysql extends Database
      */
     public function escape($value)
     {
+        // perform lazy connect
+        if (!$this->isConnected()) {
+            $this->doConnect();
+        }
+
         return $this->link->real_escape_string($value);
     }
 
