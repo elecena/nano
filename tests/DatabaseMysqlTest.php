@@ -17,7 +17,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest
     public function queryMock($query)
     {
         $this->lastQuery = $query;
-        return false;
+        return new DatabaseResult($this, []);
     }
 
     // @see http://www.php.net/manual/en/mysqli.real-escape-string.php
@@ -31,14 +31,6 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest
      */
     private function getMysqlDatabaseMock()
     {
-
-        // set up DatabaseMysql class, so that mockup will work
-        if (!class_exists('DatabaseMysql')) {
-            // load MySQL driver
-            $app = Nano::app(dirname(__FILE__) . '/app');
-            $database = Database::connect($app, ['driver' => 'mysql']);
-        }
-
         // mock the database driver
         $database = $this->getMockBuilder('DatabaseMysql')
             ->disableOriginalConstructor()
