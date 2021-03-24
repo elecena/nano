@@ -8,98 +8,103 @@ use NanoApp;
 /**
  * Message queue access layer
  */
-abstract class MessageQueue {
+abstract class MessageQueue
+{
 
-	// key parts separator
-	const SEPARATOR = '::';
+    // key parts separator
+    const SEPARATOR = '::';
 
-	/* @var $debug \Nano\Debug */
-	protected $debug;
+    /* @var $debug \Nano\Debug */
+    protected $debug;
 
-	/* @var $debug \Monolog\Logger */
-	protected $logger;
+    /* @var $debug \Monolog\Logger */
+    protected $logger;
 
-	// queue name
-	protected $queueName;
+    // queue name
+    protected $queueName;
 
-	// prefix
-	private $prefix;
+    // prefix
+    private $prefix;
 
-	/**
-	 * Force constructors to be protected - use MessageQueue::connect
-	 *
-	 * @param NanoApp $app
-	 * @param array $settings
-	 */
-	protected function __construct(NanoApp $app, Array $settings) {
-		// use debugger from the application
-		$this->debug = $app->getDebug();
-		$this->logger = NanoLogger::getLogger(__CLASS__);
+    /**
+     * Force constructors to be protected - use MessageQueue::connect
+     *
+     * @param NanoApp $app
+     * @param array $settings
+     */
+    protected function __construct(NanoApp $app, array $settings)
+    {
+        // use debugger from the application
+        $this->debug = $app->getDebug();
+        $this->logger = NanoLogger::getLogger(__CLASS__);
 
-		// set prefix
-		$this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
-	}
+        // set prefix
+        $this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
+    }
 
-	/**
-	 * Connect to a given message queue
-	 *
-	 * @param NanoApp $app
-	 * @param array $settings
-	 * @return MessageQueue
-	 */
-	public static function connect(NanoApp $app, Array $settings) {
-		$className = sprintf('Nano\\Mq\\MessageQueue%s', ucfirst($settings['driver']));
-		return new $className($app, $settings);
-	}
+    /**
+     * Connect to a given message queue
+     *
+     * @param NanoApp $app
+     * @param array $settings
+     * @return MessageQueue
+     */
+    public static function connect(NanoApp $app, array $settings)
+    {
+        $className = sprintf('Nano\\Mq\\MessageQueue%s', ucfirst($settings['driver']));
+        return new $className($app, $settings);
+    }
 
-	/**
-	 * Use given queue
-	 *
-	 * @param string $queueName
-	 */
-	public function useQueue($queueName) {
-		$this->debug->log(sprintf('%s: using queue "%s"', __CLASS__, $queueName));
+    /**
+     * Use given queue
+     *
+     * @param string $queueName
+     */
+    public function useQueue($queueName)
+    {
+        $this->debug->log(sprintf('%s: using queue "%s"', __CLASS__, $queueName));
 
-		$this->queueName = $queueName;
-	}
+        $this->queueName = $queueName;
+    }
 
-	/**
-	 * Add (right push) given message to the end of current queue and return added message
-	 *
-	 * @param $message
-	 * @param string $fname
-	 */
-	abstract public function push($message, $fname = __METHOD__);
+    /**
+     * Add (right push) given message to the end of current queue and return added message
+     *
+     * @param $message
+     * @param string $fname
+     */
+    abstract public function push($message, $fname = __METHOD__);
 
-	/**
-	 * Get and remove (left pop) message from the beginning of current queue
-	 *
-	 * @param string $fname
-	 */
-	abstract public function pop($fname = __METHOD__);
+    /**
+     * Get and remove (left pop) message from the beginning of current queue
+     *
+     * @param string $fname
+     */
+    abstract public function pop($fname = __METHOD__);
 
-	/**
-	 * Get number of items stored in current queue
-	 */
-	abstract public function getLength();
+    /**
+     * Get number of items stored in current queue
+     */
+    abstract public function getLength();
 
-	/**
-	 * Cleans current queue (i.e. remove all messages)
-	 */
-	abstract public function clean();
+    /**
+     * Cleans current queue (i.e. remove all messages)
+     */
+    abstract public function clean();
 
-	/**
-	 * Get key used for storing message queue data
-	 */
-	protected function getStorageKey($key) {
-		// add queue name before key name
-		$key = 'mq' . self::SEPARATOR . $this->queueName . self::SEPARATOR . $key;
+    /**
+     * Get key used for storing message queue data
+     */
+    protected function getStorageKey($key)
+    {
+        // add queue name before key name
+        $key = 'mq' . self::SEPARATOR . $this->queueName . self::SEPARATOR . $key;
 
-		// add prefix (if provided)
-		if ($this->prefix !== false) {
-			$key = $this->prefix . self::SEPARATOR . $key;
-		}
+        // add prefix (if provided)
+        if ($this->prefix !== false) {
+            $key = $this->prefix . self::SEPARATOR . $key;
+        }
 
-		return $key;
-	}
+        return $key;
+    }
 }

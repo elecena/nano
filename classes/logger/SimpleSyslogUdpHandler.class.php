@@ -10,19 +10,20 @@ use Monolog\Handler\SyslogUdpHandler;
  *
  * @see https://github.com/Seldaek/monolog/pull/943
  */
-class SimpleSyslogUdpHandler extends SyslogUdpHandler {
+class SimpleSyslogUdpHandler extends SyslogUdpHandler
+{
 
-	/**
-	 * Make common syslog header (see rfc5424)
-	 *
+    /**
+     * Make common syslog header (see rfc5424)
+     *
      * @param int $severity
      * @param DateTimeInterface $datetime
      * @return string
      */
-	protected function makeCommonSyslogHeader(int $severity, DateTimeInterface $datetime): string
-	{
-		$priority = $severity + $this->facility;
+    protected function makeCommonSyslogHeader(int $severity, DateTimeInterface $datetime): string
+    {
+        $priority = $severity + $this->facility;
 
-		return "<$priority>1 ";
-	}
+        return "<$priority>1 ";
+    }
 }

@@ -6,48 +6,50 @@
 
 use Nano\Config;
 
-class ConfigTest extends \Nano\NanoBaseTest {
+class ConfigTest extends \Nano\NanoBaseTest
+{
+    public function testGetDirectory()
+    {
+        $dir = dirname(__FILE__);
 
-	public function testGetDirectory() {
-		$dir = dirname(__FILE__);
+        $config = new Config($dir);
 
-		$config = new Config($dir);
+        $this->assertEquals($dir, $config->getDirectory());
+    }
 
-		$this->assertEquals($dir, $config->getDirectory());
-	}
+    public function testGetSetDelete()
+    {
+        $dir = dirname(__FILE__);
+        $key = 'foo.bar';
+        $val = 'test';
 
-	public function testGetSetDelete() {
-		$dir = dirname(__FILE__);
-		$key = 'foo.bar';
-		$val = 'test';
+        $config = new Config($dir);
 
-		$config = new Config($dir);
+        $this->assertNull($config->get($key));
+        $this->assertEquals('bar', $config->get($key, 'bar'));
 
-		$this->assertNull($config->get($key));
-		$this->assertEquals('bar', $config->get($key, 'bar'));
+        $config->set($key, $val);
 
-		$config->set($key, $val);
+        $this->assertEquals($val, $config->get($key));
+        $this->assertEquals($val, $config->get($key, 'bar'));
 
-		$this->assertEquals($val, $config->get($key));
-		$this->assertEquals($val, $config->get($key, 'bar'));
+        $config->delete($key, $val);
 
-		$config->delete($key, $val);
+        $this->assertNull($config->get($key));
+        $this->assertEquals('foo', $config->get($key, 'foo'));
 
-		$this->assertNull($config->get($key));
-		$this->assertEquals('foo', $config->get($key, 'foo'));
+        $config->set($key, [
+            'foo' => 'bar',
+            'test' => true,
+        ]);
 
-		$config->set($key, array(
-			'foo' => 'bar',
-			'test' => true,
-		));
-
-		$this->assertEquals(array(
-			'abc' => 123,
-			'foo' => 'bar',
-			'test' => true,
-		), $config->get($key, array(
-			'abc' => 123,
-			'test' => false,
-		)));
-	}
+        $this->assertEquals([
+            'abc' => 123,
+            'foo' => 'bar',
+            'test' => true,
+        ], $config->get($key, [
+            'abc' => 123,
+            'test' => false,
+        ]));
+    }
 }
