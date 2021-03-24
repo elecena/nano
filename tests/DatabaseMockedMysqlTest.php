@@ -10,6 +10,8 @@ class DatabaseMocked extends DatabaseMysql
 {
     public function query(string $sql, ?string $fname = null): DatabaseResult
     {
+        $this->doConnect();
+
         $this->lastQuery = $sql;
         return new DatabaseResult($this, []);
     }
@@ -20,9 +22,9 @@ class DatabaseMocked extends DatabaseMysql
         return addcslashes($value, "'\"\0");
     }
 
-    public function isConnected(): bool
+    protected function doConnect()
     {
-        return true;
+        $this->connected = true;
     }
 
     public static function getInstance(NanoApp $app): self
@@ -34,18 +36,18 @@ class DatabaseMocked extends DatabaseMysql
 
 class DatabaseMockedMysqlTest extends NanoBaseTest
 {
-    private $databaseMock;
+    private $database;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->databaseMock = DatabaseMocked::getInstance($this->app);
+        $this->database = DatabaseMocked::getInstance($this->app);
     }
 
     // assert that given query matches the recent one
     private function assertQueryEquals($expected)
     {
-        $this->assertEquals($expected, $this->databaseMock->getLastQuery());
+        $this->assertEquals($expected, $this->database->getLastQuery());
     }
 
     /**
@@ -53,7 +55,7 @@ class DatabaseMockedMysqlTest extends NanoBaseTest
      */
     private function getMysqlDatabaseMock(): DatabaseMysql
     {
-        return $this->databaseMock;
+        return $this->database;
     }
 
     public function testMySqlDatabaseMock()
@@ -62,7 +64,7 @@ class DatabaseMockedMysqlTest extends NanoBaseTest
 
         // check mock
         $this->assertInstanceOf(DatabaseMysql::class, $database);
-        $this->assertTrue($database->isConnected());
+        $this->assertFalse($database->isConnected());
 
         // escape
         $this->assertEquals('foo\\"s', $database->escape('foo"s'));
@@ -72,6 +74,16 @@ class DatabaseMockedMysqlTest extends NanoBaseTest
         $performanceData = $database->getPerformanceData();
         $this->assertEquals(0, $performanceData['queries']);
         $this->assertEquals(0, $performanceData['time']);
+    }
+
+    public function testLazyConnect()
+    {
+        $this->assertInstanceOf(DatabaseMocked::class, $this->database);
+
+        $this->assertFalse($this->database->isConnected(), 'We should not be connected yet');
+
+        $this->database->query('SELECT 1 FROM dual');
+        $this->assertTrue($this->database->isConnected(), 'We should be connected now');
     }
 
     public function testQuery()
