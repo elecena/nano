@@ -1,6 +1,7 @@
 <?php
 
 use Nano\NanoBaseTest;
+use Nano\Tests\TestModel;
 
 /**
  * Set of unit tests for Model class

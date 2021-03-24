@@ -1,11 +1,13 @@
 <?php
 
+namespace Nano\Tests;
+
 /**
  * An example model
  *
  * @method array getFoo
  */
-class TestModel extends Model
+class TestModel extends \Model
 {
     public function __construct()
     {
