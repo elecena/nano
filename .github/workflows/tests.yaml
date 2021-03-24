@@ -20,6 +20,17 @@ jobs:
 #         - "6.0"
 #         - "6.2"
 
+    services:
+      mysql:
+        image: mysql:8.0.22
+        env:
+          # root password is empty
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: index_digest
+        ports:
+        - "3306:3306"
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
