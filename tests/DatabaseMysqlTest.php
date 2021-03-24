@@ -32,16 +32,16 @@ class DatabaseMysqlTest extends NanoBaseTest
     // requires server running on localhost:3306
     public function testMySqlDatabase()
     {
+        // test performance data
+        $performanceData = $this->database->getPerformanceData();
+        $this->assertEquals(0, $performanceData['queries']);
+        $this->assertEquals(0, $performanceData['time']);
+
         try {
             $this->database->query('SELECT 1');
         } catch (DatabaseException $e) {
             $this->markTestSkipped('Requires server running on localhost:3306 - ' . $e->getMessage());
         }
-
-        // test performance data
-        $performanceData = $this->database->getPerformanceData();
-        $this->assertEquals(0, $performanceData['queries']);
-        $this->assertEquals(0, $performanceData['time']);
 
         $res = $this->database->select('test', '*');
         foreach ($res as $i => $row) {
