@@ -206,5 +206,4 @@ class DatabaseMockedMysqlTest extends NanoBaseTest
         $database->replace('pages', ['bar' => 1, 'foo' => 123]);
         $this->assertQueryEquals('REPLACE INTO /* Database::replace */ pages (`bar`,`foo`) VALUES ("1","123")');
     }
-
 }
