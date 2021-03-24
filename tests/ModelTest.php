@@ -1,19 +1,23 @@
 <?php
 
+use Nano\NanoBaseTest;
+
 /**
  * Set of unit tests for Model class
+ *
+ * @covers TestModel
  */
-class ModelTest extends \Nano\NanoBaseTest
+class ModelTest extends NanoBaseTest
 {
     public function setUp(): void
     {
-        $dir = realpath(dirname(__FILE__) . '/app');
+        $dir = __DIR__ . '/app';
         $this->app = Nano::app($dir);
     }
 
     public function testGetMagic()
     {
-        $model = $this->app->factory('TestModel');
+        $model = new TestModel();
 
         $this->assertEquals($model->getData(), ['foo' => 'bar']);
         $this->assertEquals($model->getFoo(), 'bar');
