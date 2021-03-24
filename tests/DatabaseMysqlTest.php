@@ -18,13 +18,15 @@ class DatabaseMysqlTest extends NanoBaseTest
     public function testLazyConnect()
     {
         $this->assertInstanceOf(DatabaseMysql::class, $this->database);
-
         $this->assertFalse($this->database->isConnected(), 'We should not be connected yet');
 
-        /**
-        $this->database->query('SELECT 1 FROM dual');
+        try {
+            $this->database->query('SELECT 1');
+        } catch (DatabaseException $e) {
+            $this->markTestSkipped('Requires server running on localhost:3306 - ' . $e->getMessage());
+        }
+
         $this->assertTrue($this->database->isConnected(), 'We should be connected now');
-         **/
     }
 
     // requires server running on localhost:3306
