@@ -1,57 +1,59 @@
 <?php
 
+use Nano\NanoBaseTest;
+
 /**
  * Set of unit tests for DatabaseMysql class
  */
 
-class DatabaseMysqlTest extends \Nano\NanoBaseTest
+class DatabaseMocked extends DatabaseMysql
 {
-    private $lastQuery;
-
-    // assert that given query matches the recent one
-    private function assertQueryEquals($expected)
+    public function query(string $sql, ?string $fname = null): DatabaseResult
     {
-        $this->assertEquals($expected, $this->lastQuery);
-    }
-
-    public function queryMock($query)
-    {
-        $this->lastQuery = $query;
+        $this->lastQuery = $sql;
         return new DatabaseResult($this, []);
     }
 
     // @see http://www.php.net/manual/en/mysqli.real-escape-string.php
-    public function escapeMock($value)
+    public function escape($value): string
     {
         return addcslashes($value, "'\"\0");
     }
 
-    /**
-     * @return DatabaseMysql
-     */
-    private function getMysqlDatabaseMock()
+    public function isConnected(): bool
     {
-        // mock the database driver
-        $database = $this->getMockBuilder('DatabaseMysql')
-            ->disableOriginalConstructor()
-            ->setMethods(['query', 'escape', 'isConnected'])
-            ->setMockClassName('DatabaseMysqlMock' . mt_rand())
-            ->getMock();
+        return true;
+    }
 
-        // mock certain methods
-        $database->expects($this->any())
-            ->method('query')
-            ->will($this->returnCallback([$this, 'queryMock']));
+    public static function getInstance(NanoApp $app): self
+    {
+        return new self($app, [], '');
+    }
+}
 
-        $database->expects($this->any())
-            ->method('escape')
-            ->will($this->returnCallback([$this, 'escapeMock']));
 
-        $database->expects($this->any())
-            ->method('isConnected')
-            ->will($this->returnValue(true));
+class DatabaseMysqlTest extends NanoBaseTest
+{
+    private $databaseMock;
 
-        return $database;
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->databaseMock = DatabaseMocked::getInstance($this->app);
+    }
+
+    // assert that given query matches the recent one
+    private function assertQueryEquals($expected)
+    {
+        $this->assertEquals($expected, $this->databaseMock->getLastQuery());
+    }
+
+    /**
+     * @deprecated use $this->database property directly
+     */
+    private function getMysqlDatabaseMock(): DatabaseMysql
+    {
+        return $this->databaseMock;
     }
 
     public function testMySqlDatabaseMock()
@@ -59,7 +61,7 @@ class DatabaseMysqlTest extends \Nano\NanoBaseTest
         $database = $this->getMysqlDatabaseMock();
 
         // check mock
-        $this->assertInstanceOf('DatabaseMysql', $database);
+        $this->assertInstanceOf(DatabaseMysql::class, $database);
         $this->assertTrue($database->isConnected());
 
         // escape
