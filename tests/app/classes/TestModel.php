@@ -1,17 +1,17 @@
 <?php
 
+namespace Nano\TestApp;
+
 /**
  * An example model
+ *
+ * @method array getFoo
  */
-class TestModel extends Model
+class TestModel extends \Model
 {
-
-    /**
-     * @param NanoApp $app
-     */
-    public function __construct(NanoApp $app)
+    public function __construct()
     {
-        parent::__construct($app);
+        parent::__construct();
 
         $this->data = [
             'foo' => 'bar',
