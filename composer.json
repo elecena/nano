@@ -36,11 +36,11 @@
       "phpunit --coverage-html=.coverage"
     ],
     "lint": [
-      "php-cs-fixer fix --config=.php_cs --dry-run --verbose",
+      "php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose",
       "phpstan analyse app/ classes/ tests/"
     ],
     "format": [
-      "php-cs-fixer fix --config=.php_cs"
+      "php-cs-fixer fix --config=.php-cs-fixer.php"
     ]
   },
   "require-dev": {
