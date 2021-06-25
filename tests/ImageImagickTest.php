@@ -15,4 +15,10 @@ class ImageImagickTest extends ImageTestBase
 
         parent::setUp();
     }
+
+    public function testNewFromRawThrowsAnException()
+    {
+        $this->expectExceptionMessage('no decode delegate for this image format');
+        Image::newFromRaw('An invalid RAW image');
+    }
 }

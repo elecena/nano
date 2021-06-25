@@ -16,7 +16,7 @@ class ImageGD extends Image
      */
     public function __construct(string $raw)
     {
-        $this->img = imagecreatefromstring($raw);
+        $this->img = @imagecreatefromstring($raw);
 
         if ($this->img === false) {
             throw new Exception('imagecreatefromstring() failed! Got from imagecreatefromstring(): ' . print_r($this->img, true));
@@ -47,7 +47,9 @@ class ImageGD extends Image
         $thumb = imagecreatetruecolor($width, $height);
 
         if ($thumb === false) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // paste rescaled image
@@ -72,7 +74,9 @@ class ImageGD extends Image
         );
 
         if ($res === false) {
+            // @codeCoverageIgnoreStart
             return true;
+            // @codeCoverageIgnoreEnd
         }
 
         // free memory
@@ -103,7 +107,9 @@ class ImageGD extends Image
         $thumb = imagecreatetruecolor($width, $height);
 
         if ($thumb === false) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // 500x300 (src) -> 333x200
@@ -134,7 +140,9 @@ class ImageGD extends Image
         );
 
         if ($res === false) {
+            // @codeCoverageIgnoreStart
             return true;
+            // @codeCoverageIgnoreEnd
         }
 
         // free memory
@@ -168,7 +176,7 @@ class ImageGD extends Image
 
             case 'png':
                 $type = IMAGETYPE_PNG;
-                imagepng($this->img, null, $quality);
+                imagepng($this->img, null, min($quality, 9));
                 break;
 
             default:

@@ -27,6 +27,25 @@ abstract class ImageTestBase extends \Nano\NanoBaseTest
         $this->assertEquals(406, $img->getHeight());
     }
 
+    /**
+     * @dataProvider renderDataProvider
+     */
+    public function testRender(string $typeToRender, int $expectedType, string $expectMimeType)
+    {
+        $img = Image::newFromFile($this->file);
+
+        $this->assertNotFalse($img->render($typeToRender));
+        $this->assertEquals($expectedType, $img->getType());
+        $this->assertEquals($expectMimeType, $img->getMimeType());
+    }
+
+    public function renderDataProvider(): Generator
+    {
+        yield 'jpeg' => [ 'jpeg', IMAGETYPE_JPEG, 'image/jpeg'];
+        yield 'png' => [ 'png', IMAGETYPE_PNG, 'image/png'];
+        yield 'gif' => [ 'gif', IMAGETYPE_GIF, 'image/gif'];
+    }
+
     public function testScale()
     {
         $img = Image::newFromFile($this->file);

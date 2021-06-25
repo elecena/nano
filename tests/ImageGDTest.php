@@ -26,4 +26,10 @@ class ImageGDTest extends ImageTestBase
 
         parent::setUp();
     }
+
+    public function testNewFromRawThrowsAnException()
+    {
+        $this->expectExceptionMessage('imagecreatefromstring() failed');
+        Image::newFromRaw('An invalid RAW image');
+    }
 }
