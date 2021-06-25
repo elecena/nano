@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Set of unit tests for Image class (for GD)
+ * Set of unit tests for Image class
  */
 
 abstract class ImageTestBase extends \Nano\NanoBaseTest

@@ -2,8 +2,9 @@
 
 /**
  * Set of unit tests for Image class (for Imagick)
+ *
+ * @covers ImageImagick
  */
-
 class ImageImagickTest extends ImageTestBase
 {
     public function setUp(): void

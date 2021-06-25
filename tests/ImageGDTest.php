@@ -2,8 +2,9 @@
 
 /**
  * Set of unit tests for Image class (for GD)
+ *
+ * @covers ImageGD
  */
-
 class ImageGDTest extends ImageTestBase
 {
     public function tearDown(): void
