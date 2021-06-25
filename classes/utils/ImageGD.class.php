@@ -42,9 +42,9 @@ class ImageGD extends Image
         $height = round($this->height * $ratio);
 
         // create new image
-        $thumb = ImageCreateTrueColor($width, $height);
+        $thumb = imagecreatetruecolor($width, $height);
 
-        if (!is_resource($thumb)) {
+        if ($thumb === false) {
             return false;
         }
 
@@ -98,9 +98,9 @@ class ImageGD extends Image
         }
 
         // create new image
-        $thumb = ImageCreateTrueColor($width, $height);
+        $thumb = imagecreatetruecolor($width, $height);
 
-        if (!is_resource($thumb)) {
+        if ($thumb === false) {
             return false;
         }
 
