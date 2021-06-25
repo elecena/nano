@@ -11,9 +11,14 @@ class ImageImagick extends Image
 
     /**
      * Create an instance of Image for given raw image data
+     * @throws Exception
      */
-    public function __construct($raw)
+    public function __construct(string $raw)
     {
+        if (!class_exists('Imagick')) {
+            throw new Exception('imagick extension is not installed');
+        }
+
         $this->img = new Imagick();
         $res = $this->img->readImageBlob($raw);
 
@@ -27,8 +32,10 @@ class ImageImagick extends Image
 
     /**
      * Scale an image to fit given box and keeping proportions
+     *
+     * @throws ImagickException
      */
-    public function scale($width, $height)
+    public function scale($width, $height): bool
     {
         // calculate new dimension
         // @see http://www.php.net/manual/en/imagick.scaleimage.php#93667
@@ -54,8 +61,10 @@ class ImageImagick extends Image
 
     /**
      * Crop an image to fit given box
+     *
+     * @throws ImagickException
      */
-    public function crop($width, $height)
+    public function crop($width, $height): bool
     {
         // calculate scale-down ratio
         $ratio = max($width / $this->width, $height / $this->height);
@@ -97,14 +106,16 @@ class ImageImagick extends Image
 
     /**
      * Return image raw data
+     *
+     * @throws ImagickException
      */
-    public function render($type, $quality = false)
+    public function render($type, int $quality = 75)
     {
         switch ($type) {
             case 'jpeg':
                 $type = IMAGETYPE_JPEG;
                 $this->img->setImageFormat('jpeg');
-                $this->img->setImageCompressionQuality($quality ? $quality : 75);
+                $this->img->setImageCompressionQuality($quality);
                 break;
 
             case 'gif':

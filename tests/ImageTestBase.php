@@ -4,7 +4,7 @@
  * Set of unit tests for Image class
  */
 
-class ImageTest extends \Nano\NanoBaseTest
+abstract class ImageTestBase extends \Nano\NanoBaseTest
 {
 
     /* @var string $file */
@@ -15,14 +15,14 @@ class ImageTest extends \Nano\NanoBaseTest
     public function setUp(): void
     {
         // 578x406
-        $this->file = dirname(__FILE__) . '/app/statics/php-logo.jpg';
+        $this->file = __DIR__ . '/app/statics/php-logo.jpg';
     }
 
     public function testNewFromFile()
     {
         $img = Image::newFromFile($this->file);
 
-        $this->assertInstanceOf('Image', $img);
+        $this->assertInstanceOf(Image::class, $img);
         $this->assertEquals(578, $img->getWidth());
         $this->assertEquals(406, $img->getHeight());
     }
@@ -31,7 +31,7 @@ class ImageTest extends \Nano\NanoBaseTest
     {
         $img = Image::newFromFile($this->file);
 
-        $this->assertInstanceOf('Image', $img);
+        $this->assertInstanceOf(Image::class, $img);
 
         if (self::DEBUG) {
             $img->save('img.jpg', 'jpeg');
@@ -62,7 +62,7 @@ class ImageTest extends \Nano\NanoBaseTest
         $this->assertTrue($img->scale(300, 410));
 
         $this->assertEquals(300, $img->getWidth());
-        $this->assertEqualsWithDelta(211, $img->getHeight(), 2);
+        $this->assertEqualsWithDelta(211, $img->getHeight(), 2, 'This image should be 211 px high');
 
         if (self::DEBUG) {
             $img->save('img-scaled-bounding.jpg', 'jpeg');
@@ -73,7 +73,7 @@ class ImageTest extends \Nano\NanoBaseTest
     {
         $img = Image::newFromFile($this->file);
 
-        $this->assertInstanceOf('Image', $img);
+        $this->assertInstanceOf(Image::class, $img);
 
         // scaling up no permitted
         $this->assertFalse($img->crop(600, 500));
@@ -101,7 +101,7 @@ class ImageTest extends \Nano\NanoBaseTest
     {
         $img = Image::newFromFile($this->file);
 
-        $this->assertInstanceOf('Image', $img);
+        $this->assertInstanceOf(Image::class, $img);
 
         // crop
         $this->assertTrue($img->crop(300, 100));

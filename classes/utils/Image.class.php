@@ -20,19 +20,15 @@ abstract class Image
 
     /**
      * Create an instance of Image for given raw image data
-     *
-     * @param string $raw
      */
-    abstract public function __construct($raw);
+    abstract public function __construct(string $raw);
 
     /**
      * Create an instance of Image from given URL (file will be fetched via HTTP)
      *
-     * @param string $url
-     * @return Image
      * @throws Nano\Http\ResponseException
      */
-    public static function newFromUrl($url)
+    public static function newFromUrl(string $url): Image
     {
         $raw = Http::get($url);
 
@@ -41,11 +37,8 @@ abstract class Image
 
     /**
      * Create an instance of Image from given file
-     *
-     * @param string $file
-     * @return Image
      */
-    public static function newFromFile($file)
+    public static function newFromFile(string $file): Image
     {
         $raw = file_get_contents($file);
 
@@ -55,11 +48,9 @@ abstract class Image
     /**
      * Create an instance of Image from raw image data
      *
-     * @param string $raw
-     * @return Image
      * @throws RuntimeException
      */
-    public static function newFromRaw($raw)
+    public static function newFromRaw(string $raw): Image
     {
         return self::getInstance($raw);
     }
@@ -69,14 +60,17 @@ abstract class Image
      *
      * Auto-detects which library to use: Imagick or GD
      *
-     * @param string $raw
-     * @return Image
      * @throws RuntimeException
      */
-    private static function getInstance($raw)
+    private static function getInstance(string $raw): Image
     {
+        /**
+         * @see ImageGDTest::setUp
+         */
+        global $NANO_FORCE_GD;
+
         // Image Magick
-        if (class_exists('Imagick')) {
+        if (class_exists('Imagick') && empty($NANO_FORCE_GD)) {
             $driverName = ImageImagick::class;
         }
         // fallback to GD
@@ -102,12 +96,12 @@ abstract class Image
     /**
      * Return image raw data
      */
-    abstract public function render($type, $quality = false);
+    abstract public function render($type, int $quality = 75);
 
     /**
      * Save image raw data to a given file
      */
-    public function save($filename, $type, $quality = false)
+    public function save($filename, $type, int $quality = 75)
     {
         $raw = $this->render($type, $quality);
 
