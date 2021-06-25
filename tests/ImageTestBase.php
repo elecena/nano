@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Set of unit tests for Image class
+ * Set of unit tests for Image class (for GD)
  */
 
-class ImageTest extends \Nano\NanoBaseTest
+abstract class ImageTestBase extends \Nano\NanoBaseTest
 {
 
     /* @var string $file */
