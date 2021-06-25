@@ -33,7 +33,7 @@
       "phpunit"
     ],
     "coverage": [
-      "phpunit --coverage-html=.coverage"
+      "XDEBUG_MODE=coverage phpunit --coverage-html=.coverage --coverage-clover=.coverage.xml --coverage-text"
     ],
     "lint": [
       "php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose",
