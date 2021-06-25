@@ -16,7 +16,7 @@ class ImageGD extends Image
     {
         $this->img = imagecreatefromstring($raw);
 
-        if (!is_resource($this->img)) {
+        if ($this->img === false) {
             throw new Exception('imagecreatefromstring() failed! Got from imagecreatefromstring(): ' . print_r($this->img, true));
         }
 
