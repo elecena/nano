@@ -168,7 +168,7 @@ class ImageGD extends Image
 
             case 'png':
                 $type = IMAGETYPE_PNG;
-                imagepng($this->img, null, $quality);
+                imagepng($this->img, null, min($quality, 9));
                 break;
 
             default:
