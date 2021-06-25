@@ -1,4 +1,6 @@
 nano
+[![Latest Stable Version](http://poser.pugx.org/elecena/nano/v)](https://packagist.org/packages/elecena/nano)
+[![phpunit](https://github.com/elecena/nano/actions/workflows/tests.yaml/badge.svg)](https://github.com/elecena/nano/actions/workflows/tests.yaml)
 ====
 
 ## Testing
