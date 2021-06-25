@@ -170,6 +170,7 @@ class ImageGD extends Image
                 break;
 
             default:
+                ob_end_clean();
                 return false;
         }
 
