@@ -72,4 +72,4 @@ jobs:
         composer install --no-interaction
 
     - name: Test the code
-      run: composer run test
+      run: composer run coverage
