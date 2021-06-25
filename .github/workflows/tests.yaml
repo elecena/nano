@@ -80,4 +80,4 @@ jobs:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         composer global require php-coveralls/php-coveralls
-        php-coveralls --coverage_clover=.coverage.xml -v
+        php-coveralls --coverage_clover=.coverage.xml --json_path=/tmp/coverage.json -v
