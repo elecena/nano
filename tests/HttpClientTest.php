@@ -38,7 +38,7 @@ class HttpClientTest extends \Nano\NanoBaseTest
         $client->close();
 
         $this->markTestIncomplete(
-          'This test has not been implemented yet.'
+            'This test has not been implemented yet.'
         );
 
         // check cookies
