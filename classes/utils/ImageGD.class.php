@@ -47,7 +47,9 @@ class ImageGD extends Image
         $thumb = imagecreatetruecolor($width, $height);
 
         if ($thumb === false) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // paste rescaled image
@@ -72,7 +74,9 @@ class ImageGD extends Image
         );
 
         if ($res === false) {
+            // @codeCoverageIgnoreStart
             return true;
+            // @codeCoverageIgnoreEnd
         }
 
         // free memory
@@ -103,7 +107,9 @@ class ImageGD extends Image
         $thumb = imagecreatetruecolor($width, $height);
 
         if ($thumb === false) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
         // 500x300 (src) -> 333x200
@@ -134,7 +140,9 @@ class ImageGD extends Image
         );
 
         if ($res === false) {
+            // @codeCoverageIgnoreStart
             return true;
+            // @codeCoverageIgnoreEnd
         }
 
         // free memory
