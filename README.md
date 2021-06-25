@@ -1,10 +1,11 @@
 nano
 ====
 
-## Requirements
+## Testing
 
 ```
-sudo apt-get install php5-curl php5-imagick php5-json php5-mysqlnd php5-readline libapache2-mod-php5
+docker run -d -p 6379:6379 redis:5.0.9-alpine redis-server --requirepass qwerty --port 6379
+composer run test
 ```
 
 ## Configuration
