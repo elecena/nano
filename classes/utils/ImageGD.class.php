@@ -16,7 +16,7 @@ class ImageGD extends Image
      */
     public function __construct(string $raw)
     {
-        $this->img = imagecreatefromstring($raw);
+        $this->img = @imagecreatefromstring($raw);
 
         if ($this->img === false) {
             throw new Exception('imagecreatefromstring() failed! Got from imagecreatefromstring(): ' . print_r($this->img, true));
