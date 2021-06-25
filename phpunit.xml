@@ -13,6 +13,7 @@
   </testsuites>
   <php>
     <const name="NANO_TEST" value="bar"/>
+    <const name="NANO_FORCE_GD" value="1"/>
     <env name="REDIS_PASSWORD" value="qwerty"/>
     <ini name="date.timezone" value="UTC"/>
     <ini name="memory_limit" value="350M"/>

@@ -76,7 +76,7 @@ abstract class Image
     private static function getInstance($raw)
     {
         // Image Magick
-        if (class_exists('Imagick')) {
+        if (class_exists('Imagick') && !defined('NANO_FORCE_GD')) {
             $driverName = ImageImagick::class;
         }
         // fallback to GD
