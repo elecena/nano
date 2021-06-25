@@ -8,7 +8,7 @@ class ImageGDTest extends ImageTestBase
 {
     public function tearDown(): void
     {
-        unset($GLOBALS['$NANO_FORCE_GD']);
+        unset($GLOBALS['NANO_FORCE_GD']);
     }
 
     public function setUp(): void
