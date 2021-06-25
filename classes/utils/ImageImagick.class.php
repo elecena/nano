@@ -20,7 +20,7 @@ class ImageImagick extends Image
         }
 
         $this->img = new Imagick();
-        $res = @$this->img->readImageBlob($raw);
+        $res = $this->img->readImageBlob($raw);
 
         if ($res !== true) {
             throw new Exception('Imagick::readImageBlob() failed!');

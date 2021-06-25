@@ -18,8 +18,7 @@ class ImageImagickTest extends ImageTestBase
 
     public function testNewFromRawThrowsAnException()
     {
-        $this->expectExceptionMessage('Imagick::readImageBlob() failed');
+        $this->expectExceptionMessage('no decode delegate for this image format');
         Image::newFromRaw('An invalid RAW image');
     }
-
 }
