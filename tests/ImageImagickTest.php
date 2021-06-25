@@ -18,7 +18,7 @@ class ImageImagickTest extends ImageTestBase
 
     public function testNewFromRawThrowsAnException()
     {
-        $this->expectExceptionMessage('imagecreatefromstring() failed');
+        $this->expectExceptionMessage('Imagick::readImageBlob() failed');
         Image::newFromRaw('An invalid RAW image');
     }
 
