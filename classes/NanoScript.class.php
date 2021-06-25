@@ -4,6 +4,8 @@ use Nano\NanoObject;
 
 /**
  * General interface for CLI scripts
+ *
+ * @codeCoverageIgnore
  */
 abstract class NanoScript extends NanoObject
 {

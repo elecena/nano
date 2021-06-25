@@ -7,6 +7,8 @@ use Monolog\Handler\StreamHandler;
 /**
  * Nano console handler
  *
+ * @codeCoverageIgnore
+ *
  * TODO: handle catchable fatals @see http://stackoverflow.com/questions/2468487/how-can-i-catch-a-catchable-fatal-error-on-php-type-hinting
  */
 class NanoConsole

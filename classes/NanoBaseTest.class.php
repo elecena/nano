@@ -7,6 +7,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Base class for PHPUnit-based unit tests
+ *
+ * @codeCoverageIgnore
  */
 class NanoBaseTest extends TestCase
 {
