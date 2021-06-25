@@ -11,8 +11,10 @@ class ImageGD extends Image
 
     /**
      * Create an instance of Image for given raw image data
+     *
+     * @throws Exception
      */
-    public function __construct($raw)
+    public function __construct(string $raw)
     {
         $this->img = imagecreatefromstring($raw);
 
@@ -149,14 +151,14 @@ class ImageGD extends Image
     /**
      * Return image raw data
      */
-    public function render($type, $quality = false)
+    public function render($type, int $quality = 75)
     {
         ob_start();
 
         switch ($type) {
             case 'jpeg':
                 $type = IMAGETYPE_JPEG;
-                imagejpeg($this->img, null, $quality ? $quality : 75);
+                imagejpeg($this->img, null, $quality);
                 break;
 
             case 'gif':
@@ -166,7 +168,7 @@ class ImageGD extends Image
 
             case 'png':
                 $type = IMAGETYPE_PNG;
-                imagepng($this->img, null, $quality ? $quality : 9);
+                imagepng($this->img, null, $quality);
                 break;
 
             default:
