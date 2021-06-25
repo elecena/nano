@@ -62,7 +62,7 @@ abstract class ImageTestBase extends \Nano\NanoBaseTest
         $this->assertTrue($img->scale(300, 410));
 
         $this->assertEquals(300, $img->getWidth());
-        $this->assertEquals(211, $img->getHeight(), 2);
+        $this->assertEqualsWithDelta(211, $img->getHeight(), 2, 'This image should be 211 px high');
 
         if (self::DEBUG) {
             $img->save('img-scaled-bounding.jpg', 'jpeg');
