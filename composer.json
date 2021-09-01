@@ -15,6 +15,7 @@
     "ext-curl": "*",
     "ext-mbstring": "*",
     "ext-gd": "*",
+    "ext-json": "*",
     "ext-xml": "*",
     "predis/predis": "^1.1",
     "monolog/monolog": "2.3.2",

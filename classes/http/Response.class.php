@@ -57,7 +57,7 @@ class Response
      */
     public function getHeader($name)
     {
-        return isset($this->headers[$name]) ? $this->headers[$name] : null;
+        return $this->headers[$name] ?? null;
     }
 
     /**
@@ -71,7 +71,7 @@ class Response
     /**
      * Get response code
      */
-    public function getResponseCode()
+    public function getResponseCode(): int
     {
         return $this->responseCode;
     }

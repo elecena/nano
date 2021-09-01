@@ -1,45 +1,65 @@
 <?php
 
+use Nano\Http\ResponseException;
+use Nano\NanoBaseTest;
+
 /**
  * Set of unit tests for Http class
+ *
+ * @see https://httpbin.org
+ *
+ * @covers Http
+ * @covers HttpClient
  */
-
-class HttpTest extends \Nano\NanoBaseTest
+class HttpTest extends NanoBaseTest
 {
+    /**
+     * @throws ResponseException
+     */
     public function testGet()
     {
-        $this->markTestSkipped('Refactor to mock HTTP traffic');
+        $url = 'https://httpbin.org/get';
 
-        // make request to example.org (redirects to http://www.iana.org/domains/example/)
-        $resp = Http::get('http://example.org');
+        $resp = Http::get($url);
 
         $this->assertEquals(200, $resp->getResponseCode());
-        $this->assertEquals('http://www.iana.org/domains/example/', $resp->getLocation());
-        $this->assertEquals('http://www.iana.org/domains/example/', $resp->getHeader('Location'));
-        $this->assertContains('Example Domains', $resp->getContent());
-        $this->assertContains('Example Domains', (string) $resp);
+        $this->assertEquals($url, $resp->getLocation());
+        $this->assertEquals('application/json', $resp->getHeader('content-type'));
+        $this->assertNull($resp->getHeader('Content-Type'), 'Headers are case sensitive!');
+
+        $json = json_decode($resp->getContent(), true);
+        $this->assertEquals($url, $json['url']);
+
+        $userAgent = $json['headers']['User-Agent'];
+
+        $this->assertStringContainsString('NanoPortal/' . Nano::VERSION, $userAgent, 'Nano version is exposed');
+        $this->assertStringContainsString('libcurl/', $userAgent, 'libcurl version is exposed');
+        $this->assertStringContainsString('php/' . phpversion(), $userAgent, 'PHP version is exposed');
     }
 
+    /**
+     * @throws ResponseException
+     */
     public function testPost()
     {
-        $this->markTestSkipped('Refactor to mock HTTP traffic');
+        $resp = Http::post('https://httpbin.org/post', ['foo' => 'bar']);
 
-        // POST request (ends with HTTP 400)
-        $resp = Http::post('http://google.com/images/foo', ['foo' => 'bar']); //var_dump($resp);
+        $this->assertEquals(200, $resp->getResponseCode());
+        $this->assertEquals('https://httpbin.org/post', $resp->getLocation());
+        $this->assertEquals('application/json', $resp->getHeader('content-type'));
 
-        $this->assertEquals(404, $resp->getResponseCode());
-        $this->assertContains('text/html', $resp->getHeader('Content-Type'));
-        $this->assertContains('Not Found', $resp->getContent());
+        $json = json_decode($resp->getContent(), true);
+        $this->assertEquals(['foo' => 'bar'], $json['form']);
+        $this->assertEquals('application/x-www-form-urlencoded', $json['headers']['Content-Type']);
     }
 
+    /**
+     * @throws ResponseException
+     */
     public function testHead()
     {
-        $this->markTestSkipped('Refactor to mock HTTP traffic');
-
-        // HEAD request for not existing image
-        $resp = Http::head('http://www.google.pl/images/srpr/nav_logo.png', ['foo' => 'bar']); //var_dump($resp);
-
-        $this->assertEquals(404, $resp->getResponseCode());
-        $this->assertEquals('', $resp->getContent());
+        $resp = Http::head('https://httpbin.org');
+        $this->assertEquals(200, $resp->getResponseCode());
+        $this->assertEquals('', $resp->getContent(), 'No content is returned');
     }
 }

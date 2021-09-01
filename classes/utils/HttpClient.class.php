@@ -50,13 +50,15 @@ class HttpClient
         $info = curl_version();
         $this->version = $info['version'];
 
+        $phpVersion = phpversion();
+
         // set up cURL library
         $this->handle = curl_init();
 
         $this->logger = self::getLogger();
 
         // set user agent
-        $this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}");
+        $this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}" . " php/{$phpVersion}");
 
         curl_setopt_array($this->handle, [
             CURLOPT_ENCODING => 'gzip',
