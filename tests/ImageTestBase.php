@@ -1,14 +1,17 @@
 <?php
 
+use Nano\Http\ResponseException;
+use Nano\NanoBaseTest;
+
 /**
  * Set of unit tests for Image class
  */
 
-abstract class ImageTestBase extends \Nano\NanoBaseTest
+abstract class ImageTestBase extends NanoBaseTest
 {
-
     /* @var string $file */
     private $file;
+    private $url;
 
     const DEBUG = false;
 
@@ -16,6 +19,9 @@ abstract class ImageTestBase extends \Nano\NanoBaseTest
     {
         // 578x406
         $this->file = __DIR__ . '/app/statics/php-logo.jpg';
+
+        /* @see https://httpbin.org/image/jpeg */
+        $this->url = 'https://httpbin.org/image/jpeg';
     }
 
     public function testNewFromFile()
@@ -25,6 +31,18 @@ abstract class ImageTestBase extends \Nano\NanoBaseTest
         $this->assertInstanceOf(Image::class, $img);
         $this->assertEquals(578, $img->getWidth());
         $this->assertEquals(406, $img->getHeight());
+    }
+
+    /**
+     * @throws ResponseException
+     */
+    public function testNewFromUrl()
+    {
+        $img = Image::newFromUrl($this->url);
+
+        $this->assertInstanceOf(Image::class, $img);
+        $this->assertEquals(239, $img->getWidth());
+        $this->assertEquals(178, $img->getHeight());
     }
 
     /**
