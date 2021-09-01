@@ -1,5 +1,7 @@
 <?php
 
+use Nano\Http\Response;
+
 /**
  * Class with helper methods for HttpClient
  */
@@ -14,7 +16,7 @@ class Http
      * @return Nano\Http\Response
      * @throws Nano\Http\ResponseException
      */
-    public static function get($url, $query = [])
+    public static function get(string $url, array $query = []): Response
     {
         $client = new HttpClient();
         $ret = $client->get($url, $query);
@@ -31,7 +33,7 @@ class Http
      * @return Nano\Http\Response
      * @throws Nano\Http\ResponseException
      */
-    public static function post($url, $fields = [])
+    public static function post(string $url, array $fields = []): Response
     {
         $client = new HttpClient();
         $ret = $client->post($url, $fields);
@@ -48,7 +50,7 @@ class Http
      * @return Nano\Http\Response
      * @throws Nano\Http\ResponseException
      */
-    public static function head($url, $query = [])
+    public static function head(string $url, array $query = []): Response
     {
         $client = new HttpClient();
         $ret = $client->head($url, $query);

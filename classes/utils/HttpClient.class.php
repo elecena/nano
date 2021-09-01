@@ -50,13 +50,15 @@ class HttpClient
         $info = curl_version();
         $this->version = $info['version'];
 
+        $phpVersion = phpversion();
+
         // set up cURL library
         $this->handle = curl_init();
 
         $this->logger = self::getLogger();
 
         // set user agent
-        $this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}");
+        $this->setUserAgent('NanoPortal/' . Nano::VERSION . " libcurl/{$this->version}" . " php/{$phpVersion}");
 
         curl_setopt_array($this->handle, [
             CURLOPT_ENCODING => 'gzip',
@@ -84,10 +86,8 @@ class HttpClient
 
     /**
      * Get logger instance
-     *
-     * @return \Monolog\Logger
      */
-    protected static function getLogger()
+    protected static function getLogger(): \Monolog\Logger
     {
         static $logger;
 
@@ -113,7 +113,7 @@ class HttpClient
      * @param string $proxy
      * @param int $type
      */
-    public function setProxy($proxy, $type = CURLPROXY_HTTP)
+    public function setProxy(string $proxy, int $type = CURLPROXY_HTTP)
     {
         curl_setopt($this->handle, CURLOPT_PROXY, $proxy);
         curl_setopt($this->handle, CURLOPT_PROXYTYPE, $type);
@@ -123,10 +123,8 @@ class HttpClient
 
     /**
      * Set user agent identification used by HTTP client
-     *
-     * @param string $userAgent
      */
-    public function setUserAgent($userAgent)
+    public function setUserAgent(string $userAgent)
     {
         $this->userAgent = $userAgent;
 
@@ -145,11 +143,8 @@ class HttpClient
 
     /**
      * Set request headers
-     **
-     * @param string $header
-     * @param string $value
      */
-    public function setRequestHeader($header, $value)
+    public function setRequestHeader(string $header, string $value)
     {
         $this->reqHeaders[] = "$header: $value";
 
@@ -158,10 +153,8 @@ class HttpClient
 
     /**
      * Set timeout for a single request
-     *
-     * @param int $timeout
      */
-    public function setTimeout($timeout)
+    public function setTimeout(int $timeout)
     {
         $this->timeout = $timeout;
 
@@ -170,10 +163,8 @@ class HttpClient
 
     /**
      * Use given cookie jar file
-     *
-     * @param string $jarFile
      */
-    public function useCookieJar($jarFile)
+    public function useCookieJar(string $jarFile)
     {
         $this->logger->debug(__METHOD__, ['jar' => $jarFile]);
 
@@ -185,11 +176,8 @@ class HttpClient
 
     /**
      * Manually sets request cookie
-     *
-     * @param string $name
-     * @param string $value
      */
-    public function setCookie($name, $value)
+    public function setCookie(string $name, string $value)
     {
         $this->cookies[$name] = $value;
 
@@ -199,12 +187,12 @@ class HttpClient
     /**
      * Send GET HTTP request for a given URL
      *
-     * @param $url
+     * @param string $url
      * @param array $query
      * @return Response
      * @throws Nano\Http\ResponseException
      */
-    public function get($url, array $query = [])
+    public function get(string $url, array $query = []): Response
     {
         // add request params
         if (!empty($query) && is_array($query)) {
@@ -222,7 +210,7 @@ class HttpClient
      * @return Response
      * @throws Nano\Http\ResponseException
      */
-    public function post($url, $fields = false)
+    public function post(string $url, $fields = false): Response
     {
         // add request POST fields
         if (is_array($fields)) {
@@ -237,12 +225,12 @@ class HttpClient
     /**
      * Send HEAD HTTP request for a given URL
      *
-     * @param $url
+     * @param string $url
      * @param array $query
      * @return Response
      * @throws Nano\Http\ResponseException
      */
-    public function head($url, array $query = [])
+    public function head(string $url, array $query = []): Response
     {
         // add request params
         if (!empty($query)) {
@@ -260,7 +248,7 @@ class HttpClient
      * @return Response
      * @throws Nano\Http\ResponseException
      */
-    private function sendRequest($method, $url)
+    private function sendRequest(string $method, string $url): Response
     {
         // send requested type of HTTP request
         curl_setopt($this->handle, CURLOPT_POST, false);
