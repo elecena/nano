@@ -62,4 +62,11 @@ class HttpTest extends NanoBaseTest
         $this->assertEquals(200, $resp->getResponseCode());
         $this->assertEquals('', $resp->getContent(), 'No content is returned');
     }
+
+    public function testFailingRequest()
+    {
+        $this->expectException(ResponseException::class);
+        $this->expectExceptionMessage('Could not resolve host: not-known-domain');
+        Http::get('https://not-known-domain');
+    }
 }
