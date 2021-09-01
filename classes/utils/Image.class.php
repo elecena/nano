@@ -2,10 +2,9 @@
 
 /**
  * Helper class for handling image manipulations
-  *
- * $Id$
+ *
+ * @codeCoverageIgnore
  */
-
 abstract class Image
 {
     // image handler from GD / Imagick
@@ -127,10 +126,7 @@ abstract class Image
         return $this->type;
     }
 
-    /**
-     * @return string
-     */
-    public function getMimeType()
+    public function getMimeType(): string
     {
         // Note from PHP manual: this function does not require the GD image library.
         return image_type_to_mime_type($this->type);
