@@ -40,6 +40,20 @@ class HttpTest extends NanoBaseTest
     /**
      * @throws ResponseException
      */
+    public function testGetWithParams()
+    {
+        $url = 'https://httpbin.org/get';
+
+        $resp = Http::get($url, ['foo' => 42]);
+        $this->assertEquals(200, $resp->getResponseCode());
+
+        $json = json_decode($resp->getContent(), true);
+        $this->assertEquals(['foo' => '42'], $json['args']);
+    }
+
+    /**
+     * @throws ResponseException
+     */
     public function testPost()
     {
         $resp = Http::post('https://httpbin.org/post', ['foo' => 'bar']);
