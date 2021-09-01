@@ -20,8 +20,7 @@
     "predis/predis": "^1.1",
     "monolog/monolog": "2.3.2",
     "macbre/monolog-utils": "^2.1",
-    "tedivm/jshrink": "^1.2",
-    "phpunit/phpunit": "9.x"
+    "tedivm/jshrink": "^1.2"
   },
   "autoload": {
     "classmap": ["classes/", "classes/utils/", "tests/app/classes/", "tests/CacheTest.php"],
@@ -48,7 +47,9 @@
     ]
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "psr/cache": "^1.0.0",
     "phpstan/phpstan": "^0.12.82",
-    "friendsofphp/php-cs-fixer": "^3.0"
+    "phpunit/phpunit": "9.x"
   }
 }
