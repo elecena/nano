@@ -1,13 +1,17 @@
 <?php
 
 use Nano\Cache;
+use Nano\NanoBaseTest;
 
 /**
  * Generic class for unit tests for Cache drivers
  */
-abstract class CacheTest extends \Nano\NanoBaseTest
+abstract class CacheTest extends NanoBaseTest
 {
-    protected function getCache($driver, array $settings = [])
+    /**
+     * @throws Exception
+     */
+    protected function getCache($driver, array $settings = []): Cache
     {
         // use test application's directory
         $dir = realpath(dirname(__FILE__) . '/app');
@@ -21,11 +25,29 @@ abstract class CacheTest extends \Nano\NanoBaseTest
         return Cache::factory($settings);
     }
 
-    public function testCacheFactory()
+    /**
+     * @param string $cacheDriver
+     * @param array $cacheOptions
+     * @param string $expectedClass
+     * @dataProvider cacheFactoryProvider
+     * @throws Exception
+     */
+    public function testCacheFactory(string $cacheDriver, array $cacheOptions, string $expectedClass)
     {
-        $this->assertInstanceOf('Nano\Cache\CacheFile', $this->getCache('file'));
-        $this->assertInstanceOf('Nano\Cache\CacheFile', $this->getCache('File'));
-        $this->assertInstanceOf('Nano\Cache\CacheRedis', $this->getCache('redis', ['host' => '127.0.0.1']));
+        $this->assertInstanceOf($expectedClass, $this->getCache($cacheDriver, $cacheOptions));
+    }
+
+    public function cacheFactoryProvider(): Generator
+    {
+        yield 'file' => [
+            'file', [], Cache\CacheFile::class
+        ];
+        yield 'File' => [
+            'File', [], Cache\CacheFile::class
+        ];
+        yield 'redis' => [
+            'redis', ['host' => '127.0.0.1'], Cache\CacheRedis::class
+        ];
     }
 
     /**
@@ -34,14 +56,11 @@ abstract class CacheTest extends \Nano\NanoBaseTest
      * @param array $settings
      * @return Cache
      */
-    abstract protected function getCacheInstance($settings = []);
+    abstract protected function getCacheInstance(array $settings = []): Cache;
 
     public function testCacheGetSet()
     {
         $cache = $this->getCacheInstance();
-        if ($cache === false) {
-            return;
-        }
 
         $key = 'foo';
         $value = [
@@ -82,9 +101,6 @@ abstract class CacheTest extends \Nano\NanoBaseTest
     public function testCacheIncrDecr()
     {
         $cache = $this->getCacheInstance();
-        if ($cache === false) {
-            return;
-        }
 
         $key = 'bar';
         $value = 12;
@@ -113,10 +129,6 @@ abstract class CacheTest extends \Nano\NanoBaseTest
     {
         $cacheA = $this->getCacheInstance();
         $cacheB = $this->getCacheInstance(['prefix' => 'foo']);
-
-        if ($cacheA === false) {
-            return;
-        }
 
         $key = 'bar';
         $value = 12;
