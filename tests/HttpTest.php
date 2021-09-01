@@ -83,4 +83,22 @@ class HttpTest extends NanoBaseTest
         $this->expectExceptionMessage('Could not resolve host: not-known-domain');
         Http::get('https://not-known-domain');
     }
+
+    /**
+     * @param int $responseCode
+     * @throws ResponseException
+     * @dataProvider responseWithCodeProvider
+     */
+    public function testResponseWithCode(int $responseCode)
+    {
+        $resp = Http::head("https://httpbin.org/status/${responseCode}");
+        $this->assertEquals($responseCode, $resp->getResponseCode());
+    }
+
+    public function responseWithCodeProvider(): Generator
+    {
+        yield 'HTTP 202 Created' => [202];
+        yield 'HTTP 404 Not Found' => [404];
+        yield 'HTTP 500 Server Error' => [500];
+    }
 }
