@@ -49,7 +49,7 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",
     "psr/cache": "^1.0.0",
-    "phpstan/phpstan": "^0.12.82",
+    "phpstan/phpstan": "^1.0.0",
     "phpunit/phpunit": "9.x"
   }
 }
