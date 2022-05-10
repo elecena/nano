@@ -18,7 +18,7 @@
     "ext-json": "*",
     "ext-xml": "*",
     "predis/predis": "^1.1",
-    "monolog/monolog": "2.5.0",
+    "monolog/monolog": "2.6.0",
     "macbre/monolog-utils": "^2.1",
     "tedivm/jshrink": "^1.2"
   },
