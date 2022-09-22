@@ -300,7 +300,7 @@ class Router
             'ó' => 'o',
             'ś' => 's',
             'ż' => 'z',
-            'ź' => 'z'
+            'ź' => 'z',
         ]);
 
         $string = preg_replace('#[^a-z0-9]+#', '-', $string);

@@ -90,7 +90,7 @@ class DatabaseMysql extends Database
                 });
 
                 $this->logger->info('Connected', [
-                    'time' => $time * 1000 // [ms]
+                    'time' => $time * 1000, // [ms]
                 ]);
 
                 $this->log(__METHOD__, 'connected with ' . $hostInfo, $time);
@@ -184,7 +184,7 @@ class DatabaseMysql extends Database
             $this->logger->error($shortSql, [
                 'exception' => $e,
                 'method' => $method,
-                'time' => $time * 1000 // [ms]
+                'time' => $time * 1000, // [ms]
             ]);
 
             $this->log(__METHOD__, "error #{$this->link->errno} - {$this->link->error}");
@@ -194,7 +194,7 @@ class DatabaseMysql extends Database
             $this->logger->info("SQL {$shortSql}", [
                 'method' => $method,
                 'rows' => $res instanceof mysqli_result ? $res->num_rows : ($this->link->affected_rows ?: 0),
-                'time' => $time * 1000 // [ms]
+                'time' => $time * 1000, // [ms]
             ]);
         }
 
@@ -327,7 +327,7 @@ class DatabaseMysql extends Database
         $suffix = '';
 
         if (!empty($options['ON DUPLICATE KEY UPDATE'])) {
-            list($column, $value) = $options['ON DUPLICATE KEY UPDATE'];
+            [$column, $value] = $options['ON DUPLICATE KEY UPDATE'];
             $suffix .= sprintf(' ON DUPLICATE KEY UPDATE %s = "%s"', $column, $this->escape($value));
         }
 

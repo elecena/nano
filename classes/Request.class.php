@@ -42,7 +42,7 @@ class Request
         $this->env = $env;
 
         // detect request type
-        $method = isset($env['REQUEST_METHOD']) ? $env['REQUEST_METHOD'] : false;
+        $method = $env['REQUEST_METHOD'] ?? false;
 
         // CLI mode detection
         if ($method == false && php_sapi_name() == 'cli') {
@@ -193,7 +193,7 @@ class Request
      */
     public function get($param, $default = null)
     {
-        return isset($this->params[$param]) ? $this->params[$param] : $default;
+        return $this->params[$param] ?? $default;
     }
 
     /**
@@ -308,7 +308,7 @@ class Request
     {
         $key = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
 
-        return isset($this->env[$key]) ? $this->env[$key] : $default;
+        return $this->env[$key] ?? $default;
     }
 
     /**
@@ -328,7 +328,7 @@ class Request
         $fields = [
             'HTTP_CLIENT_IP',
             'HTTP_X_FORWARDED_FOR',
-            'REMOTE_ADDR'
+            'REMOTE_ADDR',
         ];
 
         // scan HTTP headers to find IP

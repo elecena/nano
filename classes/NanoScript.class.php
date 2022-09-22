@@ -44,7 +44,7 @@ abstract class NanoScript extends NanoObject
             $this->init();
         } catch (Exception $e) {
             $this->logger->error(__METHOD__ . ' failed', [
-                'exception' => $e
+                'exception' => $e,
             ]);
         }
     }

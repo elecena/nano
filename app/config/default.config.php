@@ -2,7 +2,7 @@
 
 // debug
 $config['debug'] = [
-    'enabled' => true
+    'enabled' => true,
 ];
 
 $config['assets.packages'] = [

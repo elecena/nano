@@ -325,7 +325,7 @@ class HttpClient
                     'total_time' => $info['total_time'] * 1000, // [ms]
                     'speed_download' => (int) $info['speed_download'],
                     'size_download' => (int) $info['size_download'],
-                ]
+                ],
             ]);
         } else {
             $e = new ResponseException(curl_error($this->handle), curl_errno($this->handle));
@@ -333,7 +333,7 @@ class HttpClient
             $this->logger->error(__METHOD__. ': ' . $e->getMessage(), [
                 'exception' => $e,
                 'method' => $method,
-                'url' => $url
+                'url' => $url,
             ]);
 
             throw $e;

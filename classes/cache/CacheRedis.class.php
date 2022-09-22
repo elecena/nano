@@ -30,10 +30,10 @@ class CacheRedis extends Cache
         parent::__construct($settings);
 
         // read settings
-        $host = isset($settings['host']) ? $settings['host'] : 'localhost';
-        $port = isset($settings['port']) ? $settings['port'] : 6379;
-        $password = isset($settings['password']) ? $settings['password'] : false;
-        $timeout = isset($settings['timeout']) ? $settings['timeout'] : 5; // Predis default is 5 sec
+        $host = $settings['host'] ?? 'localhost';
+        $port = $settings['port'] ?? 6379;
+        $password = $settings['password'] ?? false;
+        $timeout = $settings['timeout'] ?? 5; // Predis default is 5 sec
 
         // lazy connect
         $this->redis = new Client([

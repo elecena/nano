@@ -39,7 +39,7 @@ abstract class MessageQueue
         $this->logger = NanoLogger::getLogger(__CLASS__);
 
         // set prefix
-        $this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
+        $this->prefix = $settings['prefix'] ?? false;
     }
 
     /**

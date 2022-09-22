@@ -115,8 +115,8 @@ class NanoApp
         }
 
         // set request
-        $params = isset($_REQUEST) ? $_REQUEST : [];
-        $env = isset($_SERVER) ? $_SERVER : [];
+        $params = $_REQUEST ?? [];
+        $env = $_SERVER ?? [];
 
         $this->request = new Request($params, $env);
         if (!$this->request->isCLI()) {
@@ -143,7 +143,7 @@ class NanoApp
         // TODO: move to a Monolog processor
         $responseDetails = [
             'time' => $this->getResponse()->getResponseTime() * 1000, // [ms]
-            'response_code' => $this->getResponse()->getResponseCode()
+            'response_code' => $this->getResponse()->getResponseCode(),
         ];
 
         // request type
@@ -346,7 +346,7 @@ class NanoApp
             // log the exception
             $logger = NanoLogger::getLogger('nano.app.exception');
             $logger->error($e->getMessage(), [
-                'exception' => $e
+                'exception' => $e,
             ]);
 
             if (is_callable($handler)) {

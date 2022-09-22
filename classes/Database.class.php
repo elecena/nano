@@ -104,7 +104,7 @@ abstract class Database
                 } catch (DatabaseException $e) {
                     $logger->error($e->getMessage(), [
                         'exception' => $e,
-                        'driver' => $className
+                        'driver' => $className,
                     ]);
                     throw $e;
                 }
@@ -527,7 +527,7 @@ abstract class Database
 
         while (true) {
             $column_where = [
-                sprintf('%s > "%s"', $column, $this->escape($start))
+                sprintf('%s > "%s"', $column, $this->escape($start)),
             ];
 
             $ids = $this->selectFields(
@@ -536,7 +536,7 @@ abstract class Database
                 array_merge($column_where, $where),
                 [
                     'order' => $column,
-                    'limit' => intval($batch)
+                    'limit' => intval($batch),
                 ],
                 $fname
             );

@@ -226,7 +226,7 @@ class SitemapGenerator
     public function addUrl($url, $lastmod = false, $priority = false /* 0.5 is the default value */)
     {
         $entry = [
-            'url' => $url
+            'url' => $url,
         ];
 
         $this->debug->log(__METHOD__ . ": {$url}");
@@ -282,7 +282,7 @@ class SitemapGenerator
         $http = new HttpClient();
 
         $res = $http->get($host . '/ping', [
-            'sitemap' => $this->router->formatFullUrl() . self::SITEMAP_FILE
+            'sitemap' => $this->router->formatFullUrl() . self::SITEMAP_FILE,
         ]);
 
         return $res->getResponseCode() === 200;
