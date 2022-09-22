@@ -8,11 +8,15 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 
+// https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/master/doc/rules/index.rst
+// https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/master/doc/ruleSets/index.rst
 return $config
   ->setRules([
       '@PSR2' => true,
       'array_syntax' => ['syntax' => 'short'],
+      'list_syntax' => true,
+      'ternary_to_null_coalescing' => true,
+      'trailing_comma_in_multiline' => true,
   ])
   ->setFinder($finder)
 ;
-
