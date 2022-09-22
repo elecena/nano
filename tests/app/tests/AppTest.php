@@ -32,7 +32,7 @@ abstract class AppTest extends NanoBaseTest
             'HTTP_CLIENT_IP' => $this->ip,
         ];
 
-        $this->dir = realpath(dirname(__FILE__) . '/..');
+        $this->dir = realpath(__DIR__ . '/..');
         $this->app = \Nano::app($this->dir);
 
         $request = new Request($params, $env);

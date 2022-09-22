@@ -91,7 +91,7 @@ abstract class Database
         if (!is_null($driver)) {
             $className = 'Database' . ucfirst(strtolower($driver));
 
-            $src = dirname(__FILE__) . '/database/' . $className . '.class.php';
+            $src = __DIR__ . '/database/' . $className . '.class.php';
 
             if (file_exists($src)) {
                 require_once $src;

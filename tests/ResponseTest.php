@@ -18,7 +18,7 @@ class ResponseTest extends \Nano\NanoBaseTest
     public function setUp(): void
     {
         // use test application's directory
-        $dir = realpath(dirname(__FILE__) . '/app');
+        $dir = realpath(__DIR__ . '/app');
         $this->app = Nano::app($dir);
         $this->response = new Response($this->app);
     }

@@ -10,7 +10,7 @@ class ConfigTest extends \Nano\NanoBaseTest
 {
     public function testGetDirectory()
     {
-        $dir = dirname(__FILE__);
+        $dir = __DIR__;
 
         $config = new Config($dir);
 
@@ -19,7 +19,7 @@ class ConfigTest extends \Nano\NanoBaseTest
 
     public function testGetSetDelete()
     {
-        $dir = dirname(__FILE__);
+        $dir = __DIR__;
         $key = 'foo.bar';
         $val = 'test';
 

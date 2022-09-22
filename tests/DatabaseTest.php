@@ -12,7 +12,7 @@ class DatabaseTest extends \Nano\NanoBaseTest
      */
     private function buildApp()
     {
-        $app = Nano::app(dirname(__FILE__) . '/app');
+        $app = Nano::app(__DIR__ . '/app');
 
         $app->getDebug()->enableLog();
         $app->getDebug()->setLogFile('database');

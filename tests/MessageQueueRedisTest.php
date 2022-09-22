@@ -31,7 +31,7 @@ class MessageQueueRedisTest extends \Nano\NanoBaseTest
     private function getMessageQueue()
     {
         // use test application's directory
-        $dir = realpath(dirname(__FILE__) . '/app');
+        $dir = realpath(__DIR__ . '/app');
         $app = Nano::app($dir);
 
         $mq = MessageQueue::connect($app, $this->settings);

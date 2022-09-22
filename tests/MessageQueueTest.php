@@ -11,7 +11,7 @@ class MessageQueueTest extends \Nano\NanoBaseTest
     private function getMessageQueue($driver, $settings = [])
     {
         // use test application's directory
-        $dir = realpath(dirname(__FILE__) . '/app');
+        $dir = realpath(__DIR__ . '/app');
         $app = Nano::app($dir);
 
         $settings = array_merge([
