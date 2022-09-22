@@ -14,7 +14,7 @@ abstract class CacheTest extends NanoBaseTest
     protected function getCache($driver, array $settings = []): Cache
     {
         // use test application's directory
-        $dir = realpath(dirname(__FILE__) . '/app');
+        $dir = realpath(__DIR__ . '/app');
         $app = Nano::app($dir);
 
         $settings = array_merge([

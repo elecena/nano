@@ -10,7 +10,7 @@ class CacheFileTest extends CacheTest
 {
     protected function getCacheInstance(array $settings = []): Cache
     {
-        $dir = dirname(__FILE__) . '/app/cache';
+        $dir = __DIR__ . '/app/cache';
 
         $settings = array_merge([
             'directory' => $dir,

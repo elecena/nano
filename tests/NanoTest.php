@@ -8,7 +8,7 @@ class NanoTest extends \Nano\NanoBaseTest
 {
     public function testDirectories()
     {
-        $dir = realpath(dirname(__FILE__) . '/..');
+        $dir = realpath(__DIR__ . '/..');
 
         $this->assertEquals($dir, Nano::getCoreDirectory());
         $this->assertEquals($dir . '/lib', Nano::getLibDirectory());

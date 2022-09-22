@@ -12,7 +12,7 @@ require_once __DIR__ . '../vendor/autoload.php';
 // initialize instance of framework object
 Nano::init();
 
-$app = Nano::app(dirname(__FILE__));
+$app = Nano::app(__DIR__);
 
 // run bootstrap file
 require $app->getDirectory() . '/config/bootstrap.php';

@@ -12,7 +12,7 @@ class TemplateTest extends \Nano\NanoBaseTest
 
     public function setUp(): void
     {
-        $this->dir = realpath(dirname(__FILE__). '/app/controllers/foo/templates');
+        $this->dir = realpath(__DIR__. '/app/controllers/foo/templates');
     }
 
     private function getTemplate()

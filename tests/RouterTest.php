@@ -11,7 +11,7 @@ class RouterTest extends \Nano\NanoBaseTest
     private function getRouter()
     {
         // use test application's directory
-        $dir = realpath(dirname(__FILE__) . '/app');
+        $dir = realpath(__DIR__ . '/app');
         $this->app = Nano::app($dir);
 
         return new Router($this->app);

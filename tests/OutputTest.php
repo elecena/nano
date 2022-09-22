@@ -73,7 +73,7 @@ class OutputTest extends \Nano\NanoBaseTest
 
     public function testOutputTemplate()
     {
-        $dir = dirname(__FILE__). '/app/controllers/foo/templates';
+        $dir = __DIR__. '/app/controllers/foo/templates';
         $template = new Template($dir);
         $template->set(['id' => 'foo']);
 
