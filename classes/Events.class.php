@@ -33,7 +33,7 @@ class Events
     {
         $this->events[$eventName][] = [
             self::CALLBACK_SIMPLE,
-            $callback
+            $callback,
         ];
     }
 
@@ -46,8 +46,8 @@ class Events
             self::CALLBACK_CONTROLLER,
             [
                 $controllerName,
-                $controllerMethod
-            ]
+                $controllerMethod,
+            ],
         ];
 
         $this->events[$eventName][] = $callback;
@@ -58,21 +58,21 @@ class Events
      */
     public function fire($eventName, $params = [])
     {
-        $callbacks = isset($this->events[$eventName]) ? $this->events[$eventName] : null;
+        $callbacks = $this->events[$eventName] ?? null;
 
         if ($callbacks) {
             foreach ($callbacks as $entry) {
-                list($type, $callback) = $entry;
+                [$type, $callback] = $entry;
 
                 switch ($type) {
                     // lazy load of controllers
                     case self::CALLBACK_CONTROLLER:
-                        list($name, $method) = $callback;
+                        [$name, $method] = $callback;
 
                         $instance = $this->app->getController($name);
                         $callback = [
                             $instance,
-                            $method
+                            $method,
                         ];
                         break;
                 }

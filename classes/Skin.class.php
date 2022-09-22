@@ -138,7 +138,7 @@ abstract class Skin
     {
         $this->meta[] = [
             'name' => $name,
-            'value' => $value
+            'value' => $value,
         ];
     }
 
@@ -152,7 +152,7 @@ abstract class Skin
     {
         $this->meta[] = [
             'name' => 'robots',
-            'content' => $policy
+            'content' => $policy,
         ];
     }
 
@@ -165,7 +165,7 @@ abstract class Skin
     {
         $this->meta[] = [
             'property' => "og:{$name}",
-            'content' => $value
+            'content' => $value,
         ];
     }
 
@@ -180,7 +180,7 @@ abstract class Skin
     {
         $this->link[] = array_merge([
             'rel' => $rel,
-            'value' => $value
+            'value' => $value,
         ], $attrs);
     }
 

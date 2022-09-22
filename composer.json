@@ -40,7 +40,7 @@
     ],
     "lint": [
       "php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose",
-      "phpstan analyse app/ classes/ tests/"
+      "phpstan --memory-limit=256M analyse app/ classes/ tests/"
     ],
     "format": [
       "php-cs-fixer fix --config=.php-cs-fixer.php"

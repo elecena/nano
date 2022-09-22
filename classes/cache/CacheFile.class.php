@@ -20,7 +20,7 @@ class CacheFile extends Cache
         parent::__construct($settings);
 
         $app = \NanoApp::app();
-        $this->dir = isset($settings['directory']) ? $settings['directory'] : ($app->getDirectory() . '/cache');
+        $this->dir = $settings['directory'] ?? ($app->getDirectory() . '/cache');
     }
 
     /**

@@ -35,14 +35,14 @@ abstract class Cache
      */
     public static function factory(array $settings)
     {
-        $driver = isset($settings['driver']) ? $settings['driver'] : null;
+        $driver = $settings['driver'] ?? null;
         $className = sprintf('Nano\\Cache\\Cache%s', ucfirst($driver));
 
         try {
             return new $className($settings);
         } catch (\Exception $e) {
             NanoLogger::getLogger('nano.cache')->error($e->getMessage(), [
-                'exception' => $e
+                'exception' => $e,
             ]);
             throw $e;
         }
@@ -67,7 +67,7 @@ abstract class Cache
         $events->bind('NanoAppTearDown', [$this, 'onNanoAppTearDown']);
 
         // set prefix
-        $this->prefix = isset($settings['prefix']) ? $settings['prefix'] : false;
+        $this->prefix = $settings['prefix'] ?? false;
     }
 
     /**
@@ -191,7 +191,7 @@ abstract class Cache
         $debug->log("Cache: {$this->hits} hits and {$this->misses} misses");
         $this->logger->info('Performance data', [
             'hits' => $this->getHits(),
-            'misses' => $this->getMisses()
+            'misses' => $this->getMisses(),
         ]);
     }
 }

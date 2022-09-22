@@ -19,7 +19,7 @@ abstract class CacheTest extends NanoBaseTest
 
         $settings = array_merge([
             'driver' => $driver,
-            'password' => getenv('REDIS_PASSWORD')
+            'password' => getenv('REDIS_PASSWORD'),
         ], $settings);
 
         return Cache::factory($settings);
@@ -40,13 +40,13 @@ abstract class CacheTest extends NanoBaseTest
     public function cacheFactoryProvider(): Generator
     {
         yield 'file' => [
-            'file', [], Cache\CacheFile::class
+            'file', [], Cache\CacheFile::class,
         ];
         yield 'File' => [
-            'File', [], Cache\CacheFile::class
+            'File', [], Cache\CacheFile::class,
         ];
         yield 'redis' => [
-            'redis', ['host' => '127.0.0.1'], Cache\CacheRedis::class
+            'redis', ['host' => '127.0.0.1'], Cache\CacheRedis::class,
         ];
     }
 
@@ -66,7 +66,7 @@ abstract class CacheTest extends NanoBaseTest
         $value = [
             'test' => true,
             'mixed' => [1,2,3],
-            'pi' => 3.1415
+            'pi' => 3.1415,
         ];
 
         $this->assertTrue($cache->set($key, $value, 60));

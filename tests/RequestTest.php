@@ -18,7 +18,7 @@ class RequestTest extends \Nano\NanoBaseTest
             'box' => 'on',
         ],
             [
-            'REQUEST_METHOD' => 'GET'
+            'REQUEST_METHOD' => 'GET',
         ]
         );
 
@@ -68,7 +68,7 @@ class RequestTest extends \Nano\NanoBaseTest
             'box' => 'on',
         ],
             [
-            'REQUEST_METHOD' => 'POST'
+            'REQUEST_METHOD' => 'POST',
         ]
         );
 
@@ -141,7 +141,7 @@ class RequestTest extends \Nano\NanoBaseTest
             'box' => 'on',
         ],
             [
-            'REQUEST_METHOD' => 'API'
+            'REQUEST_METHOD' => 'API',
         ]
         );
 
@@ -162,7 +162,7 @@ class RequestTest extends \Nano\NanoBaseTest
             'box' => 'on',
         ],
             [
-            'REQUEST_METHOD' => 'INTERNAL'
+            'REQUEST_METHOD' => 'INTERNAL',
         ]
         );
 
@@ -182,7 +182,7 @@ class RequestTest extends \Nano\NanoBaseTest
             'box' => 'on',
         ],
             [
-            'REQUEST_METHOD' => 'CLI'
+            'REQUEST_METHOD' => 'CLI',
         ]
         );
 
@@ -200,7 +200,7 @@ class RequestTest extends \Nano\NanoBaseTest
 
         // set path directly
         $request = new Request([
-            'q' => 'foo'
+            'q' => 'foo',
         ]);
         $request->setPath($uri);
 

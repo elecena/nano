@@ -153,7 +153,7 @@ class Response
      */
     public function getHeader($name)
     {
-        return isset($this->headers[$name]) ? $this->headers[$name] : null;
+        return $this->headers[$name] ?? null;
     }
 
     /**
@@ -184,7 +184,7 @@ class Response
         header_remove('X-Powered-By');
 
         // emit HTTP protocol and response code
-        $protocol = isset($this->env['SERVER_PROTOCOL']) ? $this->env['SERVER_PROTOCOL'] : 'HTTP/1.1';
+        $protocol = $this->env['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
 
         header("{$protocol} {$this->responseCode}", true /* $replace */, $this->responseCode);
         $this->debug->log(__METHOD__ . " - HTTP {$this->responseCode}");
@@ -282,7 +282,7 @@ class Response
      */
     public function getAcceptedEncoding()
     {
-        $acceptedEncoding = isset($this->env['HTTP_ACCEPT_ENCODING']) ? $this->env['HTTP_ACCEPT_ENCODING'] : '';
+        $acceptedEncoding = $this->env['HTTP_ACCEPT_ENCODING'] ?? '';
 
         if ($acceptedEncoding === '') {
             return false;

@@ -13,8 +13,8 @@ class OutputTest extends \Nano\NanoBaseTest
         'foo' => 'bar',
         'test' => [
             '123',
-            '456'
-        ]
+            '456',
+        ],
     ];
 
     public function testOutputFactory()

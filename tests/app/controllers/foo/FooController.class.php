@@ -45,7 +45,7 @@ class FooController extends Controller
     public function json($id)
     {
         $this->setData([
-            'id' => intval($id)
+            'id' => intval($id),
         ]);
         $this->setFormat('json');
     }

@@ -10,7 +10,7 @@ $config['db'] = [
     'default' => [
         'driver' => 'mysql',
         'utf' => true,
-    ]
+    ],
 ];
 $config['foo']['bar'] = '123';
 $config['assets'] = [

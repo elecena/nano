@@ -35,10 +35,10 @@ class MessageQueueRedis extends MessageQueue
         parent::__construct($app, $settings);
 
         // read settings
-        $host = isset($settings['host']) ? $settings['host'] : 'localhost';
-        $port = isset($settings['port']) ? $settings['port'] : 6379;
-        $password = isset($settings['password']) ? $settings['password'] : null;
-        $timeout = isset($settings['timeout']) ? $settings['timeout'] : 5; // Predis default is 5 sec
+        $host = $settings['host'] ?? 'localhost';
+        $port = $settings['port'] ?? 6379;
+        $password = $settings['password'] ?? null;
+        $timeout = $settings['timeout'] ?? 5; // Predis default is 5 sec
 
         // lazy connect
         $this->redis = new Client([
@@ -77,7 +77,7 @@ class MessageQueueRedis extends MessageQueue
 
         // log the push()
         $this->logger->info($fname, [
-            'queue' => $this->queueName
+            'queue' => $this->queueName,
         ]);
 
         // return wrapped message
@@ -100,7 +100,7 @@ class MessageQueueRedis extends MessageQueue
 
             // log the pop()
             $this->logger->info($fname, [
-                'queue' => $this->queueName
+                'queue' => $this->queueName,
             ]);
 
             // return wrapped message
@@ -127,7 +127,7 @@ class MessageQueueRedis extends MessageQueue
     {
         $this->redis->del([
             $this->getQueueKey(),
-            $this->getLastIdKey()
+            $this->getLastIdKey(),
         ]);
     }
 

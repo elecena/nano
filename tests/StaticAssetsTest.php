@@ -35,9 +35,9 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
             'jquery' => [
                 'js' => '/statics/jquery.foo.js',
                 'ext' => [
-                    'js' => 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'
-                ]
-            ]
+                    'js' => 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
+                ],
+            ],
         ]);
     }
 
@@ -138,8 +138,8 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
                 'deps' => 'libFoo',
             ],
             'libTest' => [
-                'deps' => ['libBar', 'libFoo']
-            ]
+                'deps' => ['libBar', 'libFoo'],
+            ],
         ];
         $this->app->getConfig()->set('assets.packages', $packages);
 
@@ -303,7 +303,7 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
 
         $this->assertEquals([
             'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
-            "/site/r{$cb}/package/jquery.js"
+            "/site/r{$cb}/package/jquery.js",
         ], $static->getUrlsForPackage('jquery', 'js'));
     }
 
