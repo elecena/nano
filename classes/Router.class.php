@@ -279,10 +279,17 @@ class Router
     /**
      * Sanitize given string to be used in URL
      *
-     * Replace all non alphanumeric characters with a dash
+     * Replace all non-alphanumeric characters with a dash
+     *
+     * @param string|null $string
+     * @return string
      */
-    public function sanitize($string)
+    public function sanitize(?string $string): string
     {
+        if (is_null($string)) {
+            return '';
+        }
+
         $string = mb_strtolower(trim($string));
         $string = strtr($string, [
             'ą' => 'a',

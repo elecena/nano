@@ -28,6 +28,7 @@ class RouterTest extends \Nano\NanoBaseTest
     {
         $router = $this->getRouter();
 
+        $this->assertEquals('', $router->sanitize(null));
         $this->assertEquals('foobar', $router->sanitize('foobar'));
         $this->assertEquals('foo-bar', $router->sanitize('foo/bar'));
         $this->assertEquals('foo-bar', $router->sanitize('foo - bar'));

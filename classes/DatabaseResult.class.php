@@ -49,7 +49,7 @@ class DatabaseResult implements Iterator, Countable
     /**
      * Return data from current row
      *
-     * @return mixed data
+     * @return array|bool data
      */
     public function fetchRow()
     {
@@ -81,7 +81,7 @@ class DatabaseResult implements Iterator, Countable
     /**
      * Implement Countable interface
      */
-    public function count()
+    public function count(): int
     {
         return $this->numRows();
     }
@@ -89,7 +89,7 @@ class DatabaseResult implements Iterator, Countable
     /**
      * Implement Iterator interface
      */
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->numRows()) {
             $this->seek(0);
@@ -98,6 +98,7 @@ class DatabaseResult implements Iterator, Countable
         $this->currentRow = null;
     }
 
+    #[ReturnTypeWillChange]
     public function current()
     {
         if (is_null($this->currentRow)) {
@@ -107,11 +108,12 @@ class DatabaseResult implements Iterator, Countable
         return $this->currentRow;
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->pos;
     }
 
+    #[ReturnTypeWillChange]
     public function next()
     {
         $this->pos++;
@@ -119,7 +121,7 @@ class DatabaseResult implements Iterator, Countable
         return $this->currentRow;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->current() !== false;
     }
