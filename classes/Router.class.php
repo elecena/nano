@@ -267,8 +267,8 @@ class Router
     public function getPathPrefix()
     {
         // parse homepage's URL
-        $homeUrl = parse_url($this->homeUrl, PHP_URL_PATH) ?? '';
-        $pathPrefix = self::SEPARATOR . $this->normalize($homeUrl);
+        $homeUrlPath = parse_url($this->homeUrl, PHP_URL_PATH) ?? '';
+        $pathPrefix = self::SEPARATOR . $this->normalize($homeUrlPath);
 
         if (strlen($pathPrefix) > 1) {
             $pathPrefix .= self::SEPARATOR;
