@@ -53,7 +53,7 @@ class Router
      *
      * Trim separator and extra chars given
      */
-    private function normalize($url, $extraChars = '')
+    private function normalize(string $url, string $extraChars = ''): string
     {
         $url = rtrim($url, self::SEPARATOR . $extraChars);
         $url = ltrim($url, self::SEPARATOR);
@@ -267,7 +267,8 @@ class Router
     public function getPathPrefix()
     {
         // parse homepage's URL
-        $pathPrefix = self::SEPARATOR . $this->normalize(parse_url($this->homeUrl, PHP_URL_PATH));
+        $homeUrlPath = parse_url($this->homeUrl, PHP_URL_PATH) ?? '';
+        $pathPrefix = self::SEPARATOR . $this->normalize($homeUrlPath);
 
         if (strlen($pathPrefix) > 1) {
             $pathPrefix .= self::SEPARATOR;

@@ -4,24 +4,53 @@
  * Set of unit tests for Router class
  */
 
+use Nano\NanoBaseTest;
 use Nano\Router;
 
-class RouterTest extends \Nano\NanoBaseTest
+class RouterTest extends NanoBaseTest
 {
-    private function getRouter()
+    /**
+     * @param array $customConfigSettings custom Config settings to apply to NanoApp
+     * @return Router
+     */
+    private function getRouter(array $customConfigSettings = []): Router
     {
         // use test application's directory
-        $dir = realpath(__DIR__ . '/app');
-        $this->app = Nano::app($dir);
+        $this->app = Nano::app(__DIR__ . '/app');
+
+        foreach ($customConfigSettings as $key => $value) {
+            $this->app->getConfig()->set($key, $value);
+        }
 
         return new Router($this->app);
     }
 
-    public function testGetPathPrefix()
+    /**
+     * @dataProvider getPathPrefixDataProvider
+     */
+    public function testGetPathPrefix(string $homeUrl, string $expected)
     {
-        $router = $this->getRouter();
+        $router = $this->getRouter(['home' => $homeUrl]);
+        $this->assertEquals($expected, $router->getPathPrefix());
+    }
 
-        $this->assertEquals('/site/', $router->getPathPrefix());
+    public function getPathPrefixDataProvider(): Generator
+    {
+        // parse_url( PHP_URL_PATH ) gives null in this case
+        yield 'Home page at root' => [
+            'homeUrl' => 'https://foo.bar',
+            'expected' => '/',
+        ];
+
+        yield 'Home page at /' => [
+            'homeUrl' => 'https://foo.bar/',
+            'expected' => '/',
+        ];
+
+        yield 'Home page at /site' => [
+            'homeUrl' => 'https://foo.bar/site',
+            'expected' => '/site/',
+        ];
     }
 
     public function testSanitize()
