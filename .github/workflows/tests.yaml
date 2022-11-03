@@ -79,6 +79,7 @@ jobs:
 
     - name: Upload coverage results to Coveralls
       if: matrix.php-versions == '8.0'
+      continue-on-error: true  # do not fail on Coveralls uploads
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
