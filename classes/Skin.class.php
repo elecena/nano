@@ -55,7 +55,7 @@ abstract class Skin
      * @return self
      * @throws Exception
      */
-    public static function factory(NanoApp $app, $skinName)
+    public static function factory(NanoApp $app, string $skinName): Skin
     {
         $className = sprintf('Skin%s', ucfirst($skinName));
 
@@ -72,7 +72,7 @@ abstract class Skin
      * @param NanoApp $app
      * @param string $skinName
      */
-    public function __construct(NanoApp $app, $skinName)
+    public function __construct(NanoApp $app, string $skinName)
     {
         $this->app = $app;
         $this->skinName = $skinName;
@@ -134,7 +134,7 @@ abstract class Skin
     /**
      * Add <meta> tag entry
      */
-    public function addMeta($name, $value)
+    public function addMeta(string $name, ?string $value): void
     {
         $this->meta[] = [
             'name' => $name,
@@ -306,7 +306,7 @@ abstract class Skin
     /**
      * Renders set of <meta> elements to be used in page's head section
      */
-    public function renderHead($sep = "\n")
+    public function renderHead(string $sep = "\n"): string
     {
         // render <meta> elements
         $elements = [];
@@ -315,7 +315,7 @@ abstract class Skin
             $node = '<meta';
 
             foreach ($item as $name => $value) {
-                $value = htmlspecialchars($value);
+                $value = htmlspecialchars($value ?? '');
                 $node .= " {$name}=\"{$value}\"";
             }
 
@@ -329,7 +329,7 @@ abstract class Skin
             $node = '<link';
 
             foreach ($item as $name => $value) {
-                $value = htmlspecialchars($value);
+                $value = htmlspecialchars($value ?? '');
                 $node .= " {$name}=\"{$value}\"";
             }
 
