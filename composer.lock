@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7207d0705967e68a7447e914e8569e34",
+    "content-hash": "605c512e9fb19e97f3009f84d738d431",
     "packages": [
         {
             "name": "macbre/monolog-utils",
@@ -4173,7 +4173,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3.0 || ^8.0",
+        "php": ">=7.4.0 || ^8.0",
         "ext-mysqli": "*",
         "ext-curl": "*",
         "ext-mbstring": "*",
