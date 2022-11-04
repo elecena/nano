@@ -15,7 +15,6 @@ use Macbre\Logger\Processors\RequestIdProcessor;
  */
 class NanoLogger
 {
-
     /**
      * List of handlers defined via \Nano\Logger\NanoLogger::pushHandler
      *

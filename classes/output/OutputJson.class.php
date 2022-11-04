@@ -9,7 +9,6 @@ use Nano\Output;
  */
 class OutputJson extends Output
 {
-
     /**
      * Render current data
      */

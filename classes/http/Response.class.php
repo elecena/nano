@@ -7,7 +7,6 @@ namespace Nano\Http;
  */
 class Response
 {
-
     // response from HTTP server
     private $content;
 

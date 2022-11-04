@@ -7,7 +7,6 @@ namespace Nano;
  */
 class Debug
 {
-
     // log level constants
     const ERROR = 1;
     const WARNING = 2;

@@ -10,7 +10,6 @@ use Nano\Template;
  */
 class OutputTemplate extends Output
 {
-
     /* @var Template $template */
     private $template;
     private $templateName;

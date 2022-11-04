@@ -6,7 +6,6 @@
 
 class DatabaseTest extends \Nano\NanoBaseTest
 {
-
     /**
      * @return NanoApp
      */

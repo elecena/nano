@@ -12,7 +12,6 @@ use Nano\Output;
  */
 class OutputXml extends Output
 {
-
     /**
      * Converts given array into XML and adds nodes into given element
      */

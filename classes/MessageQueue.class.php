@@ -10,7 +10,6 @@ use NanoApp;
  */
 abstract class MessageQueue
 {
-
     // key parts separator
     const SEPARATOR = '::';
 

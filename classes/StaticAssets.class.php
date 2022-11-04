@@ -452,7 +452,7 @@ class StaticAssets
                 $content = $this->getProcessor('js')->processFiles($files);
                 break;
 
-            // return file's content (images)
+                // return file's content (images)
             default:
                 $content = file_get_contents($localPath);
         }

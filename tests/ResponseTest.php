@@ -11,7 +11,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class ResponseTest extends \Nano\NanoBaseTest
 {
-
     /* @var Response $response */
     private $response;
 

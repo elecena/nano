@@ -7,7 +7,6 @@ namespace Nano;
  */
 class ResultsWrapper
 {
-
     // results
     protected $results;
 

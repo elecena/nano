@@ -15,7 +15,6 @@ use Predis\Client;
  */
 class CacheRedis extends Cache
 {
-
     // Redis connection
     private $redis;
 

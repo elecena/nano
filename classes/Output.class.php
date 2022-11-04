@@ -7,7 +7,6 @@ namespace Nano;
  */
 abstract class Output
 {
-
     // data to be processed
     protected $data;
 

@@ -8,7 +8,6 @@ namespace Nano;
 
 class View
 {
-
     // application
     private $app;
 

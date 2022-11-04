@@ -8,7 +8,6 @@
 
 class ImageGD extends Image
 {
-
     /**
      * Create an instance of Image for given raw image data
      *

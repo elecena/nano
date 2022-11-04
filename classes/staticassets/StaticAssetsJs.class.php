@@ -10,7 +10,6 @@ use JShrink\Minifier;
 
 class StaticAssetsJs extends StaticAssetsProcessor
 {
-
     /**
      * Process given JS files
      *

@@ -10,7 +10,6 @@ use Nano\Request;
  */
 abstract class AppTest extends NanoBaseTest
 {
-
     /* @var \NanoApp $app */
     protected $app;
     protected $dir;

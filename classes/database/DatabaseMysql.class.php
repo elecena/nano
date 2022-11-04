@@ -7,7 +7,6 @@ use Nano\Debug;
  */
 class DatabaseMysql extends Database
 {
-
     // @see http://php.net/manual/en/mysqlinfo.concepts.buffering.php
     const RESULT_MODE = MYSQLI_STORE_RESULT;
 

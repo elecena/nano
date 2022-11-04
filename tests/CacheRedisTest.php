@@ -9,7 +9,6 @@ use Nano\Cache;
  */
 class CacheRedisTest extends CacheTest
 {
-
     /**
      * @param array $settings
      * @return Cache

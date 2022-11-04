@@ -8,7 +8,6 @@ use Nano\NanoBaseTest;
  */
 class DatabaseResultTest extends NanoBaseTest
 {
-
     /* @var NanoDatabaseMock $dbMock */
     private $dbMock;
 

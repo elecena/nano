@@ -6,7 +6,6 @@
 
 class DOM
 {
-
     // charset used by source XML/HTML
     private $charset;
 
