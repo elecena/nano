@@ -7,7 +7,6 @@ use Nano\Http\Response;
  */
 class Http
 {
-
     /**
      * Send GET HTTP request for a given URL
      *

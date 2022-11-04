@@ -12,7 +12,6 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class NanoBaseTest extends TestCase
 {
-
     /* @var $app \NanoApp */
     protected $app;
 

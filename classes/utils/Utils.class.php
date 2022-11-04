@@ -6,7 +6,6 @@
 
 class Utils
 {
-
     /**
      * Creates temporary file and returns its name
      *

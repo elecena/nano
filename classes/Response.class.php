@@ -10,7 +10,6 @@ use Macbre\Logger\Processors\RequestIdProcessor;
 
 class Response
 {
-
     // date format to be used for HTTP headers
     const DATE_RFC1123 = 'D, d M Y H:i:s \G\M\T';
 

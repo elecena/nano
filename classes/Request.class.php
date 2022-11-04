@@ -7,7 +7,6 @@ namespace Nano;
  */
 class Request
 {
-
     // constants for request type
     const GET = 1;
     const POST = 2;
@@ -54,17 +53,17 @@ class Request
                 $this->type = self::POST;
                 break;
 
-            // "fake" request types for API dispatcher
+                // "fake" request types for API dispatcher
             case 'API':
                 $this->type = self::API;
                 break;
 
-            // "fake" request types for internal dispatcher
+                // "fake" request types for internal dispatcher
             case 'INTERNAL':
                 $this->type = self::INTERNAL;
                 break;
 
-            // "fake" request types for CLI scripts
+                // "fake" request types for CLI scripts
             case 'CLI':
                 $this->type = self::CLI;
                 break;

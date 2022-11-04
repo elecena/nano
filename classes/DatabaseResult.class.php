@@ -8,7 +8,6 @@
 
 class DatabaseResult implements Iterator, Countable
 {
-
     // database driver
     protected $database;
 

@@ -12,7 +12,6 @@ use Monolog\Handler\SyslogUdpHandler;
  */
 class SimpleSyslogUdpHandler extends SyslogUdpHandler
 {
-
     /**
      * Make common syslog header (see rfc5424)
      *

@@ -144,7 +144,7 @@ class Router
                 $methodName = null;
                 break;
 
-            // controller and method name: /product/bar (with parameters)
+                // controller and method name: /product/bar (with parameters)
             case 2:
             default:
                 $controllerName = $pathParts[0];

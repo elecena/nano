@@ -9,7 +9,6 @@ use Nano\Logger\NanoLogger;
  */
 abstract class Cache
 {
-
     // key parts separator
     const SEPARATOR = '::';
 

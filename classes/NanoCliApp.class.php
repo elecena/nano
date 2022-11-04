@@ -8,7 +8,6 @@ use Nano\Logger\NanoLogger;
 
 class NanoCliApp extends NanoApp
 {
-
     /**
      * Create application based on given config
      */

@@ -22,7 +22,6 @@ class DatabaseConnectionException extends DatabaseException
  */
 abstract class Database
 {
-
     // debug
     protected $debug;
 

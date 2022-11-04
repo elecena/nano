@@ -12,7 +12,6 @@ use Nano\Http\ResponseException;
 
 class HttpClient
 {
-
     // HTTP request types
     const GET = 'GET';
     const POST = 'POST';

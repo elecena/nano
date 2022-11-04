@@ -6,7 +6,6 @@
 
 class StaticAssetsCss extends StaticAssetsProcessor
 {
-
     // embed images smaller then (size in bytes)
     const IMAGE_EMBED_THRESHOLD = 2048;
 
@@ -150,7 +149,7 @@ class StaticAssetsCss extends StaticAssetsProcessor
                 $type = 'jpeg';
                 break;
 
-            // not supported image type provided
+                // not supported image type provided
             default:
                 return false;
         }

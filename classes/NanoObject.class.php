@@ -10,7 +10,6 @@ use Nano\Logger\NanoLogger;
 
 abstract class NanoObject
 {
-
     // application
     protected $app;
 

@@ -7,7 +7,6 @@ namespace Nano;
  */
 class Config
 {
-
     // directory to load config files from
     private $dir = 0;
 

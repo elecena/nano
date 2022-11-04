@@ -20,7 +20,6 @@ use Predis\Client;
  */
 class MessageQueueRedis extends MessageQueue
 {
-
     // connection with server
     private $redis;
 
