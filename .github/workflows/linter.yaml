@@ -14,6 +14,7 @@ jobs:
         - '7.4'
         - '8.0'
         - '8.1'
+        - '8.2'
 
     steps:
     - name: Checkout
@@ -41,4 +42,6 @@ jobs:
       run: composer install --no-interaction
 
     - name: Lint the code
-      run: composer run lint
+      run: |
+        PHP_CS_FIXER_IGNORE_ENV=1 \
+          composer run lint
