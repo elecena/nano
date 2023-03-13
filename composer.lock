@@ -263,16 +263,16 @@
         },
         {
             "name": "tedivm/jshrink",
-            "version": "v1.6.0",
+            "version": "v1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tedious/JShrink.git",
-                "reference": "9db60b1cbed5513f12590c599caff14e82e51276"
+                "reference": "aa786b10f012fc0e15b5147c22bdb8c765fac76a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/9db60b1cbed5513f12590c599caff14e82e51276",
-                "reference": "9db60b1cbed5513f12590c599caff14e82e51276",
+                "url": "https://api.github.com/repos/tedious/JShrink/zipball/aa786b10f012fc0e15b5147c22bdb8c765fac76a",
+                "reference": "aa786b10f012fc0e15b5147c22bdb8c765fac76a",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,7 @@
             ],
             "support": {
                 "issues": "https://github.com/tedious/JShrink/issues",
-                "source": "https://github.com/tedious/JShrink/tree/v1.6.0"
+                "source": "https://github.com/tedious/JShrink/tree/v1.6.5"
             },
             "funding": [
                 {
@@ -319,7 +319,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-05T23:52:37+00:00"
+            "time": "2023-03-12T15:19:34+00:00"
         }
     ],
     "packages-dev": [
