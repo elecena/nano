@@ -44,7 +44,7 @@ class MessageQueueRedisTest extends \Nano\NanoBaseTest
     {
         $mq = $this->getMessageQueue();
 
-        $this->assertInstanceOf('Nano\Mq\MessageQueueRedis', $mq);
+        $this->assertInstanceOf(Nano\Mq\MessageQueueRedis::class, $mq);
     }
 
     public function testQueuePopPushLength()
