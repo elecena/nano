@@ -184,7 +184,7 @@ class ResponseTest extends \Nano\NanoBaseTest
     /**
      * @return array
      */
-    static public function ifModifiedSinceLastModifiedDataProvider(): array
+    public static function ifModifiedSinceLastModifiedDataProvider(): array
     {
         return [
             [null, null, false],
@@ -227,7 +227,7 @@ class ResponseTest extends \Nano\NanoBaseTest
     /**
      * @return array
      */
-    static public function ifModifiedSinceETagDataProvider(): array
+    public static function ifModifiedSinceETagDataProvider(): array
     {
         return [
             [null, null, false],

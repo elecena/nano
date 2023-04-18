@@ -34,7 +34,7 @@ class RouterTest extends NanoBaseTest
         $this->assertEquals($expected, $router->getPathPrefix());
     }
 
-    static public function getPathPrefixDataProvider(): Generator
+    public static function getPathPrefixDataProvider(): Generator
     {
         // parse_url( PHP_URL_PATH ) gives null in this case
         yield 'Home page at root' => [

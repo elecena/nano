@@ -56,7 +56,7 @@ abstract class ImageTestBase extends NanoBaseTest
         $this->assertEquals($expectMimeType, $img->getMimeType());
     }
 
-    static public function renderDataProvider(): Generator
+    public static function renderDataProvider(): Generator
     {
         yield 'jpeg' => [ 'jpeg', IMAGETYPE_JPEG, 'image/jpeg'];
         yield 'png' => [ 'png', IMAGETYPE_PNG, 'image/png'];
