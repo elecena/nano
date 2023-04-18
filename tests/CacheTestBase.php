@@ -37,7 +37,7 @@ abstract class CacheTestBase extends NanoBaseTest
         $this->assertInstanceOf($expectedClass, $this->getCache($cacheDriver, $cacheOptions));
     }
 
-    public function cacheFactoryProvider(): Generator
+    static public function cacheFactoryProvider(): Generator
     {
         yield 'file' => [
             'file', [], Cache\CacheFile::class,

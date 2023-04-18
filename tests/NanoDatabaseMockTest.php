@@ -22,7 +22,7 @@ class NanoDatabaseMockTest extends NanoBaseTest
      * @param string $expected
      * @dataProvider escapeDataProvider
      */
-    public function testEscape($value, $expected)
+    public function testEscape(string $value, string $expected)
     {
         $this->assertEquals($expected, $this->mock->escape($value));
     }
@@ -30,7 +30,7 @@ class NanoDatabaseMockTest extends NanoBaseTest
     /**
      * @return array
      */
-    public function escapeDataProvider()
+    public static function escapeDataProvider(): array
     {
         return [
             ['foo', 'foo'],
