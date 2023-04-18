@@ -9,12 +9,10 @@ use Nano\MessageQueue;
  */
 class MessageQueueRedisTest extends \Nano\NanoBaseTest
 {
-    private $settings;
+    private array $settings;
 
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
-
         $this->settings = [
             'driver' => 'redis',
             'host' => '127.0.0.1',
@@ -46,7 +44,7 @@ class MessageQueueRedisTest extends \Nano\NanoBaseTest
     {
         $mq = $this->getMessageQueue();
 
-        $this->assertInstanceOf('Nano\Mq\MessageQueueRedis', $mq);
+        $this->assertInstanceOf(Nano\Mq\MessageQueueRedis::class, $mq);
     }
 
     public function testQueuePopPushLength()

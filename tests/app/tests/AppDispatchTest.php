@@ -7,7 +7,7 @@ use Nano\Request;
 /**
  * Set of unit tests for Nano's Application dispatcher
  */
-class AppDispatchTest extends AppTest
+class AppDispatchTest extends AppTestBase
 {
     public function testDispatchRequest()
     {

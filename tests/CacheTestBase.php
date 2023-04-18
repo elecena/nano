@@ -6,7 +6,7 @@ use Nano\NanoBaseTest;
 /**
  * Generic class for unit tests for Cache drivers
  */
-abstract class CacheTest extends NanoBaseTest
+abstract class CacheTestBase extends NanoBaseTest
 {
     /**
      * @throws Exception
@@ -37,7 +37,7 @@ abstract class CacheTest extends NanoBaseTest
         $this->assertInstanceOf($expectedClass, $this->getCache($cacheDriver, $cacheOptions));
     }
 
-    public function cacheFactoryProvider(): Generator
+    public static function cacheFactoryProvider(): Generator
     {
         yield 'file' => [
             'file', [], Cache\CacheFile::class,

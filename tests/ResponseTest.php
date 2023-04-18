@@ -142,10 +142,10 @@ class ResponseTest extends \Nano\NanoBaseTest
 
         // mock NanoApp
         // TODO: add mockXXX method to mock certain app fields
-        // mockRequest, mockDatabase, mockDebug, ...
+        //  mockRequest, mockDatabase, mockDebug, ...
         $app = $this->getMockBuilder('NanoApp')
             ->disableOriginalConstructor()
-            ->setMethods(['getRequest', 'getDebug', 'getConfig'])
+            ->onlyMethods(['getRequest', 'getDebug', 'getConfig'])
             ->getMock();
 
         $app->expects($this->any())->method('getRequest')->will($this->returnValue($request));
@@ -184,7 +184,7 @@ class ResponseTest extends \Nano\NanoBaseTest
     /**
      * @return array
      */
-    public function ifModifiedSinceLastModifiedDataProvider()
+    public static function ifModifiedSinceLastModifiedDataProvider(): array
     {
         return [
             [null, null, false],
@@ -227,7 +227,7 @@ class ResponseTest extends \Nano\NanoBaseTest
     /**
      * @return array
      */
-    public function ifModifiedSinceETagDataProvider()
+    public static function ifModifiedSinceETagDataProvider(): array
     {
         return [
             [null, null, false],

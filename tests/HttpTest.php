@@ -92,7 +92,7 @@ class HttpTest extends NanoBaseTest
         $this->assertEquals($responseCode, $resp->getResponseCode());
     }
 
-    public function responseWithCodeProvider(): Generator
+    public static function responseWithCodeProvider(): Generator
     {
         yield 'HTTP 202 Created' => [202];
         yield 'HTTP 404 Not Found' => [404];

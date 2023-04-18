@@ -7,7 +7,7 @@ use Nano\Cache;
  *
  * A locally running redis server is required
  */
-class CacheRedisTest extends CacheTest
+class CacheRedisTest extends CacheTestBase
 {
     /**
      * @param array $settings

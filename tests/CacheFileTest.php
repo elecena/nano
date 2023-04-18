@@ -6,7 +6,7 @@ use Nano\Cache;
  * Set of unit tests for Cache file driver
  */
 
-class CacheFileTest extends CacheTest
+class CacheFileTest extends CacheTestBase
 {
     protected function getCacheInstance(array $settings = []): Cache
     {

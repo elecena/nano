@@ -34,7 +34,7 @@ class RouterTest extends NanoBaseTest
         $this->assertEquals($expected, $router->getPathPrefix());
     }
 
-    public function getPathPrefixDataProvider(): Generator
+    public static function getPathPrefixDataProvider(): Generator
     {
         // parse_url( PHP_URL_PATH ) gives null in this case
         yield 'Home page at root' => [
@@ -101,7 +101,7 @@ class RouterTest extends NanoBaseTest
         $router = $this->getRouter();
         $request = $this->app->getRequest();
 
-        $this->assertNull($router->getLastRoute($request));
+        $this->assertNull($router->getLastRoute());
 
         // $config['index'] = '/foo/index';
         $request->setPath('/');
@@ -110,7 +110,7 @@ class RouterTest extends NanoBaseTest
 
         $request->setPath('/bar');
         $router->route($request);
-        $this->assertNull($router->getLastRoute($request));
+        $this->assertNull($router->getLastRoute());
 
         $request->setPath('/foo');
         $router->route($request);
@@ -139,11 +139,11 @@ class RouterTest extends NanoBaseTest
         // unroutable requests
         $request->setPath('/bar/_test/123');
         $router->route($request);
-        $this->assertNull($router->getLastRoute($request));
+        $this->assertNull($router->getLastRoute());
 
         $request->setPath('/bar/apiBar/123');
         $router->route($request);
-        $this->assertNull($router->getLastRoute($request));
+        $this->assertNull($router->getLastRoute());
     }
 
     public function testMaps()
@@ -166,7 +166,7 @@ class RouterTest extends NanoBaseTest
 
         $request->setPath('/test/123');
         $router->route($request);
-        $this->assertNull($router->getLastRoute($request));
+        $this->assertNull($router->getLastRoute());
 
         $request->setPath('/show/456');
         $router->route($request);
@@ -189,6 +189,6 @@ class RouterTest extends NanoBaseTest
 
         $request->setPath('/');
         $router->route($request);
-        $this->assertNull($router->getLastRoute($request));
+        $this->assertNull($router->getLastRoute());
     }
 }

@@ -2,12 +2,14 @@
 
 namespace Nano\TestApp;
 
+use Model;
+
 /**
  * An example model
  *
- * @method array getFoo
+ * @method getFoo() array
  */
-class TestModel extends \Model
+class TestModel extends Model
 {
     public function __construct()
     {
