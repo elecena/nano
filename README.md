@@ -8,6 +8,7 @@ nano
 
 ```
 docker run -d -p 6379:6379 redis:5.0.9-alpine redis-server --requirepass qwerty --port 6379
+docker run -d -p 5555:80 kennethreitz/httpbin httpin
 composer run test
 ```
 
