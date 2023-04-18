@@ -5,15 +5,10 @@ use Nano\TestApp\TestModel;
 
 /**
  * Set of unit tests for Model class
- *
- * @covers TestModel
  */
 class ModelTest extends NanoBaseTest
 {
-    /**
-     * @var TestModel
-     */
-    private $model;
+    private TestModel $model;
 
     public function setUp(): void
     {
