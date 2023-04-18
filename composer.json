@@ -50,6 +50,6 @@
     "friendsofphp/php-cs-fixer": "^3.0",
     "psr/cache": "^1.0.0",
     "phpstan/phpstan": "^1.0.1",
-    "phpunit/phpunit": "9.x"
+    "phpunit/phpunit": "10.1.1"
   }
 }
