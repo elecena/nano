@@ -4,6 +4,7 @@ composer.phar
 .coverage/
 .coverage.xml
 .phpunit.result.cache
+.phpunit.cache/
 
 vendor/
 .idea/
