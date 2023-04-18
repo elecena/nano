@@ -33,10 +33,10 @@
   },
   "scripts": {
     "test": [
-      "phpunit --testdox --verbose"
+      "phpunit --testdox"
     ],
     "coverage": [
-      "XDEBUG_MODE=coverage phpunit --coverage-html=.coverage --coverage-clover=.coverage.xml --coverage-text --verbose"
+      "XDEBUG_MODE=coverage phpunit --coverage-html=.coverage --coverage-clover=.coverage.xml --coverage-text"
     ],
     "lint": [
       "php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose",
