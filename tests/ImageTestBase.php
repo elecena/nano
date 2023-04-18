@@ -9,9 +9,8 @@ use Nano\NanoBaseTest;
 
 abstract class ImageTestBase extends NanoBaseTest
 {
-    /* @var string $file */
-    private $file;
-    private $url;
+    private string $file;
+    private string $url;
 
     const DEBUG = false;
 
@@ -20,8 +19,8 @@ abstract class ImageTestBase extends NanoBaseTest
         // 578x406
         $this->file = __DIR__ . '/app/statics/php-logo.jpg';
 
-        /* @see https://httpbin.org/image/jpeg */
-        $this->url = 'https://httpbin.org/image/jpeg';
+        /* @see http://0.0.0.0:5555/image/jpeg */
+        $this->url = self::HTTPBIN_HOST . '/image/jpeg';
     }
 
     public function testNewFromFile()

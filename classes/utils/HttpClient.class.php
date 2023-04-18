@@ -123,7 +123,7 @@ class HttpClient
     /**
      * Set user agent identification used by HTTP client
      */
-    public function setUserAgent(string $userAgent)
+    public function setUserAgent(string $userAgent): void
     {
         $this->userAgent = $userAgent;
 
@@ -143,7 +143,7 @@ class HttpClient
     /**
      * Set request headers
      */
-    public function setRequestHeader(string $header, string $value)
+    public function setRequestHeader(string $header, string $value): void
     {
         $this->reqHeaders[] = "$header: $value";
 
@@ -153,7 +153,7 @@ class HttpClient
     /**
      * Set timeout for a single request
      */
-    public function setTimeout(int $timeout)
+    public function setTimeout(int $timeout): void
     {
         $this->timeout = $timeout;
 
@@ -163,7 +163,7 @@ class HttpClient
     /**
      * Use given cookie jar file
      */
-    public function useCookieJar(string $jarFile)
+    public function useCookieJar(string $jarFile): void
     {
         $this->logger->debug(__METHOD__, ['jar' => $jarFile]);
 
@@ -176,7 +176,7 @@ class HttpClient
     /**
      * Manually sets request cookie
      */
-    public function setCookie(string $name, string $value)
+    public function setCookie(string $name, string $value): void
     {
         $this->cookies[$name] = $value;
 

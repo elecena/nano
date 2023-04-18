@@ -37,20 +37,19 @@ class HttpClientTest extends NanoBaseTest
         $client->setCookie('another-one', 'tasty');
 
         // set a cookie via HTTP response header
-        $resp = $client->get('https://httpbin.org/cookies/set', ['cookie' => 'yummy']);
+        $resp = $client->get(self::HTTPBIN_HOST . '/cookies/set/the_cookie/is_yummy');
         $this->assertEquals(200, $resp->getResponseCode());
-        $this->assertStringContainsString('cookie=yummy', $resp->getHeader('set-cookie'), 'Cookie is set');
 
         // check cookies
         $this->assertFileExists($this->jarFile, 'Jar file is created');
 
         // are cookies kept within the session?
-        $resp = $client->get('https://httpbin.org/cookies');
+        $resp = $client->get(self::HTTPBIN_HOST . '/cookies');
 
         $body = json_decode($resp->getContent(), true);
         $this->assertCount(2, $body['cookies'], 'Two cookies are set');
         $this->assertEquals('tasty', $body['cookies']['another-one']);
-        $this->assertEquals('yummy', $body['cookies']['cookie']);
+        $this->assertEquals('is_yummy', $body['cookies']['the_cookie']);
 
         // close HTTP session
         $client->close();

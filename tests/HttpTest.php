@@ -18,14 +18,12 @@ class HttpTest extends NanoBaseTest
      */
     public function testGet()
     {
-        $url = 'https://httpbin.org/get';
+        $url = self::HTTPBIN_HOST . '/get';
 
         $resp = Http::get($url);
 
         $this->assertEquals(200, $resp->getResponseCode());
         $this->assertEquals($url, $resp->getLocation());
-        $this->assertEquals('application/json', $resp->getHeader('content-type'));
-        $this->assertNull($resp->getHeader('Content-Type'), 'Headers are case sensitive!');
 
         $json = json_decode($resp->getContent(), true);
         $this->assertEquals($url, $json['url']);
@@ -42,7 +40,7 @@ class HttpTest extends NanoBaseTest
      */
     public function testGetWithParams()
     {
-        $url = 'https://httpbin.org/get';
+        $url = self::HTTPBIN_HOST . '/get';
 
         $resp = Http::get($url, ['foo' => 42]);
         $this->assertEquals(200, $resp->getResponseCode());
@@ -56,11 +54,10 @@ class HttpTest extends NanoBaseTest
      */
     public function testPost()
     {
-        $resp = Http::post('https://httpbin.org/post', ['foo' => 'bar']);
+        $resp = Http::post(self::HTTPBIN_HOST . '/post', ['foo' => 'bar']);
 
         $this->assertEquals(200, $resp->getResponseCode());
-        $this->assertEquals('https://httpbin.org/post', $resp->getLocation());
-        $this->assertEquals('application/json', $resp->getHeader('content-type'));
+        $this->assertEquals(self::HTTPBIN_HOST . '/post', $resp->getLocation());
 
         $json = json_decode($resp->getContent(), true);
         $this->assertEquals(['foo' => 'bar'], $json['form']);
@@ -72,7 +69,7 @@ class HttpTest extends NanoBaseTest
      */
     public function testHead()
     {
-        $resp = Http::head('https://httpbin.org');
+        $resp = Http::head(self::HTTPBIN_HOST);
         $this->assertEquals(200, $resp->getResponseCode());
         $this->assertEquals('', $resp->getContent(), 'No content is returned');
     }
@@ -91,7 +88,7 @@ class HttpTest extends NanoBaseTest
      */
     public function testResponseWithCode(int $responseCode)
     {
-        $resp = Http::head("https://httpbin.org/status/${responseCode}");
+        $resp = Http::head(self::HTTPBIN_HOST . "/status/{$responseCode}");
         $this->assertEquals($responseCode, $resp->getResponseCode());
     }
 

@@ -15,6 +15,9 @@ class NanoBaseTest extends TestCase
     /* @var $app \NanoApp */
     protected $app;
 
+    /* @see https://github.com/postmanlabs/httpbin */
+    const HTTPBIN_HOST = 'http://0.0.0.0:5555';
+
     protected function setUp(): void
     {
         // use the current working directory where "./composer.phar test" is run
