@@ -5,7 +5,7 @@ namespace Nano\AppTests;
 /**
  * Set of unit tests for Nano's Application core
  */
-class AppCoreTest extends AppTest
+class AppCoreTest extends AppTestBase
 {
     public function testCreateApp()
     {

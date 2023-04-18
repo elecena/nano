@@ -23,7 +23,7 @@
     "tedivm/jshrink": "^1.2"
   },
   "autoload": {
-    "classmap": ["classes/", "classes/utils/", "tests/app/classes/", "tests/CacheTest.php"],
+    "classmap": ["classes/", "classes/utils/", "tests/app/classes/", "tests/"],
     "psr-4": {
       "Nano\\AppTests\\": "tests/app/tests"
     }

@@ -6,7 +6,7 @@ use Nano\NanoBaseTest;
 /**
  * Generic class for unit tests for Cache drivers
  */
-abstract class CacheTest extends NanoBaseTest
+abstract class CacheTestBase extends NanoBaseTest
 {
     /**
      * @throws Exception

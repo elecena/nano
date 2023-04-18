@@ -7,7 +7,7 @@ use Nano\View;
 /**
  * Set of unit tests for Nano's Application controller
  */
-class AppControllerTest extends AppTest
+class AppControllerTest extends AppTestBase
 {
     public function testControllers()
     {

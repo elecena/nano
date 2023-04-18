@@ -5,7 +5,7 @@ namespace Nano\AppTests;
 /**
  * Set of unit tests for Nano's Application config
  */
-class AppConfigTest extends AppTest
+class AppConfigTest extends AppTestBase
 {
     public function testAppConfig()
     {

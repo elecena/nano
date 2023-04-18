@@ -8,7 +8,7 @@ use Nano\Request;
 /**
  * Generic class for unit tests for Nano's Application class
  */
-abstract class AppTest extends NanoBaseTest
+abstract class AppTestBase extends NanoBaseTest
 {
     /* @var \NanoApp $app */
     protected $app;
