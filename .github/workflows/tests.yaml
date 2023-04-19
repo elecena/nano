@@ -53,6 +53,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
+        coverage: xdebug
 
     - name: Print some details about PHP
       run: |
