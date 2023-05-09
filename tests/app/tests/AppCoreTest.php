@@ -20,6 +20,9 @@ use NanoCliApp;
  */
 class AppCoreTest extends AppTestBase
 {
+    /**
+     * @covers NanoApp
+     */
     public function testCreateApp()
     {
         $this->assertInstanceOf(NanoApp::class, $this->app);
@@ -36,6 +39,9 @@ class AppCoreTest extends AppTestBase
         $this->assertEquals($this->dir, $this->app->getDirectory());
     }
 
+    /**
+     * @covers NanoApp::isInAppDirectory
+     */
     public function testIsInAppDirectory()
     {
         $this->assertTrue($this->app->isInAppDirectory($this->dir));
@@ -46,6 +52,9 @@ class AppCoreTest extends AppTestBase
         $this->assertFalse($this->app->isInAppDirectory($this->dir . '/../..'));
     }
 
+    /**
+     * @covers Nano::cli
+     */
     public function testCliApp()
     {
         $app = \Nano::cli($this->dir);
@@ -58,6 +67,9 @@ class AppCoreTest extends AppTestBase
         $this->assertEquals($this->dir . '/log/foo.log', $app->getDebug()->getLogFile());
     }
 
+    /**
+     * @covers NanoApp::factory
+     */
     public function testAppFactory()
     {
         // "simple" factory call (no extra params)
