@@ -369,10 +369,10 @@ class NanoApp
         return $this->dir;
     }
 
-	/**
-	 * Lazy-load the cache instance
-	 * @throws Exception
-	 */
+    /**
+     * Lazy-load the cache instance
+     * @throws Exception
+     */
     public function getCache(): Cache
     {
         if (is_null($this->cache)) {
@@ -458,12 +458,12 @@ class NanoApp
         return $this->router;
     }
 
-	/**
-	 * Return skin
-	 *
-	 * @return Skin
-	 * @throws Exception
-	 */
+    /**
+     * Return skin
+     *
+     * @return Skin
+     * @throws Exception
+     */
     public function getSkin(): Skin
     {
         // lazy load the skin
