@@ -29,17 +29,6 @@ abstract class HealthcheckBase extends NanoObject
     }
 
     /**
-     * Do not connect to the database be default!
-     *
-     * @param \NanoApp $app
-     * @return \Database|null
-     */
-    protected static function getDatabase(\NanoApp $app)
-    {
-        return null;
-    }
-
-    /**
      * @param string $msg
      */
     protected function log($msg)
