@@ -20,40 +20,37 @@ use \Nano\Router;
 class NanoApp
 {
     // cache object
-    protected $cache = false;
+    protected ?Cache $cache = null;
 
     // config
-    protected $config;
+    protected Config $config;
 
     // debug logging
-    protected $debug;
+    protected Debug $debug;
 
     // database connection
-    protected $database = false;
+    protected ?Database $database = null;
 
     // events handler
-    protected $events;
+    protected Events $events;
 
     // response
-    protected $response;
+    protected Response $response;
 
     // HTTP request
-    protected $request;
+    protected Request $request;
 
     // router
-    protected $router;
+    protected Router $router;
 
     // skin
-    protected $skin = false;
-
-    // an array of loaded modules
-    protected $modules;
+    protected ?Skin $skin = null;
 
     // application's working directory
-    protected $dir = '';
+    protected string $dir = '';
 
     // current application instance
-    protected static $app;
+    protected static ?NanoApp $app = null;
 
     /**
      * Return the current instance of NanoApp
@@ -329,14 +326,14 @@ class NanoApp
      * Will render HTTP 500 page with error details
      *
      * @param callable $fn function to call
-     * @param callable|bool $handler custom exception handling function to call
-     * @return mixed|Exception value return by function called or exception that was thrown
+     * @param callable|null $handler custom exception handling function to call
+     * @return mixed|Throwable value return by function called or exception that was thrown
      */
-    public function handleException(callable $fn, $handler = false)
+    public function handleException(callable $fn, ?callable $handler = null)
     {
         try {
             return $fn();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $response = $this->getResponse();
             $response->setResponseCode(Response::INTERNAL_SERVER_ERROR);
             $response->setContentType('text/plain');
@@ -367,19 +364,18 @@ class NanoApp
     /**
      * Return path to application
      */
-    public function getDirectory()
+    public function getDirectory(): string
     {
         return $this->dir;
     }
 
     /**
-     * Return cache
-     *
-     * @return Cache
+     * Lazy-load the cache instance
+     * @throws Exception
      */
-    public function getCache()
+    public function getCache(): Cache
     {
-        if ($this->cache === false) {
+        if (is_null($this->cache)) {
             // setup cache (using default driver if none provided)
             $cacheSettings = $this->config->get('cache', [
                 'driver' => 'file',
@@ -394,22 +390,25 @@ class NanoApp
     /**
      * Return config
      */
-    public function getConfig()
+    public function getConfig(): Config
     {
         return $this->config;
     }
 
     /**
-     * Return database
-     *
-     * @return Database
+     * Lazy-load the database instance
+     * @throws Exception
      */
-    public function getDatabase()
+    public function getDatabase(): Database
     {
         // lazy connection handling
-        if ($this->database === false) {
+        if (is_null($this->database)) {
             // set connection to database (using db.default config entry)
             $this->database = Database::connect($this);
+
+            if (is_null($this->database)) {
+                throw new Exception(__METHOD__ . ': unable to create a database instance!');
+            }
         }
 
         return $this->database;
@@ -418,7 +417,7 @@ class NanoApp
     /**
      * Return debug
      */
-    public function getDebug()
+    public function getDebug(): Debug
     {
         return $this->debug;
     }
@@ -426,7 +425,7 @@ class NanoApp
     /**
      * Return events
      */
-    public function getEvents()
+    public function getEvents(): Events
     {
         return $this->events;
     }
@@ -434,7 +433,7 @@ class NanoApp
     /**
      * Return response
      */
-    public function getResponse()
+    public function getResponse(): Response
     {
         return $this->response;
     }
@@ -442,7 +441,7 @@ class NanoApp
     /**
      * Return request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }
@@ -451,7 +450,7 @@ class NanoApp
      * Set a request for this NanoApp, used by tests
      * @param Request $request
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): void
     {
         $this->request = $request;
     }
@@ -459,7 +458,7 @@ class NanoApp
     /**
      * Return router
      */
-    public function getRouter()
+    public function getRouter(): Router
     {
         return $this->router;
     }
@@ -468,13 +467,14 @@ class NanoApp
      * Return skin
      *
      * @return Skin
+     * @throws Exception
      */
-    public function getSkin()
+    public function getSkin(): Skin
     {
         // lazy load the skin
-        if ($this->skin === false) {
+        if (is_null($this->skin)) {
             // use the default skin
-            $skinName = $this->config->get('skin', 'default');
+            $skinName = (string) $this->config->get('skin', 'default');
 
             // allow to override the default choice
             $this->events->fire('NanoAppGetSkin', [$this, &$skinName]);

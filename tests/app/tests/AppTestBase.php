@@ -10,10 +10,8 @@ use Nano\Request;
  */
 abstract class AppTestBase extends NanoBaseTest
 {
-    /* @var \NanoApp $app */
-    protected $app;
-    protected $dir;
-    protected $ip;
+    protected string $dir;
+    protected string $ip;
 
     public function setUp(): void
     {

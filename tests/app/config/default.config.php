@@ -3,6 +3,7 @@
 $config['test'] = 'value';
 $config['home'] = 'http://example.org/site/';
 $config['index'] = '/foo/index';
+$config['skin'] = 'TestApp'; /* @see SkinTestApp */
 $config['cache'] = [
     'driver' => 'file',
 ];
