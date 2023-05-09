@@ -329,14 +329,14 @@ class NanoApp
      * Will render HTTP 500 page with error details
      *
      * @param callable $fn function to call
-     * @param callable|bool $handler custom exception handling function to call
-     * @return mixed|Exception value return by function called or exception that was thrown
+     * @param callable|null $handler custom exception handling function to call
+     * @return mixed|Throwable value return by function called or exception that was thrown
      */
-    public function handleException(callable $fn, $handler = false)
+    public function handleException(callable $fn, ?callable $handler = null)
     {
         try {
             return $fn();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $response = $this->getResponse();
             $response->setResponseCode(Response::INTERNAL_SERVER_ERROR);
             $response->setContentType('text/plain');

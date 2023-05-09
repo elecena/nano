@@ -2,6 +2,8 @@
 
 namespace Nano\AppTests;
 
+use Nano\TestApp\TestModel;
+
 /**
  * Set of unit tests for Nano's Application core
  */
@@ -74,5 +76,39 @@ class AppCoreTest extends AppTestBase
 
         // test creation of not existing class
         $this->assertNull($this->app->factory('NotExistingClass'));
+    }
+
+    /**
+     * @covers NanoApp::handleException
+     * @dataProvider handleExceptionDataProvider
+     */
+    public function testHandleException(callable $fn, string $expectedClass)
+    {
+        $ret = $this->app->handleException($fn);
+        $this->assertInstanceOf($expectedClass, $ret);
+    }
+
+    public static function handleExceptionDataProvider(): \Generator
+    {
+        yield 'TypeError' => [
+            function () {
+                array_filter(null); // passing null here triggers the TypeError
+            },
+            \TypeError::class,
+        ];
+
+        yield 'Exception' => [
+            function () {
+                throw new \Exception('foo');
+            },
+            \Exception::class,
+        ];
+
+        yield 'Callable returned value is returned by handleException' => [
+            function () {
+                return new TestModel();
+            },
+            TestModel::class,
+        ];
     }
 }
