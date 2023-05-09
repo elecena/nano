@@ -34,6 +34,7 @@ class AppCoreTest extends AppTestBase
         $this->assertInstanceOf(Request::class, $this->app->getRequest());
         $this->assertInstanceOf(Response::class, $this->app->getResponse());
         $this->assertInstanceOf(Router::class, $this->app->getRouter());
+        $this->assertInstanceOf(\SkinTestApp::class, $this->app->getSkin());
 
         // directories
         $this->assertEquals($this->dir, $this->app->getDirectory());
