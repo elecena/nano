@@ -21,9 +21,6 @@ abstract class NanoObject
 
     protected $logger;
 
-    // DB connection
-    protected $database;
-
     // config
     protected $config;
 
@@ -42,15 +39,14 @@ abstract class NanoObject
         $this->debug = $this->app->getDebug();
         $this->logger = NanoLogger::getLogger('nano.' . get_class($this));
         $this->events = $this->app->getEvents();
-
-        // use lazy-resolving
-        $this->database = static::getDatabase($this->app);
     }
-    
+
     /**
      * Allow models and services to use different database
+     *
+     * @throws \Exception
      */
-    protected static function getDatabase(\NanoApp $app)
+    protected static function getDatabase(\NanoApp $app): \Database
     {
         return $app->getDatabase();
     }

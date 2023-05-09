@@ -397,6 +397,7 @@ class NanoApp
 
     /**
      * Lazy-load the database instance
+     * @throws Exception
      */
     public function getDatabase(): Database
     {
@@ -404,6 +405,10 @@ class NanoApp
         if (is_null($this->database)) {
             // set connection to database (using db.default config entry)
             $this->database = Database::connect($this);
+
+            if (is_null($this->database)) {
+                throw new Exception(__METHOD__ . ': unable to create a database instance!');
+            }
         }
 
         return $this->database;
