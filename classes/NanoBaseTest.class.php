@@ -12,8 +12,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class NanoBaseTest extends TestCase
 {
-    /* @var $app \NanoApp */
-    protected $app;
+    protected \NanoApp $app;
 
     /* @see https://github.com/postmanlabs/httpbin */
     const HTTPBIN_HOST = 'http://0.0.0.0:5555';
