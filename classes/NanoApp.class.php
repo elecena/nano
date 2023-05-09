@@ -469,7 +469,7 @@ class NanoApp
         // lazy load the skin
         if (is_null($this->skin)) {
             // use the default skin
-            $skinName = $this->config->get('skin', 'default');
+            $skinName = (string) $this->config->get('skin', 'default');
 
             // allow to override the default choice
             $this->events->fire('NanoAppGetSkin', [$this, &$skinName]);
