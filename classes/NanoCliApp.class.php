@@ -26,4 +26,28 @@ class NanoCliApp extends NanoApp
             require $bootstrapFile;
         }
     }
+
+    /**
+     * Wrap your script logic with the method below to exceptions logging added.
+     */
+    public function handleException(callable $fn, ?callable $handler = null)
+    {
+        try {
+            return $fn();
+        } catch (\Throwable $ex) {
+            // log the exception
+            $logger = NanoLogger::getLogger('nano.app.exception');
+            $logger->error($ex->getMessage(), [
+                'exception' => $ex,
+            ]);
+
+            if (is_callable($handler)) {
+                $handler($ex);
+                return $ex;
+            }
+
+            echo get_class($ex) . ": {$ex->getMessage()}\n{$ex->getTraceAsString()}\n";
+            die(1);
+        }
+    }
 }
