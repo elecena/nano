@@ -18,6 +18,7 @@
     "ext-json": "*",
     "ext-xml": "*",
     "ext-xmlwriter": "*",
+    "ext-zlib": "*",
     "predis/predis": "^2.0",
     "monolog/monolog": "^3.3.1",
     "macbre/monolog-utils": "^3.0.0",
