@@ -5,6 +5,11 @@
  *
  * @see http://www.sitemaps.org/pl/protocol.html
  */
+namespace Nano\Utils;
+
+use Exception;
+use NanoApp;
+use XMLWriter;
 
 class SitemapGenerator
 {
@@ -17,22 +22,22 @@ class SitemapGenerator
 
     const USE_GZIP = true; // see issue #11
 
-    private $app;
-    private $debug;
-    private $dir;
-    private $router;
+    private NanoApp $app;
+    private \Nano\Debug $debug;
+    private string $dir;
+    private \Nano\Router $router;
 
-    // list of sitemap's URLs
-    private $urls;
+    /* @var string [] list of sitemap's URLs */
+    private array $urls = [];
 
     // count URLs in all sitemaps
-    private $urlsCount = 0;
+    private int $urlsCount = 0;
 
     // name of the currently built sitemap
-    private $currentSitemap = '';
+    private string $currentSitemap = '';
 
     // list of sitemaps to be stored in sitemapindex file
-    private $sitemaps = [];
+    private array $sitemaps = [];
 
     /**
      * @throws Exception
@@ -55,7 +60,7 @@ class SitemapGenerator
      * @param string $rootElement
      * @return XMLWriter
      */
-    private function initXML($rootElement)
+    private function initXML(string $rootElement): XMLWriter
     {
         $xml = new XMLWriter();
         $xml->openMemory();
@@ -77,9 +82,9 @@ class SitemapGenerator
      * @param XMLWriter $xml
      * @param string $fileName
      * @param bool $gzip
-     * @return int
+     * @return int bytes saved
      */
-    private function saveXML(XMLWriter $xml, $fileName, $gzip = true)
+    private function saveXML(XMLWriter $xml, string $fileName, bool $gzip = true): int
     {
         $fileName = basename($fileName) . ($gzip ? '.gz' : '');
 
@@ -103,13 +108,13 @@ class SitemapGenerator
      *
      * @param string $fileName
      * @param bool $gzip
-     * @return bool|int
+     * @return null|int
      */
-    private function saveSitemap($fileName, $gzip = true)
+    private function saveSitemap(string $fileName, bool $gzip = true): ?int
     {
         // nothing to store
         if (empty($this->urls)) {
-            return false;
+            return null;
         }
 
         // generate XML
@@ -152,9 +157,9 @@ class SitemapGenerator
      *
      * @param string $fileName
      * @param bool $gzip
-     * @return int
+     * @return void
      */
-    private function saveIndex($fileName, $gzip = true)
+    private function saveIndex(string $fileName, bool $gzip = true): void
     {
         // generate XML
         $xml = $this->initXML('sitemapindex');
@@ -170,7 +175,7 @@ class SitemapGenerator
             $xml->endElement();
         }
 
-        return $this->saveXML($xml, $fileName, $gzip);
+        $this->saveXML($xml, $fileName, $gzip);
     }
 
     /**
@@ -178,7 +183,7 @@ class SitemapGenerator
      *
      * Saves sitemap with the current set of URLs and adds an entry to sitemaps index
      */
-    private function addSitemap()
+    private function addSitemap(): void
     {
         // nothing to store
         if (count($this->urls) === 0) {
@@ -196,7 +201,7 @@ class SitemapGenerator
      *
      * @param string $name
      */
-    public function startSitemap($name)
+    public function startSitemap(string $name): void
     {
         // store previously added urls
         $this->addSitemap();
@@ -209,7 +214,7 @@ class SitemapGenerator
     /**
      * Closes sitemap created using startSitemap
      */
-    public function endSitemap()
+    public function endSitemap(): void
     {
         // store previously added urls
         $this->addSitemap();
@@ -223,7 +228,7 @@ class SitemapGenerator
      * @param bool|string|int $lastmod
      * @param bool|int $priority
      */
-    public function addUrl($url, $lastmod = false, $priority = false /* 0.5 is the default value */)
+    public function addUrl(string $url, $lastmod = false, $priority = false /* 0.5 is the default value */): void
     {
         $entry = [
             'url' => $url,
@@ -251,7 +256,7 @@ class SitemapGenerator
     /**
      * Return number of URLs added to the list
      */
-    public function countUrls()
+    public function countUrls(): int
     {
         return $this->urlsCount;
     }
@@ -259,7 +264,7 @@ class SitemapGenerator
     /**
      * Save all remaining links in the sitemap and generate sitemap index
      */
-    public function save()
+    public function save(): int
     {
         $this->debug->log(__METHOD__ . ": number of URLs - " . $this->countUrls());
 
@@ -276,10 +281,11 @@ class SitemapGenerator
      *
      * @param string $host
      * @return bool
+     * @throws \Nano\Http\ResponseException
      */
-    public function ping($host)
+    public function ping(string $host): bool
     {
-        $http = new HttpClient();
+        $http = new \HttpClient();
 
         $res = $http->get($host . '/ping', [
             'sitemap' => $this->router->formatFullUrl() . self::SITEMAP_FILE,

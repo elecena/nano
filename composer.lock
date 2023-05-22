@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2527bd15a1ddf446276c030c05763096",
+    "content-hash": "b4d6c9261a7732935a1fafeae1eb995f",
     "packages": [
         {
             "name": "macbre/monolog-utils",
@@ -3933,7 +3933,9 @@
         "ext-mbstring": "*",
         "ext-gd": "*",
         "ext-json": "*",
-        "ext-xml": "*"
+        "ext-xml": "*",
+        "ext-xmlwriter": "*",
+        "ext-zlib": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
