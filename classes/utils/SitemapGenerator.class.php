@@ -5,6 +5,11 @@
  *
  * @see http://www.sitemaps.org/pl/protocol.html
  */
+namespace Nano\Utils;
+
+use Exception;
+use NanoApp;
+use XMLWriter;
 
 class SitemapGenerator
 {
@@ -276,11 +281,11 @@ class SitemapGenerator
      *
      * @param string $host
      * @return bool
-     * @throws Nano\Http\ResponseException
+     * @throws \Nano\Http\ResponseException
      */
     public function ping(string $host): bool
     {
-        $http = new HttpClient();
+        $http = new \HttpClient();
 
         $res = $http->get($host . '/ping', [
             'sitemap' => $this->router->formatFullUrl() . self::SITEMAP_FILE,
