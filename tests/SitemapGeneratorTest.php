@@ -33,9 +33,12 @@ class SitemapGeneratorTest extends AppTestBase
         $this->assertArrayHasKey('sitemap-001-pages.xml.gz', static::$filesWritten);
 
         $sitemapIndexXml = (string) static::$filesWritten['sitemap.xml'];
-
         $this->assertStringContainsString('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', $sitemapIndexXml);
         $this->assertStringContainsString('<loc>http://example.org/site/sitemap-001-pages.xml.gz</loc>', $sitemapIndexXml);
+
+        $subSitemapXml = gzdecode((string) static::$filesWritten['sitemap-001-pages.xml.gz']);
+        $this->assertStringContainsString('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', $subSitemapXml);
+        $this->assertStringContainsString('<loc>/foo/bar</loc>', $subSitemapXml);
     }
 }
 
