@@ -27,8 +27,8 @@ class SitemapGenerator
     private string $dir;
     private \Nano\Router $router;
 
-    // list of sitemap's URLs
-    private $urls;
+    /* @var string [] list of sitemap's URLs */
+    private array $urls = [];
 
     // count URLs in all sitemaps
     private int $urlsCount = 0;
