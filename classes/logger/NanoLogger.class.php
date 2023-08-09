@@ -2,7 +2,9 @@
 
 namespace Nano\Logger;
 
+use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Monolog\Handler\RotatingFileHandler;
 
 // processors
@@ -18,9 +20,9 @@ class NanoLogger
     /**
      * List of handlers defined via \Nano\Logger\NanoLogger::pushHandler
      *
-     * @var \Monolog\Handler\HandlerInterface[]
+     * @var HandlerInterface[]
      */
-    private static $handlers = [];
+    private static array $handlers = [];
 
     /**
      * Return new instance of the Logger channel
@@ -29,9 +31,8 @@ class NanoLogger
      *
      * @param string $name channel name
      * @param array $extraFields fields to be added to every message sent from this logger
-     * @return \Monolog\Logger
      */
-    public static function getLogger($name, array $extraFields = [])
+    public static function getLogger(string $name, array $extraFields = []): Logger
     {
         $logger = new Logger($name);
 
@@ -48,7 +49,7 @@ class NanoLogger
         if (!isset($_SERVER['REQUEST_URI'])) {
             $scriptName = rtrim(getcwd(), '/') . '/' . ltrim($_SERVER['PHP_SELF'], '/');
 
-            $logger->pushProcessor(function (array $record) use ($scriptName) {
+            $logger->pushProcessor(function (LogRecord $record) use ($scriptName) {
                 $record['extra']['script'] = $scriptName;
                 return $record;
             });
@@ -56,7 +57,7 @@ class NanoLogger
 
         // add per-logger extra fields
         if (!empty($extraFields)) {
-            $logger->pushProcessor(function (array $record) use ($extraFields) {
+            $logger->pushProcessor(function (LogRecord $record) use ($extraFields) {
                 $record['extra'] = array_merge($record['extra'], $extraFields);
                 return $record;
             });
@@ -67,10 +68,8 @@ class NanoLogger
 
     /**
      * Register a new log handler
-     *
-     * @param \Monolog\Handler\HandlerInterface $handler
      */
-    public static function pushHandler($handler)
+    public static function pushHandler(HandlerInterface $handler): void
     {
         self::$handlers[] = $handler;
     }
@@ -80,9 +79,8 @@ class NanoLogger
      *
      * @param string $dir App directory
      * @param string $stream log file name
-     * @param int $level
      */
-    public static function pushStreamHandler($dir, $stream, $level=Logger::DEBUG)
+    public static function pushStreamHandler(string $dir, string $stream, int $level=Logger::DEBUG): void
     {
         $stream = sprintf('%s/logs/%s.log', $dir, $stream);
 
