@@ -20,14 +20,15 @@ class NanoLoggerTest extends \Nano\NanoBaseTest
 {
     public function testGetLogger(): void
     {
+        // register a global logging handler for easier testing
+        $handler = new TestLoggingHandler(ident: 'foo');
+        NanoLogger::pushHandler($handler);
+
         $logger = NanoLogger::getLogger(name: __CLASS__, extraFields: ['foo'=>'bar']);
         $this->assertInstanceOf(Logger::class, $logger);
         $this->assertEquals(__CLASS__, $logger->getName());
 
         // now, let's assert on what's getting logged
-        $handler = new TestLoggingHandler(ident: 'foo');
-        $logger->pushHandler($handler);
-
         $logger->info('Message');
         $this->assertInstanceOf(LogRecord::class, $handler->lastRecord);
 
