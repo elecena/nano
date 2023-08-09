@@ -16,9 +16,6 @@ class TestLoggingHandler extends Monolog\Handler\SyslogHandler
     }
 }
 
-/**
- * @covers NanoLogger
- */
 class NanoLoggerTest extends \Nano\NanoBaseTest
 {
     public function testGetLogger(): void
