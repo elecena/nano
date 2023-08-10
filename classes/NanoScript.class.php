@@ -11,8 +11,8 @@ abstract class NanoScript extends NanoObject
 {
     const LOGFILE = 'debug';
 
-    private $isDebug = false;
-    private $arguments = [];
+    private bool $isDebug = false;
+    private array $arguments = [];
 
     /**
      * @param NanoApp $app
@@ -24,17 +24,14 @@ abstract class NanoScript extends NanoObject
         $this->arguments = $argv;
 
         $this->isDebug = (bool) getenv('DEBUG');
-
         parent::__construct();
 
         if ($this->isInDebugMode()) {
-            $this->debug->log();
-            $this->debug->log('Running in debug mode');
-            $this->debug->log();
+            $this->logger->debug('Running in debug mode');
         }
 
-        $this->logger->pushProcessor(function ($record) {
-            $record['extra']['script_class'] = get_class($this);
+        $this->logger->pushProcessor(function (\Monolog\LogRecord $record) {
+            $record->extra['script_class'] = get_class($this);
             return $record;
         });
 
@@ -42,15 +39,15 @@ abstract class NanoScript extends NanoObject
 
         try {
             $this->init();
-        } catch (Exception $e) {
-            $this->logger->error(__METHOD__ . ' failed', [
+        } catch (Throwable $e) {
+            $this->logger->error(get_class($this) . '::init() failed', [
                 'exception' => $e,
             ]);
         }
     }
 
     /**
-     * Setup the script
+     * Set up the script
      */
     protected function init()
     {
@@ -63,10 +60,8 @@ abstract class NanoScript extends NanoObject
 
     /**
      * Called when the script execution is completed
-     *
-     * @param NanoApp $app
      */
-    public function onTearDown(NanoApp $app)
+    public function onTearDown(NanoApp $app): void
     {
         $this->logger->info('Script completed', [
             'time' => $app->getResponse()->getResponseTime() * 1000, // [ms]
@@ -80,18 +75,15 @@ abstract class NanoScript extends NanoObject
      *
      * @return bool is script run in debug mode?
      */
-    protected function isInDebugMode()
+    protected function isInDebugMode(): bool
     {
         return $this->isDebug;
     }
 
     /**
      * Was given option passed in command line as "--option"?
-     *
-     * @param string $opt
-     * @return bool
      */
-    protected function hasOption($opt)
+    protected function hasOption(string $opt): bool
     {
         $opt = sprintf('--%s', $opt);
         return in_array($opt, $this->arguments);
