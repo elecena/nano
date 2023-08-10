@@ -62,6 +62,24 @@ abstract class NanoScript extends NanoObject
     abstract public function run();
 
     /**
+     * Runs the script (by calling the run method), but wraps the call in the exceptions handling code.
+     *
+     * @throws Throwable
+     */
+    public function runAndCatch(): mixed
+    {
+        try {
+            return $this->run();
+        } catch(Throwable $e) {
+            $message = get_class($this) . '::run() failed';
+            $this->logger->error($message, ['exception' => $e]);
+
+            echo "{$message}:\n{$e->getMessage()}\n\n{$e->getTraceAsString()}\n";
+            throw $e;
+        }
+    }
+
+    /**
      * Called when the script execution is completed
      */
     public function onTearDown(NanoApp $app): void

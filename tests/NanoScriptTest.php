@@ -75,4 +75,26 @@ class NanoScriptTest extends \Nano\NanoBaseTest
         $this->expectExceptionObject($ex);
         $instance->run();
     }
+
+    public function testWorkingTestScriptRunAndCatchException()
+    {
+        // make the run() method throw an exception
+        $ex = new Exception('foo');
+        WorkingTestScript::$throw = $ex;
+
+        // register a global logging handler for easier testing
+        $handler = new Nano\TestLoggingHandler(ident: 'foo');
+        NanoLogger::pushHandler($handler);
+
+        try {
+            Nano::script(__DIR__ . '/..', WorkingTestScript::class)->runAndCatch();
+        } catch(Throwable $e) {
+            $this->assertEquals($ex->getMessage(), $e->getMessage());
+        }
+
+        // assert the logging
+        $this->assertEquals('WorkingTestScript::run() failed', $handler->lastRecord->message);
+        $this->assertEquals(Monolog\Level::Error, $handler->lastRecord->level);
+        $this->assertEquals($ex->getMessage(), $handler->lastRecord->context['exception']['message']);
+    }
 }
