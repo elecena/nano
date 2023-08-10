@@ -4,7 +4,6 @@ use Monolog\Logger;
 use Monolog\LogRecord;
 use Nano\Logger\NanoLogger;
 
-
 class NanoLoggerTest extends \Nano\NanoBaseTest
 {
     public function testGetLogger(): void
