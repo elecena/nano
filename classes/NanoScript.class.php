@@ -66,7 +66,7 @@ abstract class NanoScript extends NanoObject
      *
      * @throws Throwable
      */
-    public function runAndCatch(): mixed
+    final public function runAndCatch(): mixed
     {
         try {
             return $this->run();
