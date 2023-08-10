@@ -35,6 +35,8 @@ class WorkingTestScript extends FailingTestScript
         if (self::$throw) {
             throw self::$throw;
         }
+
+        $this->logger->info('Hi!');
         return 42;
     }
 }
@@ -108,7 +110,16 @@ class NanoScriptTest extends \Nano\NanoBaseTest
      */
     public function testWorkingTestScriptRunAndCatchReturnsTheValue()
     {
+        // register a global logging handler for easier testing
+        $handler = new Nano\TestLoggingHandler(ident: 'foo');
+        NanoLogger::pushHandler($handler);
+
         $ret = Nano::script(__DIR__ . '/..', WorkingTestScript::class)->runAndCatch();
         $this->assertEquals(42, $ret);
+
+        // assert the logging
+        $this->assertEquals('Hi!', $handler->lastRecord->message);
+        $this->assertEquals(Monolog\Level::Info, $handler->lastRecord->level);
+        $this->assertEquals(WorkingTestScript::class, $handler->lastRecord->extra['script_class']);
     }
 }
