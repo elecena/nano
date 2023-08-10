@@ -6,6 +6,7 @@ composer.phar
 .phpunit.result.cache
 .phpunit.cache/
 
+log/*
 vendor/
 .idea/
 .php-cs-fixer.cache

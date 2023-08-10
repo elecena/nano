@@ -4,6 +4,8 @@ namespace Nano;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Monolog\LogRecord;
+use Monolog\Handler\SyslogHandler;
 
 /**
  * Base class for PHPUnit-based unit tests
@@ -67,5 +69,18 @@ class NanoBaseTest extends TestCase
         $reflection_property->setAccessible(true);
 
         $reflection_property->setValue($obj, $mock);
+    }
+}
+
+
+/**
+ * No-op logging handler. Keeps track of LogRecords sent to it.
+ */
+class TestLoggingHandler extends SyslogHandler
+{
+    public ?LogRecord $lastRecord = null;
+    protected function write(LogRecord $record): void
+    {
+        $this->lastRecord = $record;
     }
 }

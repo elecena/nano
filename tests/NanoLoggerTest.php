@@ -4,24 +4,12 @@ use Monolog\Logger;
 use Monolog\LogRecord;
 use Nano\Logger\NanoLogger;
 
-/**
- * No-op logging handler. Keeps track of LogRecords sent to it.
- */
-class TestLoggingHandler extends Monolog\Handler\SyslogHandler
-{
-    public ?LogRecord $lastRecord = null;
-    protected function write(LogRecord $record): void
-    {
-        $this->lastRecord = $record;
-    }
-}
-
 class NanoLoggerTest extends \Nano\NanoBaseTest
 {
     public function testGetLogger(): void
     {
         // register a global logging handler for easier testing
-        $handler = new TestLoggingHandler(ident: 'foo');
+        $handler = new Nano\TestLoggingHandler(ident: 'foo');
         NanoLogger::pushHandler($handler);
 
         $logger = NanoLogger::getLogger(name: __CLASS__, extraFields: ['foo'=>'bar']);

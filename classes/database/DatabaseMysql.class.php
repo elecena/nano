@@ -80,8 +80,8 @@ class DatabaseMysql extends Database
 
             if ($res) {
                 // add more information to Monolog logs
-                $this->logger->pushProcessor(function ($record) use ($hostInfo) {
-                    $record['extra']['database'] = [
+                $this->logger->pushProcessor(function (\Monolog\LogRecord $record) use ($hostInfo) {
+                    $record->extra['database'] = [
                         'host' => $hostInfo,
                         'name' => $this->name,
                     ];
