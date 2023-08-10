@@ -16,6 +16,7 @@ abstract class NanoScript extends NanoObject
 
     /**
      * @param NanoApp $app
+     * @throws Throwable
      */
     public function __construct(NanoApp $app)
     {
@@ -43,6 +44,8 @@ abstract class NanoScript extends NanoObject
             $this->logger->error(get_class($this) . '::init() failed', [
                 'exception' => $e,
             ]);
+
+            throw $e;
         }
     }
 

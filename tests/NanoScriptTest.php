@@ -24,11 +24,14 @@ class NanoScriptTest extends \Nano\NanoBaseTest
         $handler = new Nano\TestLoggingHandler(ident: 'foo');
         NanoLogger::pushHandler($handler);
 
-        $instance = Nano::script(__DIR__ . '/..', TestScript::class);
-        $this->assertInstanceOf(TestScript::class, $instance);
+        try {
+            Nano::script(__DIR__ . '/..', TestScript::class);
+        } catch (Throwable) {
+        }
 
         // our init method failed, there should be a log message about it
         $this->assertInstanceOf(\Monolog\LogRecord::class, $handler->lastRecord);
+        $this->assertEquals(\Monolog\Level::Error, $handler->lastRecord->level);
 
         $this->assertEquals('TestScript::init() failed', $handler->lastRecord->message);
         $this->assertInstanceOf(TypeError::class, $handler->lastRecord->context['exception']);
