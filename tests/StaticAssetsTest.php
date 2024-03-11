@@ -231,7 +231,7 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
         $static = $this->getStaticAssets();
         $cb = $static->getCacheBuster();
 
-        $this->assertFalse($static->getCDNPath());
+        $this->assertNull($static->getCDNPath());
 
         $this->assertEquals("/site/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
         $this->assertEquals(["/site/r{$cb}/package/core.js"], $static->getUrlsForPackage('core', 'js'));
@@ -261,20 +261,20 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
 
         $root = $this->app->getDirectory();
 
-        $this->assertFalse($static->getCDNPath());
+        $this->assertNull($static->getCDNPath());
 
         $this->assertEquals("/site/r{$cb}/statics/head.js", $static->getUrlForFile($root . '/statics/head.js'));
     }
 
     public function testGetUrlForAssetAndPackageWithCDN()
     {
-        $cdnPath = 'http://cdn.net/sitepath';
+        $cdnPath = 'https://cdn.net/sitepath';
         $this->app->getConfig()->set('assets.cdnPath', $cdnPath);
 
         $static = $this->getStaticAssets();
         $cb = $static->getCacheBuster();
 
-        $this->assertEquals($cdnPath, $static->getCDNPath());
+        $this->assertSame($cdnPath, $static->getCDNPath());
 
         $this->assertEquals("{$cdnPath}/r{$cb}/statics/jquery.foo.js", $static->getUrlForAsset('/statics/jquery.foo.js'));
         $this->assertEquals(["{$cdnPath}/r{$cb}/package/core.js"], $static->getUrlsForPackage('core', 'js'));
@@ -301,7 +301,7 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
         $static = $this->getStaticAssets();
         $cb = $static->getCacheBuster();
 
-        $this->assertFalse($static->getCDNPath());
+        $this->assertNull($static->getCDNPath());
 
         $this->assertEquals([
             'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
