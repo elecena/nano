@@ -19,39 +19,40 @@ class StaticAssets
     const PACKAGE_JS = 'js';
     const PACKAGE_CSS = 'css';
 
-    private $app;
-    private $debug;
-    private $router;
+    private NanoApp $app;
+    private \Nano\Debug $debug;
+    private Router $router;
 
     // application's root directory
-    private $localRoot;
+    private string $localRoot;
 
     // cache buster value
-    private $cb;
+    private int $cb;
 
     // path to Content Delivery Network (if used)
-    private $cdnPath;
+    private string $cdnPath;
 
     // should cache buster value be prepended to an URL?
     // example: /r200/foo/bar.js [true]
     // example: /foo/bar.js?r=200 [false]
-    private $prependCacheBuster;
+    private bool $prependCacheBuster;
 
     // is StaticAssets in debug mode?
     // add debug=1 to URL
-    private $debugMode = false;
+    private bool $debugMode = false;
 
     // registered packages
-    private $packages;
+    private array $packages;
 
     // list of supported extensions with their mime types
-    private $types = [
+    private array $types = [
         'css' => 'text/css; charset=utf-8',
         'js' => 'application/javascript; charset=utf-8',
         'gif' => 'image/gif',
         'png' => 'image/png',
         'jpg' => 'image/jpeg',
         'ico' => 'image/x-icon',
+        'svg' => 'image/svg+xml',
     ];
 
     /**
