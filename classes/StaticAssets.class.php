@@ -19,39 +19,40 @@ class StaticAssets
     const PACKAGE_JS = 'js';
     const PACKAGE_CSS = 'css';
 
-    private $app;
-    private $debug;
-    private $router;
+    private NanoApp $app;
+    private \Nano\Debug $debug;
+    private Router $router;
 
     // application's root directory
-    private $localRoot;
+    private string $localRoot;
 
     // cache buster value
-    private $cb;
+    private int $cb;
 
     // path to Content Delivery Network (if used)
-    private $cdnPath;
+    private ?string $cdnPath;
 
     // should cache buster value be prepended to an URL?
     // example: /r200/foo/bar.js [true]
     // example: /foo/bar.js?r=200 [false]
-    private $prependCacheBuster;
+    private bool $prependCacheBuster;
 
     // is StaticAssets in debug mode?
     // add debug=1 to URL
-    private $debugMode = false;
+    private bool $debugMode = false;
 
     // registered packages
-    private $packages;
+    private array $packages;
 
     // list of supported extensions with their mime types
-    private $types = [
+    private array $types = [
         'css' => 'text/css; charset=utf-8',
         'js' => 'application/javascript; charset=utf-8',
         'gif' => 'image/gif',
         'png' => 'image/png',
         'jpg' => 'image/jpeg',
         'ico' => 'image/x-icon',
+        'svg' => 'image/svg+xml',
     ];
 
     /**
@@ -71,7 +72,7 @@ class StaticAssets
         $config = $this->app->getConfig();
 
         $this->cb = intval($config->get('assets.cb', 1));
-        $this->cdnPath = $config->get('assets.cdnPath', false);
+        $this->cdnPath = $config->get('assets.cdnPath', default: null);
         $this->prependCacheBuster = $config->get('assets.prependCacheBuster', true) === true;
         $this->packages = $config->get('assets.packages', []);
     }
@@ -79,7 +80,7 @@ class StaticAssets
     /**
      * Turn debug mode on/off
      */
-    public function setDebugMode($inDebugMode)
+    public function setDebugMode($inDebugMode): void
     {
         $this->debugMode = ($inDebugMode != false);
 
@@ -91,7 +92,7 @@ class StaticAssets
     /**
      * Is debug mode on?
      */
-    public function inDebugMode()
+    public function inDebugMode(): bool
     {
         return $this->debugMode === true;
     }
@@ -103,7 +104,7 @@ class StaticAssets
      * @return StaticAssetsProcessor
      * @throws Exception
      */
-    public function getProcessor($assetType)
+    public function getProcessor(string $assetType): StaticAssetsProcessor
     {
         $className = sprintf('StaticAssets%s', ucfirst($assetType));
 
@@ -117,7 +118,7 @@ class StaticAssets
     /**
      * Get current cache buster value (used to invalidate cached assets)
      */
-    public function getCacheBuster()
+    public function getCacheBuster(): int
     {
         return $this->cb;
     }
@@ -125,9 +126,9 @@ class StaticAssets
     /**
      * Get path to CDN host
      *
-     * @return string|false CDN path or false if not defined
+     * @return string|null CDN path or false if not defined
      */
-    public function getCDNPath()
+    public function getCDNPath(): ?string
     {
         return $this->cdnPath;
     }
@@ -135,7 +136,7 @@ class StaticAssets
     /**
      * Returns whether given package exists
      */
-    public function packageExists($packageName)
+    public function packageExists($packageName): bool
     {
         return isset($this->packages[$packageName]);
     }
@@ -143,7 +144,7 @@ class StaticAssets
     /**
      * Get list of assets of given type from given packages
      */
-    private function getPackagesItems(array $packagesNames, $type)
+    private function getPackagesItems(array $packagesNames, $type): bool|array
     {
         $assets = [];
 
@@ -163,7 +164,7 @@ class StaticAssets
     /**
      * Get list of external assets of given type from given packages
      */
-    private function getPackagesExternalItems(array $packagesNames, $type)
+    private function getPackagesExternalItems(array $packagesNames, $type): bool|array
     {
         $assets = [];
 
@@ -182,8 +183,11 @@ class StaticAssets
 
     /**
      * Remove packages with no assets of a given type
+     *
+     * @param string[] $packages
+     * @return string[]
      */
-    public function filterOutEmptyPackages(array $packages, $type)
+    public function filterOutEmptyPackages(array $packages, $type): array
     {
         $ret = [];
 
@@ -203,7 +207,7 @@ class StaticAssets
      *
      * Dependencies are returned before provided packages to maintain correct loading order
      */
-    public function resolveDependencies(array $packages)
+    public function resolveDependencies(array $packages): bool|array
     {
         $ret = $packages;
 
@@ -226,17 +230,15 @@ class StaticAssets
         }
 
         // make array contains unique values and fix indexing
-        $ret = array_values(array_unique($ret));
-
-        return $ret;
+        return array_values(array_unique($ret));
     }
 
     /**
      * Get package name from given path
      */
-    public function getPackageName($path)
+    public function getPackageName($path): bool|string
     {
-        if (strpos($path, self::PACKAGE_URL_PREFIX) === 0) {
+        if (str_starts_with($path, self::PACKAGE_URL_PREFIX)) {
             // remove package URL prefix
             $path = substr($path, strlen(self::PACKAGE_URL_PREFIX));
 
@@ -255,7 +257,7 @@ class StaticAssets
      */
     private function preprocessRequestPath($path)
     {
-        if (strpos($path, '/r') === 0) {
+        if (str_starts_with($path, '/r')) {
             $path = preg_replace('#^/r\d+#', '', $path);
         }
 
@@ -265,7 +267,7 @@ class StaticAssets
     /**
      * Get full local path from request's path to given asset
      */
-    public function getLocalPath($path)
+    public function getLocalPath($path): string
     {
         return $this->localRoot . $this->preprocessRequestPath($path);
     }
@@ -276,7 +278,7 @@ class StaticAssets
     public function getUrlForAsset($asset)
     {
         // check for external assets
-        if (strpos($asset, 'http') === 0) {
+        if (str_starts_with($asset, 'http')) {
             return $asset;
         }
 
@@ -306,7 +308,7 @@ class StaticAssets
         // perform a rewrite for CDN
         $cdnPath = $this->getCDNPath();
 
-        if ($cdnPath !== false) {
+        if (is_string($cdnPath)) {
             $prefix = $this->router->getPathPrefix();
             $url = $cdnPath . Router::SEPARATOR . substr($url, strlen($prefix));
         }
@@ -370,8 +372,9 @@ class StaticAssets
      * Serve given request for a static asset / package
      *
      * This is an entry point
+     * @throws Exception
      */
-    public function serve(Request $request)
+    public function serve(Request $request): bool
     {
         $ext = $request->getExtension();
         $response = $this->app->getResponse();
@@ -415,7 +418,7 @@ class StaticAssets
         $response->setContent($content);
 
         // caching
-        // @see @see http://developer.yahoo.com/performance/rules.html
+        // @see http://developer.yahoo.com/performance/rules.html
         $response->setCacheDuration(30 * 86400 /* a month */);
         return true;
     }
@@ -424,8 +427,9 @@ class StaticAssets
      * Serve single static asset
      *
      * Performs additional checks and returns minified version of an asset
+     * @throws Exception
      */
-    private function serveSingleAsset($requestPath, $ext)
+    private function serveSingleAsset($requestPath, $ext): bool|string
     {
         // get local path to the asset
         $localPath = $this->getLocalPath($requestPath);
@@ -462,8 +466,9 @@ class StaticAssets
 
     /**
      * Serve package(s) of static assets
+     * @throws Exception
      */
-    private function servePackage($package, $ext)
+    private function servePackage($package, $ext): bool|string
     {
         if (!in_array($ext, [self::PACKAGE_CSS, self::PACKAGE_JS])) {
             $this->debug->log("Package can only be JS or CSS package");
