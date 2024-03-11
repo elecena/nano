@@ -230,7 +230,7 @@ class StaticAssets
         }
 
         // make array contains unique values and fix indexing
-	    return array_values(array_unique($ret));
+        return array_values(array_unique($ret));
     }
 
     /**
@@ -368,12 +368,12 @@ class StaticAssets
         return count($ret) > 0 ? $ret : false;
     }
 
-	/**
-	 * Serve given request for a static asset / package
-	 *
-	 * This is an entry point
-	 * @throws Exception
-	 */
+    /**
+     * Serve given request for a static asset / package
+     *
+     * This is an entry point
+     * @throws Exception
+     */
     public function serve(Request $request): bool
     {
         $ext = $request->getExtension();
@@ -423,12 +423,12 @@ class StaticAssets
         return true;
     }
 
-	/**
-	 * Serve single static asset
-	 *
-	 * Performs additional checks and returns minified version of an asset
-	 * @throws Exception
-	 */
+    /**
+     * Serve single static asset
+     *
+     * Performs additional checks and returns minified version of an asset
+     * @throws Exception
+     */
     private function serveSingleAsset($requestPath, $ext): bool|string
     {
         // get local path to the asset
@@ -464,10 +464,10 @@ class StaticAssets
         return $content;
     }
 
-	/**
-	 * Serve package(s) of static assets
-	 * @throws Exception
-	 */
+    /**
+     * Serve package(s) of static assets
+     * @throws Exception
+     */
     private function servePackage($package, $ext): bool|string
     {
         if (!in_array($ext, [self::PACKAGE_CSS, self::PACKAGE_JS])) {
