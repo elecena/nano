@@ -88,6 +88,8 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
             '/statics/reset.css' => true,
             '/statics/blank.gif' => true,
             '/statics/rss.png' => true,
+            '/statics/favicon.ico' => true,
+            '/statics/favicon.svg' => true,
             // package
             '/package/core.js' => true,
             '/package/foo.css' => true,
@@ -98,8 +100,8 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
             $static = $this->getStaticAssets();
             $response = $this->app->getResponse();
 
-            $this->assertEquals($expected, $static->serve($request));
-            $this->assertEquals($expected ? Response::OK : Response::NOT_IMPLEMENTED, $response->getResponseCode());
+            $this->assertEquals($expected, $static->serve($request), "The StaticAssetts::serve('{$asset}') should return " . json_encode($expected));
+            $this->assertEquals($expected ? Response::OK : Response::NOT_IMPLEMENTED, $response->getResponseCode(), 'Response code should maych');
         }
     }
 
