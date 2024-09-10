@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "macbre/monolog-utils",
-            "version": "3.0.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/macbre/monolog-utils.git",
-                "reference": "6de0b2efe712da7ea33405d97497e96119471f77"
+                "reference": "7aefd969ec4d5d142310535c778961c85893c744"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/macbre/monolog-utils/zipball/6de0b2efe712da7ea33405d97497e96119471f77",
-                "reference": "6de0b2efe712da7ea33405d97497e96119471f77",
+                "url": "https://api.github.com/repos/macbre/monolog-utils/zipball/7aefd969ec4d5d142310535c778961c85893c744",
+                "reference": "7aefd969ec4d5d142310535c778961c85893c744",
                 "shasum": ""
             },
             "require": {
@@ -52,9 +52,9 @@
             ],
             "support": {
                 "issues": "https://github.com/macbre/monolog-utils/issues",
-                "source": "https://github.com/macbre/monolog-utils/tree/3.0.0"
+                "source": "https://github.com/macbre/monolog-utils/tree/3.1.0"
             },
-            "time": "2023-04-18T09:52:48+00:00"
+            "time": "2024-09-09T21:21:01+00:00"
         },
         {
             "name": "monolog/monolog",
