@@ -25,7 +25,7 @@ class NanoDatabaseMock extends \DatabaseMysql
     /**
      * @param callable|null $callback
      */
-    public function setOnQueryCallback(callable $callback = null)
+    public function setOnQueryCallback(?callable $callback = null)
     {
         $this->onQueryCallback = $callback;
     }

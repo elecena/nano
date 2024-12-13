@@ -33,7 +33,7 @@ class NanoBaseTest extends TestCase
      * @param callable|null $onQuery optional callback
      * @return NanoDatabaseMock
      */
-    protected function getDatabaseMock(array $result = [], callable $onQuery = null): NanoDatabaseMock
+    protected function getDatabaseMock(array $result = [], ?callable $onQuery = null): NanoDatabaseMock
     {
         $mock = new NanoDatabaseMock($this->app);
 
