@@ -70,7 +70,7 @@ abstract class NanoScript extends NanoObject
     {
         try {
             return $this->run();
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             $message = get_class($this) . '::run() failed';
             $this->logger->error($message, ['exception' => $e]);
 

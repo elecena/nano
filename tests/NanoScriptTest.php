@@ -95,7 +95,7 @@ class NanoScriptTest extends \Nano\NanoBaseTest
 
         try {
             Nano::script(__DIR__ . '/..', WorkingTestScript::class)->runAndCatch();
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             $this->assertEquals($ex->getMessage(), $e->getMessage());
         }
 
