@@ -19,9 +19,9 @@
     "ext-xml": "*",
     "ext-xmlwriter": "*",
     "ext-zlib": "*",
-    "predis/predis": "^2.0",
+    "predis/predis": "2.3.0",
     "monolog/monolog": "^3.3.1",
-    "macbre/monolog-utils": "^3.0.0",
+    "macbre/monolog-utils": "3.1.0",
     "tedivm/jshrink": "^1.2"
   },
   "autoload": {
