@@ -69,5 +69,5 @@ abstract class StaticAssetsProcessor
         return $ret;
     }
 
-    abstract protected function process(array $files);
+    abstract protected function process(array $files): string;
 }

@@ -6,12 +6,12 @@
 
 class StaticAssetsCss extends StaticAssetsProcessor
 {
-    // embed images smaller then (size in bytes)
+    // embed images smaller than (size in bytes)
     const IMAGE_EMBED_THRESHOLD = 2048;
 
-    private $currentDir;
+    private string $currentDir;
 
-    protected function process(array $files)
+    protected function process(array $files): string
     {
         $content = '';
 

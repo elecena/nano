@@ -1,11 +1,11 @@
 <?php
 
-use JShrink\Minifier;
+use MatthiasMullie\Minify;
 
 /**
  * JS processor
  *
- * @see https://github.com/tedious/JShrink#usage
+ * @see https://github.com/matthiasmullie/minify?tab=readme-ov-file#usage
  */
 
 class StaticAssetsJs extends StaticAssetsProcessor
@@ -16,7 +16,7 @@ class StaticAssetsJs extends StaticAssetsProcessor
      * @param array $files
      * @return string
      */
-    protected function process(array $files)
+    protected function process(array $files): string
     {
         $content = '';
 
@@ -26,7 +26,8 @@ class StaticAssetsJs extends StaticAssetsProcessor
 
         // compress JS code
         if (!$this->inDebugMode()) {
-            $content = Minifier::minify($content, ['flaggedComments' => true]);
+            $minifier = new Minify\JS($content);
+            $content = $minifier->minify();
         }
 
         return trim($content);
