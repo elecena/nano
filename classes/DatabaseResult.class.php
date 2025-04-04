@@ -8,23 +8,14 @@
 
 class DatabaseResult implements Iterator, Countable
 {
-    // database driver
-    protected $database;
-
-    // results resource
-    protected $results;
-
     // current position in results
-    protected $pos;
+    protected int $pos;
 
     // current row
-    protected $currentRow;
+    protected array|bool|null $currentRow;
 
-    public function __construct(Database $database, $results)
+    public function __construct(protected Database $database, protected $results)
     {
-        $this->database = $database;
-        $this->results = $results;
-
         // reset position
         $this->pos = 0;
     }
@@ -71,10 +62,6 @@ class DatabaseResult implements Iterator, Countable
     public function free()
     {
         $this->database->freeResults($this->results);
-
-        unset($this->database);
-        unset($this->results);
-        unset($this->currentRow);
     }
 
     /**
