@@ -8,23 +8,14 @@
 
 class DatabaseResult implements Iterator, Countable
 {
-    // database driver
-    protected Database $database;
-
-    // results resource
-    protected $results;
-
     // current position in results
     protected int $pos;
 
     // current row
     protected array|bool|null $currentRow;
 
-    public function __construct(Database $database, $results)
+    public function __construct(protected Database $database, protected $results)
     {
-        $this->database = $database;
-        $this->results = $results;
-
         // reset position
         $this->pos = 0;
     }
