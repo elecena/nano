@@ -8,7 +8,7 @@ use Nano\Request;
  */
 class StaticAssetsTest extends \Nano\NanoBaseTest
 {
-    private $cb = 0;
+    private int $cb = 0;
 
     public function setUp(): void
     {
@@ -414,6 +414,6 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
 
         $this->assertTrue($static->serve($request));
         $this->assertStringContainsString('"head"', $response->getContent());
-        $this->assertStringContainsString('jQuery.fn.foo=function(bar){return this.attr(bar);}', $response->getContent());
+        $this->assertStringContainsString('jQuery.fn.foo=function(bar){return this.attr(bar)}', $response->getContent());
     }
 }
