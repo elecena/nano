@@ -16,7 +16,7 @@ class StaticAssetsJs extends StaticAssetsProcessor
      * @param array $files
      * @return string
      */
-    protected function process(array $files)
+    protected function process(array $files): string
     {
         $content = '';
 
