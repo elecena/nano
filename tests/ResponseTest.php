@@ -155,14 +155,8 @@ class ResponseTest extends \Nano\NanoBaseTest
         return $app;
     }
 
-    /**
-     * @dataProvider ifModifiedSinceLastModifiedDataProvider
-     *
-     * @param string|null $lastModified
-     * @param string|null $headerValue
-     * @param bool $expected
-     */
-    public function testIfModifiedSinceLastModified($lastModified, $headerValue, $expected)
+	#[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceLastModifiedDataProvider')]
+    public function testIfModifiedSinceLastModified(?string $lastModified, ?string $headerValue, bool $expected)
     {
         if (!is_null($headerValue)) {
             $headers = ['HTTP_IF_MODIFIED_SINCE' => $headerValue];
@@ -202,10 +196,8 @@ class ResponseTest extends \Nano\NanoBaseTest
         ];
     }
 
-    /**
-     * @dataProvider ifModifiedSinceETagDataProvider
-     */
-    public function testIfModifiedSinceETag($eTag, $headerValue, $expected)
+	#[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceETagDataProvider')]
+    public function testIfModifiedSinceETag(?string $eTag, ?string $headerValue, bool $expected)
     {
         if (!is_null($headerValue)) {
             $headers = ['HTTP_IF_NONE_MATCH' => $headerValue];
