@@ -1,7 +1,5 @@
 <?php
 
-use MatthiasMullie\Minify;
-
 /**
  * CSS processor
  */
@@ -29,16 +27,6 @@ class StaticAssetsCss extends StaticAssetsProcessor
      */
     private function processFile(string $file): string
     {
-	    $content = file_get_contents($file);
-
-	    // compress JS code
-	    if (!$this->inDebugMode()) {
-		    $minifier = new Minify\CSS($content);
-		    $content = $minifier->minify();
-	    }
-
-		return $content;
-
         $content = file_get_contents($file);
 
         // used for images / CSS embedding
@@ -72,6 +60,7 @@ class StaticAssetsCss extends StaticAssetsProcessor
                 ' {' => '{',
                 '{ ' => '{',
                 ', ' => ',',
+                ' > ' => '>',
                 '} ' => '}',
                 ';} ' => '}',
             ]);
