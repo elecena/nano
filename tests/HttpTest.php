@@ -84,7 +84,7 @@ class HttpTest extends NanoBaseTest
     /**
      * @throws ResponseException
      */
-	#[\PHPUnit\Framework\Attributes\DataProvider('responseWithCodeProvider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('responseWithCodeProvider')]
     public function testResponseWithCode(int $responseCode)
     {
         $resp = Http::head(self::HTTPBIN_HOST . "/status/{$responseCode}");

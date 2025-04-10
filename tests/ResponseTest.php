@@ -155,7 +155,7 @@ class ResponseTest extends \Nano\NanoBaseTest
         return $app;
     }
 
-	#[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceLastModifiedDataProvider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceLastModifiedDataProvider')]
     public function testIfModifiedSinceLastModified(?string $lastModified, ?string $headerValue, bool $expected)
     {
         if (!is_null($headerValue)) {
@@ -196,7 +196,7 @@ class ResponseTest extends \Nano\NanoBaseTest
         ];
     }
 
-	#[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceETagDataProvider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceETagDataProvider')]
     public function testIfModifiedSinceETag(?string $eTag, ?string $headerValue, bool $expected)
     {
         if (!is_null($headerValue)) {

@@ -15,7 +15,7 @@ class NanoCliAppTest extends \Nano\NanoBaseTest
         $this->cliApp = \Nano::cli($dir);
     }
 
-	#[\PHPUnit\Framework\Attributes\DataProvider('handleExceptionDataProvider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('handleExceptionDataProvider')]
     public function testHandleException(callable $fn, string $expectedClass)
     {
         // by passing the handler we make handleException() return the exception instead of die()

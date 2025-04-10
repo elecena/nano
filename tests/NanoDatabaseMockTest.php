@@ -17,7 +17,7 @@ class NanoDatabaseMockTest extends NanoBaseTest
         $this->mock = new NanoDatabaseMock($this->app);
     }
 
-	#[\PHPUnit\Framework\Attributes\DataProvider('escapeDataProvider')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('escapeDataProvider')]
     public function testEscape(string $value, string $expected)
     {
         $this->assertEquals($expected, $this->mock->escape($value));
