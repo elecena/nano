@@ -25,7 +25,7 @@ class StaticAssetsCss extends StaticAssetsProcessor
     /**
      * Process given CSS file
      */
-    private function processFile($file)
+    private function processFile(string $file): string
     {
         $content = file_get_contents($file);
 
@@ -60,6 +60,7 @@ class StaticAssetsCss extends StaticAssetsProcessor
                 ' {' => '{',
                 '{ ' => '{',
                 ', ' => ',',
+                ' > ' => '>',
                 '} ' => '}',
                 ';} ' => '}',
             ]);

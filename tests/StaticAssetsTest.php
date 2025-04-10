@@ -2,6 +2,7 @@
 
 use Nano\Response;
 use Nano\Request;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Set of unit tests for StaticAssets class
@@ -309,31 +310,51 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
         ], $static->getUrlsForPackage('jquery', 'js'));
     }
 
-    public function testCssMinify()
+    /**
+     * @throws Exception
+     */
+    #[DataProvider('cssMinifyProvider')]
+    public function testCssMinify(string $css, string $expected)
     {
         $static = $this->getStaticAssets();
         $processor = $static->getProcessor('css');
 
-        // original CSS => minifiied
-        $css = [
-            'body, p {padding: 5px 0px; margin:  10px;}' => 'body,p{padding:5px 0;margin:10px}',
-            '.foo .bar {padding: 10px 1px 0em 0.5em}' => '.foo .bar{padding:10px 1px 0 .5em}',
-            '.foo > .bar {padding: 0.75em 0px;}' => '.foo > .bar{padding:.75em 0}',
-            'mark    {background-color: #eeeeee; color: #333}' => 'mark{background-color:#eee;color:#333}',
-            '.foo {padding: 0 0 15px 0px;}' => '.foo{padding:0 0 15px 0}',
-            '.foo {margin: 0 0 25px;}' => '.foo{margin:0 0 25px}',
+        // temporary file to use for processing
+        $file = tempnam(sys_get_temp_dir(), 'nano-css');
+        file_put_contents($file, $css);
+
+        $this->assertStringContainsString($expected, $processor->processFiles([$file]));
+
+        // clean up
+        unlink($file);
+    }
+
+    public static function cssMinifyProvider(): Generator
+    {
+        yield 'removes spaces within selectors (foo, bar)' => [
+            'body, p {padding: 5px 0px; margin:  10px;}',
+            'body,p{padding:5px 0;margin:10px}',
         ];
-
-        foreach ($css as $in => $out) {
-            // temporary file to use for processing
-            $file = Utils::getTempFile();
-
-            file_put_contents($file, $in);
-            $this->assertStringContainsString($out, $processor->processFiles([$file]));
-
-            // clean up
-            unlink($file);
-        }
+        yield 'removes spaces within selectors (foo > bar)' => [
+            'body > p {padding: 5px 0px; margin:  10px;}',
+            'body>p{padding:5px 0;margin:10px}',
+        ];
+        yield 'removes spaces between properties name and values' => [
+            '.foo .bar {padding: 10px 1px 0em 0.5em}',
+            '.foo .bar{padding:10px 1px 0 .5em}',
+        ];
+        yield 'removes units when the value is zero' => [
+            '.foo {padding: 0.75em 0px;}',
+            '.foo{padding:.75em 0}',
+        ];
+        yield 'simplifies colours' => [
+            'mark    {background-color: #eeeeee; color: #333}',
+            'mark{background-color:#eee;color:#333}',
+        ];
+        yield 'removes trailing ;' => [
+            '.foo {margin: 0 0 25px;}',
+            '.foo{margin:0 0 25px}',
+        ];
     }
 
     public function testImageEncoding()
@@ -366,7 +387,7 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
 
         // include reset.css file
         $out = $processor->processFiles([$dir . '/blank.css']);
-        $this->assertFalse(strpos($out, '@import'));
+        $this->assertFalse(str_contains($out, '@import'));
         $this->assertStringContainsString('html,body,h1,h2,h3,h4,h5,h6', $out);
     }
 
