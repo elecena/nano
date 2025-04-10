@@ -310,11 +310,11 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
         ], $static->getUrlsForPackage('jquery', 'js'));
     }
 
-	/**
-	 * @throws Exception
-	 */
+    /**
+     * @throws Exception
+     */
     #[DataProvider('cssMinifyProvider')]
-    public function testCssMinify( string $css, string $expected )
+    public function testCssMinify(string $css, string $expected)
     {
         $static = $this->getStaticAssets();
         $processor = $static->getProcessor('css');
@@ -329,32 +329,33 @@ class StaticAssetsTest extends \Nano\NanoBaseTest
         unlink($file);
     }
 
-	public static function cssMinifyProvider(): Generator {
-		yield 'removes spaces within selectors (foo, bar)' => [
-			'body, p {padding: 5px 0px; margin:  10px;}',
-			'body,p{padding:5px 0;margin:10px}',
-		];
-		yield 'removes spaces within selectors (foo > bar)' => [
-			'body > p {padding: 5px 0px; margin:  10px;}',
-			'body>p{padding:5px 0;margin:10px}',
-		];
-		yield 'removes spaces between properties name and values' => [
-			'.foo .bar {padding: 10px 1px 0em 0.5em}',
-			'.foo .bar{padding:10px 1px 0 .5em}',
-		];
-		yield 'removes units when the value is zero' => [
-			'.foo {padding: 0.75em 0px;}',
-			'.foo{padding:.75em 0}',
-		];
-		yield 'simplifies colours' => [
-			'mark    {background-color: #eeeeee; color: #333}',
-			'mark{background-color:#eee;color:#333}',
-		];
-		yield 'removes trailing ;' => [
-			'.foo {margin: 0 0 25px;}',
-			'.foo{margin:0 0 25px}',
-		];
-	}
+    public static function cssMinifyProvider(): Generator
+    {
+        yield 'removes spaces within selectors (foo, bar)' => [
+            'body, p {padding: 5px 0px; margin:  10px;}',
+            'body,p{padding:5px 0;margin:10px}',
+        ];
+        yield 'removes spaces within selectors (foo > bar)' => [
+            'body > p {padding: 5px 0px; margin:  10px;}',
+            'body>p{padding:5px 0;margin:10px}',
+        ];
+        yield 'removes spaces between properties name and values' => [
+            '.foo .bar {padding: 10px 1px 0em 0.5em}',
+            '.foo .bar{padding:10px 1px 0 .5em}',
+        ];
+        yield 'removes units when the value is zero' => [
+            '.foo {padding: 0.75em 0px;}',
+            '.foo{padding:.75em 0}',
+        ];
+        yield 'simplifies colours' => [
+            'mark    {background-color: #eeeeee; color: #333}',
+            'mark{background-color:#eee;color:#333}',
+        ];
+        yield 'removes trailing ;' => [
+            '.foo {margin: 0 0 25px;}',
+            '.foo{margin:0 0 25px}',
+        ];
+    }
 
     public function testImageEncoding()
     {
