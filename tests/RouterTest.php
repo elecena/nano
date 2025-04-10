@@ -25,9 +25,7 @@ class RouterTest extends NanoBaseTest
         return new Router($this->app);
     }
 
-    /**
-     * @dataProvider getPathPrefixDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPathPrefixDataProvider')]
     public function testGetPathPrefix(string $homeUrl, string $expected)
     {
         $router = $this->getRouter(['home' => $homeUrl]);

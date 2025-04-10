@@ -148,21 +148,15 @@ class ResponseTest extends \Nano\NanoBaseTest
             ->onlyMethods(['getRequest', 'getDebug', 'getConfig'])
             ->getMock();
 
-        $app->expects($this->any())->method('getRequest')->will($this->returnValue($request));
-        $app->expects($this->any())->method('getDebug')->will($this->returnValue($this->app->getDebug()));
-        $app->expects($this->any())->method('getConfig')->will($this->returnValue($this->app->getConfig()));
+        $app->expects($this->any())->method('getRequest')->willReturn($request);
+        $app->expects($this->any())->method('getDebug')->willReturn($this->app->getDebug());
+        $app->expects($this->any())->method('getConfig')->willReturn($this->app->getConfig());
 
         return $app;
     }
 
-    /**
-     * @dataProvider ifModifiedSinceLastModifiedDataProvider
-     *
-     * @param string|null $lastModified
-     * @param string|null $headerValue
-     * @param bool $expected
-     */
-    public function testIfModifiedSinceLastModified($lastModified, $headerValue, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceLastModifiedDataProvider')]
+    public function testIfModifiedSinceLastModified(?string $lastModified, ?string $headerValue, bool $expected)
     {
         if (!is_null($headerValue)) {
             $headers = ['HTTP_IF_MODIFIED_SINCE' => $headerValue];
@@ -202,10 +196,8 @@ class ResponseTest extends \Nano\NanoBaseTest
         ];
     }
 
-    /**
-     * @dataProvider ifModifiedSinceETagDataProvider
-     */
-    public function testIfModifiedSinceETag($eTag, $headerValue, $expected)
+    #[\PHPUnit\Framework\Attributes\DataProvider('ifModifiedSinceETagDataProvider')]
+    public function testIfModifiedSinceETag(?string $eTag, ?string $headerValue, bool $expected)
     {
         if (!is_null($headerValue)) {
             $headers = ['HTTP_IF_NONE_MATCH' => $headerValue];

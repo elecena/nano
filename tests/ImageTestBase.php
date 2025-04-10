@@ -44,9 +44,7 @@ abstract class ImageTestBase extends NanoBaseTest
         $this->assertEquals(178, $img->getHeight());
     }
 
-    /**
-     * @dataProvider renderDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('renderDataProvider')]
     public function testRender(string $typeToRender, int $expectedType, string $expectMimeType)
     {
         $img = Image::newFromFile($this->file);

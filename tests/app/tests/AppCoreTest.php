@@ -14,6 +14,7 @@ use Nano\Router;
 use Nano\TestApp\TestModel;
 use NanoApp;
 use NanoCliApp;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Set of unit tests for Nano's Application core
@@ -102,10 +103,7 @@ class AppCoreTest extends AppTestBase
         $this->assertNull($this->app->factory('NotExistingClass'));
     }
 
-    /**
-     * @covers NanoApp::handleException
-     * @dataProvider handleExceptionDataProvider
-     */
+    #[DataProvider('handleExceptionDataProvider')]
     public function testHandleException(callable $fn, string $expectedClass)
     {
         $ret = $this->app->handleException($fn);

@@ -26,12 +26,9 @@ abstract class CacheTestBase extends NanoBaseTest
     }
 
     /**
-     * @param string $cacheDriver
-     * @param array $cacheOptions
-     * @param string $expectedClass
-     * @dataProvider cacheFactoryProvider
      * @throws Exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cacheFactoryProvider')]
     public function testCacheFactory(string $cacheDriver, array $cacheOptions, string $expectedClass)
     {
         $this->assertInstanceOf($expectedClass, $this->getCache($cacheDriver, $cacheOptions));
