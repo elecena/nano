@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0e64b635f4e4d3b9f288e4be32d372b",
+    "content-hash": "966eaeab2b6da6f7728385af5ba8ad7b",
     "packages": [
         {
             "name": "macbre/monolog-utils",
@@ -1529,16 +1529,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.2.0",
+            "version": "12.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f3f6587947f9f53f009af8d18026776375d59145"
+                "reference": "5f09fda04e7caea93cff50b4e90319184f3e6ee3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f3f6587947f9f53f009af8d18026776375d59145",
-                "reference": "f3f6587947f9f53f009af8d18026776375d59145",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5f09fda04e7caea93cff50b4e90319184f3e6ee3",
+                "reference": "5f09fda04e7caea93cff50b4e90319184f3e6ee3",
                 "shasum": ""
             },
             "require": {
@@ -1606,7 +1606,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.2.1"
             },
             "funding": [
                 {
@@ -1630,7 +1630,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-06-06T02:58:21+00:00"
+            "time": "2025-06-07T05:17:47+00:00"
         },
         {
             "name": "psr/cache",
