@@ -11,9 +11,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # https://github.com/shivammathur/setup-php?tab=readme-ov-file#tada-php-support
         php-versions:
         - '8.3'
         - '8.4'
+        - '8.5'  # Nightly
 
     services:
       mysql:
