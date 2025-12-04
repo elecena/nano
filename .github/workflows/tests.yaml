@@ -19,7 +19,8 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0.39
+        # https://hub.docker.com/_/mysql/
+        image: mysql:9.5.0
         env:
           # root password is empty
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
@@ -44,7 +45,7 @@ jobs:
     - name: Start the Redis container
       env:
         REDIS_PASSWORD: qwerty
-        REDIS_VERSION: 7.4.2
+        REDIS_VERSION: 8.4.0
       run: |
         docker run -d -p 6379:6379 redis:${REDIS_VERSION}-alpine redis-server --requirepass ${REDIS_PASSWORD} --port 6379
 
@@ -84,7 +85,7 @@ jobs:
       run: composer run coverage
 
     - name: Upload coverage results to Coveralls
-      if: matrix.php-versions == '8.2'
+      if: matrix.php-versions == '8.4'
       continue-on-error: true  # do not fail on Coveralls uploads
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
