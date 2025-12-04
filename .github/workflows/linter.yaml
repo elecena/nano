@@ -41,6 +41,4 @@ jobs:
       run: composer install --no-interaction
 
     - name: Lint the code
-      run: |
-        PHP_CS_FIXER_IGNORE_ENV=1 \
-          composer run lint
+      run: composer run lint
