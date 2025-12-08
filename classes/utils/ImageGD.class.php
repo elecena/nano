@@ -78,9 +78,6 @@ class ImageGD extends Image
             // @codeCoverageIgnoreEnd
         }
 
-        // free memory
-        imagedestroy($this->img);
-
         // update image data
         $this->img = $thumb;
         $this->width = $width;
@@ -143,9 +140,6 @@ class ImageGD extends Image
             return true;
             // @codeCoverageIgnoreEnd
         }
-
-        // free memory
-        imagedestroy($this->img);
 
         // update image data
         $this->img = $thumb;

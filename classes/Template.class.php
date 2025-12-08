@@ -30,7 +30,7 @@ class Template
         if (is_array($name)) {
             // set mutiple variables (key / value set)
             $this->vars = array_merge($this->vars, $name);
-        } else {
+        } elseif ($name !== null) {
             // set single variable
             $this->vars[$name] = $value;
         }

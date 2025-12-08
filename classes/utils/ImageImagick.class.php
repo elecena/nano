@@ -45,7 +45,7 @@ class ImageImagick extends Image
             return false;
         }
 
-        $res = $this->img->scaleImage($this->width * $ratio, $this->height * $ratio, false /* exact scaling */);
+        $res = $this->img->scaleImage((int) round($this->width * $ratio), (int) round($this->height * $ratio), false /* exact scaling */);
 
         if ($res !== true) {
             return false;
@@ -88,8 +88,8 @@ class ImageImagick extends Image
             $width,
             $height,
             // destination upper left coordinates
-            round(($this->width - $width) / 2),
-            round(($this->height - $height) / 2)
+            (int) round(($this->width - $width) / 2),
+            (int) round(($this->height - $height) / 2)
         );
 
         if ($res !== true) {
