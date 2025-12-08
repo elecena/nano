@@ -103,7 +103,8 @@ class HttpClient
     public function close()
     {
         $this->logger->debug(__METHOD__);
-        curl_close($this->handle);
+        // curl_close() is deprecated in PHP 8.5 and no longer needed since PHP 8.0
+        // CurlHandle objects are automatically cleaned up
     }
 
     /**
