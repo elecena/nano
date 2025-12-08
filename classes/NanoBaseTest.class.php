@@ -63,10 +63,10 @@ class NanoBaseTest extends TestCase
      */
     protected function setNanoAppMock(NanoObject $obj, MockObject $mock)
     {
-        // make sphinx property a public one
         $reflection = new \ReflectionClass($obj);
         $reflection_property = $reflection->getProperty('app');
-        $reflection_property->setAccessible(true);
+        // setAccessible() is deprecated in PHP 8.5 and no longer needed since PHP 8.1
+        // All properties are accessible via reflection by default
 
         $reflection_property->setValue($obj, $mock);
     }
