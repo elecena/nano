@@ -19,7 +19,8 @@ class NanoCliAppTest extends \Nano\NanoBaseTest
     public function testHandleException(callable $fn, string $expectedClass)
     {
         // by passing the handler we make handleException() return the exception instead of die()
-        $ret = $this->cliApp->handleException($fn, handler: function (\Throwable $ex) {});
+        $ret = $this->cliApp->handleException($fn, handler: function (\Throwable $ex) {
+        });
         $this->assertInstanceOf($expectedClass, $ret);
     }
 
