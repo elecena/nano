@@ -11,21 +11,21 @@ use Nano\View;
 
 class Router
 {
-    const SEPARATOR = '/';
-    const DEFAULT_METHOD = 'index';
+    const string SEPARATOR = '/';
+    const string DEFAULT_METHOD = 'index';
 
-    private $app;
-    private $debug;
+    private readonly \NanoApp $app;
+    private readonly Debug $debug;
 
     // URL mapping
-    private $map = [];
-    private $wildcardMap = [];
+    private array $map = [];
+    private array $wildcardMap = [];
 
     // last routed request info
-    private $lastRoute = null;
+    private ?array $lastRoute = null;
 
     // URL to application's home page (i.e. /)
-    private $homeUrl;
+    private ?string $homeUrl;
 
     /**
      * @param \NanoApp $app
@@ -56,9 +56,7 @@ class Router
     private function normalize(string $url, string $extraChars = ''): string
     {
         $url = rtrim($url, self::SEPARATOR . $extraChars);
-        $url = ltrim($url, self::SEPARATOR);
-
-        return $url;
+        return ltrim($url, self::SEPARATOR);
     }
 
     /**
@@ -313,7 +311,7 @@ class Router
     /**
      * Format a local link for a given route
      */
-    public function formatUrl(/* $controllerName, $methodName, ..., $params = array() */)
+    public function formatUrl(/* $controllerName, $methodName, ..., $params = array() */): string
     {
         $args = func_get_args();
 
@@ -337,11 +335,16 @@ class Router
     /**
      * Format a external link (i.e. with host name) for a given route
      */
-    public function formatFullUrl(/* $controllerName, $methodName, ..., $params = array() */)
+    public function formatFullUrl(/* $controllerName, $methodName, ..., $params = array() */): string
     {
         // parse homepage's URL
         $scheme = parse_url($this->homeUrl, PHP_URL_SCHEME);
         $host = parse_url($this->homeUrl, PHP_URL_HOST);
+        $port = parse_url($this->homeUrl, PHP_URL_PORT);
+
+        if (is_numeric($port)) {
+            $host .= ':' . intval($port);
+        }
 
         $args = func_get_args();
 

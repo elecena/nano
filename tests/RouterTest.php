@@ -94,6 +94,17 @@ class RouterTest extends NanoBaseTest
         $this->assertEquals('http://example.org/site/foo/bar/test?q=test&foo=bar+test', $router->formatFullUrl('foo', 'bar', 'test', ['q' => 'test', 'foo' => 'bar test']));
     }
 
+    public function testFormatFullUrlWithPort()
+    {
+        $router = $this->getRouter([
+            'home' => 'http://app.local:5888',
+        ]);
+
+        $this->assertEquals('http://app.local:5888/', $router->formatFullUrl('/'));
+        $this->assertEquals('http://app.local:5888/foo/bar?q=test&foo=1', $router->formatFullUrl('/foo/bar/', ['q' => 'test', 'foo' => 1]));
+        $this->assertEquals('http://app.local:5888/foo/bar/test?q=test&foo=bar+test', $router->formatFullUrl('foo', 'bar', 'test', ['q' => 'test', 'foo' => 'bar test']));
+    }
+
     public function testLastRoute()
     {
         $router = $this->getRouter();
